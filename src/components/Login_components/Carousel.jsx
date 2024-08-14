@@ -25,7 +25,7 @@ function Carousel() {
   }, []);
 
   return (
-    <div className="hidden rounded-r-3xl sm:flex sm:w-1/2 sm:min-h-screen bg-gradient-to-r from-purple-600 to-emerald-500 shadow-pink-500 shadow-2xl justify-center">
+    <div className="hidden rounded-r-3xl sm:flex sm:items-center sm:w-1/2 sm:min-h-screen bg-gradient-to-r from-purple-600 to-emerald-500 shadow-pink-500 shadow-2xl justify-center">
       <div className="text-center text-white">
         <img className="h-80 w-80 mx-auto mb-4 mt-10" src={imagen} alt="Logo" />
         <p className="text-3xl italic mb-2 mt-10">"{phrases[currentPhraseIndex].text}"</p>

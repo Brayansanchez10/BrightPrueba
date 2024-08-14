@@ -27,8 +27,10 @@ const HoverCard = ({ title, description, ruta, onClick }) => {
         >
           {description}
         </p>
-        <div className="absolute inset-0  items-center justify-center bg-gradient-to-br from-pink-200 to-violet-300 border border-black 
-        opacity-0 sm:hover:opacity-95 transition-opacity duration-300 p-4 sm:flex">
+        <div
+          className="absolute inset-0  items-center justify-center bg-gradient-to-br from-pink-200 to-violet-300 border border-black 
+        opacity-0 sm:hover:opacity-95 transition-opacity duration-300 p-4 sm:flex"
+        >
           <div className="text-center">
             <p
               className="mt-2 text-lg text-black font-bold whitespace-wrap text-center px-2 sm:hover:opacity-100
