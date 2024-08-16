@@ -6,6 +6,7 @@ import { useUserContext } from "../../context/user/user.context";
 import { useAuth } from "../../context/auth.context";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
+import Swal from 'sweetalert2';
 
 const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
   const { t } = useTranslation("global");
@@ -32,7 +33,8 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
           setName(userData.username);
           setEmail(userData.email);
 
-          if (userData.userImage) {
+          // Handle userImage correctly
+          if (userData.userImage && userData.userImage !== "null") {
             setPreviewProfileImage(userData.userImage);
           }
         } catch (error) {
@@ -75,6 +77,7 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (validateForm() && userId) {
       try {
         const userData = {
@@ -82,24 +85,33 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
           email,
           userImage: deleteProfileImage ? null : profileImage,
         };
-
+  
         await updateUserPartial(userId, userData);
+  
+        // Mostrar mensaje de éxito
         toast.success(t("userProfileSettings.changes_saved_successfully"), {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 1500, // Duración del mensaje
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
         });
-
+  
+        // Configurar recarga de la página después del tiempo de la alerta
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500); // La duración debe coincidir con autoClose
+  
         if (deleteProfileImage) {
           setProfileImage(null);
           setPreviewProfileImage(null);
-          setDeleteProfileImage(false); // Reset flag after saving changes
+          setDeleteProfileImage(false); // Restablecer el indicador después de guardar los cambios
         }
+  
       } catch (error) {
+        // Mostrar mensaje de error
         toast.error(t("userProfileSettings.failed_to_save_changes"), {
           position: "top-right",
           autoClose: 3000,
@@ -113,13 +125,49 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
     } else {
       console.error("Couldn't get user ID");
     }
-    window.location.reload();
   };
 
   const handleDeleteImage = async () => {
-    setProfileImage(null);
-    setPreviewProfileImage(null);
-    setDeleteProfileImage(true);
+    if (userId) {
+      // Mostrar diálogo de confirmación antes de eliminar la imagen
+      const result = await Swal.fire({
+        title: t('userProfileSettings.confirm_image_deletion'), // Mensaje de confirmación
+        text: t('userProfileSettings.are_you_sure'), // Mensaje de advertencia
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: t('userProfileSettings.yes_delete_it'), // Texto del botón de confirmación
+        cancelButtonText: t('userProfileSettings.cancel'), // Texto del botón de cancelación
+      });
+  
+      if (result.isConfirmed) {
+        try {
+          await updateUserPartial(userId, { username: name, email, userImage: null });
+  
+          Swal.fire({
+            icon: 'success',
+            title: t('userProfileSettings.image_deleted_successfully'), // Mensaje de éxito
+            showConfirmButton: false,
+            timer: 3000,
+          });
+  
+          setProfileImage(null);
+          setPreviewProfileImage(null);
+          setDeleteProfileImage(false); // Reset flag after deletion
+  
+        } catch (error) {
+          Swal.fire({
+            icon: 'error',
+            title: t('userProfileSettings.failed_to_delete_image'), // Mensaje de error
+            showConfirmButton: false,
+            timer: 3000,
+          });
+        }
+      }
+    } else {
+      console.error("Couldn't get user ID");
+    }
   };
 
   const transformCloudinaryURL = (imageUrl) => {

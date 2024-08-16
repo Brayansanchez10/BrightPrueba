@@ -138,7 +138,11 @@
         "cannot_undo": "Esta acción no se puede deshacer",
         "yes_delete_account": "Sí, eliminar cuenta",
         "cancel": "Cancelar",
-        "deleteImage": "Borrar Imagen"
+        "deleteImage": "Borrar Imagen",
+        "confirm_image_deletion": "¿Estás seguro de que quieres eliminar esta imagen?",
+        "yes_delete_it": "Sí, ¡eliminarla!",
+        "image_deleted_successfully": "¡Imagen eliminada exitosamente!",
+        "failed_to_delete_image": "No se pudo eliminar la imagen."
     },
     "navigationBar": {
         "search_placeholder": "Buscar...",

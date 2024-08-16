@@ -34,9 +34,12 @@ const Navbar = () => {
         try {
           const userData = await getUserById(user.data.id);
           setUsername(userData.username);
-          setUserImage(userData.userImage || null); // Asegúrate de que sea null si no hay imagen
+
+          // Verificar si userImage es "null" (cadena de texto) o null
+          setUserImage(userData.userImage !== "null" ? userData.userImage : null);
         } catch (error) {
           console.error(error);
+          setUserImage(null); // En caso de error, mostrar el ícono predeterminado
         }
       }
     };

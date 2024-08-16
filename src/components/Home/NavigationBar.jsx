@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { BiSearch, BiUserCircle } from "react-icons/bi";
-import { FaBars, FaUserCircle } from 'react-icons/fa';
+import { BiSearch } from "react-icons/bi";
+import { FaUserCircle } from 'react-icons/fa';
 import { Link } from "react-router-dom";
 import Logo from "../../assets/img/hola.png";
 import { useAuth } from "../../context/auth.context";
@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 function NavigationBar({ onSearch }) {
   const { t } = useTranslation("global");
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const [showWelcomeModal, setShowWelcomeModal] = useState(false); // Estado para mostrar el modal de bienvenida
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const { logout, user } = useAuth();
   const { getUserById } = useUserContext();
   const [username, setUsername] = useState("");
@@ -18,7 +18,7 @@ function NavigationBar({ onSearch }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const menuRef = useRef(null);
-  const welcomeModalRef = useRef(null); // Referencia al modal de bienvenida
+  const welcomeModalRef = useRef(null);
 
   const handleLogout = async () => {
     try {
@@ -30,10 +30,10 @@ function NavigationBar({ onSearch }) {
     }
   };
 
-  const handleSearchChange = (e) => { //Se agrega esta función para poder filtrar mediante el nombre de la categoria
+  const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    onSearch(term); // Llama a la función que actualiza el término de búsqueda en el componente principal
+    onSearch(term);
   };
 
   useEffect(() => {
@@ -42,7 +42,9 @@ function NavigationBar({ onSearch }) {
         try {
           const userData = await getUserById(user.data.id);
           setUsername(userData.username);
-          setUserImage(userData.userImage);
+
+          // Si userImage es "null", establecerlo como una cadena vacía
+          setUserImage(userData.userImage === "null" ? "" : userData.userImage);
         } catch (error) {
           console.error("Error al obtener datos del usuario:", error);
         }
@@ -57,10 +59,10 @@ function NavigationBar({ onSearch }) {
       if (
         menuRef.current &&
         !menuRef.current.contains(event.target) &&
-        !welcomeModalRef.current?.contains(event.target) // No cerrar si el clic está dentro del modal de bienvenida
+        !welcomeModalRef.current?.contains(event.target)
       ) {
         setIsMenuVisible(false);
-        setShowWelcomeModal(false); // Ocultar el modal de bienvenida al cerrar el menú
+        setShowWelcomeModal(false);
       }
     };
 
@@ -74,7 +76,7 @@ function NavigationBar({ onSearch }) {
     <nav className="bg-gradient-to-r from-purple-700 to-pink-600 shadow-orange shadow-sky-300 p-2 md:p-3 flex justify-between items-center w-full">
       {/* Sección izquierda */}
       <div className="flex items-center">
-        <BiSearch className="text-white " size="24px" />
+        <BiSearch className="text-white" size="24px" />
         <input
           type="search"
           placeholder={t('navigationBar.search_placeholder')}
@@ -96,7 +98,7 @@ function NavigationBar({ onSearch }) {
           <span className="text-white font-black text-xl md:text-2xl hidden sm:block">
             {t('navigationBar.bright')}
           </span>
-          <img className="h-12 " src={Logo} alt="Logo" />
+          <img className="h-12" src={Logo} alt="Logo" />
           <span className="text-white font-black text-xl md:text-2xl hidden sm:block">
             {t('navigationBar.mind')}
           </span>
@@ -105,43 +107,41 @@ function NavigationBar({ onSearch }) {
 
       {/* Sección derecha */}
       <div className="flex items-center">
-      <div
-        className="relative text-white md:text-lg font-bold mr-2 md:mr-4 cursor-pointer text-base hidden sm:block"
-        onMouseEnter={() => setShowWelcomeModal(true)}
-        onMouseLeave={() => setShowWelcomeModal(false)}
-      >
-        {username}
-        {showWelcomeModal && (
-          <div
-            ref={welcomeModalRef}
-            className="absolute top-8 right-0 w-72 bg-white shadow-lg rounded-lg p-6 z-50"
-            onMouseEnter={() => setShowWelcomeModal(true)}
-            onMouseLeave={() => setShowWelcomeModal(false)}
-          >
-            {userImage && (
-              <img
-                src={userImage}
-                alt="User"
-                className="h-16 w-16 rounded-full mx-auto mb-4"
-              />
-            )}
-            <p className={`text-gray-800 font-semibold text-center mb-2 ${!userImage && 'mt-4'}`}>
-              {t('navigationBar.welcome_message', { username })}
-            </p>
-            <p className="text-gray-600 text-center mb-4">
-              {t('navigationBar.check_courses')}
-            </p>
-            <Link
-              to="/MyCourses"
-              className="text-blue-600 font-semibold hover:underline text-center block"
+        <div
+          className="relative text-white md:text-lg font-bold mr-2 md:mr-4 cursor-pointer text-base hidden sm:block"
+          onMouseEnter={() => setShowWelcomeModal(true)}
+          onMouseLeave={() => setShowWelcomeModal(false)}
+        >
+          {username}
+          {showWelcomeModal && (
+            <div
+              ref={welcomeModalRef}
+              className="absolute top-8 right-0 w-72 bg-white shadow-lg rounded-lg p-6 z-50"
             >
-              {t('navigationBar.see_my_courses')}
-            </Link>
-          </div>
-        )}
-      </div>
+              {userImage && (
+                <img
+                  src={userImage}
+                  alt="User"
+                  className="h-16 w-16 rounded-full mx-auto mb-4"
+                />
+              )}
+              <p className={`text-gray-800 font-semibold text-center mb-2 ${!userImage && 'mt-4'}`}>
+                {t('navigationBar.welcome_message', { username })}
+              </p>
+              <p className="text-gray-600 text-center mb-4">
+                {t('navigationBar.check_courses')}
+              </p>
+              <Link
+                to="/MyCourses"
+                className="text-blue-600 font-semibold hover:underline text-center block"
+              >
+                {t('navigationBar.see_my_courses')}
+              </Link>
+            </div>
+          )}
+        </div>
 
-        <div className="relative">  {/* Contiene la imagen de navegación*/}
+        <div className="relative">
           <div
             className={`h-12 md:h-12 w-12 md:w-12 cursor-pointer border rounded-full transition-all duration-300 hover:scale-110 mr-1 ${
               userImage ? '' : 'bg-purple-500 flex items-center justify-center'
@@ -154,7 +154,7 @@ function NavigationBar({ onSearch }) {
             }}
           >
             {!userImage && (
-              <FaUserCircle className="h-12 w-12 text-white" />
+              <FaUserCircle className="h-8 w-8 text-white" />
             )}
           </div>
 

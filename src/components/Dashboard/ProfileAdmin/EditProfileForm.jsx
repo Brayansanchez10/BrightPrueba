@@ -4,6 +4,7 @@ import { useAuth } from "../../../context/auth.context";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
+import Swal from 'sweetalert2';
 
 const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   const { updateUserPartial, getUserById } = useUserContext();
@@ -21,13 +22,18 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   useEffect(() => {
     const fetchUserId = async () => {
       if (user && user.data && user.data.id) {
-        const userData = await getUserById(user.data.id);
-        setUserId(userData._id);
-        setName(userData.username);
-        setEmail(userData.email);
+        try {
+          const userData = await getUserById(user.data.id);
+          setUserId(userData._id);
+          setName(userData.username);
+          setEmail(userData.email);
 
-        if (userData.userImage) {
-          setPreviewProfileImage(transformCloudinaryURL(userData.userImage));
+          // Handle userImage correctly
+          if (userData.userImage && userData.userImage !== "null") {
+            setPreviewProfileImage(userData.userImage);
+          }
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
         }
       }
     };
@@ -71,15 +77,21 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           };
 
           await updateUserPartial(userId, userData);
-          toast.success(t('userProfileSettings.changes_saved_successfully'), {
+           // Mostrar mensaje de éxito
+          toast.success(t("userProfileSettings.changes_saved_successfully"), {
             position: "top-right",
-            autoClose: 3000,
+            autoClose: 750, // Duración del mensaje
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
           });
+    
+          // Configurar recarga de la página después del tiempo de la alerta
+          setTimeout(() => {
+            window.location.reload();
+          }, 750); // La duración debe coincidir con autoClose
 
           if (deleteProfileImage) {
             setProfileImage(null);
@@ -130,10 +142,47 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
     }
   };
 
-  const handleDeleteImage = () => {
-    setProfileImage(null);
-    setPreviewProfileImage(null);
-    setDeleteProfileImage(true); 
+  const handleDeleteImage = async () => {
+    if (userId) {
+      // Mostrar diálogo de confirmación antes de eliminar la imagen
+      const result = await Swal.fire({
+        title: t('userProfileSettings.confirm_image_deletion'), // Mensaje de confirmación
+        text: t('userProfileSettings.are_you_sure'), // Mensaje de advertencia
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: t('userProfileSettings.yes_delete_it'), // Texto del botón de confirmación
+        cancelButtonText: t('userProfileSettings.cancel'), // Texto del botón de cancelación
+      });
+  
+      if (result.isConfirmed) {
+        try {
+          await updateUserPartial(userId, { username: name, email, userImage: null });
+  
+          Swal.fire({
+            icon: 'success',
+            title: t('userProfileSettings.image_deleted_successfully'), // Mensaje de éxito
+            showConfirmButton: false,
+            timer: 3000,
+          });
+  
+          setProfileImage(null);
+          setPreviewProfileImage(null);
+          setDeleteProfileImage(false); // Reset flag after deletion
+  
+        } catch (error) {
+          Swal.fire({
+            icon: 'error',
+            title: t('userProfileSettings.failed_to_delete_image'), // Mensaje de error
+            showConfirmButton: false,
+            timer: 3000,
+          });
+        }
+      }
+    } else {
+      console.error("Couldn't get user ID");
+    }
   };
 
   const transformCloudinaryURL = (imageUrl) => {
@@ -148,25 +197,21 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           {t('userProfileSettings.edit_profile')}
         </h1>
         {previewProfileImage && (
-          <div className="flex justify-center items-center space-x-4 mt-2">
-            <div className="w-20 h-20">
-              <img
-                src={previewProfileImage}
-                alt="Preview"
-                className="w-full h-full rounded-full"
-              />
-            </div>
+          <div className="mb-4 text-center">
+            <img
+              src={previewProfileImage}
+              alt="Preview"
+              className="w-20 h-20 rounded-full mx-auto mb-4 shadow-lg"
+            />
+            <button
+              type="button"
+              className="bg-red-500 text-white rounded-lg w-28 hover:bg-red-600 py-2 font-semibold"
+              onClick={handleDeleteImage}
+            >
+              {t("userProfileSettings.deleteImage")}
+            </button>
           </div>
         )}
-        <div className="flex justify-center mt-2">
-          <button
-            type="button"
-            className=" bg-red-500 text-white rounded-lg w-28 hover:bg-red-600 h-6 font-semibold"
-            onClick={handleDeleteImage}
-          >
-            {t('userProfileSettings.deleteImage')}
-          </button>
-        </div>
         <form onSubmit={handleSubmit}>
           <div className="mt-4">
             <label htmlFor="name" className="text-base font-bold text-black">
@@ -214,10 +259,9 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
               onChange={handleImageChange}
             />
           </div>
-
-          <div className="flex items-center justify-center mt-5">
+          <div className="mt-4 flex justify-center">
             <button
-              className="bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-900 hover:to-blue-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
               type="submit"
             >
               {t('userProfileSettings.save')}
