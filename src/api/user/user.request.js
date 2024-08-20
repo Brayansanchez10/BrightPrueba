@@ -16,7 +16,7 @@ export const updateUser = async (_id, userData) => {
 };
 export const registerToCourse = (userId, courseId) => axios.post(`${api}/users/registerToCourse`, { userId, courseId }, { withCredentials: true });
 
-export const ActivateAcc = (_id) => axios.get(`${api}/activation/${_id}`, { withCredentials: true });
+export const ActivateAcc = (_id) => axios.get(`${api}/activation/${_id}`, { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' }});
 
 export const deleteUser = (id) => axios.delete(`${api}/users/delete/${id}`, { withCredentials: true });
 
