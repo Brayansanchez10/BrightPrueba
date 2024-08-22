@@ -6,6 +6,7 @@ import {
     updateCourse as updateCourseApi, 
     deleteCourse as deleteCourseApi,
     getCoursesByCategory as getCoursesByCategoryApi,
+    asignarLinkContenido as asignarLinkContenidoApi,
     asignarContenido as asignarContenidoApi // Importa la función asignarContenido desde tu archivo api
 } from '../../api/courses/course.request'; // Importa las funciones de tu archivo api
 
@@ -110,12 +111,26 @@ export const CoursesProvider = ({ children }) => {
         }
     };
 
+    const asignarLinkContenido = async (id, texto) => {
+        try {
+            console.log("ID del curso:", id);
+            console.log("Texto recibido:", texto);
+            //Llamar a la Api con el texto en lugar del archivo
+            const res = await asignarLinkContenidoApi(id, texto);
+            console.log("Respuesta Api", res);
+            return res.data;
+        } catch (error) {
+            console.error("Error al asignar contenido",error);
+            return null;
+        }
+    };
+
     useEffect(() => {
         getAllCourses();
     }, []);
 
     return (
-        <CoursesContext.Provider value={{ courses, getAllCourses, getCourse, createCourse, getCoursesByCategory, updateCourse, deleteCourse, asignarContenido }}>
+        <CoursesContext.Provider value={{ courses, getAllCourses, getCourse, createCourse, getCoursesByCategory, updateCourse, deleteCourse, asignarContenido, asignarLinkContenido }}>
             {children}
         </CoursesContext.Provider>
     );

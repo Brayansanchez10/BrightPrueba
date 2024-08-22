@@ -72,6 +72,23 @@ const CourseView = () => {
         }
     };
 
+    const isYouTubeLink = (url) => {
+        return url.includes('youtube.com/watch') || url.includes('youtu.be/');
+    };
+
+    const getYouTubeEmbedUrl = (url) => {
+        // Verifica si es un enlace de tipo 'youtu.be'
+        if (url.includes('youtu.be/')) {
+            const videoId = url.split('youtu.be/')[1];
+            return `https://www.youtube.com/embed/${videoId}`;
+        }
+    
+        // Verifica si es un enlace de tipo 'youtube.com/watch'
+        const urlParams = new URLSearchParams(new URL(url).search);
+        const videoId = urlParams.get('v');
+        return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+    };
+
     const generatePremiumCertificatePDF = (username, courseTitle, zorroImage) => {
         const doc = new jsPDF({
             orientation: 'portrait',
@@ -166,7 +183,7 @@ const CourseView = () => {
                                     disabled={index > currentViewedIndex + 1}
                                 >
                                     <Button type="link" onClick={() => handleContentClick(index)}>
-                                        {url.endsWith('.mp4') ? 'Ver Video' : url.endsWith('.pdf') ? 'Ver PDF' : 'Ver Imagen'}
+                                        {isYouTubeLink(url) ? 'Ver Video de YouTube' : url.endsWith('.mp4') ? 'Ver Video' : url.endsWith('.pdf') ? 'Ver PDF' : 'Ver Imagen'}
                                     </Button>
                                 </Panel>
                             ))}
@@ -183,25 +200,36 @@ const CourseView = () => {
             >
                 {course.content && currentIndex < course.content.length && (
                     <>
-                        {course.content[currentIndex].endsWith('.mp4') ? (
-                            <video controls className="w-full">
-                                <source src={course.content[currentIndex]} type="video/mp4" />
-                                Tu navegador no soporta el elemento de video.
-                            </video>
+                        {isYouTubeLink(course.content[currentIndex]) ? (
+                            <iframe
+                                width="100%"
+                                height="315"
+                                src={getYouTubeEmbedUrl(course.content[currentIndex])}
+                                title="Video de YouTube"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            ></iframe>
                         ) : course.content[currentIndex].endsWith('.pdf') ? (
                             <iframe
-                                src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(course.content[currentIndex])}`}
-                                className="w-full"
-                                style={{ minHeight: '400px' }}
-                                frameBorder="0"
-                            >
-                                Tu navegador no soporta PDFs. Por favor descarga el PDF para verlo: <a href={course.content[currentIndex]}>Descargar PDF</a>
-                            </iframe>
+                                src={course.content[currentIndex]}
+                                width="100%"
+                                height="600"
+                                title="PDF Viewer"
+                            ></iframe>
                         ) : (
-                            <img src={course.content[currentIndex]} alt="Vista previa del contenido" className="w-full" />
+                            <div className="flex justify-center">
+                                <img
+                                    src={course.content[currentIndex]}
+                                    alt={`Content ${currentIndex}`}
+                                    className="max-w-full h-auto"
+                                />
+                            </div>
                         )}
-                        {currentViewedIndex === currentIndex && (
-                            <Button onClick={handleNext} className="mt-4">Siguiente</Button>
+                        {currentIndex < course.content.length - 1 && (
+                            <div className="flex justify-end mt-4">
+                                <Button onClick={handleNext}>Siguiente</Button>
+                            </div>
                         )}
                     </>
                 )}

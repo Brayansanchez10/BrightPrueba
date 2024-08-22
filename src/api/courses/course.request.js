@@ -25,6 +25,19 @@ export const asignarContenido = (id, contentFile) => {
   });
 };
 
+//Función para asignar texto a un contenido
+export const asignarLinkContenido = (id, texto) => {
+  //Crear un objeto Json con el texto
+  const data = { texto };
+
+  //Realizar la solicitud POST utilizando axios
+  return courseRequest.post(`/asignarLinkContenido/${id}`, data,{
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
+
 // Función para eliminar un recurso de un curso
 export const deleteResource = (courseId, resourceIndex) => {
   return courseRequest.delete(`/courses/${courseId}/resources/${resourceIndex}`);

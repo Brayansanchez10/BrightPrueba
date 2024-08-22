@@ -378,7 +378,7 @@
         "courseError": "No hay curso seleccionado.",
         "contentAssignedSuccessfully": "Contenido asignado con éxito",
         "errorAssigningContent": "Error al asignar contenido",
-        "invalidFileType": "Solo se permiten archivos \".mov\", \".mp4\", \".docx\", \".pdf\", \".jpg\", \".png\".",
+        "invalidFileType": "Solo se permiten archivos \".mov\", \".docx\", \".pdf\", \".jpg\", \".png\".",
         "noContentAssigned": "No hay contenido asignado.",
         "downloadPDF": "Descargar PDF:",
         "assign": "Asignar",
@@ -387,7 +387,16 @@
         "resource": "Recurso",
         "videoSupport": "Tu navegador no soporta el elemento de video.",
         "resourceDeleted": "Recurso eliminado exitosamente",
-        "errorDeletingResource": "Error al eliminar el recurso"
+        "errorDeletingResource": "Error al eliminar el recurso",
+        "selectOption": "Selecciona una opción",
+        "file": "Subir archivo",
+        "link": "Subir Link",
+        "enterText": "Ingresa el texto",
+        "noTextEntered": "Por favor ingresa un texto",
+        "placeholderlink": "Ingrese un enlace aquí",
+        "videoLink": "Video Ingresado",
+        "invalidVideoLink": "El enlace del video no es válido",
+        "invalidVideoLinkdescription": "Por favor ingrese un link válido"
     },
     "categories": {
         "title": "Categorías",

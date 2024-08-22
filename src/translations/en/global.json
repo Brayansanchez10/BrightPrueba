@@ -378,7 +378,7 @@
         "courseError": "No course selected.",
         "contentAssignedSuccessfully": "Content Assigned Successfully",
         "errorAssigningContent": "Error Assigning Content",
-        "invalidFileType": "Only \".mov\", \".mp4\", \".docx\", \".pdf\", \".jpg\", \".png\" files are allowed.",
+        "invalidFileType": "Only \".mov\", \".docx\", \".pdf\", \".jpg\", \".png\" files are allowed.",
         "noContentAssigned": "No content assigned.",
         "downloadPDF": "Download PDF:",
         "assign": "Assign",
@@ -387,7 +387,16 @@
         "resource": "Resource",
         "videoSupport": "Your browser does not support the video element.",
         "resourceDeleted": "Resource successfully deleted",
-        "errorDeletingResource": "Error deleting resource"
+        "errorDeletingResource": "Error deleting resource",
+        "selectOption": "Select an option",
+        "file": "Upload File",
+        "link": "Upload Link",
+        "enterText": "Enter text",
+        "noTextEntered": "Please enter some text",
+        "placeholderlink": "Enter a link here",
+        "videoLink": "Video uploaded",
+        "invalidVideoLink": "The video link is invalid",
+        "invalidVideoLinkdescription": "Please enter a valid link"
     },
     "categories": {
         "title": "Categories",
