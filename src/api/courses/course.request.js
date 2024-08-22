@@ -99,3 +99,4 @@ export const deleteCourse = (id) => courseRequest.delete(`/deleteCourse/${id}`);
 export const getCoursesByCategory = (categoryName) => courseRequest.get(`/category/${categoryName}`);
 
 export default courseRequest;
+
