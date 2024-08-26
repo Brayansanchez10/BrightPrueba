@@ -97,7 +97,8 @@
     "notFound": {
         "title": "Ooops! Página no encontrada",
         "description": "La página que estás buscando no existe. ¿Quieres volver a la página de inicio?",
-        "returnHome": "Volver a la página de inicio"
+        "returnHome": "Volver a la página de inicio",
+        "return": "Regresar"
     },
     "home": {
         "explore_categories": "Explora Nuestras Categorías",

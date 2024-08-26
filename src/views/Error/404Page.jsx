@@ -16,6 +16,14 @@ const NotFoundPage = () => {
     }
   };
 
+  const goBack = () => {
+    try {
+      window.history.back();
+    } catch (error) {
+      console.error("Error al regresar a la página anterior");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -29,7 +37,10 @@ const NotFoundPage = () => {
           </p>
         </div>
         <div className="text-center">
-          <a className="inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300 cursor-pointer" onClick={handleLogout}> 
+          <a className="inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300 cursor-pointer m-1" onClick={goBack}> 
+            &#8678; {t('notFound.return')}
+          </a>
+          <a className="inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300 cursor-pointer m-1" onClick={handleLogout}> 
             {t('notFound.returnHome')}
           </a>
         </div>

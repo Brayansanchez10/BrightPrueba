@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaGlobeAmericas, FaGlobeEurope } from 'react-icons/fa';
 
@@ -6,10 +6,19 @@ const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
   const [isEnglish, setIsEnglish] = useState(i18n.language === 'en');
 
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      i18n.changeLanguage(savedLanguage);
+      setIsEnglish(savedLanguage === 'en');
+    }
+  }, [i18n]);
+
   const handleToggle = () => {
     const newLang = isEnglish ? 'es' : 'en';
     i18n.changeLanguage(newLang);
     setIsEnglish(!isEnglish);
+    localStorage.setItem('language', newLang);
   };
 
   return (
