@@ -1,8 +1,8 @@
 import React, { useCallback, useState, useRef, useEffect } from "react";
 import { Modal, Button, Collapse, notification, Spin } from "antd";
-import { DeleteFilled } from "@ant-design/icons";
+import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { useTranslation } from 'react-i18next';
-import { deleteResource, asignarLinkContenido } from "../../../api/courses/course.request";
+import { deleteResource, asignarLinkContenido, actualizarLinkContenido, actualizarContenidoArchivo } from "../../../api/courses/course.request";
 import { toast } from "react-toastify";
 
 const { Panel } = Collapse;
@@ -24,6 +24,8 @@ const AssignContentModal = ({
   const [fileSelected, setFileSelected] = useState(null);
   const [textInput, setTextInput] = useState('');
   const [selection, setSelection] = useState('file');
+  const [editIndex, setEditIndex] = useState(null);
+  const [editLink, setEditLink] = useState('');
   const imgRefs = useRef([]);
 
   useEffect(() => {
@@ -37,6 +39,8 @@ const AssignContentModal = ({
     setTextInput('');
     setLoading(false);
     setSelection('file');
+    setEditIndex(null);
+    setEditLink('');
     if (imgRefs.current) imgRefs.current.forEach(img => (img.src = ""));
   };
   
@@ -97,12 +101,23 @@ const AssignContentModal = ({
 
     setLoading(true);
     try {
-      await onAssignContent();
-      notification.success({
-        message: t('assignContentModal.contentAssignedSuccessfully'),
-        duration: 3,
-      });
-      onClose();
+      if (editIndex !== null) {
+        // Update existing link
+        await actualizarContenidoArchivo(selectedCourse._id, editIndex, fileSelected);
+        toast.success(t("assignContentModal.linkUpdatedSuccessfully"), {
+          autoClose: 750,
+          onClose: () => {
+            window.location.reload();
+          },
+        });
+      } else {
+        await onAssignContent();
+        notification.success({
+          message: t('assignContentModal.contentAssignedSuccessfully'),
+          duration: 3,
+        });
+        onClose();
+      }
     } catch (error) {
       notification.error({
         message: t('assignContentModal.errorAssigningContent'),
@@ -138,13 +153,25 @@ const AssignContentModal = ({
 
     setLoading(true);
     try {
-      await asignarLinkContenido(selectedCourse._id, trimmedInput);
-      toast.success(t("assignContentModal.contentAssignedSuccessfully"), {
-        autoClose: 750,
-        onClose: () => {
-          window.location.reload();
-        },
-      });
+      if (editIndex !== null) {
+        // Update existing link
+        await actualizarLinkContenido(selectedCourse._id, trimmedInput, editIndex);
+        toast.success(t("assignContentModal.linkUpdatedSuccessfully"), {
+          autoClose: 750,
+          onClose: () => {
+            window.location.reload();
+          },
+        });
+      } else {
+        // Add new link
+        await asignarLinkContenido(selectedCourse._id, trimmedInput);
+        toast.success(t("assignContentModal.contentAssignedSuccessfully"), {
+          autoClose: 750,
+          onClose: () => {
+            window.location.reload();
+          },
+        });
+      }
     } catch (error) {
       notification.error({
         message: t('assignContentModal.errorAssigningContent'),
@@ -154,7 +181,15 @@ const AssignContentModal = ({
     } finally {
       setLoading(false);
     }
-  }, [textInput, selectedCourse, onClose, t]);
+  }, [textInput, selectedCourse, onClose, editIndex, t]);
+
+  const handleEditResource = (index, url) => {
+    setEditIndex(index);
+    setEditLink(url);
+    setSelection('link');
+    setTextInput(url);
+  };
+
 
   const handleCancel = () => {
     resetState();
@@ -208,11 +243,18 @@ const AssignContentModal = ({
                     header={
                       <div className="flex justify-between items-center">
                         <span>{t('assignContentModal.resource')} {index + 1}</span>
-                        <Button
-                          type="danger"
-                          icon={<DeleteFilled />}
-                          onClick={() => handleRemoveResource(index)}
-                        />
+                        <div className="flex ml-auto space-x-2"> {/* Nuevo div contenedor para los botones */}
+                          <Button
+                            type="danger"
+                            icon={<DeleteFilled />}
+                            onClick={() => handleRemoveResource(index)}
+                          />
+                          <Button
+                            type="default"
+                            icon={<EditFilled />}
+                            onClick={() => handleEditResource(index, url)}
+                          />
+                        </div>
                       </div>
                     }
                     key={index}

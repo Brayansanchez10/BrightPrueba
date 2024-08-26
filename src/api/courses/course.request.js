@@ -94,6 +94,35 @@ export const updateCourse = (id, courseData) => {
   });
 };
 
+// Función para actualizar el contenido de un archivo en un curso
+export const actualizarContenidoArchivo = (id, index, nuevoArchivo) => {
+  const formData = new FormData(); // Crear una instancia de FormData
+
+  // Agregar el nuevo archivo de contenido al FormData
+  formData.append('content', nuevoArchivo);
+
+  // Realizar la solicitud PUT utilizando Axios
+  return courseRequest.put(`/actualizarContenidoArchivo/${id}/${index}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+// Función para actualizar el texto o enlace en un curso
+export const actualizarLinkContenido = (id, nuevoTexto, index) => {
+  const data = { nuevoTexto, index };
+
+  // Realizar la solicitud PUT utilizando Axios
+  return courseRequest.put(`/actualizarLinkContenido/${id}`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
+
+
+
 // Función para eliminar un curso
 export const deleteCourse = (id) => courseRequest.delete(`/deleteCourse/${id}`);
 export const getCoursesByCategory = (categoryName) => courseRequest.get(`/category/${categoryName}`);

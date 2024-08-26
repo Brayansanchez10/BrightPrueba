@@ -7,6 +7,9 @@ import {
     deleteCourse as deleteCourseApi,
     getCoursesByCategory as getCoursesByCategoryApi,
     asignarLinkContenido as asignarLinkContenidoApi,
+    actualizarLinkContenido as actualizarLinkContenidoApi,
+    actualizarContenidoArchivo as actualizarContenidoArchivoApi,
+
     asignarContenido as asignarContenidoApi // Importa la función asignarContenido desde tu archivo api
 } from '../../api/courses/course.request'; // Importa las funciones de tu archivo api
 
@@ -125,12 +128,46 @@ export const CoursesProvider = ({ children }) => {
         }
     };
 
+
+    //Funcion para actualizar archivo de componente: 
+    const actualizarContenidoArchivo = async (id, index, nuevoArchivo) => {
+        try {
+            console.log("ID del curso:", id);
+            console.log("Índice del archivo:", index);
+            console.log("Nuevo archivo recibido:", nuevoArchivo);
+    
+            // Llamar a la API para actualizar el archivo
+            const res = await actualizarContenidoArchivoApi(id, index, nuevoArchivo);
+            console.log("Respuesta de la API para actualizar contenido de archivo:", res);
+            return res.data;
+        } catch (error) {
+            console.error("Error al actualizar contenido de archivo:", error);
+            return null;
+        }
+    };
+
+
+    const actualizarLinkContenido = async (id, nuevoTexto, index) => {
+        try {
+            console.log("ID del curso:", id);
+            console.log("Nuevo texto recibido:", nuevoTexto);
+    
+            // Llamar a la API para actualizar el texto o enlace
+            const res = await actualizarLinkContenidoApi(id, nuevoTexto, index);
+            console.log("Respuesta de la API para actualizar link de contenido:", res);
+            return res.data;
+        } catch (error) {
+            console.error("Error al actualizar link de contenido:", error);
+            return null;
+        }
+    };
+
     useEffect(() => {
         getAllCourses();
     }, []);
 
     return (
-        <CoursesContext.Provider value={{ courses, getAllCourses, getCourse, createCourse, getCoursesByCategory, updateCourse, deleteCourse, asignarContenido, asignarLinkContenido }}>
+        <CoursesContext.Provider value={{ courses, getAllCourses, getCourse, createCourse, getCoursesByCategory, updateCourse, deleteCourse, asignarContenido, asignarLinkContenido, actualizarContenidoArchivo, actualizarLinkContenido }}>
             {children}
         </CoursesContext.Provider>
     );
