@@ -97,7 +97,8 @@
     "notFound": {
         "title": "Ooops! Page not found",
         "description": "The page you are looking for does not exist. Would you like to return to the home page?",
-        "returnHome": "Return to Home Page"
+        "returnHome": "Return to Home Page",
+        "return": "Go back"
     },
     "home": {
         "explore_categories": "Explore Our Categories",
