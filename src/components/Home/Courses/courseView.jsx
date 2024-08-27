@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useCoursesContext } from '../../../context/courses/courses.context';
 import { useAuth } from '../../../context/auth.context';
 import { useUserContext } from '../../../context/user/user.context';
-import { Collapse, Button, Modal } from 'antd';
+import { Collapse, Button, Modal, Progress } from 'antd'; // Asegúrate de importar Progress
 import NavigationBar from '../NavigationBar';
 import { FaArrowLeft } from 'react-icons/fa';
 import jsPDF from 'jspdf';
@@ -21,6 +21,7 @@ const CourseView = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentViewedIndex, setCurrentViewedIndex] = useState(-1);
+    const [showFinishButton, setShowFinishButton] = useState(false);
 
     useEffect(() => {
         const fetchCourse = async () => {
@@ -67,11 +68,20 @@ const CourseView = () => {
 
     const handleCloseModal = () => {
         setModalVisible(false);
-        if (currentViewedIndex === course.content.length - 1) {
-            generatePremiumCertificatePDF(username, course.title, zorro);
-        }
+        setShowFinishButton(false);
+        setCurrentIndex(0);
     };
 
+    const handleFinishCourse = () => {
+        generatePremiumCertificatePDF(username, course.title, zorro);
+        setModalVisible(false);
+    };
+
+    const handlePrevious = () => {
+        if (currentIndex > 0) {
+            setCurrentIndex(currentIndex - 1);
+        }
+    };
     const isYouTubeLink = (url) => {
         return url.includes('youtube.com/watch') || url.includes('youtu.be/');
     };
@@ -157,6 +167,14 @@ const CourseView = () => {
         doc.save(`Certificado_${courseTitle}.pdf`);
     };
 
+    useEffect(() => {
+        if (course && currentIndex === course.content.length - 1) {
+            setShowFinishButton(true);
+        } else {
+            setShowFinishButton(false);
+        }
+    }, [currentIndex, course]);
+
     if (!course) return <div>Loading...</div>;
 
     return (
@@ -194,16 +212,24 @@ const CourseView = () => {
             <Modal
                 visible={modalVisible}
                 onCancel={handleCloseModal}
+                title={`Recurso ${currentIndex + 1}`}
                 footer={null}
                 destroyOnClose
                 afterClose={() => setCurrentIndex(0)}
+                width={window.innerWidth < 768 ? "90%" : "50%"}  // Responsividad del ancho del modal
             >
                 {course.content && currentIndex < course.content.length && (
                     <>
+                        <Progress
+                            percent={(currentIndex + 1) / course.content.length * 100}
+                            status="active"
+                            strokeColor={{ '0%': '#108ee9', '100%': '#87d068' }}
+                            className="mb-4"
+                        />
                         {isYouTubeLink(course.content[currentIndex]) ? (
                             <iframe
                                 width="100%"
-                                height="315"
+                                height={window.innerWidth < 768 ? "300" : "515"}  // Altura responsiva
                                 src={getYouTubeEmbedUrl(course.content[currentIndex])}
                                 title="Video de YouTube"
                                 frameBorder="0"
@@ -214,7 +240,7 @@ const CourseView = () => {
                             <iframe
                                 src={course.content[currentIndex]}
                                 width="100%"
-                                height="600"
+                                height={window.innerWidth < 768 ? "500" : "700"}  // Altura responsiva
                                 title="PDF Viewer"
                             ></iframe>
                         ) : (
@@ -226,11 +252,17 @@ const CourseView = () => {
                                 />
                             </div>
                         )}
-                        {currentIndex < course.content.length - 1 && (
-                            <div className="flex justify-end mt-4">
-                                <Button onClick={handleNext}>Siguiente</Button>
-                            </div>
-                        )}
+                        <div className="flex justify-end mt-4">
+                            {showFinishButton ? (
+                                <Button onClick={handleFinishCourse} type="primary" className="bg-gradient-to-r from-purple-500 to-emerald-400 text-white">
+                                    Finalizar Curso
+                                </Button>
+                            ) : (
+                                <Button onClick={handleNext} type="primary" className="bg-gradient-to-r from-purple-500 to-emerald-400 text-white">
+                                    Siguiente
+                                </Button>
+                            )}
+                        </div>
                     </>
                 )}
             </Modal>
