@@ -221,7 +221,7 @@ const CourseView = () => {
                 {course.content && currentIndex < course.content.length && (
                     <>
                         <Progress
-                            percent={(currentIndex + 1) / course.content.length * 100}
+                            percent={Math.round((currentIndex + 1) / course.content.length * 100)}
                             status="active"
                             strokeColor={{ '0%': '#108ee9', '100%': '#87d068' }}
                             className="mb-4"
