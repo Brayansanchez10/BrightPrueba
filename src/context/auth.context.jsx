@@ -93,7 +93,7 @@ export const AuthProvider = ({ children }) => {
         document.cookie = "anotherCookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         setUser(null);
         setRole(null);
-        sessionStorage.clear();
+        sessionStorage.clear("videoShown");
         // Redireccionar a la página de login
         window.location.replace("/");
       };
