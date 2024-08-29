@@ -10,6 +10,8 @@ const ALLOWED_FILE_TYPES = ['.mov', '.docx', '.pdf', '.jpg', '.png']; // Removid
 
 // Expresión regular para validar URLs de YouTube
 const YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
+const VIMEO_URL_REGEX = /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)$/i;
+
 
 const AssignContentModal = ({
   visible,
@@ -44,17 +46,26 @@ const AssignContentModal = ({
     if (imgRefs.current) imgRefs.current.forEach(img => (img.src = ""));
   };
   
-  const getYouTubeEmbedUrl = (url) => { //Esta función te permite tener una previsualización del video 
-    // Verifica si es un enlace de tipo 'youtu.be'
-    if (url.includes('youtu.be/')) {
+  const getEmbedUrl = (url) => {
+    // Verifica si es un enlace de tipo 'youtu.be' o 'youtube.com/watch'
+    if (YOUTUBE_URL_REGEX.test(url)) {
+      if (url.includes('youtu.be/')) {
         const videoId = url.split('youtu.be/')[1].split('?')[0];
         return `https://www.youtube.com/embed/${videoId}`;
+      }
+  
+      const urlParams = new URLSearchParams(new URL(url).search);
+      const videoId = urlParams.get('v');
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
     }
-
-    // Verifica si es un enlace de tipo 'youtube.com/watch'
-    const urlParams = new URLSearchParams(new URL(url).search);
-    const videoId = urlParams.get('v');
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+  
+    // Verifica si es un enlace de Vimeo
+    if (VIMEO_URL_REGEX.test(url)) {
+      const videoId = url.match(VIMEO_URL_REGEX)[4]; // El ID del video de Vimeo
+      return `https://player.vimeo.com/video/${videoId}`;
+    }
+  
+    return '';
   };
 
   const handleTextChange = (e) => {
@@ -139,10 +150,10 @@ const AssignContentModal = ({
       });
       return;
     }
-
+  
     const trimmedInput = textInput.trim();
-    // Validar URL de YouTube
-    if (!YOUTUBE_URL_REGEX.test(trimmedInput)) {
+    // Validar URL de YouTube o Vimeo
+    if (!YOUTUBE_URL_REGEX.test(trimmedInput) && !VIMEO_URL_REGEX.test(trimmedInput)) {
       notification.warning({
         message: t('assignContentModal.invalidVideoLink'),
         description: t('assignContentModal.invalidVideoLinkdescription'),
@@ -150,7 +161,7 @@ const AssignContentModal = ({
       });
       return;
     }
-
+  
     setLoading(true);
     try {
       if (editIndex !== null) {
@@ -259,18 +270,18 @@ const AssignContentModal = ({
                     }
                     key={index}
                   >
-                    {url.startsWith('https://www.youtube.com') || url.startsWith('https://youtu.be') ? (
-                      <div>
-                        <p className="font-bold text-lg text-gray-700">{t('assignContentModal.videoLink')}:</p>
-                        <iframe
-                          src={getYouTubeEmbedUrl(url)}
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          className="w-full h-64"
-                          title={`YouTube video ${index}`}
-                        />
-                      </div>
+                   {url.startsWith('https://www.youtube.com') || url.startsWith('https://youtu.be') || url.startsWith('https://vimeo.com') ? (
+                    <div>
+                      <p className="font-bold text-lg text-gray-700">{t('assignContentModal.videoLink')}:</p>
+                      <iframe
+                        src={getEmbedUrl(url)}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-64"
+                        title={`Video ${index}`}
+                      />
+                    </div>
                     ) : url.endsWith(".pdf") ? (
                       <div>
                         <p>{t('assignContentModal.downloadPDF')}</p>

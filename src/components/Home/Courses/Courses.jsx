@@ -6,6 +6,7 @@ import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useUserContext } from "../../../context/user/user.context";
 import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from 'react-i18next';
+import Logo from "../../../assets/img/hola.png";
 
 const Course = () => {
   const { t } = useTranslation("global"); //Pequeño ajuste de correcion de global, estaba mal escrito.
@@ -75,31 +76,59 @@ const Course = () => {
     currentPage * itemsPerPage
   );
 
+  const goBack = () => {
+    try {
+      window.history.back();
+    } catch (error) {
+      console.error("Error al regresar a la página anterior");
+    }
+  };
+
   return (
     <div className="bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400 min-h-screen overflow-hidden">
       <NavigationBar />
-      <div className="flex justify-center mt-14 font-black italic">
-        <h1 className="text-3xl bg-gradient-to-br from-red-300 to-pink-500 py-1 border-white
-        sm:text-4xl 
-        md:text-5xl 
-        lg:text-5xl font-bold text-white text-center flex justify-center border px-4 mx-2">
-          {t('courseComponent.courses_of')} {title}
-        </h1>
-      </div>
-      <div className="grid grid-cols-1 gap-1 gap-y-0 mt-10 mx-2 
-      sm:grid-cols-2 sm:gap-2 sm:gap-y-1 sm:mt-16 sm:mx-4
-      md:grid-cols-3 md:gap-3 md:gap-y-2 md:mt-20 md:mx-4
-      lg:grid-cols-4 lg:gap-4 lg:gap-y-0 lg:mt-20  lg:mx-6 ">
-        {paginatedCourses.map((course, index) => (
-          <HoverCard
-            key={index}
-            title={course.title}
-            description={course.description}
-            ruta={course.image}
-            onClick={() => handleCardClick(course)}
-          />
-        ))}
-      </div>
+      <a className="inline-block bg-purple-700 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded transition-colors duration-300 cursor-pointer m-1" onClick={goBack}> 
+        &#8678; {t('notFound.return')}
+      </a>
+      {filteredCourses.length > 0 && (
+        <div className="flex justify-center mt-14 font-black italic">
+          <h1 className="text-3xl bg-gradient-to-br from-red-300 to-pink-500 py-1 border-white
+          sm:text-4xl 
+          md:text-5xl 
+          lg:text-5xl font-bold text-white text-center flex justify-center border px-4 mx-2">
+            {t('courseComponent.courses_of')} {title}
+          </h1>
+        </div>
+      )}
+      {filteredCourses.length > 0 ? (
+        <div className="grid grid-cols-1 gap-1 gap-y-0 mt-10 mx-2 
+        sm:grid-cols-2 sm:gap-2 sm:gap-y-1 sm:mt-16 sm:mx-4
+        md:grid-cols-3 md:gap-3 md:gap-y-2 md:mt-20 md:mx-4
+        lg:grid-cols-4 lg:gap-4 lg:gap-y-0 lg:mt-20  lg:mx-6 ">
+          {paginatedCourses.map((course, index) => (
+            <HoverCard
+              key={index}
+              title={course.title}
+              description={course.description}
+              ruta={course.image}
+              onClick={() => handleCardClick(course)}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex justify-center items-center mt-20 px-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full">
+            <h2 className="text-xl font-bold mb-4 text-center text-gray-800 sm:text-2xl md:text-3xl lg:text-4xl">{title}</h2>
+            <img className="h-20 mb-4 mx-auto sm:h-24 md:h-36 lg:h-48" src={Logo} alt="Logo" />
+            <h2 className="text-xl font-bold mb-4 text-center text-gray-800 sm:text-2xl md:text-3xl lg:text-4xl">
+              {t('courseComponent.no_courses_available')}
+            </h2>
+            <p className="text-center text-gray-600 text-sm sm:text-base md:text-lg lg:text-xl">
+              {t('courseComponent.check_back_later')}
+            </p>
+          </div>
+        </div>
+      )}
       {totalPages > 1 && (
         <div className="flex justify-center mb-4 mt-8">
           <button

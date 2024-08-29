@@ -3,8 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useCoursesContext } from '../../../context/courses/courses.context';
 import { useAuth } from '../../../context/auth.context';
 import { useUserContext } from '../../../context/user/user.context';
-import { useCourseProgressContext } from '../../../context/courses/progress.context'; 
-import { Collapse, Button, Modal, Progress } from 'antd';
+import { Collapse, Button, Modal, Progress } from 'antd'; // Asegúrate de importar Progress
 import NavigationBar from '../NavigationBar';
 import { FaArrowLeft } from 'react-icons/fa';
 import jsPDF from 'jspdf';
@@ -17,7 +16,6 @@ const CourseView = () => {
     const { getCourse } = useCoursesContext();
     const { user } = useAuth();
     const { getUserById } = useUserContext();
-    const { getCourseProgress, updateCourseProgress } = useCourseProgressContext();  
     const [username, setUsername] = useState('');
     const [course, setCourse] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -53,40 +51,6 @@ const CourseView = () => {
         fetchUserData();
     }, [user, getUserById]);
 
-    useEffect(() => {
-        const fetchProgress = async () => {
-            if (user && course) {
-                try {
-                    const progress = await getCourseProgress(user.data.id, courseId);
-                    if (progress) {
-                        setCurrentViewedIndex(progress.currentIndex);
-                        setCurrentIndex(progress.currentIndex);
-                    }
-                } catch (error) {
-                    console.error('Error al obtener el progreso del curso:', error);
-                }
-            }
-        };
-
-        fetchProgress();
-    }, [user, course, getCourseProgress, courseId]);
-
-    useEffect(() => {
-        const saveProgress = async () => {
-            if (user && course && currentIndex !== null) {
-                try {
-                    await updateCourseProgress(user.data.id, courseId, currentIndex);
-                } catch (error) {
-                    console.error('Error al actualizar el progreso del curso:', error);
-                }
-            }
-        };
-    
-        const debounceSave = setTimeout(saveProgress, 500);
-    
-        return () => clearTimeout(debounceSave);
-    }, [currentIndex, user, course, updateCourseProgress, courseId]);
-
     const handleContentClick = (index) => {
         if (index <= currentViewedIndex + 1) {
             setCurrentIndex(index);
@@ -118,20 +82,30 @@ const CourseView = () => {
             setCurrentIndex(currentIndex - 1);
         }
     };
-
-    const isYouTubeLink = (url) => {
-        return url.includes('youtube.com/watch') || url.includes('youtu.be/');
+    const isVideoLink = (url) => {
+        return url.includes('youtube.com/watch') || url.includes('youtu.be/') || url.includes('vimeo.com/');
     };
 
-    const getYouTubeEmbedUrl = (url) => {
-        if (url.includes('youtu.be/')) {
-            const videoId = url.split('youtu.be/')[1];
-            return `https://www.youtube.com/embed/${videoId}`;
+    const getEmbedUrl = (url) => {
+        if (url.includes('youtu.be/') || url.includes('youtube.com/watch')) {
+            // Verifica si es un enlace de YouTube
+            if (url.includes('youtu.be/')) {
+                const videoId = url.split('youtu.be/')[1];
+                return `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1`;
+            }
+            const urlParams = new URLSearchParams(new URL(url).search);
+            const videoId = urlParams.get('v');
+            return videoId ? `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1` : '';
+        } else if (url.includes('vimeo.com/')) {
+            // Verifica si es un enlace de Vimeo
+            const videoId = url.split('vimeo.com/')[1];
+            return `https://player.vimeo.com/video/${videoId}?controls=1&background=0&byline=0&title=0&portrait=0&loop=0`;
+        } else if (url.includes('wistia.com/')) {
+            // Verifica si es un enlace de Wistia
+            const videoId = url.split('wistia.com/')[1].split('/')[0];
+            return `https://fast.wistia.net/embed/iframe/${videoId}?controls=1`;
         }
-    
-        const urlParams = new URLSearchParams(new URL(url).search);
-        const videoId = urlParams.get('v');
-        return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+        return ''; // Retorna una cadena vacía si no es un enlace válido
     };
 
     const generatePremiumCertificatePDF = (username, courseTitle, zorroImage) => {
@@ -141,54 +115,64 @@ const CourseView = () => {
             format: [21.6, 28]
         });
 
+        // Fondo blanco
         doc.setFillColor(255, 255, 255);
         doc.rect(0, 0, 21.6, 28, 'F');
 
-        doc.setDrawColor(218, 165, 32);
+        // Borde dorado
+        doc.setDrawColor(218, 165, 32); // Color dorado
         doc.setLineWidth(0.5);
         doc.rect(1, 1, 19.6, 25.6);
 
-        doc.setDrawColor(192, 192, 192);
+        // Borde interno
+        doc.setDrawColor(192, 192, 192); // Color gris claro
         doc.setLineWidth(0.3);
         doc.rect(1.5, 1.5, 18.6, 24.6);
 
+        // Título del certificado
         doc.setFont('times', 'bold');
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(28);
         doc.text('CERTIFICADO DE APRENDIZAJE', 10.8, 4.5, { align: 'center' });
 
+        // Nombre del usuario
         doc.setFont('times', 'bold');
-        doc.setTextColor(0, 0, 128);
+        doc.setTextColor(0, 0, 128); // Color azul oscuro
         doc.setFontSize(24);
         doc.text(`¡Felicitaciones ${username}!`, 10.8, 7.5, { align: 'center' });
 
+        // Texto de reconocimiento
         doc.setFont('times', 'italic');
-        doc.setTextColor(105, 105, 105);
+        doc.setTextColor(105, 105, 105); // Color gris
         doc.setFontSize(18);
         doc.text('Por completar exitosamente el curso', 10.8, 10.5, { align: 'center' });
 
+        // Título del curso
         doc.setFont('times', 'bold');
-        doc.setTextColor(0, 0, 0);
+        doc.setTextColor(0, 0, 0); // Color negro
         doc.setFontSize(22);
         doc.text(`"${courseTitle}"`, 10.8, 12.5, { align: 'center' });
 
+        // Imagen de Zorro
         if (zorroImage) {
             doc.addImage(zorroImage, 'JPEG', 8.8, 14, 4, 4);
         }
 
+        // Texto adicional
         doc.setFont('times', 'normal');
         doc.setFontSize(16);
-        doc.setTextColor(47, 79, 79);
+        doc.setTextColor(47, 79, 79); // Color verde azulado
         doc.text('Gracias por tu dedicación y esfuerzo.', 10.8, 19, { align: 'center' });
 
         doc.setFontSize(16);
-        doc.setTextColor(47, 79, 79);
+        doc.setTextColor(47, 79, 79); // Color verde azulado
         doc.text('¡Sigue aprendiendo y mejorando!', 10.8, 21, { align: 'center' });
 
         doc.setFontSize(14);
-        doc.setTextColor(192, 192, 192);
+        doc.setTextColor(192, 192, 192); // Color gris claro
         doc.text('Este certificado fue generado automáticamente.', 10.8, 23, { align: 'center' });
 
+        // Guardar el PDF
         doc.save(`Certificado_${courseTitle}.pdf`);
     };
 
@@ -226,7 +210,7 @@ const CourseView = () => {
                                     disabled={index > currentViewedIndex + 1}
                                 >
                                     <Button type="link" onClick={() => handleContentClick(index)}>
-                                        {isYouTubeLink(url) ? 'Ver Video de YouTube' : url.endsWith('.mp4') ? 'Ver Video' : url.endsWith('.pdf') ? 'Ver PDF' : 'Ver Imagen'}
+                                        {isVideoLink(url) ? 'Ver Video' : url.endsWith('.mp4') ? 'Ver Video' : url.endsWith('.pdf') ? 'Ver PDF' : 'Ver Imagen'}
                                     </Button>
                                 </Panel>
                             ))}
@@ -241,37 +225,34 @@ const CourseView = () => {
                 footer={null}
                 destroyOnClose
                 afterClose={() => setCurrentIndex(0)}
-                width={window.innerWidth < 768 ? "90%" : "50%"}
+                width={window.innerWidth < 768 ? "90%" : "50%"}  // Responsividad del ancho del modal
             >
                 {course.content && currentIndex < course.content.length && (
                     <>
                         <Progress
-                            percent={Math.round((currentIndex + 1) / course.content.length * 100)}
+                            percent={(currentIndex + 1) / course.content.length * 100}
                             status="active"
                             strokeColor={{ '0%': '#108ee9', '100%': '#87d068' }}
                             className="mb-4"
                         />
-                        {isYouTubeLink(course.content[currentIndex]) ? (
-                            <iframe
-                                key={currentIndex}
+                        {isVideoLink(course.content[currentIndex]) ? (
+                             <iframe
+                                title={`Video ${currentIndex + 1}`}
                                 width="100%"
-                                height={window.innerWidth < 768 ? "300" : "515"}
-                                src={getYouTubeEmbedUrl(course.content[currentIndex])}
-                                title="Video de YouTube"
+                                height="400"
+                                src={getEmbedUrl(course.content[currentIndex])}
                                 frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen
                             ></iframe>
                         ) : course.content[currentIndex].endsWith('.pdf') ? (
                             <iframe
-                                key={currentIndex}
                                 src={course.content[currentIndex]}
                                 width="100%"
-                                height={window.innerWidth < 768 ? "500" : "700"}
+                                height={window.innerWidth < 768 ? "500" : "700"}  // Altura responsiva
                                 title="PDF Viewer"
                             ></iframe>
                         ) : (
-                            <div key={currentIndex} className="flex justify-center">
+                            <div className="flex justify-center">
                                 <img
                                     src={course.content[currentIndex]}
                                     alt={`Content ${currentIndex}`}

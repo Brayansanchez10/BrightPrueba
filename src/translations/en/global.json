@@ -185,7 +185,10 @@
         "register": "Register",
         "close": "Close",
         "successful_registration": "Successful registration",
-        "success_message": "You have successfully registered for the course!"
+        "success_message": "You have successfully registered for the course!",
+        "no_courses_available": "Coming soon",
+        "check_back_later": "There are no courses available at the moment. New courses will be available soon! Please check back later.",
+        "no_courses_enrolled": "You are not enrolled in any courses yet."
     },
     "leftBarComponent": {
         "start": "Start",
@@ -472,5 +475,9 @@
         "cancelButton": "Cancel",
         "successMessage": "Account deleted successfully",
         "errorMessage": "Invalid or expired confirmation code."
+    },
+    "footer": {
+        "description": "Mesadoko © developed by Disruptive IT",
+         "copy_right": "Copyright 2024"
     }
 }

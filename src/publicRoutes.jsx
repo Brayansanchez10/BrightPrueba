@@ -5,7 +5,14 @@ function PublicRoute({ redirectToUser = "/Home", redirectToAdmin = "/admin" }) {
     const { loading, isAuthenticated, role } = useAuth();
 
     if (loading) {
-        return <div>Loading...</div>;  // Indicador de carga
+        return (
+            <div className="flex items-center justify-center h-screen">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-purple-700 border-opacity-70"></div>
+                <p className="mt-4 text-xl text-purple-700">Loading...</p>
+              </div>
+            </div>
+          );
     }
 
     if (isAuthenticated()) {

@@ -46,6 +46,9 @@ import PublicRoute from "./publicRoutes";
 import ActivationComponent from "./components/Activate";
 import DeleteAccountConfirmation from "./components/Dashboard/ProfileAdmin/eliminatedCode";
 
+//Footer
+import Footer from "./components/footer";
+
 function App() {
   return (
     <AuthProvider>
@@ -93,6 +96,7 @@ function App() {
                     <Route path="/activate" element={<ActivationComponent />} />
                     <Route path="*" element={<Navigate to="/notFound" />} />
                   </Routes>
+                  <Footer />
                 </CourseProgressProvider>
               </CoursesProvider>
             </CategoryProvider>
