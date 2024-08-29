@@ -11,6 +11,7 @@ const ALLOWED_FILE_TYPES = ['.mov', '.docx', '.pdf', '.jpg', '.png']; // Removid
 // Expresión regular para validar URLs de YouTube
 const YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
 const VIMEO_URL_REGEX = /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)$/i;
+const GOOGLE_DRIVE_URL_REGEX = /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
 
 
 const AssignContentModal = ({
@@ -53,18 +54,24 @@ const AssignContentModal = ({
         const videoId = url.split('youtu.be/')[1].split('?')[0];
         return `https://www.youtube.com/embed/${videoId}`;
       }
-  
+
       const urlParams = new URLSearchParams(new URL(url).search);
       const videoId = urlParams.get('v');
       return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
     }
-  
+
     // Verifica si es un enlace de Vimeo
     if (VIMEO_URL_REGEX.test(url)) {
       const videoId = url.match(VIMEO_URL_REGEX)[4]; // El ID del video de Vimeo
       return `https://player.vimeo.com/video/${videoId}`;
     }
-  
+
+    // Verifica si es un enlace de Google Drive
+    if (GOOGLE_DRIVE_URL_REGEX.test(url)) {
+      const fileId = url.match(GOOGLE_DRIVE_URL_REGEX)[3]; // El ID del archivo de Google Drive
+      return `https://drive.google.com/file/d/${fileId}/preview`;
+    }
+
     return '';
   };
 
@@ -152,8 +159,9 @@ const AssignContentModal = ({
     }
   
     const trimmedInput = textInput.trim();
-    // Validar URL de YouTube o Vimeo
-    if (!YOUTUBE_URL_REGEX.test(trimmedInput) && !VIMEO_URL_REGEX.test(trimmedInput)) {
+    
+    // Validar URL de YouTube, Vimeo o Google Drive
+    if (!YOUTUBE_URL_REGEX.test(trimmedInput) && !VIMEO_URL_REGEX.test(trimmedInput) && !GOOGLE_DRIVE_URL_REGEX.test(trimmedInput)) {
       notification.warning({
         message: t('assignContentModal.invalidVideoLink'),
         description: t('assignContentModal.invalidVideoLinkdescription'),
@@ -192,7 +200,7 @@ const AssignContentModal = ({
     } finally {
       setLoading(false);
     }
-  }, [textInput, selectedCourse, onClose, editIndex, t]);
+  }, [textInput, selectedCourse, editIndex, t]);
 
   const handleEditResource = (index, url) => {
     setEditIndex(index);
@@ -270,18 +278,18 @@ const AssignContentModal = ({
                     }
                     key={index}
                   >
-                   {url.startsWith('https://www.youtube.com') || url.startsWith('https://youtu.be') || url.startsWith('https://vimeo.com') ? (
-                    <div>
-                      <p className="font-bold text-lg text-gray-700">{t('assignContentModal.videoLink')}:</p>
-                      <iframe
-                        src={getEmbedUrl(url)}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-64"
-                        title={`Video ${index}`}
-                      />
-                    </div>
+                   {url.startsWith('https://www.youtube.com') || url.startsWith('https://youtu.be') || url.startsWith('https://vimeo.com') || GOOGLE_DRIVE_URL_REGEX.test(url) ? (
+                      <div>
+                        <p className="font-bold text-lg text-gray-700">{t('assignContentModal.videoLink')}:</p>
+                        <iframe
+                          src={getEmbedUrl(url)}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="w-full h-64"
+                          title={`Video ${index}`}
+                        />
+                      </div>
                     ) : url.endsWith(".pdf") ? (
                       <div>
                         <p>{t('assignContentModal.downloadPDF')}</p>

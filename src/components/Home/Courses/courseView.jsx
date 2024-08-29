@@ -83,12 +83,11 @@ const CourseView = () => {
         }
     };
     const isVideoLink = (url) => {
-        return url.includes('youtube.com/watch') || url.includes('youtu.be/') || url.includes('vimeo.com/');
+        return url.includes('youtube.com/watch') || url.includes('youtu.be/') || url.includes('vimeo.com/') || url.includes('drive.google.com/');
     };
 
     const getEmbedUrl = (url) => {
         if (url.includes('youtu.be/') || url.includes('youtube.com/watch')) {
-            // Verifica si es un enlace de YouTube
             if (url.includes('youtu.be/')) {
                 const videoId = url.split('youtu.be/')[1];
                 return `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1`;
@@ -97,15 +96,13 @@ const CourseView = () => {
             const videoId = urlParams.get('v');
             return videoId ? `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1` : '';
         } else if (url.includes('vimeo.com/')) {
-            // Verifica si es un enlace de Vimeo
             const videoId = url.split('vimeo.com/')[1];
             return `https://player.vimeo.com/video/${videoId}?controls=1&background=0&byline=0&title=0&portrait=0&loop=0`;
-        } else if (url.includes('wistia.com/')) {
-            // Verifica si es un enlace de Wistia
-            const videoId = url.split('wistia.com/')[1].split('/')[0];
-            return `https://fast.wistia.net/embed/iframe/${videoId}?controls=1`;
+        } else if (url.includes('drive.google.com/')) {
+            const videoId = url.match(/[-\w]{25,}/); // Extrae el ID del archivo
+            return videoId ? `https://drive.google.com/file/d/${videoId}/preview` : '';
         }
-        return ''; // Retorna una cadena vacía si no es un enlace válido
+        return '';
     };
 
     const generatePremiumCertificatePDF = (username, courseTitle, zorroImage) => {
@@ -210,7 +207,7 @@ const CourseView = () => {
                                     disabled={index > currentViewedIndex + 1}
                                 >
                                     <Button type="link" onClick={() => handleContentClick(index)}>
-                                        {isVideoLink(url) ? 'Ver Video' : url.endsWith('.mp4') ? 'Ver Video' : url.endsWith('.pdf') ? 'Ver PDF' : 'Ver Imagen'}
+                                        {isVideoLink(url) ? 'Ver Video de YouTube' : url.endsWith('.mp4') ? 'Ver Video' : url.endsWith('.pdf') ? 'Ver PDF' : 'Ver Imagen'}
                                     </Button>
                                 </Panel>
                             ))}
@@ -236,7 +233,7 @@ const CourseView = () => {
                             className="mb-4"
                         />
                         {isVideoLink(course.content[currentIndex]) ? (
-                             <iframe
+                            <iframe
                                 title={`Video ${currentIndex + 1}`}
                                 width="100%"
                                 height="400"
