@@ -46,15 +46,14 @@ function NewPassword() {
     }, [formik.values.password, formik.values.confirmPassword]);
 
     return (
-        <div className="flex min-h-screen bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600">
+        <div className="flex min-h-screen bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600 justify-center items-center">
             <ToastContainer />
-            <div className="flex w-1/2 mx-auto justify-center items-center">
-                <div className="p-16 bg-white rounded-3xl shadow-2xl w-4/5 bg-gradient-to-tl from-purple-700 to-blue-600">
-                    <h2 className="text-5xl font-black text-center mb-10 text-white">{t('new_password.change_password')}</h2>
-                    <form onSubmit={formik.handleSubmit} className="py-10 flex flex-col space-y-6">
-                       
+            <div className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 p-8">
+                <div className="p-8 bg-white rounded-3xl shadow-2xl bg-gradient-to-tl from-purple-700 to-blue-600">
+                    <h2 className="text-3xl md:text-4xl lg:text-4xl font-black text-center mb-6 text-white">{t('new_password.change_password')}</h2>
+                    <form onSubmit={formik.handleSubmit} className="py-6 flex flex-col space-y-4">
                         <div>
-                            <label className="text-lg font-bold text-white block mb-4 mx-4">{t('new_password.new_password')}</label>
+                            <label className="text-lg font-bold text-white block mb-2">{t('new_password.new_password')}</label>
                             <div className="relative">
                                 <input
                                     type={showPassword ? 'text' : 'password'}
@@ -62,7 +61,7 @@ function NewPassword() {
                                     value={formik.values.password}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    className="w-full p-4 border border-cyan-300 rounded-full bg-pink-100 placeholder-gray-450 focus:outline-sky-600 focus:border-sky-950 focus:bg-slate-200"
+                                    className="w-full p-3 border border-cyan-300 rounded-full bg-pink-100 placeholder-gray-450 focus:outline-sky-600 focus:border-sky-950 focus:bg-slate-200"
                                     placeholder={t('new_password.new_password')}
                                 />
                                 <button
@@ -78,7 +77,7 @@ function NewPassword() {
                             ) : null}
                         </div>
                         <div>
-                            <label className="text-lg font-bold text-white block mb-4 mx-4">{t('new_password.confirm_password')}</label>
+                            <label className="text-lg font-bold text-white block mb-2">{t('new_password.confirm_password')}</label>
                             <div className="relative">
                                 <input
                                     type={showConfirmPassword ? 'text' : 'password'}
@@ -86,7 +85,7 @@ function NewPassword() {
                                     value={formik.values.confirmPassword}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    className="w-full p-4 border border-cyan-300 rounded-full bg-pink-100 placeholder-gray-450 focus:outline-sky-600 focus:border-sky-950 focus:bg-slate-200"
+                                    className="w-full p-3 border border-cyan-300 rounded-full bg-pink-100 placeholder-gray-450 focus:outline-sky-600 focus:border-sky-950 focus:bg-slate-200"
                                     placeholder={t('new_password.confirm_password')}
                                 />
                                 <button
@@ -104,7 +103,7 @@ function NewPassword() {
                         {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
                         <button
                             type="submit"
-                            className={`w-full py-4 px-8 font-medium text-white rounded-full text-xl ${passwordsMatch ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'} disabled:opacity-50`}
+                            className={`w-full py-3 px-6 font-medium text-white rounded-full text-lg ${passwordsMatch ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'} disabled:opacity-50`}
                             disabled={!formik.isValid || !passwordsMatch}
                         >
                             {t('new_password.change_password')}
