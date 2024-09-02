@@ -8,6 +8,9 @@ import NavigationBar from '../NavigationBar';
 import { FaArrowLeft } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import zorro from '../../../assets/img/Zorro.jpeg';
+import derechaabajo from '../../../assets/img/DerechaAbajo.jpeg';
+import izquierdaarriba from '../../../assets/img/IzquierdaArriba.jpeg';
+import { Anothershabby_trial } from '../../../Tipografy/Anothershabby_trial-normal';
 
 const { Panel } = Collapse;
 
@@ -73,7 +76,7 @@ const CourseView = () => {
     };
 
     const handleFinishCourse = () => {
-        generatePremiumCertificatePDF(username, course.title, zorro);
+        generatePremiumCertificatePDF(username, course.title, zorro, derechaabajo, izquierdaarriba);
         setModalVisible(false);
     };
 
@@ -105,70 +108,86 @@ const CourseView = () => {
         return '';
     };
 
-    const generatePremiumCertificatePDF = (username, courseTitle, zorroImage) => {
+    const generatePremiumCertificatePDF = (username, courseTitle, zorroImage, derechaabajo, izquierdaarriba) => {
         const doc = new jsPDF({
-            orientation: 'portrait',
+            orientation: 'landscape',
             unit: 'cm',
-            format: [21.6, 28]
+            format: [28, 21.6] // Tamaño A4 en centímetros
         });
-
+    
         // Fondo blanco
-        doc.setFillColor(255, 255, 255);
-        doc.rect(0, 0, 21.6, 28, 'F');
-
-        // Borde dorado
-        doc.setDrawColor(218, 165, 32); // Color dorado
-        doc.setLineWidth(0.5);
-        doc.rect(1, 1, 19.6, 25.6);
-
-        // Borde interno
-        doc.setDrawColor(192, 192, 192); // Color gris claro
-        doc.setLineWidth(0.3);
-        doc.rect(1.5, 1.5, 18.6, 24.6);
-
+        doc.setFillColor(240, 248, 255);
+        doc.rect(0, 0, 28, 21.6, 'F');
+    
+        // Añadir imágenes de bordes
+        if (izquierdaarriba) {
+            doc.addImage(izquierdaarriba, 'JPEG', -1, -1, 10, 10);
+        }
+        if (derechaabajo) {
+            doc.addImage(derechaabajo, 'JPEG', 19, 13, 10, 10);
+        }
+    
+        // Agregar fuente personalizada
+        doc.addFileToVFS('Anothershabby.ttf', Anothershabby_trial);
+        doc.addFont('Anothershabby.ttf', 'AnotherShabby', 'normal');
+        doc.setFont('AnotherShabby'); // Aplicar fuente personalizada
+    
         // Título del certificado
-        doc.setFont('times', 'bold');
+        doc.setFont('AnotherShabby', 'normal');
         doc.setTextColor(0, 0, 0);
-        doc.setFontSize(28);
-        doc.text('CERTIFICADO DE APRENDIZAJE', 10.8, 4.5, { align: 'center' });
-
-        // Nombre del usuario
-        doc.setFont('times', 'bold');
-        doc.setTextColor(0, 0, 128); // Color azul oscuro
-        doc.setFontSize(24);
-        doc.text(`¡Felicitaciones ${username}!`, 10.8, 7.5, { align: 'center' });
-
-        // Texto de reconocimiento
-        doc.setFont('times', 'italic');
-        doc.setTextColor(105, 105, 105); // Color gris
-        doc.setFontSize(18);
-        doc.text('Por completar exitosamente el curso', 10.8, 10.5, { align: 'center' });
-
-        // Título del curso
-        doc.setFont('times', 'bold');
-        doc.setTextColor(0, 0, 0); // Color negro
-        doc.setFontSize(22);
-        doc.text(`"${courseTitle}"`, 10.8, 12.5, { align: 'center' });
+        doc.setFontSize(70);
+        doc.text('CERTIFICADO', 14, 4.5, { align: 'center' });
+    
+        // Subtítulo
+        doc.setFontSize(25);
+        doc.setFont('AnotherShabby', 'normal');
+        doc.setTextColor(0, 0, 0);
+        doc.text('De aprendizaje', 18, 5.5, { align: 'center' });
 
         // Imagen de Zorro
         if (zorroImage) {
-            doc.addImage(zorroImage, 'JPEG', 8.8, 14, 4, 4);
+            doc.addImage(zorroImage, 'JPEG', 12, 7, 4, 4);
         }
 
+        // Texto de reconocimiento
+        doc.setFont('times', 'bold');
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(18);
+        doc.text('ESTE CERTIFICADO SE OTORGA A', 14, 13.0, { align: 'center' });
+    
+        // Nombre del usuario
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(65);
+        doc.setFont('AnotherShabby', 'normal');
+        doc.text(`${username}`, 14, 15.5, { align: 'center' });
+
+        
+        // Línea debajo del nombre de usuario
+        doc.setLineWidth(0.1); // Grosor de la línea
+        doc.setDrawColor(0, 0, 0); // Color negro
+        doc.line(6, 16, 22, 16); // Coordenadas de inicio y fin de la línea
+    
+    
+        // Título del curso y Texto adicional
+        doc.setFont('times', 'normal');
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(14);
+        doc.text(`Por completar exitosamente el curso "${courseTitle}". `, 11, 17.5, { align: 'center' });
+    
         // Texto adicional
         doc.setFont('times', 'normal');
-        doc.setFontSize(16);
-        doc.setTextColor(47, 79, 79); // Color verde azulado
-        doc.text('Gracias por tu dedicación y esfuerzo.', 10.8, 19, { align: 'center' });
-
-        doc.setFontSize(16);
-        doc.setTextColor(47, 79, 79); // Color verde azulado
-        doc.text('¡Sigue aprendiendo y mejorando!', 10.8, 21, { align: 'center' });
-
         doc.setFontSize(14);
-        doc.setTextColor(192, 192, 192); // Color gris claro
-        doc.text('Este certificado fue generado automáticamente.', 10.8, 23, { align: 'center' });
-
+        doc.setTextColor(0, 0, 0);
+        doc.text('Gracias por tu dedicación y', 19, 17.5, { align: 'center' });
+    
+        doc.setFontSize(14);
+        doc.setTextColor(0, 0, 0);
+        doc.text('esfuerzo. ¡Sigue aprendiendo y mejorando!', 14, 18.0, { align: 'center' });
+    
+        doc.setFontSize(14);
+        doc.setTextColor(192, 192, 192);
+        doc.text('Este certificado fue generado automáticamente.', 14, 19.5, { align: 'center' });
+    
         // Guardar el PDF
         doc.save(`Certificado_${courseTitle}.pdf`);
     };
