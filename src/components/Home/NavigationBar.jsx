@@ -16,7 +16,6 @@ function NavigationBar({ onSearch }) {
   const [username, setUsername] = useState("");
   const [userImage, setUserImage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [logoutTimer, setLogoutTimer] = useState(null);
 
   const menuRef = useRef(null);
   const welcomeModalRef = useRef(null);
