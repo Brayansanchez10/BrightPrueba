@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useUserContext } from '../../context/user/user.context.jsx';
 import { useCoursesContext } from '../../context/courses/courses.context.jsx';
 import { useTranslation } from 'react-i18next';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 const Cards = ({ isLeftBarVisible }) => {
   const { usersData } = useUserContext();
-  const { courses } = useCoursesContext(); // Obtén los cursos desde el contexto
+  const { courses } = useCoursesContext();
   const { t } = useTranslation("global");
   const [stats, setStats] = useState({
     cursos: 0,
@@ -19,88 +23,106 @@ const Cards = ({ isLeftBarVisible }) => {
     const inactiveUsers = usersData.filter(user => !user.state);
 
     setStats({
-      cursos: courses.length, // Actualiza el número de cursos
+      cursos: courses.length,
       usuariosRegistrados: usersData.length,
       usuariosActivos: activeUsers.length,
       usuariosInactivos: inactiveUsers.length,
     });
-  }, [usersData, courses]); // Incluye `courses` en las dependencias
+  }, [usersData, courses]);
 
-  const maxUsers = Math.max(stats.usuariosRegistrados, stats.usuariosActivos, stats.usuariosInactivos, stats.cursos);
+  const data = {
+    labels: [
+      t('cardsComponent.activeUsers'),
+      t('cardsComponent.inactiveUsers'),
+      t('cardsComponent.courses'),
+      t('cardsComponent.registeredUsers')
+    ],
+    datasets: [
+      {
+        label: t('cardsComponent.statistics'),
+        data: [stats.usuariosActivos, stats.usuariosInactivos, stats.cursos, stats.usuariosRegistrados],
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(75, 192, 192, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false, 
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return `${context.label}: ${context.raw}`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+    layout: {
+      padding: {
+        left: 0, 
+        right: 0, 
+      }
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-1 justify-center mt-10 mx-2">
-        <div className="bg-green-200 border-green-400 border-2 rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 transition duration-300 flex flex-col items-center w-full">
-          <div className="w-16 h-16 bg-green-300 rounded-full flex items-center justify-center mt-6 mb-4">
-            <span className="text-2xl font-black">{stats.usuariosActivos}</span>
+    <div className="p-6 space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col items-center">
+          <div className="w-16 h-16 bg-green-200 rounded-full flex items-center justify-center mb-4">
+            <span className="text-2xl font-bold">{stats.usuariosActivos}</span>
           </div>
-          <div className="text-center px-2">
-            <h3 className="text-xl font-extrabold mb-2">{t('cardsComponent.activeUsers')}</h3>
-            <p className="text-base font-medium">{t('cardsComponent.activeUsersDescription')}</p>
-          </div>
+          <h3 className="text-xl font-semibold mb-2">{t('cardsComponent.activeUsers')}</h3>
+          <p>{t('cardsComponent.activeUsersDescription')}</p>
         </div>
-        <div className="bg-red-200 border-red-400 border-2 rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 transition duration-300 flex flex-col items-center w-full">
-          <div className="w-16 h-16 bg-red-300 rounded-full flex items-center justify-center mt-6 mb-4">
-            <span className="text-2xl font-black">{stats.usuariosInactivos}</span>
+        <div className="bg-gradient-to-r from-red-400 to-red-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col items-center">
+          <div className="w-16 h-16 bg-red-200 rounded-full flex items-center justify-center mb-4">
+            <span className="text-2xl font-bold">{stats.usuariosInactivos}</span>
           </div>
-          <div className="text-center px-2">
-            <h3 className="text-xl font-extrabold mb-2">{t('cardsComponent.inactiveUsers')}</h3>
-            <p className="text-base font-medium">{t('cardsComponent.inactiveUsersDescription')}</p>
-          </div>
+          <h3 className="text-xl font-semibold mb-2">{t('cardsComponent.inactiveUsers')}</h3>
+          <p>{t('cardsComponent.inactiveUsersDescription')}</p>
         </div>
-        <div className="bg-purple-200 border-purple-400 border-2 rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 transition duration-300 flex flex-col items-center w-full">
-          <div className="w-16 h-16 bg-purple-300 rounded-full flex items-center justify-center mt-6 mb-4">
-            <span className="text-2xl font-black">{stats.cursos}</span>
+        <div className="bg-gradient-to-r from-purple-400 to-purple-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col items-center">
+          <div className="w-16 h-16 bg-purple-200 rounded-full flex items-center justify-center mb-4">
+            <span className="text-2xl font-bold">{stats.cursos}</span>
           </div>
-          <div className="text-center px-2">
-            <h3 className="text-xl font-extrabold mb-2">{t('cardsComponent.courses')}</h3>
-            <p className="text-base font-medium">{t('cardsComponent.coursesDescription')}</p>
-          </div>
+          <h3 className="text-xl font-semibold mb-2">{t('cardsComponent.courses')}</h3>
+          <p>{t('cardsComponent.coursesDescription')}</p>
         </div>
-        <div className="bg-yellow-200 border-yellow-400 border-2 rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 transition duration-300 flex flex-col items-center w-full">
-          <div className="w-16 h-16 bg-yellow-300 rounded-full flex items-center justify-center mt-6 mb-4">
-            <span className="text-2xl font-black">{stats.usuariosRegistrados}</span>
+        <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col items-center">
+          <div className="w-16 h-16 bg-yellow-200 rounded-full flex items-center justify-center mb-4">
+            <span className="text-2xl font-bold">{stats.usuariosRegistrados}</span>
           </div>
-          <div className="text-center px-2">
-            <h3 className="text-xl font-extrabold mb-2">{t('cardsComponent.registeredUsers')}</h3>
-            <p className="text-base font-medium">{t('cardsComponent.registeredUsersDescription')}</p>
-          </div>
+          <h3 className="text-xl font-semibold mb-2">{t('cardsComponent.registeredUsers')}</h3>
+          <p>{t('cardsComponent.registeredUsersDescription')}</p>
         </div>
       </div>
-      <div className="flex justify-center w-full">
-        <div className="bg-gradient-to-b from-indigo-700 to-indigo-400 rounded-lg shadow-md w-full lg:w-11/12 mb-6 py-4 mt-10 mx-2">
-          <h2 className="text-4xl font-extrabold text-center text-white">{t('cardsComponent.statistics')}</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-10 text-center mt-10">
-            <div className="flex flex-col items-center">
-              <h3 className="text-2xl text-gray-100">{t('cardsComponent.activeUsers')}</h3>
-              <div className="relative mt-4 w-12 h-24 bg-green-200 rounded-lg overflow-hidden">
-                <div className="absolute bottom-0 w-full bg-gradient-to-t from-green-500 to-green-300 transition-all duration-300 ease-out" style={{ height: `${(stats.usuariosActivos / maxUsers) * 100}%` }}></div>
-              </div>
-              <p className="mt-4 text-3xl text-gray-100">{stats.usuariosActivos}</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <h3 className="text-2xl text-white">{t('cardsComponent.inactiveUsers')}</h3>
-              <div className="relative mt-4 w-12 h-24 bg-red-200 rounded-lg overflow-hidden">
-                <div className="absolute bottom-0 w-full bg-gradient-to-t from-red-500 to-red-300 transition-all duration-300 ease-out" style={{ height: `${(stats.usuariosInactivos / maxUsers) * 100}%` }}></div>
-              </div>
-              <p className="mt-4 text-3xl text-gray-100">{stats.usuariosInactivos}</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <h3 className="text-2xl text-white">{t('cardsComponent.courses')}</h3>
-              <div className="relative mt-4 w-12 h-24 bg-purple-200 rounded-lg overflow-hidden">
-                <div className="absolute bottom-0 w-full bg-gradient-to-t from-purple-500 to-purple-300 transition-all duration-700 ease-out" style={{ height: `${(stats.cursos / maxUsers) * 100}%` }}></div>
-              </div>
-              <p className="mt-4 text-3xl text-gray-100">{stats.cursos}</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <h3 className="text-2xl text-white">{t('cardsComponent.registeredUsers')}</h3>
-              <div className="relative mt-4 w-12 h-24 bg-yellow-200 rounded-lg overflow-hidden">
-                <div className="absolute bottom-0 w-full bg-gradient-to-t from-yellow-500 to-yellow-300 transition-all duration-700 ease-out" style={{ height: `${(stats.usuariosRegistrados / maxUsers) * 100}%` }}></div>
-              </div>
-              <p className="mt-4 text-3xl text-gray-100">{stats.usuariosRegistrados}</p>
-            </div>
-          </div>
+
+      <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-6">
+        <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">{t('cardsComponent.statistics')}</h2>
+        <div className="w-full h-80">
+          <Bar data={data} options={options} />
         </div>
       </div>
     </div>

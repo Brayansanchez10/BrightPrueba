@@ -10,45 +10,34 @@ const LeftBar = ({ onVisibilityChange }) => {
   const { t } = useTranslation("global");
 
   const [isVisible, setIsVisible] = useState(false);
-  const [logoutTimer, setLogoutTimer] = useState(null);
-  const logoutTimerRef = useRef(logoutTimer);
-
-  useEffect(() => {
-    logoutTimerRef.current = logoutTimer;
-  }, [logoutTimer]);
+  const logoutTimerRef = useRef(null); 
 
   const resetTimer = () => {
     if (logoutTimerRef.current) {
       clearTimeout(logoutTimerRef.current);
     }
 
-    setLogoutTimer(
-      setTimeout(() => {
-        handleLogout();
-      }, 8 * 60 * 1000)
-    );
+    logoutTimerRef.current = setTimeout(() => {
+      handleLogout(); 
+    }, 15 * 60 * 1000);
   };
 
   useEffect(() => {
     const handleActivity = () => {
-      resetTimer();
+      resetTimer(); 
     };
 
-    resetTimer();
+    resetTimer(); 
 
-    const mouseMoveListener = document.addEventListener(
-      "mousemove",
-      handleActivity
-    );
-    const keyPressListener = document.addEventListener(
-      "keypress",
-      handleActivity
-    );
+    document.addEventListener("mousemove", handleActivity);
+    document.addEventListener("keypress", handleActivity);
 
     return () => {
       document.removeEventListener("mousemove", handleActivity);
       document.removeEventListener("keypress", handleActivity);
-      clearTimeout(logoutTimerRef.current);
+      if (logoutTimerRef.current) {
+        clearTimeout(logoutTimerRef.current); 
+      }
     };
   }, []);
 
@@ -58,7 +47,7 @@ const LeftBar = ({ onVisibilityChange }) => {
       localStorage.removeItem("token");
       setTimeout(() => {
         navigate("/");
-      }, 5000); // Espera 5 segundos antes de redirigir al usuario al login
+      }, 5000); 
     } catch (error) {
       console.error("Error al hacer logout:", error);
     }
