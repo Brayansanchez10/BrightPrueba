@@ -16,6 +16,7 @@ function NavigationBar({ onSearch }) {
   const [username, setUsername] = useState("");
   const [userImage, setUserImage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [logoutTimer, setLogoutTimer] = useState(null);
 
   const menuRef = useRef(null);
   const welcomeModalRef = useRef(null);
@@ -42,8 +43,6 @@ function NavigationBar({ onSearch }) {
         try {
           const userData = await getUserById(user.data.id);
           setUsername(userData.username);
-
-          // Si userImage es "null", establecerlo como una cadena vacía
           setUserImage(userData.userImage === "null" ? "" : userData.userImage);
         } catch (error) {
           console.error("Error al obtener datos del usuario:", error);
@@ -72,9 +71,43 @@ function NavigationBar({ onSearch }) {
     };
   }, [menuRef, welcomeModalRef]);
 
+  useEffect(() => {
+    const resetState = () => {
+      setIsMenuVisible(false);
+      setShowWelcomeModal(false);
+    };
+    if (logoutTimer) {
+      clearTimeout(logoutTimer); 
+    }
+    const newLogoutTimer = setTimeout(async () => {
+      await handleLogout(); 
+    }, 3600000); 
+    setLogoutTimer(newLogoutTimer);
+
+    return () => clearTimeout(newLogoutTimer); 
+  }, [isMenuVisible, showWelcomeModal]);
+
+  const handleMouseMove = () => {
+    if (logoutTimer) {
+      clearTimeout(logoutTimer);
+    }
+    const newLogoutTimer = setTimeout(async () => {
+      await handleLogout(); 
+    }, 10000);
+    setLogoutTimer(newLogoutTimer);
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      if (logoutTimer) clearTimeout(logoutTimer); 
+    };
+  }, [logoutTimer]);
+
   return (
     <nav className="bg-gradient-to-r from-purple-700 to-pink-600 shadow-orange shadow-sky-300 p-2 md:p-3 flex justify-between items-center w-full">
-      {/* Sección izquierda */}
       <div className="flex items-center">
         <BiSearch className="text-white" size="24px" />
         <input
@@ -91,8 +124,6 @@ function NavigationBar({ onSearch }) {
           {t('navigationBar.my_courses')}
         </Link>
       </div>
-
-      {/* Sección central */}
       <div className="flex justify-center items-center md:mr-20">
         <Link to="/Home" className="flex justify-center items-center">
           <span className="text-white font-black text-xl md:text-2xl hidden sm:block">
@@ -104,8 +135,6 @@ function NavigationBar({ onSearch }) {
           </span>
         </Link>
       </div>
-
-      {/* Sección derecha */}
       <div className="flex items-center">
         <div
           className="relative text-white md:text-lg font-bold mr-2 md:mr-4 cursor-pointer text-base hidden sm:block"
@@ -157,8 +186,6 @@ function NavigationBar({ onSearch }) {
               <FaUserCircle className="h-8 w-8 text-white" />
             )}
           </div>
-
-          {/* Menú desplegable */}
           {isMenuVisible && (
             <div
               ref={menuRef}

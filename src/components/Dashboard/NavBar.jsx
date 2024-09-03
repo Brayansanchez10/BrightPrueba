@@ -34,12 +34,10 @@ const Navbar = () => {
         try {
           const userData = await getUserById(user.data.id);
           setUsername(userData.username);
-
-          // Verificar si userImage es "null" (cadena de texto) o null
           setUserImage(userData.userImage !== "null" ? userData.userImage : null);
         } catch (error) {
           console.error(error);
-          setUserImage(null); // En caso de error, mostrar el ícono predeterminado
+          setUserImage(null); 
         }
       }
     };
@@ -102,7 +100,7 @@ const Navbar = () => {
                 />
               ) : (
                 <FaUserCircle
-                  size="48px" // Ajusta el tamaño del icono según sea necesario
+                  size="48px"
                   className="cursor-pointer text-white"
                   onClick={toggleMenu}
                 />
