@@ -20,6 +20,47 @@ function NavigationBar({ onSearch }) {
   const menuRef = useRef(null);
   const welcomeModalRef = useRef(null);
 
+  const [logoutTimer, setLogoutTimer] = useState(null);
+  const logoutTimerRef = useRef(logoutTimer);
+
+  useEffect(() => {
+    logoutTimerRef.current = logoutTimer;
+  }, [logoutTimer]);
+
+  const resetTimer = () => {
+    if (logoutTimerRef.current) {
+      clearTimeout(logoutTimerRef.current);
+    }
+
+    setLogoutTimer(
+      setTimeout(() => {
+        handleLogout();
+      }, 3600000) // 1 hora de inactividad
+    );
+  };
+
+  useEffect(() => {
+    const handleActivity = () => {
+      resetTimer();
+    };
+
+    // Resetear el temporizador cuando haya actividad
+    const mouseMoveListener = document.addEventListener(
+      "mousemove",
+      handleActivity
+    );
+    const keyPressListener = document.addEventListener(
+      "keypress",
+      handleActivity
+    );
+
+    return () => {
+      document.removeEventListener("mousemove", handleActivity);
+      document.removeEventListener("keypress", handleActivity);
+      clearTimeout(logoutTimerRef.current);
+    };
+  }, []);
+
   const handleLogout = async () => {
     try {
       await logout();
