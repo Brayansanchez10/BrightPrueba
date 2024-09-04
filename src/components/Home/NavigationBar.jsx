@@ -19,24 +19,16 @@ function NavigationBar({ onSearch }) {
 
   const menuRef = useRef(null);
   const welcomeModalRef = useRef(null);
-
-  const [logoutTimer, setLogoutTimer] = useState(null);
-  const logoutTimerRef = useRef(logoutTimer);
-
-  useEffect(() => {
-    logoutTimerRef.current = logoutTimer;
-  }, [logoutTimer]);
+  const logoutTimerRef = useRef(null);
 
   const resetTimer = () => {
     if (logoutTimerRef.current) {
       clearTimeout(logoutTimerRef.current);
     }
 
-    setLogoutTimer(
-      setTimeout(() => {
-        handleLogout();
-      }, 3600000) // 1 hora de inactividad
-    );
+    logoutTimerRef.current = setTimeout(() => {
+      handleLogout();
+    }, 3600000); // 1 hora de inactividad
   };
 
   useEffect(() => {
@@ -45,19 +37,18 @@ function NavigationBar({ onSearch }) {
     };
 
     // Resetear el temporizador cuando haya actividad
-    const mouseMoveListener = document.addEventListener(
-      "mousemove",
-      handleActivity
-    );
-    const keyPressListener = document.addEventListener(
-      "keypress",
-      handleActivity
-    );
+    document.addEventListener("mousemove", handleActivity);
+    document.addEventListener("keypress", handleActivity);
+
+    // Establecer temporizador inicialmente
+    resetTimer();
 
     return () => {
       document.removeEventListener("mousemove", handleActivity);
       document.removeEventListener("keypress", handleActivity);
-      clearTimeout(logoutTimerRef.current);
+      if (logoutTimerRef.current) {
+        clearTimeout(logoutTimerRef.current);
+      }
     };
   }, []);
 
@@ -110,41 +101,6 @@ function NavigationBar({ onSearch }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuRef, welcomeModalRef]);
-
-  useEffect(() => {
-    const resetState = () => {
-      setIsMenuVisible(false);
-      setShowWelcomeModal(false);
-    };
-    if (logoutTimer) {
-      clearTimeout(logoutTimer); 
-    }
-    const newLogoutTimer = setTimeout(async () => {
-      await handleLogout(); 
-    }, 3600000); 
-    setLogoutTimer(newLogoutTimer);
-
-    return () => clearTimeout(newLogoutTimer); 
-  }, [isMenuVisible, showWelcomeModal]);
-
-  const handleMouseMove = () => {
-    if (logoutTimer) {
-      clearTimeout(logoutTimer);
-    }
-    const newLogoutTimer = setTimeout(async () => {
-      await handleLogout(); 
-    }, 10000);
-    setLogoutTimer(newLogoutTimer);
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      if (logoutTimer) clearTimeout(logoutTimer); 
-    };
-  }, [logoutTimer]);
 
   return (
     <nav className="bg-gradient-to-r from-purple-700 to-pink-600 shadow-orange shadow-sky-300 p-2 md:p-3 flex justify-between items-center w-full">
