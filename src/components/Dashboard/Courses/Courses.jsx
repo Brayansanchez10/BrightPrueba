@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input } from "antd";
-import Swal from "sweetalert2";
+import { Button, Input, message } from "antd";
 import {
   ReloadOutlined,
   InfoCircleOutlined,
@@ -14,7 +13,7 @@ import { useCoursesContext } from "../../../context/courses/courses.context";
 import CreateCourseForm from "../Courses/CreateCourseForm";
 import UpdateCourseForm from "../Courses/UpdateCourseForm";
 import Navbar from "../NavBar";
-import CreateResourceModal from "../Resources/CreateResourceModal";
+import AssignContentModal from "./AssignContentModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import CourseDetailsModal from "./CourseDetailsModal";
 import NotifyCourseModal from "./NotifyCourseModal";
@@ -27,7 +26,7 @@ const DataTablete = () => {
   const {
     getAllCourses,
     courses,
-    crearRecurso,
+    asignarContenido,
     deleteCourse,
     updateCourse,
   } = useCoursesContext();
@@ -36,15 +35,16 @@ const DataTablete = () => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [resourceFile, setResourceFile] = useState(null);
+  const [contentFile, setContentFile] = useState(null);
   const [itemsPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
   const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
-  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+  const [isAssignModalVisible, setIsAssignModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [courseToDelete, setCourseToDelete] = useState(null);
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
   const [selectedCourseDetails, setSelectedCourseDetails] = useState(null);
+  const [isNotifyModalVisible, setIsNotifyModalVisible] = useState(false);
 
   useEffect(() => {
     getUsers();
@@ -76,6 +76,8 @@ const DataTablete = () => {
   };
 
   const handleUpdateCourse = async (updatedCourse) => {
+    message.success(t('courses.updateSuccess'));
+    window.location.reload();
     setShowUpdateForm(false);
     setSelectedCourse(null);
   };
@@ -85,27 +87,19 @@ const DataTablete = () => {
     setShowCreateForm(false);
   };
 
-  // Abre el CreateResourceModal
-  const handleCreateResourceClick = (course) => {
+  const handleAssignButtonClick = (course) => {
     setSelectedCourse(course);
-    setSelectedCourseId(course._id); // Establece el ID del curso seleccionado
-    setIsCreateModalVisible(true);
+    setIsAssignModalVisible(true);
   };
 
-
-  const handleCreateResource = async () => {
-    if (selectedCourse && selectedCourse._id) { // Verifica si selectedCourse y _id están definidos
+  const handleAssignContent = async () => {
+    if (selectedCourse && contentFile) {
       const courseId = selectedCourse._id;
-      try {
-        const res = await crearRecurso(courseId);
-        message.success(t('courses.createdResource'));
-        setIsCreateModalVisible(false);
-        await getAllCourses(); // Opcional, para refrescar los recursos creados
-      } catch (error) {
-        console.error("Error al crear recurso:", error); // Verifica el error en la consola
-      }
-    } else {
-      message.error(t('courses.noCourseSelected'));
+      const res = await asignarContenido(courseId, contentFile);
+
+      console.log(t('courses.assignedContent'), res);
+      setIsAssignModalVisible(false);
+      window.location.reload();
     }
   };
 
@@ -115,27 +109,17 @@ const DataTablete = () => {
   };
 
   const handleDeleteConfirm = async () => {
-  try {
-    await deleteCourse(courseToDelete._id);
-    await Swal.fire({
-      icon: 'success',
-      title: t('courses.deleteSuccess'),
-      timer: 1000,
-      showConfirmButton: false,
-    });
-    getAllCourses(); // Obtiene los cursos actualizados
-  } catch (error) {
-    console.error(error);
-    await Swal.fire({
-      icon: 'error',
-      title: t('courses.deleteError'),
-    });
-  } finally {
-    setIsDeleteModalVisible(false);
-    setCourseToDelete(null);
-  }
-};
-
+    try {
+      await deleteCourse(courseToDelete._id);
+      message.success(t('courses.deleteSuccess'));
+      getAllCourses();
+    } catch (error) {
+      message.error(t('courses.deleteError'));
+    } finally {
+      setIsDeleteModalVisible(false);
+      setCourseToDelete(null);
+    }
+  };
 
   const handleRemoveResource = async (index) => {
     if (selectedCourse) {
@@ -283,7 +267,7 @@ const DataTablete = () => {
                                 <Button
                                   className=" bg-green-500 h-10 text-lg text-white"
                                   onClick={() =>
-                                    handleCreateResourceClick(course)
+                                    handleAssignButtonClick(course)
                                   }
                                   icon={<CheckCircleOutlined />}
                                 />
@@ -339,14 +323,13 @@ const DataTablete = () => {
             courseId={selectedCourse ? selectedCourse._id : null}
           />
 
-           {/* Modal para crear recursos */}
-           <CreateResourceModal
-            isVisible={isCreateModalVisible}
-            onCancel={() => setIsCreateModalVisible(false)}
-            courseId={selectedCourse?._id}  // Pasa el courseId aquí
-            onCreate={handleCreateResource}
-            resourceFile={resourceFile}
-            onFileChange={(e) => setResourceFile(e.target.files[0])}
+          <AssignContentModal
+            visible={isAssignModalVisible}
+            onClose={() => setIsAssignModalVisible(false)}
+            onAssignContent={handleAssignContent}
+            selectedCourse={selectedCourse}
+            setContentFile={setContentFile}
+            handleRemoveResource={handleRemoveResource}
           />
 
           <DeleteConfirmationModal
