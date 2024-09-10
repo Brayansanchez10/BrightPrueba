@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { toast, ToastContainer } from "react-toastify";
 import NavigationBar from "../Home/NavigationBar";
 import SettingsBar from "../Home/SettingsUser";
 import { useUserContext } from "../../context/user/user.context";
 import { useAuth } from "../../context/auth.context";
-import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
 import Swal from 'sweetalert2';
 
@@ -88,21 +86,18 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
   
         await updateUserPartial(userId, userData);
   
-        // Mostrar mensaje de éxito
-        toast.success(t("userProfileSettings.changes_saved_successfully"), {
-          position: "top-right",
-          autoClose: 1500, // Duración del mensaje
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
+        // Mostrar mensaje de éxito con SweetAlert2
+        Swal.fire({
+          icon: 'success',
+          title: t("userProfileSettings.changes_saved_successfully"),
+          showConfirmButton: false,
+          timer: 1500, // Duración del mensaje
         });
   
         // Configurar recarga de la página después del tiempo de la alerta
         setTimeout(() => {
           window.location.reload();
-        }, 1500); // La duración debe coincidir con autoClose
+        }, 1500); // La duración debe coincidir con timer
   
         if (deleteProfileImage) {
           setProfileImage(null);
@@ -111,15 +106,12 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
         }
   
       } catch (error) {
-        // Mostrar mensaje de error
-        toast.error(t("userProfileSettings.failed_to_save_changes"), {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
+        // Mostrar mensaje de error con SweetAlert2
+        Swal.fire({
+          icon: 'error',
+          title: t("userProfileSettings.failed_to_save_changes"),
+          text: error.message,
+          showConfirmButton: true,
         });
       }
     } else {
@@ -180,7 +172,6 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
       <div className="flex justify-center 2xl:mt-20">
         <div className="grid grid-cols-1 lg:w-4/12">
           <SettingsBar className="" />
-          <ToastContainer />
           <form
             onSubmit={handleSubmit}
             className="bg-gradient-to-b from-purple-500 to-violet-800 shadow-lg rounded-lg px-6 mt-2 text-white"

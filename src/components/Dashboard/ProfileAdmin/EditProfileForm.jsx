@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useUserContext } from "../../../context/user/user.context";
 import { useAuth } from "../../../context/auth.context";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
 import Swal from 'sweetalert2';
 
@@ -77,21 +75,19 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           };
 
           await updateUserPartial(userId, userData);
-           // Mostrar mensaje de éxito
-          toast.success(t("userProfileSettings.changes_saved_successfully"), {
-            position: "top-right",
-            autoClose: 750, // Duración del mensaje
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
+
+          // Mostrar mensaje de éxito
+          Swal.fire({
+            icon: 'success',
+            title: t("userProfileSettings.changes_saved_successfully"),
+            showConfirmButton: false,
+            timer: 750,
           });
-    
+
           // Configurar recarga de la página después del tiempo de la alerta
           setTimeout(() => {
             window.location.reload();
-          }, 750); // La duración debe coincidir con autoClose
+          }, 750); // La duración debe coincidir con timer
 
           if (deleteProfileImage) {
             setProfileImage(null);
@@ -99,14 +95,12 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
             setDeleteProfileImage(false); // Reset flag after saving changes
           }
         } catch (error) {
-          toast.error(t('userProfileSettings.failed_to_save_changes'), {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
+          Swal.fire({
+            icon: 'error',
+            title: t('userProfileSettings.failed_to_save_changes'),
+            text: error.message,
+            confirmButtonText: 'OK',
+            timer: 3000,
           });
         }
       } else {
@@ -155,26 +149,27 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
         confirmButtonText: t('userProfileSettings.yes_delete_it'), // Texto del botón de confirmación
         cancelButtonText: t('userProfileSettings.cancel'), // Texto del botón de cancelación
       });
-  
+
       if (result.isConfirmed) {
         try {
           await updateUserPartial(userId, { username: name, email, userImage: null });
-  
+
           Swal.fire({
             icon: 'success',
             title: t('userProfileSettings.image_deleted_successfully'), // Mensaje de éxito
             showConfirmButton: false,
             timer: 3000,
           });
-  
+
           setProfileImage(null);
           setPreviewProfileImage(null);
           setDeleteProfileImage(false); // Reset flag after deletion
-  
+
         } catch (error) {
           Swal.fire({
             icon: 'error',
             title: t('userProfileSettings.failed_to_delete_image'), // Mensaje de error
+            text: error.message,
             showConfirmButton: false,
             timer: 3000,
           });
@@ -191,7 +186,6 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
   return (
     <div className="md:mt-3 mt-5 mx-4 mb-2 flex rounded-lg">
-      <ToastContainer />
       <div className="max-w-lg mx-auto bg-gradient-to-b from-purple-500 to-blue-500 rounded-lg shadow-lg py-4 px-6 md:px-10">
         <h1 className="text-center font-black text-white md:text-xl lg:text-2xl">
           {t('userProfileSettings.edit_profile')}

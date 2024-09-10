@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, message, Form, } from "antd";
+import { Button, Input, Form } from "antd";
 import { ReloadOutlined, InfoCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 import LeftBar from "../../Dashboard/LeftBar";
 import { useCategoryContext } from "../../../context/courses/category.context";
@@ -9,6 +9,7 @@ import DeleteCategory from "./DeleteCategory";
 import DetailsCategoryModal from "./DetailsCategoryModal";
 import UpdateCategoryModal from "./UpdateCategoryModal";
 import { useTranslation } from "react-i18next";
+import Swal from 'sweetalert2';
 
 const DataTablete = () => {
   const { t } = useTranslation("global");
@@ -30,10 +31,10 @@ const DataTablete = () => {
 
   useEffect(() => {
     getCategories();
-  }, []);
+  }, [getCategories]);
 
   useEffect(() => {
-    const filteredCategory = categories.filter( category => 
+    const filteredCategory = categories.filter(category =>
       category.name.toLowerCase().includes(searchValue.toLowerCase()) ||
       category.description.toLowerCase().includes(searchValue.toLowerCase())
     );
@@ -44,11 +45,64 @@ const DataTablete = () => {
   const handleCreateCategory = async (category) => {
     try {
       await createCategory(category);
-      message.success(t("categories.createSuccess"));
+      Swal.fire({
+        title: t("categories.createSuccess"),
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
     } catch (error) {
-      message.error(t("categories.createError"));
+      Swal.fire({
+        title: t("categories.createError"),
+        icon: 'error',
+        timer: 1500,
+        showConfirmButton: true
+      });
     } finally {
       setShowCategoryForm(false);
+    }
+  };
+
+  const handleUpdateSubmit = async (values) => {
+    try {
+      await updateCategory(selectedCategory._id, values);
+      Swal.fire({
+        title: t("categories.updateSuccess"),
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+    } catch (error) {
+      Swal.fire({
+        title: t("categories.updateError"),
+        icon: 'error',
+        timer: 1500,
+        showConfirmButton: true
+      });
+    } finally {
+      handleUpdateModalClose();
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await deleteCategory(categoryToDelete._id);
+      Swal.fire({
+        title: t("categories.deleteSuccess"),
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+    } catch (error) {
+      Swal.fire({
+        title: t("categories.deleteError"),
+        icon: 'error',
+        timer: 1500,
+        showConfirmButton: true
+      });
+    } finally {
+      setIsDeleteModalVisible(false);
+      setCategoryToDelete(null);
     }
   };
 
@@ -111,21 +165,6 @@ const DataTablete = () => {
     setImagePreview(null);
   };
 
-  const handleUpdateSubmit = async (values) => {
-    try {
-      console.log("prueba:", selectedCategory._id)
-      console.log("prueba2:", values)
-      await updateCategory(selectedCategory._id, values);
-   
-
-      message.success(t("categories.updateSuccess"));
-    } catch (error) {
-      message.error(t("categories.updateError"));
-    } finally {
-      handleUpdateModalClose();
-    }
-  };
-
   const handleDeleteButtonClick = (category) => {
     setCategoryToDelete(category);
     setIsDeleteModalVisible(true);
@@ -136,22 +175,10 @@ const DataTablete = () => {
     setCategoryToDelete(null);
   };
 
-  const handleDeleteConfirm = async () => {
-    try {
-      await deleteCategory(categoryToDelete._id);
-      message.success(t("categories.deleteSuccess"));
-    } catch (error) {
-      message.error(t("categories.deleteError"));
-    } finally {
-      setIsDeleteModalVisible(false);
-      setCategoryToDelete(null);
-    }
-  };
-
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const generateIds = () => {
-    const filteredCategory = categories.filter( category => 
+    const filteredCategory = categories.filter(category =>
       category.name.toLowerCase().includes(searchValue.toLowerCase()) ||
       category.description.toLowerCase().includes(searchValue.toLowerCase())
     );
@@ -161,7 +188,7 @@ const DataTablete = () => {
       .map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
   };
 
-  const filteredCategory = categories.filter( category => 
+  const filteredCategory = categories.filter(category =>
     category.name.toLowerCase().includes(searchValue.toLowerCase()) ||
     category.description.toLowerCase().includes(searchValue.toLowerCase())
   );
@@ -272,36 +299,36 @@ const DataTablete = () => {
             form={form}
             imagePreview={imagePreview}
           />
-           {totalPages > 1 && (
-          <div className="flex justify-center mx-auto mb-4 mt-8 space-x-2 items-center">
-            <button
-              onClick={() => paginate(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="px-3 py-1 bg-gray-200 text-gray-800 border"
-            >
-              {t("categories.previous")}
-            </button>
-            {getVisiblePageNumbers().map((page) => (
+          {totalPages > 1 && (
+            <div className="flex justify-center mx-auto mb-4 mt-8 space-x-2 items-center">
               <button
-                key={page}
-                onClick={() => paginate(page)}
-                className={`px-3 py-1 ${currentPage === page ? "bg-black border text-white" : "bg-gray-200 text-gray-800 border"}`}
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 bg-gray-200 text-gray-800 border"
               >
-                {page}
+                {t("categories.previous")}
               </button>
-            ))}
-            <button
-              onClick={() => paginate(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="px-3 py-1 bg-gray-200 text-gray-800 border"
-            >
-              {t("categories.next")}
-            </button>
-          </div>
-        )}
-          </div>
+              {getVisiblePageNumbers().map((page) => (
+                <button
+                  key={page}
+                  onClick={() => paginate(page)}
+                  className={`px-3 py-1 ${currentPage === page ? "bg-black border text-white" : "bg-gray-200 text-gray-800 border"}`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 bg-gray-200 text-gray-800 border"
+              >
+                {t("categories.next")}
+              </button>
+            </div>
+          )}
         </div>
       </div>
+    </div>
   );
 };
 

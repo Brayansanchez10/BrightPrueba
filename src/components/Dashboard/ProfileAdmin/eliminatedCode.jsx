@@ -2,8 +2,7 @@ import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../../../context/user/user.context";
 import { useAuth } from "../../../context/auth.context";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 import logo from "../../../assets/img/hola.png";
 import { useTranslation } from 'react-i18next';
 
@@ -61,19 +60,28 @@ const DeleteAccountConfirmation = () => {
       
       const response = await deleteUserConfirmation(user.data.id, code);
       //Verica la respuesta y contiene el mensaje esperado.
-      if (response && response.msg === "User deleted successfully"){
-        toast.success(t("deleteAccountConfirmation.successMessage"));
-        setTimeout(() => {
+      if (response && response.msg === "User deleted successfully") {
+        Swal.fire({
+          icon: 'success',
+          title: t("deleteAccountConfirmation.successMessage"),
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
           window.location.reload(); 
           navigate("/");
-        }, 1500);
+        });
       } else {
          // Lanza un error si la respuesta no indica éxito
          throw new Error(response?.msg || "Failed to delete user");
       }   
     } catch (error) {
       console.error(error);
-      toast.error(t("deleteAccountConfirmation.errorMessage") + ": " + error.message);
+      Swal.fire({
+        icon: 'error',
+        title: t("deleteAccountConfirmation.errorMessage"),
+        text: error.message,
+        confirmButtonText: 'OK'
+      });
     }
   };
 
@@ -126,7 +134,6 @@ const DeleteAccountConfirmation = () => {
           </Link>
         </div>
       </form>
-      <ToastContainer />
     </div>
   );
 };

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import Carousel from "./../components/Login_components/Carousel";
 import { useAuth } from "../context/auth.context";
@@ -20,7 +19,6 @@ const LoginForm = () => {
   const { login } = useAuth();
   const { t } = useTranslation("global");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
 
   const validationSchema = yup.object().shape({
     email: yup.string().email(t("login.invalid_email")).required(t("login.email_required")),
@@ -51,20 +49,27 @@ const LoginForm = () => {
           const userToken = user?.data?.token || null;
           console.log(userRole);
   
-          
           document.cookie = `token=${userToken}; path=/`;
           setUserRole(userRole);
           setIsAuthenticated(true);
         } else {
           setError(message);
-          toast.error(message);
+          Swal.fire({
+            icon: 'error',
+            title: t("login.error"),
+            text: message,
+          });
         }
       } catch (error) {
         console.log("Error capturado en el catch:", error);
         const errorMessage =
           error?.response?.data?.message || t("login.error_occurred");
         setError(errorMessage);
-        toast.error(errorMessage);
+        Swal.fire({
+          icon: 'error',
+          title: t("login.error"),
+          text: errorMessage,
+        });
       } finally {
         setLoading(false);
         setTimeout(() => {
@@ -91,7 +96,6 @@ const LoginForm = () => {
     <div className="flex min-h-screen bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400">
       <Carousel />
       <div className="flex flex-col justify-center items-center w-full sm:w-1/2 sm:mx-4">
-        <ToastContainer />
         <form
           onSubmit={formik.handleSubmit}
           className="bg-white rounded-3xl w-full p-10 border shadow-orange shadow-pink-300"
@@ -153,14 +157,13 @@ const LoginForm = () => {
               ) : null}
             </div>
             <div className="flex justify-center">
-            <button 
-             type="submit"
-             className="w-56 py-2 cursor-pointer bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-xl font-bold text-xl"
-             disabled={!formik.isValid || loading || isSubmitting}
-           >
-             {loading ? t("login.loading") : t("login.login")}
-           </button>
-           
+              <button 
+                type="submit"
+                className="w-56 py-2 cursor-pointer bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-xl font-bold text-xl"
+                disabled={!formik.isValid || loading || isSubmitting}
+              >
+                {loading ? t("login.loading") : t("login.login")}
+              </button>
             </div>
           </div>
           <div className="mt-4 text-center">

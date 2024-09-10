@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, Button, Input, message } from "antd";
-import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useCategoryContext } from "../../../context/courses/category.context";
 import { useTranslation } from "react-i18next";
@@ -98,7 +97,6 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
 
   return (
     <>
-      <ToastContainer />
       <Modal
         className="shadow-orange shadow-white border-2 border-black rounded-lg"
         centered

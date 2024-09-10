@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Modal, Select } from "antd";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useCategoryContext } from "../../../context/courses/category.context";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 import { useTranslation } from 'react-i18next';
 
 const { Option } = Select;
@@ -112,13 +111,22 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
 
     try {
       await updateCourse(courseId, courseData);
-      toast.success(t("updateCourseForm.updateSuccess"), { autoClose: 1000 });
-      onUpdate(courseData);
-      onClose();
-      window.location.reload();
+      Swal.fire({
+        icon: 'success',
+        title: t("updateCourseForm.updateSuccess"),
+        timer: 1000,
+        showConfirmButton: false,
+      }).then(() => {
+        onUpdate(courseData);
+        onClose();
+        window.location.reload();
+      });
     } catch (error) {
       console.error(error);
-      toast.error(t("updateCourseForm.updateFailure"));
+      Swal.fire({
+        icon: 'error',
+        title: t("updateCourseForm.updateFailure"),
+      });
     }
   };
 
@@ -222,7 +230,6 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
           </div>
         </form>
       </Modal>
-      <ToastContainer />
     </>
   );
 };

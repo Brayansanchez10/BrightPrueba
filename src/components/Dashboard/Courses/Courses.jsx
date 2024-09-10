@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, message } from "antd";
+import { Button, Input } from "antd";
+import Swal from "sweetalert2";
 import {
   ReloadOutlined,
   InfoCircleOutlined,
@@ -72,8 +73,6 @@ const DataTablete = () => {
   };
 
   const handleUpdateCourse = async (updatedCourse) => {
-    message.success(t('courses.updateSuccess'));
-    window.location.reload();
     setShowUpdateForm(false);
     setSelectedCourse(null);
   };
@@ -95,7 +94,6 @@ const DataTablete = () => {
 
       console.log(t('courses.assignedContent'), res);
       setIsAssignModalVisible(false);
-      window.location.reload();
     }
   };
 
@@ -105,17 +103,27 @@ const DataTablete = () => {
   };
 
   const handleDeleteConfirm = async () => {
-    try {
-      await deleteCourse(courseToDelete._id);
-      message.success(t('courses.deleteSuccess'));
-      getAllCourses();
-    } catch (error) {
-      message.error(t('courses.deleteError'));
-    } finally {
-      setIsDeleteModalVisible(false);
-      setCourseToDelete(null);
-    }
-  };
+  try {
+    await deleteCourse(courseToDelete._id);
+    await Swal.fire({
+      icon: 'success',
+      title: t('courses.deleteSuccess'),
+      timer: 1000,
+      showConfirmButton: false,
+    });
+    getAllCourses(); // Obtiene los cursos actualizados
+  } catch (error) {
+    console.error(error);
+    await Swal.fire({
+      icon: 'error',
+      title: t('courses.deleteError'),
+    });
+  } finally {
+    setIsDeleteModalVisible(false);
+    setCourseToDelete(null);
+  }
+};
+
 
   const handleRemoveResource = async (index) => {
     if (selectedCourse) {

@@ -2,9 +2,8 @@ import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../../../src/context/user/user.context";
 import { useAuth } from "../../../src/context/auth.context";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import logo from "../../../src/assets/img/hola.png"
+import Swal from 'sweetalert2';
+import logo from "../../../src/assets/img/hola.png";
 import { useTranslation } from 'react-i18next';
 import Cookies from 'js-cookie';
 
@@ -58,21 +57,27 @@ const DeleteAccountConfirmation = () => {
 
         // Verifica si la respuesta está definida y contiene el mensaje esperado
         if (response && response.msg === "User deleted successfully") {
-          toast.success(t("deleteAccountConfirmation.successMessage"), {
-            autoClose: 1500,
-            onClose: () => {
-              setTimeout(() => {
-                window.location.reload(); 
-                navigate("/register"); // Redirige a la página de login
-              }, 1500);
-            },
+          Swal.fire({
+            icon: 'success',
+            title: t("deleteAccountConfirmation.successMessage"),
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            setTimeout(() => {
+              window.location.reload(); 
+              navigate("/register"); // Redirige a la página de login
+            }, 1500);
           });
         } else {
             throw new Error(response?.msg || "Failed to delete user");
         }
     } catch (error) {
         console.error(error);
-        toast.error(t("deleteAccountConfirmation.errorMessage") + ": " + error.message);
+        Swal.fire({
+          icon: 'error',
+          title: t("deleteAccountConfirmation.errorMessage"),
+          text: error.message,
+        });
     }
   };
 
@@ -123,7 +128,6 @@ const DeleteAccountConfirmation = () => {
           </Link>
         </div>
       </form>
-      <ToastContainer />
     </div>
   );
 };

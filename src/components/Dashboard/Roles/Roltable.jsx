@@ -8,6 +8,7 @@ import {
   CheckCircleOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
+import Swal from "sweetalert2";
 import { useRoleContext } from "../../../context/user/role.context";
 import { usePermissionContext } from "../../../context/user/permissions.context";
 import CreateRolForm from "../Roles/CreateRolForm";
@@ -149,16 +150,29 @@ const DataTable = () => {
     setSelectedRoleId(roleId);
     setShowDeleteModal(true);
   };
-
+  
   const confirmDeleteRole = async () => {
     try {
-      console.log(selectedRoleId);
       await deleteRole(selectedRoleId);
-      setShowDeleteModal(false);
-      setUpdatedDataFlag(true); // Trigger data refresh
-      window.location.reload();
+  
+      Swal.fire({
+        icon: 'success',
+        title: 'Rol eliminado exitosamente',
+        timer: 2000,
+        showConfirmButton: false,
+      }).then(() => {
+        setShowDeleteModal(false);
+        setUpdatedDataFlag(true); // Trigger data refresh
+      });
+  
     } catch (error) {
-      console.error("Error deleting role:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al eliminar el rol',
+        text: error.message || 'An error occurred while deleting the role.',
+        timer: 3000,
+        showConfirmButton: true,
+      });
     }
   };
 
