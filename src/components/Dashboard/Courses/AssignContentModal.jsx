@@ -1,9 +1,9 @@
 import React, { useCallback, useState, useRef, useEffect } from "react";
-import { Modal, Button, Collapse, notification, Spin } from "antd";
+import { Modal, Button, Collapse, Spin } from "antd";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { useTranslation } from 'react-i18next';
 import { deleteResource, asignarLinkContenido, actualizarLinkContenido, actualizarContenidoArchivo } from "../../../api/courses/course.request";
-import { toast } from "react-toastify";
+import Swal from 'sweetalert2';
 
 const { Panel } = Collapse;
 const ALLOWED_FILE_TYPES = ['.mov', '.docx', '.pdf', '.jpg', '.png']; // Removido '.mp4'
@@ -12,7 +12,6 @@ const ALLOWED_FILE_TYPES = ['.mov', '.docx', '.pdf', '.jpg', '.png']; // Removid
 const YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
 const VIMEO_URL_REGEX = /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)$/i;
 const GOOGLE_DRIVE_URL_REGEX = /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
-
 
 const AssignContentModal = ({
   visible,
@@ -88,10 +87,12 @@ const AssignContentModal = ({
       setFileSelected(file);
       setContentFile(file);
     } else {
-      notification.warning({
-        message: t('assignContentModal.invalidFileType'),
-        description: t('assignContentModal.invalidFileType'),
-        duration: 3,
+      Swal.fire({
+        icon: 'warning',
+        title: t('assignContentModal.invalidFileType'),
+        text: t('assignContentModal.invalidFileType'),
+        timer: 3000,
+        showConfirmButton: true,
       });
       e.target.value = '';
       setFileSelected(null);
@@ -100,19 +101,23 @@ const AssignContentModal = ({
 
   const handleAssignContent = useCallback(async () => {
     if (!fileSelected) {
-      notification.warning({
-        message: t('assignContentModal.noFileSelected'),
-        description: t('assignContentModal.noFileSelected'),
-        duration: 3,
+      Swal.fire({
+        icon: 'warning',
+        title: t('assignContentModal.noFileSelected'),
+        text: t('assignContentModal.noFileSelected'),
+        timer: 3000,
+        showConfirmButton: true,
       });
       return;
     }
 
     if (!selectedCourse) {
-      notification.error({
-        message: t('assignContentModal.courseError'),
-        description: t('assignContentModal.courseError'),
-        duration: 3,
+      Swal.fire({
+        icon: 'error',
+        title: t('assignContentModal.courseError'),
+        text: t('assignContentModal.courseError'),
+        timer: 3000,
+        showConfirmButton: true,
       });
       return;
     }
@@ -122,38 +127,47 @@ const AssignContentModal = ({
       if (editIndex !== null) {
         // Update existing link
         await actualizarContenidoArchivo(selectedCourse._id, editIndex, fileSelected);
-        toast.success(t("assignContentModal.linkUpdatedSuccessfully"), {
-          autoClose: 750,
-          onClose: () => {
-            window.location.reload();
-          },
+        Swal.fire({
+          icon: 'success',
+          title: t("assignContentModal.linkUpdatedSuccessfully"),
+          timer: 750,
+          showConfirmButton: false,
+        }).then(() => {
+          window.location.reload();
         });
       } else {
         await onAssignContent();
-        notification.success({
-          message: t('assignContentModal.contentAssignedSuccessfully'),
-          duration: 3,
+        Swal.fire({
+          icon: 'success',
+          title: t('assignContentModal.contentAssignedSuccessfully'),
+          timer: 3000,
+          showConfirmButton: false,
+        }).then(() => {
+          window.location.reload();
         });
-        onClose();
       }
     } catch (error) {
-      notification.error({
-        message: t('assignContentModal.errorAssigningContent'),
-        description: error.message || t('assignContentModal.errorAssigningContent'),
-        duration: 3,
+      Swal.fire({
+        icon: 'error',
+        title: t('assignContentModal.errorAssigningContent'),
+        text: error.message || t('assignContentModal.errorAssigningContent'),
+        timer: 3000,
+        showConfirmButton: true,
       });
     } finally {
       setLoading(false);
       setFileSelected(null);
     }
-  }, [fileSelected, onAssignContent, onClose, selectedCourse, t]);
+  }, [fileSelected, onAssignContent, onClose, selectedCourse, t, editIndex]);
 
   const handleLinkAssignContent = useCallback(async () => {
     if (!textInput.trim()) {
-      notification.warning({
-        message: t('assignContentModal.noTextEntered'),
-        description: t('assignContentModal.noTextEntered'),
-        duration: 3,
+      Swal.fire({
+        icon: 'warning',
+        title: t('assignContentModal.noTextEntered'),
+        text: t('assignContentModal.noTextEntered'),
+        timer: 3000,
+        showConfirmButton: true,
       });
       return;
     }
@@ -162,10 +176,12 @@ const AssignContentModal = ({
     
     // Validar URL de YouTube, Vimeo o Google Drive
     if (!YOUTUBE_URL_REGEX.test(trimmedInput) && !VIMEO_URL_REGEX.test(trimmedInput) && !GOOGLE_DRIVE_URL_REGEX.test(trimmedInput)) {
-      notification.warning({
-        message: t('assignContentModal.invalidVideoLink'),
-        description: t('assignContentModal.invalidVideoLinkdescription'),
-        duration: 3,
+      Swal.fire({
+        icon: 'warning',
+        title: t('assignContentModal.invalidVideoLink'),
+        text: t('assignContentModal.invalidVideoLinkdescription'),
+        timer: 3000,
+        showConfirmButton: true,
       });
       return;
     }
@@ -175,27 +191,33 @@ const AssignContentModal = ({
       if (editIndex !== null) {
         // Update existing link
         await actualizarLinkContenido(selectedCourse._id, trimmedInput, editIndex);
-        toast.success(t("assignContentModal.linkUpdatedSuccessfully"), {
-          autoClose: 750,
-          onClose: () => {
-            window.location.reload();
-          },
+        Swal.fire({
+          icon: 'success',
+          title: t("assignContentModal.linkUpdatedSuccessfully"),
+          timer: 750,
+          showConfirmButton: false,
+        }).then(() => {
+          window.location.reload();
         });
       } else {
         // Add new link
         await asignarLinkContenido(selectedCourse._id, trimmedInput);
-        toast.success(t("assignContentModal.contentAssignedSuccessfully"), {
-          autoClose: 750,
-          onClose: () => {
-            window.location.reload();
-          },
+        Swal.fire({
+          icon: 'success',
+          title: t("assignContentModal.contentAssignedSuccessfully"),
+          timer: 3000,
+          showConfirmButton: false,
+        }).then(() => {
+          window.location.reload();
         });
       }
     } catch (error) {
-      notification.error({
-        message: t('assignContentModal.errorAssigningContent'),
-        description: error.message || t('assignContentModal.errorAssigningContent'),
-        duration: 3,
+      Swal.fire({
+        icon: 'error',
+        title: t('assignContentModal.errorAssigningContent'),
+        text: error.message || t('assignContentModal.errorAssigningContent'),
+        timer: 3000,
+        showConfirmButton: true,
       });
     } finally {
       setLoading(false);
@@ -209,7 +231,6 @@ const AssignContentModal = ({
     setTextInput(url);
   };
 
-
   const handleCancel = () => {
     resetState();
     onClose();
@@ -218,18 +239,22 @@ const AssignContentModal = ({
   const handleRemoveResource = async (index) => {
     try {
       await deleteResource(selectedCourse._id, index);
-      toast.success(t("assignContentModal.resourceDeleted"), {
-        autoClose: 750,
-        onClose: () => {
-          window.location.reload();
-        },
+      Swal.fire({
+        icon: 'success',
+        title: t("assignContentModal.resourceDeleted"),
+        timer: 750,
+        showConfirmButton: false,
+      }).then(() => {
+        window.location.reload();
       });
     } catch (error) {
       console.error('Error deleting resource:', error);
-      notification.error({
-        message: t('assignContentModal.errorDeletingResource'),
-        description: error.message || t('assignContentModal.errorDeletingResource'),
-        duration: 3,
+      Swal.fire({
+        icon: 'error',
+        title: t('assignContentModal.errorDeletingResource'),
+        text: error.message || t('assignContentModal.errorDeletingResource'),
+        timer: 3000,
+        showConfirmButton: true,
       });
     }
   };

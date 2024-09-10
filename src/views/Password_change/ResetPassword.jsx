@@ -1,7 +1,6 @@
 import logo from "../../assets/img/hola.png";
 import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { resetPasswordRequest } from "../../api/auth";
@@ -29,24 +28,30 @@ const ResetPasswordForm = () => {
       setIsSubmitting(true);
       try {
         await resetPasswordRequest(values);
-        toast.success(t("reset_password.email_sent_success"));
+        Swal.fire({
+          icon: "success",
+          title: t("reset_password.email_sent_success"),
+          showConfirmButton: false,
+          timer: 3000,
+        });
         setTimeout(() => {
           navigate("/code");
         }, 3000);
       } catch (error) {
         console.error(error);
-        toast.error(t("reset_password.email_not_registered"));
+        Swal.fire({
+          icon: "error",
+          title: t("reset_password.email_not_registered"),
+          text: t("reset_password.try_again"),
+        });
       } finally {
-        setTimeout(() => {
-          setIsSubmitting(false);
-        }, 3000); // 
+        setIsSubmitting(false);
       }
     },
   });
 
   return (
     <div className="bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600 min-h-screen flex justify-center">
-      <ToastContainer />
       <div className="flex justify-center items-center">
         <div className="bg-gradient-to-r from-violet-600 to-rose-500 rounded-xl shadow-xl shadow-zinc-950 px-6 mx-2">
           <h1 className="text-xl font-black text-slate-100 mt-4 text-center">

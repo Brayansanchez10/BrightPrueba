@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Modal, Form, Input, Select, Button, message } from "antd";
+import { Modal, Form, Input, Select } from "antd";
 import { useRoleContext } from "../../../context/user/role.context";
-import { useUserContext } from "../../../context/user/user.context"; // Importa el contexto de usuario
+import { useUserContext } from "../../../context/user/user.context";
+import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 
 const { Option } = Select;
@@ -10,7 +11,6 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
   const { rolesData } = useRoleContext();
   const { checkIfUserExists } = useUserContext();
   const [form] = Form.useForm();
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const { t } = useTranslation("global");
 
   const handleFormSubmit = async () => {
@@ -20,22 +20,29 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
 
       // Verifica si el usuario ya existe
       if (checkIfUserExists(username, email)) {
-        message.error(t("CreateUserModal.userExists"));
+        Swal.fire({
+          icon: "error",
+          title: t("CreateUserModal.userExists"),
+          confirmButtonText: "OK",
+        });
         return;
       }
 
       onCreate(values);
-      setSuccessMessageVisible(true); // Mostrar el mensaje de éxito
+
+      // Mostrar mensaje de éxito con SweetAlert2
+      Swal.fire({
+        icon: "success",
+        title: t("CreateUserModal.userCreatedSuccess"),
+        showConfirmButton: false,
+        timer: 1500, // Duración del mensaje
+      });
+
       form.resetFields();
       onCancel(); // Cerrar el modal después de crear el usuario
     } catch (error) {
       console.error("Failed to create user:", error);
     }
-  };
-
-  const handleModalClose = () => {
-    setSuccessMessageVisible(false); // Ocultar el mensaje si se cierra el modal
-    onCancel(); // Cerrar el modal
   };
 
   return (
@@ -44,10 +51,9 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
       centered
       visible={visible}
       closable={false}
-      onCancel={handleModalClose}
+      onCancel={onCancel}
       footer={null}
       maskStyle={{ backdropFilter: "blur(15px)" }}
-      afterClose={() => setSuccessMessageVisible(false)} // Asegurar que se oculte el mensaje después de cerrar el modal
     >
       <Form
         className="bg-gradient-to-tr from-teal-400 to-blue-500 shadow-lg rounded-lg py-2"
@@ -117,19 +123,12 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
           <button
             className="bg-neutral-700 hover:bg-neutral-600 text-white font-medium px-4 py-2 rounded-lg"
             key="cancel"
-            onClick={handleModalClose}
+            onClick={onCancel}
           >
             {t("CreateUserModal.cancel")}
           </button>
         </div>
       </Form>
-
-      {/* Mostrar mensaje de éxito */}
-      {successMessageVisible &&
-        message.success({
-          content: t("CreateUserModal.userCreatedSuccess"),
-          duration: 5, // Duración en segundos que se muestra el mensaje
-        })}
     </Modal>
   );
 };

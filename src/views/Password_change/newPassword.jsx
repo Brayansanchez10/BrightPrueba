@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { toast, ToastContainer } from 'react-toastify';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { passwordReset } from '../../api/auth';
 import { useTranslation } from 'react-i18next';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
@@ -30,12 +30,21 @@ function NewPassword() {
         onSubmit: async (values) => {
             try {
                 await passwordReset(values);
-                toast.success(t('new_password.success'));
+                Swal.fire({
+                    icon: 'success',
+                    title: t('new_password.success'),
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
                 setTimeout(() => {
                     navigate('/');
                 }, 2000);
             } catch (error) {
-                toast.error(t('new_password.error'));
+                Swal.fire({
+                    icon: 'error',
+                    title: t('new_password.error'),
+                    text: t('new_password.try_again'),
+                });
                 console.error(error);
             }
         },
@@ -47,7 +56,6 @@ function NewPassword() {
 
     return (
         <div className="flex min-h-screen bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600 justify-center items-center">
-            <ToastContainer />
             <div className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 p-8">
                 <div className="p-8 bg-white rounded-3xl shadow-2xl bg-gradient-to-tl from-purple-700 to-blue-600">
                     <h2 className="text-3xl md:text-4xl lg:text-4xl font-black text-center mb-6 text-white">{t('new_password.change_password')}</h2>

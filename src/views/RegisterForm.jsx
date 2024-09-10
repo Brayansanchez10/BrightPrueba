@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 import Carousel from "../components/Login_components/Carousel";
 import { Link, useNavigate } from "react-router-dom";
 import { registerRequest } from "../api/auth";
@@ -57,56 +56,51 @@ function RegisterForm() {
     onSubmit: async (values) => {
       try {
         const { confirmPassword, ...userData } = values;
-    
+
         setIsSubmitting(true);
-    
+
         const response = await registerRequest(userData);
-    
+
         if (response.data.msg) {
           switch (response.data.msg) {
-            case "Email already exists": //Correo Existente Mensaje error
-              toast.error(t("register.email_exists"));
+            case "Email already exists":
+              Swal.fire("Error", t("register.email_exists"), "error");
               break;
             case "Username already exists":
-              toast.error(t("register.username_exists")); //Username Existente Mensaje error
+              Swal.fire("Error", t("register.username_exists"), "error");
               break;
             default:
-              toast.error(t("register.server_error"));
+              Swal.fire("Error", t("register.server_error"), "error");
           }
         } else {
           setSuccess(true);
-          toast.success(t("register.user_created"), {
-            autoClose: 2500,
-            onClose: () => navigate("/"),
-          });
+          Swal.fire({
+            title: t("register.user_created"),
+            icon: "success",
+            timer: 2500,
+            showConfirmButton: false,
+          }).then(() => navigate("/"));
         }
       } catch (error) {
         console.error("Caught error:", error);
-    
+
         if (error.response) {
-          // Error de respuesta del servidor
-          console.error("Server response error:", error.response.data);
-    
           const errorMsg = error.response.data.msg || "Unknown error occurred";
-    
+
           switch (errorMsg) {
             case "Email already exists":
-              toast.error(t("register.email_exists"));
+              Swal.fire("Error", t("register.email_exists"), "error");
               break;
             case "Username already exists":
-              toast.error(t("register.username_exists"));
+              Swal.fire("Error", t("register.username_exists"), "error");
               break;
             default:
-              toast.error(t("register.server_error"));
+              Swal.fire("Error", t("register.server_error"), "error");
           }
         } else if (error.request) {
-          // Error de solicitud 
-          console.error("Network error:", error.request);
-          toast.error(t("register.server_error"));
+          Swal.fire("Error", t("register.server_error"), "error");
         } else {
-          // Error al configurar la solicitud
-          console.error("Error configuring request:", error.message);
-          toast.error(t("register.server_error"));
+          Swal.fire("Error", t("register.server_error"), "error");
         }
       } finally {
         setIsSubmitting(false);
@@ -117,7 +111,6 @@ function RegisterForm() {
   return (
     <div className="flex min-h-screen bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400">
       <Carousel className="" />
-      <ToastContainer />
       <div className="flex flex-col justify-center items-center w-full sm:w-1/2 md:w-5/12 mx-auto overflow-auto">
         <div className="bg-white rounded-3xl w-full px-20 py-10 shadow-orange shadow-pink-300">
           <div className="text-xl w-36 mx-auto text-center font-black bg-gradient-to-r from-purple-500 to-emerald-400 py-2 rounded-xl text-white">

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { toast, ToastContainer } from 'react-toastify';
+import Swal from 'sweetalert2';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../context/user/user.context';
 import { useAuth } from '../../context/auth.context';
@@ -58,12 +58,28 @@ function NewPassword() {
                 });
     
                 await changePassword(email, values.password);
-                toast.success(t('newPasswordUser.password_changed_success'));
+                
+                // Mostrar mensaje de éxito con SweetAlert2
+                Swal.fire({
+                    icon: 'success',
+                    title: t('newPasswordUser.password_changed_success'),
+                    showConfirmButton: false,
+                    timer: 1500, // Duración del mensaje
+                });
+
+                // Configurar redirección después del tiempo de la alerta
                 setTimeout(() => {
                     navigate('/');
-                }, 2000);
+                }, 1500); // La duración debe coincidir con timer
+
             } catch (error) {
-                toast.error(t('newPasswordUser.password_change_error'));
+                // Mostrar mensaje de error con SweetAlert2
+                Swal.fire({
+                    icon: 'error',
+                    title: t('newPasswordUser.password_change_error'),
+                    text: error.message,
+                    showConfirmButton: true,
+                });
                 console.error('Error changing password:', error);
             }
         },
@@ -75,7 +91,6 @@ function NewPassword() {
 
     return (
         <div className="flex justify-center min-h-screen bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600">
-            <ToastContainer />
             <div className="flex justify-center items-center">
                 <div className="p-6 rounded-3xl shadow-2xl w-6/6 bg-gradient-to-tl from-purple-500 to-blue-500">
                     <h2 className="text-5xl font-black text-center mb-10 text-white">{t('newPasswordUser.change_password')}</h2>

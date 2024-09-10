@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Modal, Select } from "antd";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useCategoryContext } from "../../../context/courses/category.context";
 import { useTranslation } from "react-i18next";
@@ -39,7 +38,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
-      setCourse({ ...course, image: file, imagePreview:URL.createObjectURL(file)});
+      setCourse({ ...course, image: file, imagePreview: URL.createObjectURL(file) });
       setErrorMessage((prev) => ({ ...prev, image: "" }));
     } else {
       e.target.value = null;
@@ -104,16 +103,24 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
     };
     try {
       await createCourse(courseData);
-      toast.success(t("createCourseForm.createSuccess"), { autoClose: 1000 });
-      setTimeout(() => {
+      Swal.fire({
+        icon: 'success',
+        title: t("createCourseForm.createSuccess"),
+        timer: 1000,
+        showConfirmButton: false,
+      }).then(() => {
         onCreate(courseData);
         resetForm();
         onClose();
-        window.location.reload();
-      }, 1000); // Ajusta el retraso según sea necesario
+      });
     } catch (error) {
       console.error(error);
-      toast.error(t("createCourseForm.createFailure"), { autoClose: 3000 });
+      Swal.fire({
+        icon: 'error',
+        title: t("createCourseForm.createFailure"),
+        timer: 3000,
+        showConfirmButton: true,
+      });
     }
   };
 
@@ -123,7 +130,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
       category: "",
       description: "",
       image: null,
-      imagePreview:null,
+      imagePreview: null,
     });
     setErrorMessage({
       name: "",
@@ -138,7 +145,6 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
 
   return (
     <>
-      <ToastContainer />
       <Modal
         open={visible}
         footer={null}
