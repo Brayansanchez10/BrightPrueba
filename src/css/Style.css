@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%; /* Para centrar la animación en el contenedor */
+    height: 100%;
   }
   
   .loading-animation div {
