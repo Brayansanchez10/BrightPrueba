@@ -6,6 +6,7 @@ import {
     updateResource as updateResourceApi,
     deleteResource as deleteResourceApi,
     getAllResources as getAllResourcesApi,
+    getResourceUser as getResourceUserApi,
 } from "../../api/courses/resource.request.js"; // Importamos las funciones de Resource.request
 
 // Crear el contexto
@@ -37,6 +38,16 @@ export const ResourceProvider = ({ children }) => {
         }
     };
 
+    //Función para obtener un recurso Vista User
+    const getResourceUser = async (id) => {
+        try {
+            const res = await getResourceUserApi(id);
+            return res.data;
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    };
     
     // Función para obtener un recurso registrado al courseId
     const getResource = async (courseId) => {
@@ -109,7 +120,7 @@ export const ResourceProvider = ({ children }) => {
     }, []);
 
     return (
-        <ResourceContext.Provider value={{ resources, createResource, updateResource, deleteResource, }}>
+        <ResourceContext.Provider value={{ resources, getResource, createResource, updateResource, deleteResource, getResourceUser }}>
             {children}
         </ResourceContext.Provider>
     );
