@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate  } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./index.css";
 
 // Context
@@ -48,7 +48,7 @@ import PublicRoute from "./publicRoutes";
 import ActivationComponent from "./components/Activate";
 import DeleteAccountConfirmation from "./components/Dashboard/ProfileAdmin/eliminatedCode";
 
-//Footer
+// Footer
 import Footer from "./components/footer";
 
 function App() {
@@ -72,19 +72,19 @@ function App() {
                       </Route>
 
                       {/* Vistas para USUARIO */}
-                      <Route element={<ProtectedRoute requiredRole="usuario"/>}>
+                      <Route element={<ProtectedRoute requiredRole="usuario" />}>
                         <Route path="/Home" element={<HomePage />} />
                         <Route path="/MyCourses" element={<MyCourses />} />
                         <Route path="/CoursesHome" element={<CoursesHome />} />
                         <Route path="/course/:courseId" element={<CourseView />} />
-                        <Route path="/resource" element={<ResourceView/>} />
+                        <Route path="/resource/:resourceId" element={<ResourceView />} />
                         <Route path="/Account" element={<ProfileUser />} />
                         <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />
                         <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />
                       </Route>
 
                       {/* Rutas Protegidas PARA ADMINISTRADOR */}
-                      <Route element={<ProtectedRoute requiredRole="Admin"/>}>
+                      <Route element={<ProtectedRoute requiredRole="Admin" />}>
                         <Route path="/admin" element={<Dashboard />} />
                         <Route path="/Usuarios" element={<Usuarios />} />
                         <Route path="/Courses" element={<Courses />} />
