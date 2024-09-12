@@ -11,6 +11,8 @@ const resourceRequest = axios.create({
 export const getAllResources = () => resourceRequest.get('/getAllResources');
 // Función para obtener los recursos
 export const getResource = (courseId) => resourceRequest.get(`/getResource/${courseId}`);
+//Función obtenere Recursos vista Usuario
+export const getResourceUser = (id) => resourceRequest.get(`/getResourceUser/${id}`);
 
 // Función para crear un recurso
 export const createResource = async (resourceData) => {
