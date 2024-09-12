@@ -213,7 +213,9 @@ const CourseView = () => {
                 </div>
                 <div className="flex flex-col md:flex-row">
                     <div className="md:w-3/5 pr-8 text-center">
-                        <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
+                        <Link to="/resource">
+                            <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
+                        </Link>
                         <img src={course.image} alt={course.title} className="w-full h-64 object-cover rounded-lg mb-4" />
                         <p className="text-lg mb-4">{course.description}</p>
                     </div>
