@@ -4,8 +4,7 @@ import * as yup from 'yup';
 import React from 'react';
 
 import { resetPasswordVerify } from '../../api/auth'; 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 import logo from '../../assets/img/hola.png';
 import { useTranslation } from 'react-i18next';
 
@@ -51,13 +50,22 @@ const ResetPasswordVerifyForm = () => {
         const resetCode = codes.join('');
         try {
             const response = await resetPasswordVerify({ resetCode });
-            toast.success(t('reset_password_verify.valid_code'));
+            Swal.fire({
+                icon: 'success',
+                title: t('reset_password_verify.valid_code'),
+                showConfirmButton: false,
+                timer: 3000,
+            });
             setTimeout(() => {
                 navigate('/newPassword');
             }, 3000);
         } catch (error) {
             console.error(error);
-            toast.error(t('reset_password_verify.invalid_code'));
+            Swal.fire({
+                icon: 'error',
+                title: t('reset_password_verify.invalid_code'),
+                text: t('reset_password_verify.try_again'),
+            });
         }
     };
 
@@ -101,7 +109,6 @@ const ResetPasswordVerifyForm = () => {
                     </div>
                 </form>
             </div>
-            <ToastContainer />
         </div>
     );
 };

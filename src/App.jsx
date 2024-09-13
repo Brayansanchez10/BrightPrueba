@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate  } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./index.css";
 
 // Context
@@ -8,7 +8,8 @@ import { RoleProvider } from "./context/user/role.context";
 import { PermissionProvider } from "./context/user/permissions.context";
 import { CategoryProvider } from "./context/courses/category.context";
 import { CoursesProvider } from "./context/courses/courses.context";
-import { CourseProgressProvider } from "./context/courses/progress.context"
+import { CourseProgressProvider } from "./context/courses/progress.context";
+import { ResourceProvider } from "./context/courses/resource.contex";
 
 // Pages
 import LoginForm from "./views/LoginForm";
@@ -34,6 +35,7 @@ import Categories from "./components/Dashboard/Categories/Categories";
 import HomePage from "./views/HomePage";
 import ProfileUser from "./components/Home/ProfileUser";
 import MyCourses from "./components/Home/Courses/MyCourses";
+import ResourceView from "./components/Home/Resources/resourceView";
 import CoursesHome from "./components/Home/Courses/Courses";
 import UserDeleteAccount from "./components/Home/UserDeleteAccount";
 
@@ -46,7 +48,7 @@ import PublicRoute from "./publicRoutes";
 import ActivationComponent from "./components/Activate";
 import DeleteAccountConfirmation from "./components/Dashboard/ProfileAdmin/eliminatedCode";
 
-//Footer
+// Footer
 import Footer from "./components/footer";
 
 function App() {
@@ -57,16 +59,17 @@ function App() {
           <PermissionProvider>
             <CategoryProvider>
               <CoursesProvider>
-                <CourseProgressProvider>
-                  <Routes>
-                    {/* Vistas del LOGIN */}
-                    <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
-                      <Route path="/" element={<LoginForm />} />
-                      <Route path="/register" element={<RegisterForm />} />
-                      <Route path="/reset" element={<ResetPasswordForm />} />
-                      <Route path="/code" element={<ResetPasswordVerifyForm />} />
-                      <Route path="/newPassword" element={<NewPassword />} />
-                    </Route>
+                <ResourceProvider>
+                  <CourseProgressProvider>
+                    <Routes>
+                      {/* Vistas del LOGIN */}
+                      <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
+                        <Route path="/" element={<LoginForm />} />
+                        <Route path="/register" element={<RegisterForm />} />
+                        <Route path="/reset" element={<ResetPasswordForm />} />
+                        <Route path="/code" element={<ResetPasswordVerifyForm />} />
+                        <Route path="/newPassword" element={<NewPassword />} />
+                      </Route>
 
                     {/* Vistas para USUARIO */}
                     <Route element={<ProtectedRoute requiredRole="usuario"/>}>

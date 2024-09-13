@@ -1,297 +1,217 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useCoursesContext } from '../../../context/courses/courses.context';
-import { useAuth } from '../../../context/auth.context';
-import { useUserContext } from '../../../context/user/user.context';
-import { Collapse, Button, Modal, Progress } from 'antd'; // Asegúrate de importar Progress
-import NavigationBar from '../NavigationBar';
-import { FaArrowLeft } from 'react-icons/fa';
-import jsPDF from 'jspdf';
-import zorro from '../../../assets/img/Zorro.jpeg';
-import derechaabajo from '../../../assets/img/DerechaAbajo.jpeg';
-import izquierdaarriba from '../../../assets/img/IzquierdaArriba.jpeg';
-import { Anothershabby_trial } from '../../../Tipografy/Anothershabby_trial-normal';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useCoursesContext } from "../../../context/courses/courses.context";
+import { useAuth } from "../../../context/auth.context";
+import { useUserContext } from "../../../context/user/user.context";
+import { Collapse, Button, Rate } from "antd";
+import NavigationBar from "../NavigationBar";
+import { FaArrowRight } from "react-icons/fa";
+import zorro from "../../../assets/img/hola.png";
 
 const { Panel } = Collapse;
 
 const CourseView = () => {
-    const { courseId } = useParams();
-    const { getCourse } = useCoursesContext();
-    const { user } = useAuth();
-    const { getUserById } = useUserContext();
-    const [username, setUsername] = useState('');
-    const [course, setCourse] = useState(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [currentViewedIndex, setCurrentViewedIndex] = useState(-1);
-    const [showFinishButton, setShowFinishButton] = useState(false);
+  const { courseId } = useParams();
+  const { getCourse } = useCoursesContext();
+  const { user } = useAuth();
+  const { getUserById } = useUserContext();
+  const [username, setUsername] = useState("");
+  const [userCourses, setUserCourses] = useState([]);
+  const [course, setCourse] = useState(null);
+  const [numCursos, setNumCursos] = useState(0);
 
-    useEffect(() => {
-        const fetchCourse = async () => {
-            try {
-                const courseData = await getCourse(courseId);
-                setCourse(courseData);
-            } catch (error) {
-                console.error('Error al obtener la información del curso:', error);
-            }
-        };
-
-        fetchCourse();
-    }, [courseId, getCourse]);
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (user && user.data && user.data.id) {
-                try {
-                    const userData = await getUserById(user.data.id);
-                    setUsername(userData.username);
-                } catch (error) {
-                    console.error('Error al obtener datos del usuario:', error);
-                }
-            }
-        };
-
-        fetchUserData();
-    }, [user, getUserById]);
-
-    const handleContentClick = (index) => {
-        if (index <= currentViewedIndex + 1) {
-            setCurrentIndex(index);
-            setCurrentViewedIndex(index);
-            setModalVisible(true);
-        }
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const courseData = await getCourse(courseId);
+        console.log("Course Data:", courseData);
+        setCourse(courseData);
+        const instructorData = await getUserById(courseData.instructorId);
+        console.log("Instructor Data:", instructorData);
+        setUsername(instructorData.username);
+      } catch (error) {
+        console.error("Error al obtener la información del curso:", error);
+      }
     };
 
-    const handleNext = () => {
-        if (currentViewedIndex === currentIndex) {
-            setCurrentIndex(currentIndex + 1);
-            setCurrentViewedIndex(currentIndex + 1);
+    fetchCourse();
+  }, [courseId, getCourse, getUserById]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (user && user.data && user.data.id) {
+        try {
+          const userData = await getUserById(user.data.id);
+          console.log("User Data:", userData);
+          setUserCourses(userData.courses || []);
+          setNumCursos(userData.courses ? userData.courses.length : 0);
+        } catch (error) {
+          console.error("Error al obtener datos del usuario:", error);
         }
+      }
     };
 
-    const handleCloseModal = () => {
-        setModalVisible(false);
-        setShowFinishButton(false);
-        setCurrentIndex(0);
-    };
+    fetchUserData();
+  }, [user, getUserById]);
 
-    const handleFinishCourse = () => {
-        generatePremiumCertificatePDF(username, course.title, zorro, derechaabajo, izquierdaarriba);
-        setModalVisible(false);
-    };
+  if (!course) return;
 
-    const handlePrevious = () => {
-        if (currentIndex > 0) {
-            setCurrentIndex(currentIndex - 1);
-        }
-    };
-    const isVideoLink = (url) => {
-        return url.includes('youtube.com/watch') || url.includes('youtu.be/') || url.includes('vimeo.com/') || url.includes('drive.google.com/');
-    };
-
-    const getEmbedUrl = (url) => {
-        if (url.includes('youtu.be/') || url.includes('youtube.com/watch')) {
-            if (url.includes('youtu.be/')) {
-                const videoId = url.split('youtu.be/')[1];
-                return `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1`;
-            }
-            const urlParams = new URLSearchParams(new URL(url).search);
-            const videoId = urlParams.get('v');
-            return videoId ? `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1` : '';
-        } else if (url.includes('vimeo.com/')) {
-            const videoId = url.split('vimeo.com/')[1];
-            return `https://player.vimeo.com/video/${videoId}?controls=1&background=0&byline=0&title=0&portrait=0&loop=0`;
-        } else if (url.includes('drive.google.com/')) {
-            const videoId = url.match(/[-\w]{25,}/); // Extrae el ID del archivo
-            return videoId ? `https://drive.google.com/file/d/${videoId}/preview` : '';
-        }
-        return '';
-    };
-
-    const generatePremiumCertificatePDF = (username, courseTitle, zorroImage, derechaabajo, izquierdaarriba) => {
-        const doc = new jsPDF({
-            orientation: 'landscape',
-            unit: 'cm',
-            format: [28, 21.6] // Tamaño A4 en centímetros
-        });
-    
-        // Fondo blanco
-        doc.setFillColor(240, 248, 255);
-        doc.rect(0, 0, 28, 21.6, 'F');
-    
-        // Añadir imágenes de bordes
-        if (izquierdaarriba) {
-            doc.addImage(izquierdaarriba, 'JPEG', -1, -1, 10, 10);
-        }
-        if (derechaabajo) {
-            doc.addImage(derechaabajo, 'JPEG', 19, 13, 10, 10);
-        }
-    
-        // Agregar fuente personalizada
-        doc.addFileToVFS('Anothershabby.ttf', Anothershabby_trial);
-        doc.addFont('Anothershabby.ttf', 'AnotherShabby', 'normal');
-        doc.setFont('AnotherShabby'); // Aplicar fuente personalizada
-    
-        // Título del certificado
-        doc.setFont('AnotherShabby', 'normal');
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(70);
-        doc.text('CERTIFICADO', 14, 4.5, { align: 'center' });
-    
-        // Subtítulo
-        doc.setFontSize(25);
-        doc.setFont('AnotherShabby', 'normal');
-        doc.setTextColor(0, 0, 0);
-        doc.text('De aprendizaje', 18, 5.5, { align: 'center' });
-
-        // Imagen de Zorro
-        if (zorroImage) {
-            doc.addImage(zorroImage, 'JPEG', 12, 7, 4, 4);
-        }
-
-        // Texto de reconocimiento
-        doc.setFont('times', 'bold');
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(18);
-        doc.text('ESTE CERTIFICADO SE OTORGA A', 14, 13.0, { align: 'center' });
-    
-        // Nombre del usuario
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(65);
-        doc.setFont('AnotherShabby', 'normal');
-        doc.text(`${username}`, 14, 15.5, { align: 'center' });
-
-        
-        // Línea debajo del nombre de usuario
-        doc.setLineWidth(0.1); // Grosor de la línea
-        doc.setDrawColor(0, 0, 0); // Color negro
-        doc.line(6, 16, 22, 16); // Coordenadas de inicio y fin de la línea
-    
-    
-        // Título del curso y Texto adicional
-        doc.setFont('times', 'normal');
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(14);
-        doc.text(`Por completar exitosamente el curso "${courseTitle}". `, 11, 17.5, { align: 'center' });
-    
-        // Texto adicional
-        doc.setFont('times', 'normal');
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text('Gracias por tu dedicación y', 19, 17.5, { align: 'center' });
-    
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text('esfuerzo. ¡Sigue aprendiendo y mejorando!', 14, 18.0, { align: 'center' });
-    
-        doc.setFontSize(14);
-        doc.setTextColor(192, 192, 192);
-        doc.text('Este certificado fue generado automáticamente.', 14, 19.5, { align: 'center' });
-    
-        // Guardar el PDF
-        doc.save(`Certificado_${courseTitle}.pdf`);
-    };
-
-    useEffect(() => {
-        if (course && currentIndex === course.content.length - 1) {
-            setShowFinishButton(true);
-        } else {
-            setShowFinishButton(false);
-        }
-    }, [currentIndex, course]);
-
-    if (!course) return <div>Loading...</div>;
-
-    return (
-        <div className="min-h-screen overflow-auto overflow-x-hidden bg-gradient-to-t from-blue-200 via-blue-300 to-blue-400">
-            <NavigationBar />
-            <div className="max-w-screen-lg mx-auto bg-white p-3 rounded-lg shadow-md mt-20 mb-10">
-                <div className="flex items-center mb-4">
-                    <Link to="/MyCourses" className="flex items-center text-blue-600 hover:text-blue-800">
-                        <FaArrowLeft className="mr-2" /> Back
-                    </Link>
-                </div>
-                <div className="flex flex-col md:flex-row">
-                    <div className="md:w-3/5 pr-8 text-center">
-                        <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
-                        <img src={course.image} alt={course.title} className="w-full h-64 object-cover rounded-lg mb-4" />
-                        <p className="text-lg mb-4">{course.description}</p>
-                    </div>
-                    <div className="md:w-2/5 mt-10">
-                        <Collapse accordion>
-                            {course.content && course.content.map((url, index) => (
-                                <Panel
-                                    header={`Recurso ${index + 1}`}
-                                    key={index}
-                                    disabled={index > currentViewedIndex + 1}
-                                >
-                                    <Button type="link" onClick={() => handleContentClick(index)}>
-                                        {isVideoLink(url) ? 'Ver Video de YouTube' : url.endsWith('.mp4') ? 'Ver Video' : url.endsWith('.pdf') ? 'Ver PDF' : 'Ver Imagen'}
-                                    </Button>
-                                </Panel>
-                            ))}
-                        </Collapse>
-                    </div>
-                </div>
+  return (
+    <div className="min-h-screen overflow-auto bg-[#242222]">
+      <NavigationBar />
+      <div className="max-w-screen-xl mx-auto p-6">
+        <div className="bg-[#D9D9D9] p-6 rounded-lg shadow-lg mb-8 flex flex-col md:flex-row items-center md:items-start md:justify-between">
+          <div className="md:w-2/3 pl-6">
+            <h1 className="text-5xl md:text-7xl font-extrabold mb-8">
+              Curso de {course.title}
+            </h1>
+            <p className="text-xl md:text-2xl mb-8 leading-relaxed max-w-xl">
+              En BrightMind, creemos que el aprendizaje nunca termina. Descubre
+              el mundo de Python desde lo más básico y construye una sólida base
+              de conocimientos. ¡Empieza hoy y abre la puerta a nuevas
+              habilidades con BrightMind!
+            </p>
+            <div className="flex flex-col items-start mb-8 pl-4">
+              <span className="text-xl mb-2">Opiniones:</span>
+              <Rate disabled defaultValue={4.5} className="text-xl mb-2" />
+              <span className="text-lg">4.5/5</span>
             </div>
-            <Modal
-                visible={modalVisible}
-                onCancel={handleCloseModal}
-                title={`Recurso ${currentIndex + 1}`}
-                footer={null}
-                destroyOnClose
-                afterClose={() => setCurrentIndex(0)}
-                width={window.innerWidth < 768 ? "90%" : "50%"}  // Responsividad del ancho del modal
-            >
-                {course.content && currentIndex < course.content.length && (
-                    <>
-                        <Progress
-                            percent={(currentIndex + 1) / course.content.length * 100}
-                            status="active"
-                            strokeColor={{ '0%': '#108ee9', '100%': '#87d068' }}
-                            className="mb-4"
-                        />
-                        {isVideoLink(course.content[currentIndex]) ? (
-                            <iframe
-                                title={`Video ${currentIndex + 1}`}
-                                width="100%"
-                                height="400"
-                                src={getEmbedUrl(course.content[currentIndex])}
-                                frameBorder="0"
-                                allowFullScreen
-                            ></iframe>
-                        ) : course.content[currentIndex].endsWith('.pdf') ? (
-                            <iframe
-                                src={course.content[currentIndex]}
-                                width="100%"
-                                height={window.innerWidth < 768 ? "500" : "700"}  // Altura responsiva
-                                title="PDF Viewer"
-                            ></iframe>
-                        ) : (
-                            <div className="flex justify-center">
-                                <img
-                                    src={course.content[currentIndex]}
-                                    alt={`Content ${currentIndex}`}
-                                    className="max-w-full h-auto"
-                                />
-                            </div>
-                        )}
-                        <div className="flex justify-end mt-4">
-                            {showFinishButton ? (
-                                <Button onClick={handleFinishCourse} type="primary" className="bg-gradient-to-r from-purple-500 to-emerald-400 text-white">
-                                    Finalizar Curso
-                                </Button>
-                            ) : (
-                                <Button onClick={handleNext} type="primary" className="bg-gradient-to-r from-purple-500 to-emerald-400 text-white">
-                                    Siguiente
-                                </Button>
-                            )}
-                        </div>
-                    </>
-                )}
-            </Modal>
+            <Button className="bg-gradient-to-r from-purple-500 to-emerald-400 text-white rounded-lg px-10 py-5 text-xl font-bold">
+              Aprende
+            </Button>
+          </div>
+          <div className="md:w-1/3 text-center">
+            <img
+              src={zorro}
+              alt="Zorro"
+              className="w-full h-auto max-w-xl mx-auto"
+              style={{
+                maxHeight: "350px",
+                marginLeft: "0",
+                marginBottom: "1rem",
+              }}
+            />
+            <Button className="border-2 border-black text-black font-bold text-2xl px-6 py-4 mt-4">
+              Nivel Básico
+            </Button>
+          </div>
         </div>
-    );
+        <div className="bg-[#D9D9D9] p-6 rounded-lg shadow-lg flex flex-col md:flex-row">
+          <div className="flex-1 md:mr-8">
+            <Collapse accordion>
+              <Panel
+                header={
+                  <span className="text-xl font-bold text-black">
+                    <FaArrowRight className="inline-block mr-2" />
+                    Introducción
+                  </span>
+                }
+                key="1"
+                className="bg-white text-black font-bold"
+                
+              >
+                <p>No se que poner:v</p>
+              </Panel>
+              <Panel
+                header={
+                  <span className="text-xl font-bold text-black">
+                    <FaArrowRight className="inline-block mr-2" />
+                    Conceptos Básicos
+                  </span>
+                }
+                key="2"
+                className="bg-white text-black font-bold"
+                showArrow={false}
+              >
+                <p>Descripcion del curso</p>
+                <div className="flex justify-end mt-8">
+                  <Button className="bg-gradient-to-r from-purple-500 to-emerald-400 text-white rounded-lg px-10 py-5 text-xl font-bold">
+                    Comienza ahora
+                  </Button>
+                </div>
+              </Panel>
+              <Panel
+                header={
+                  <span className="text-xl font-bold text-black">
+                    <FaArrowRight className="inline-block mr-2" />
+                    Introducción
+                  </span>
+                }
+                key="3"
+                className="bg-white text-black font-bold"
+                showArrow={false}
+              >
+                <p>No se que poner:v</p>
+              </Panel>
+              <Panel
+                header={
+                  <span className="text-xl font-bold text-black">
+                    <FaArrowRight className="inline-block mr-2" />
+                    Introducción
+                  </span>
+                }
+                key="4"
+                className="bg-white text-black font-bold"
+                showArrow={false}
+              >
+                <p>No se que poner:v</p>
+              </Panel>
+              <Panel
+                header={
+                  <span className="text-xl font-bold text-black">
+                    <FaArrowRight className="inline-block mr-2" />
+                    Introducción
+                  </span>
+                }
+                key="5"
+                className="bg-white text-black font-bold"
+                showArrow={false}
+              >
+                <p>No se que poner:v</p>
+              </Panel>
+              <Panel
+                header={
+                  <span className="text-xl font-bold text-black">
+                    <FaArrowRight className="inline-block mr-2" />
+                    Introducción
+                  </span>
+                }
+                key="6"
+                className="bg-white text-black font-bold"
+                showArrow={false}
+              >
+                <p>No se que poner:v</p>
+              </Panel>
+            </Collapse>
+          </div>
+          <div className="w-full md:w-64 bg-white p-4 rounded-lg shadow-md mt-8 md:mt-0">
+            <img
+              src={course.image}
+              alt="Imagen del curso"
+              className="w-full h-auto rounded mb-4"
+            />
+            <div className="text-center">
+              <p className="text-lg font-bold mt-4">
+                Instructor: {user.data.username}
+              </p>
+              <p className="text-lg font-bold">Cursos: {numCursos}</p>
+              {userCourses.length > 0 ? (
+                <ul className="">
+                  {userCourses.map((userCourse, index) => (
+                    <li key={index}>{userCourse.title}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-md mt-2">
+                  No estás registrado en ningún curso.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default CourseView;

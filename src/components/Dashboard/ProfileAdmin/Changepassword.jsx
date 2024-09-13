@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { toast, ToastContainer } from "react-toastify";
+import Swal from 'sweetalert2';
 import { Link, useParams, useNavigate } from "react-router-dom";
 import LeftBar from "./../../Dashboard/LeftBar";
 import Navbar from "./../../Dashboard/NavBar";
@@ -9,7 +9,6 @@ import { useUserContext } from "../../../context/user/user.context";
 import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from "react-i18next";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import "react-toastify/dist/ReactToastify.css";
 
 function Changepassword() {
   const { t } = useTranslation("global");
@@ -30,7 +29,13 @@ function Changepassword() {
           setEmail(userData.email);
         }
       } catch (error) {
-        toast.error(t("newPasswordUser.fetch_email_error"));
+        Swal.fire({
+          icon: 'error',
+          title: t("newPasswordUser.fetch_email_error"),
+          text: error.message,
+          confirmButtonText: 'OK',
+          timer: 3000,
+        });
         console.error("Error fetching user email:", error);
       }
     };
@@ -65,13 +70,24 @@ function Changepassword() {
     onSubmit: async (values) => {
       try {
         await changePassword(email, values.password); // Usa la función changePassword del contexto
-        toast.success(t("newPasswordUser.password_changed_success"));
+        Swal.fire({
+          icon: 'success',
+          title: t("newPasswordUser.password_changed_success"),
+          showConfirmButton: false,
+          timer: 2000,
+        });
         setTimeout(() => {
           navigate("/ProfileEditor");
         }, 2000);
         console.log(values);
       } catch (error) {
-        toast.error(t("newPasswordUser.password_change_error"));
+        Swal.fire({
+          icon: 'error',
+          title: t("newPasswordUser.password_change_error"),
+          text: error.message,
+          confirmButtonText: 'OK',
+          timer: 3000,
+        });
         console.error(error);
       }
     },
@@ -98,17 +114,6 @@ function Changepassword() {
         }`}
       >
         <Navbar />
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
         <div className="flex justify-center items-center mx-2 mt-20 sm:mt-10 mb-5">
           <div className="bg-gradient-to-bl border from-purple-500 to-blue-500 p-4 rounded-3xl w-full sm:w-5/6 md:w-7/12 lg:w-5/12 shadow-orange shadow-white">
             <h2 className="text-2xl sm:text-3xl lg:text-5xl font-black text-center mb-2 text-white">

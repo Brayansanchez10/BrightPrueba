@@ -5,6 +5,7 @@ import {
   InfoCircleOutlined,
   DeleteOutlined,
   CheckCircleOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
 import LeftBar from "../../Dashboard/LeftBar";
 import { useUserContext } from "../../../context/user/user.context";
@@ -14,8 +15,10 @@ import UpdateCourseForm from "../Courses/UpdateCourseForm";
 import Navbar from "../NavBar";
 import AssignContentModal from "./AssignContentModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
-import CourseDetailsModal from "./CourseDetailsModal"; // Import the new modal
+import CourseDetailsModal from "./CourseDetailsModal";
+import NotifyCourseModal from "./NotifyCourseModal";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 const DataTablete = () => {
   const { t } = useTranslation("global");
@@ -41,6 +44,7 @@ const DataTablete = () => {
   const [courseToDelete, setCourseToDelete] = useState(null);
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
   const [selectedCourseDetails, setSelectedCourseDetails] = useState(null);
+  const [isNotifyModalVisible, setIsNotifyModalVisible] = useState(false);
 
   useEffect(() => {
     getUsers();
@@ -141,6 +145,28 @@ const DataTablete = () => {
   const handleDetailsButtonClick = (course) => {
     setSelectedCourseDetails(course);
     setIsDetailsModalVisible(true);
+  };
+
+  const handleNotifyButtonClick = (course) => {
+    setSelectedCourse(course);
+    setIsNotifyModalVisible(true);
+  };
+
+  const handleSendNotification = async (recipients) => {
+    try {
+      const response = await axios.post('/api/users/notify-course', {
+        courseId: selectedCourse._id,
+        recipients: recipients
+      });
+      if (response.data.message === "Course notification emails sent successfully") {
+        message.success(t('courses.notificationSent'));
+      } else {
+        throw new Error("Unexpected response");
+      }
+    } catch (error) {
+      console.error("Error sending notification:", error);
+      message.error(t('courses.notificationError'));
+    }
   };
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -260,6 +286,13 @@ const DataTablete = () => {
                                   }
                                 />
                                 <Button
+                                  className="bg-orange-500 h-10 text-lg text-white"
+                                  icon={<BellOutlined />}
+                                  onClick={() =>
+                                    handleNotifyButtonClick(course)
+                                  }
+                                />
+                                <Button
                                   className="bg-red-500 h-10 text-lg text-white"
                                   icon={<DeleteOutlined />}
                                   onClick={() =>
@@ -310,6 +343,13 @@ const DataTablete = () => {
             onClose={() => setIsDetailsModalVisible(false)}
             course={selectedCourseDetails}
           />
+
+          <NotifyCourseModal
+                visible={isNotifyModalVisible}
+                onClose={() => setIsNotifyModalVisible(false)}
+                onSendEmail={handleSendNotification}
+                usersData={usersData}
+              />
         </div>
       </div>
       {totalPages > 1 && (

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Modal, message } from "antd";
+import { Modal } from "antd";
 import { useRoleContext } from "../../../context/user/role.context";
+import Swal from "sweetalert2";
 import { useTranslation } from 'react-i18next';
 
 const CreateRolForm = ({ visible, onClose }) => {
@@ -56,18 +57,22 @@ const CreateRolForm = ({ visible, onClose }) => {
     try {
       
       if (rolesData.some((existingRole) => existingRole.nombre === role.nombre)) {
-        message.error({
-          content: "Role name already exists",
-          duration: 3,
+        Swal.fire({
+          icon: "error",
+          title: t("createRoleForm.roleExists"),
+          confirmButtonText: "OK",
         });
         return;
       }
       // Crear el nuevo rol
       await createRole(role);
-      message.success({
-        content: t('createRoleForm.roleCreated'),
-        duration: 1,
-        onClose: handleModalClose,
+
+      Swal.fire({
+        icon: "success",
+        title: t('createRoleForm.roleCreated'),
+        showConfirmButton: false,
+        timer: 1500, // Duración del mensaje
+        onClose: handleModalClose(),
       });
       setRole({ nombre: "" });
     } catch (error) {

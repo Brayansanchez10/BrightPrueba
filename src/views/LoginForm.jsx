@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import Carousel from "./../components/Login_components/Carousel";
 import { useAuth } from "../context/auth.context";
@@ -51,20 +50,27 @@ const LoginForm = () => {
           const userToken = user?.data?.token || null;
           console.log(userRole);
   
-          
           document.cookie = `token=${userToken}; path=/`;
           setUserRole(userRole);
           setIsAuthenticated(true);
         } else {
           setError(message);
-          toast.error(message);
+          Swal.fire({
+            icon: 'error',
+            title: t("login.error"),
+            text: message,
+          });
         }
       } catch (error) {
         console.log("Error capturado en el catch:", error);
         const errorMessage =
           error?.response?.data?.message || t("login.error_occurred");
         setError(errorMessage);
-        toast.error(errorMessage);
+        Swal.fire({
+          icon: 'error',
+          title: t("login.error"),
+          text: errorMessage,
+        });
       } finally {
         setLoading(false);
         setTimeout(() => {
