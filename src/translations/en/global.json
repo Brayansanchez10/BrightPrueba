@@ -2,7 +2,7 @@
     "login": {
         "sign_in": "Sign In",
         "not_registered": "Haven't you registered yet?",
-        "register": "- Register",
+        "register": "CREATE ACCOUNT",
         "email": "Email",
         "enter_email": "Enter email",
         "invalid_email": "Invalid email",
@@ -12,9 +12,13 @@
         "password_required": "Password is required",
         "loading": "Loading...",
         "login": "LOGIN",
-        "forgot_password": "Have you forgotten your password?",
+        "forgot_password": "Forgot password",
         "login_successful": "Login successful",
-        "error_occurred": "An error occurred"
+        "error_occurred": "An error occurred",
+        "hello": "HELLO!",
+        "welcome_message": "WELCOME TO A LEARNING SPACE",
+        "login_se": "LOGIN",
+        "your_account": "YOUR ACOUNT"
     },
     "carousel": {
         "phrases": {
@@ -39,8 +43,8 @@
         "username_min_length": "Username must be at least 4 characters long",
         "email_requires_at": "Email must contain '@'",
         "email_requires_com": "Email must end with '.com'",
-        "register": "Register",
-        "already_registered": "Already registered?",
+        "register": "REGISTER",
+        "already_registered": "Already registered? ",
         "login": "Login",
         "username": "Username",
         "enter_username": "Enter username",
@@ -59,7 +63,10 @@
         "passwords_match": "Passwords must match",
         "user_created": "User created successfully, Please check your email to activate your account",
         "email_exists": "Email already exists, please enter a different one",
-        "username_exists": "Username already exists, please enter a different one"
+        "username_exists": "Username already exists, please enter a different one",
+        "register_now": "REGISTER NOW",
+        "future": "BE PART OF THE FUTURE",
+        "ready": "READY!"
     },
     "reset_password": {
         "invalid_email": "Invalid email",

@@ -47,10 +47,12 @@ const VideoPage = () => {
 
   return (
     <div className="flex items-center justify-center w-full h-screen bg-black">
-      <video className="w-full h-full object-cover" autoPlay muted onEnded={getRandomIndex}>
-        <source src={videos[randomIndex]} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      {videos.length > 0 && (
+        <video className="w-full h-full object-cover" autoPlay muted onEnded={getRandomIndex}>
+          <source src={videos[randomIndex]} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
     </div>
   );
 };

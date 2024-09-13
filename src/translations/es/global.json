@@ -2,7 +2,7 @@
     "login": {
         "sign_in": "Iniciar sesión",
         "not_registered": "¿No te has registrado todavía?",
-        "register": "- Registrarse",
+        "register": "CREAR CUENTA",
         "email": "Correo electrónico",
         "enter_email": "Ingresa correo electrónico",
         "invalid_email": "Correo electrónico no válido",
@@ -14,7 +14,11 @@
         "login": "INICIAR SESIÓN",
         "forgot_password": "¿Has olvidado tu contraseña?",
         "login_successful": "Inicio de sesión exitoso",
-        "error_occurred": "Ocurrió un error"
+        "error_occurred": "Ocurrió un error",
+        "hello": "¡HOLA!",
+        "welcome_message": "BIENVENIDO A SU ESPACIO DE APRENDIZAJE",
+        "login_se": "INGRESA",
+        "your_account": "A TU CUENTA"
     },
     "carousel": {
         "phrases": {
@@ -39,8 +43,8 @@
         "username_min_length": "El nombre de usuario debe tener al menos 4 caracteres",
         "email_requires_at": "El correo debe contener un '@'",
         "email_requires_com": "El correo debe terminar en' .com'",
-        "register": "Registrarse",
-        "already_registered": "¿Ya estás registrado?",
+        "register": "REGISTRARSE",
+        "already_registered": "¿Ya estás registrado? ",
         "login": "Iniciar sesión",
         "username": "Nombre de usuario",
         "enter_username": "Ingresa nombre de usuario",
@@ -59,7 +63,10 @@
         "passwords_match": "Las contraseñas deben coincidir",
         "user_created": "Usuario creado exitosamente, Por favor revisa tu correo para activar la cuenta",
         "email_exists": "El correo electrónico ya existe, por favor ingrese uno distinto",
-        "username_exists": "El nombre de usuario ya existe, por favor ingrese uno distinto"
+        "username_exists": "El nombre de usuario ya existe, por favor ingrese uno distinto",
+        "register_now": "REGÍSTRESE AHORA",
+        "future": "SE PARTE DEL FUTURO",
+        "ready": "PREPARADO!"
     },
     "reset_password": {
         "invalid_email": "Correo electrónico no válido",

@@ -77,6 +77,7 @@ function App() {
                       <Route path="/Account" element={<ProfileUser />} />
                       <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />
                       <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />
+                      <Route path="" element={Footer} />
                     </Route>
 
                     {/* Rutas Protegidas PARA ADMINISTRADOR */}
@@ -89,14 +90,15 @@ function App() {
                       <Route path="/ProfileEditor" element={<ProfileEditor />} />
                       <Route path="/ChangePassword" element={<ChangePassword />} />
                       <Route path="/eliminatedCode" element={<DeleteAccountConfirmation />} />
+                      <Route path="" element={Footer} />
                     </Route>
 
                     {/* Vistas ADICIONALES */}
                     <Route path="/notFound" element={<NotFoundPage />} />
                     <Route path="/activate" element={<ActivationComponent />} />
                     <Route path="*" element={<Navigate to="/notFound" />} />
+                    
                   </Routes>
-                  <Footer />
                 </CourseProgressProvider>
               </CoursesProvider>
             </CategoryProvider>
