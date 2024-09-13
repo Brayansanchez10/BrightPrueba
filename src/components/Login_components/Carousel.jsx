@@ -12,6 +12,7 @@ function Carousel() {
     { text: t("carousel.phrases.bloom.text"), author: "Allan Bloom", image: "image_url4" },
     { text: t("carousel.phrases.ebbinghaus.text"), author: "Hermann Ebbinghaus", image: "image_url5" },
   ];
+
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
 
   useEffect(() => {
@@ -25,11 +26,27 @@ function Carousel() {
   }, []);
 
   return (
-    <div className="hidden rounded-r-3xl sm:flex sm:items-center sm:w-1/2 sm:min-h-screen bg-gradient-to-r from-purple-600 to-emerald-500 shadow-pink-500 shadow-2xl justify-center">
+    <div className="bg-gradient-to-r from-purple-600 to-emerald-500 w-full sm:w-auto rounded-tl-3xl rounded-bl-3xl p-8">
       <div className="text-center text-white">
-        <img className="h-80 w-80 mx-auto mb-4 mt-10" src={imagen} alt="Logo" />
-        <p className="text-3xl italic mb-2 mt-10">"{phrases[currentPhraseIndex].text}"</p>
-        <p className="text-2xl font-bold mt-20 text-black">- {phrases[currentPhraseIndex].author}</p>
+        <img
+          className="h-60 w-60 sm:h-64 sm:w-64 lg:h-80 lg:w-80 mx-auto mb-0 mt-0"
+          src={imagen}
+          alt="Logo"
+        />
+        <div className="h-48 lg:h-56 block items-center justify-center">
+          <p className="text-xl sm:text-2xl lg:text-3xl italic text-center">
+            "{phrases[currentPhraseIndex].text}"
+          </p>
+          <br />
+          <p className="text-lg sm:text-xl lg:text-2xl font-bold text-black">
+            - {phrases[currentPhraseIndex].author}
+          </p>
+        </div>
+        
+        <p className="text-lg mt-0.5 sm:text-xl sm:mt-16 lg:mt-6 font-bold mb-14">
+          {t('footer.description')}
+          <p className="text-sm">{t('footer.copy_right')}</p>
+        </p>
       </div>
     </div>
   );
