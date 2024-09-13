@@ -119,7 +119,6 @@ function RegisterForm() {
         
         
         <div className="flex flex-col justify-center items-center bg-white w-full md:w-2/2 sm:rounded-none md:rounded-tr-3xl md:rounded-br-3xl p-3">
-          <ToastContainer />
           <div className="text-2xl w-full mx-auto text-center font-black bg-gradient-to-r from-emerald-400  to-purple-800 bg-clip-text text-transparent font-impact mb-2">
               <p>{t("register.register_now")}</p>
               <p>{t("register.future")}</p>

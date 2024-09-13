@@ -96,13 +96,14 @@ function App() {
                       <Route path="" element={Footer} />
                     </Route>
 
-                    {/* Vistas ADICIONALES */}
-                    <Route path="/notFound" element={<NotFoundPage />} />
-                    <Route path="/activate" element={<ActivationComponent />} />
-                    <Route path="*" element={<Navigate to="/notFound" />} />
+                      {/* Vistas ADICIONALES */}
+                      <Route path="/notFound" element={<NotFoundPage />} />
+                      <Route path="/activate" element={<ActivationComponent />} />
+                      <Route path="*" element={<Navigate to="/notFound" />} />
                     
-                  </Routes>
-                </CourseProgressProvider>
+                    </Routes>
+                  </CourseProgressProvider>
+                </ResourceProvider>
               </CoursesProvider>
             </CategoryProvider>
           </PermissionProvider>
