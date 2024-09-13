@@ -35,9 +35,9 @@ import Categories from "./components/Dashboard/Categories/Categories";
 import HomePage from "./views/HomePage";
 import ProfileUser from "./components/Home/ProfileUser";
 import MyCourses from "./components/Home/Courses/MyCourses";
-import ResourceView from "./components/Home/Resources/resourceView";
 import CoursesHome from "./components/Home/Courses/Courses";
 import UserDeleteAccount from "./components/Home/UserDeleteAccount";
+import ResourceView from "./components/Home/Resources/resourceView";
 
 // Vista error
 import NotFoundPage from "./views/Error/404Page";
@@ -77,6 +77,7 @@ function App() {
                       <Route path="/MyCourses" element={<MyCourses />} />
                       <Route path="/CoursesHome" element={<CoursesHome />} />
                       <Route path="/course/:courseId" element={<CourseView />} />
+                      <Route path="/resource/:id" element={<ResourceView /> } />
                       <Route path="/Account" element={<ProfileUser />} />
                       <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />
                       <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />

@@ -6,7 +6,7 @@ import {
     updateResource as updateResourceApi,
     deleteResource as deleteResourceApi,
     getAllResources as getAllResourcesApi,
-    getResourceUser as getResourceUserApi,
+    getResourceUser as getResourceUserApi
 } from "../../api/courses/resource.request.js"; // Importamos las funciones de Resource.request
 
 // Crear el contexto
@@ -37,7 +37,7 @@ export const ResourceProvider = ({ children }) => {
             return null;
         }
     };
-
+    
     //Función para obtener un recurso Vista User
     const getResourceUser = async (id) => {
         try {
@@ -48,6 +48,7 @@ export const ResourceProvider = ({ children }) => {
             return null;
         }
     };
+
     
     // Función para obtener un recurso registrado al courseId
     const getResource = async (courseId) => {
@@ -65,14 +66,15 @@ export const ResourceProvider = ({ children }) => {
     };
 
     // Función para crear un recurso
-    const createResource = async ({courseId, title, description, file, link}) => {
+    const createResource = async ({ courseId, title, description, file, link, quizzes }) => {
         try {
             const newResource = {
                 courseId, 
                 title,
                 description,
                 file,
-                link
+                link,
+                quizzes // Añadir quizzes al nuevo recurso
             };
             console.log(newResource);
 
@@ -86,8 +88,16 @@ export const ResourceProvider = ({ children }) => {
     };
 
     // Función para actualizar un recurso
-    const updateResource = async (id, resourceData) => {
+    const updateResource = async (id, { title, description, file, link, quizzes }) => {
         try {
+            const resourceData = {
+                title,
+                description,
+                file,
+                link,
+                quizzes // Incluir quizzes en la actualización
+            };
+
             const res = await updateResourceApi(id, resourceData);
             setResources(prevResources =>
                 prevResources.map(resource =>

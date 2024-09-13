@@ -1,217 +1,184 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useCoursesContext } from "../../../context/courses/courses.context";
-import { useAuth } from "../../../context/auth.context";
-import { useUserContext } from "../../../context/user/user.context";
-import { Collapse, Button, Rate } from "antd";
-import NavigationBar from "../NavigationBar";
-import { FaArrowRight } from "react-icons/fa";
-import zorro from "../../../assets/img/hola.png";
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useCoursesContext } from '../../../context/courses/courses.context';
+import { useResourceContext } from '../../../context/courses/resource.contex';
+import { useAuth } from '../../../context/auth.context';
+import { useUserContext } from '../../../context/user/user.context';
+import { Collapse, Button, Modal, Progress } from 'antd'; // Asegúrate de importar Progress
+import NavigationBar from '../NavigationBar';
+import { FaArrowLeft } from 'react-icons/fa';
+import jsPDF from 'jspdf';
+import zorro from '../../../assets/img/Zorro.jpeg';
+import derechaabajo from '../../../assets/img/DerechaAbajo.jpeg';
+import izquierdaarriba from '../../../assets/img/IzquierdaArriba.jpeg';
+import { Anothershabby_trial } from '../../../Tipografy/Anothershabby_trial-normal';
+import { getAllResources } from '../../../api/courses/resource.request';
+import Logo from "../../../assets/img/hola.png";
+import { useNavigate } from "react-router-dom";
 
 const { Panel } = Collapse;
 
 const CourseView = () => {
-  const { courseId } = useParams();
-  const { getCourse } = useCoursesContext();
-  const { user } = useAuth();
-  const { getUserById } = useUserContext();
-  const [username, setUsername] = useState("");
-  const [userCourses, setUserCourses] = useState([]);
-  const [course, setCourse] = useState(null);
-  const [numCursos, setNumCursos] = useState(0);
+    const { courseId } = useParams();
+    const { getCourse } = useCoursesContext();
+    const { getResource  } = useResourceContext();
+    const { user } = useAuth();
+    const { getUserById } = useUserContext();
+    const [username, setUsername] = useState('');
+    const [course, setCourse] = useState(null);
+    const navigate = useNavigate();
+    const [resources, setResources] = useState([]); // Agrega estado para los recursos
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [currentViewedIndex, setCurrentViewedIndex] = useState(-1);
+    const [showFinishButton, setShowFinishButton] = useState(false);
 
-  useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        const courseData = await getCourse(courseId);
-        console.log("Course Data:", courseData);
-        setCourse(courseData);
-        const instructorData = await getUserById(courseData.instructorId);
-        console.log("Instructor Data:", instructorData);
-        setUsername(instructorData.username);
-      } catch (error) {
-        console.error("Error al obtener la información del curso:", error);
-      }
-    };
+    useEffect(() => {
+        const fetchCourse = async () => {
+            try {
+                const courseData = await getCourse(courseId);
+                setCourse(courseData);
+            } catch (error) {
+                console.error('Error al obtener la información del curso:', error);
+            }
+        };
 
-    fetchCourse();
-  }, [courseId, getCourse, getUserById]);
+        fetchCourse();
+    }, [courseId, getCourse]);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (user && user.data && user.data.id) {
-        try {
-          const userData = await getUserById(user.data.id);
-          console.log("User Data:", userData);
-          setUserCourses(userData.courses || []);
-          setNumCursos(userData.courses ? userData.courses.length : 0);
-        } catch (error) {
-          console.error("Error al obtener datos del usuario:", error);
-        }
-      }
-    };
+    useEffect(() => {
+        const fetchResources = async () => {
+            try {
+                const ResourceData = await getResource(courseId); 
+                setResources(ResourceData);
+            } catch (error) {
+                console.error('Error al obtener los recursos del curso:', error);
+            }
+        };
+    
+        fetchResources();
+    }, [courseId]);
 
-    fetchUserData();
-  }, [user, getUserById]);
-
-  if (!course) return;
-
-  return (
-    <div className="min-h-screen overflow-auto bg-[#242222]">
-      <NavigationBar />
-      <div className="max-w-screen-xl mx-auto p-6">
-        <div className="bg-[#D9D9D9] p-6 rounded-lg shadow-lg mb-8 flex flex-col md:flex-row items-center md:items-start md:justify-between">
-          <div className="md:w-2/3 pl-6">
-            <h1 className="text-5xl md:text-7xl font-extrabold mb-8">
-              Curso de {course.title}
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 leading-relaxed max-w-xl">
-              En BrightMind, creemos que el aprendizaje nunca termina. Descubre
-              el mundo de Python desde lo más básico y construye una sólida base
-              de conocimientos. ¡Empieza hoy y abre la puerta a nuevas
-              habilidades con BrightMind!
-            </p>
-            <div className="flex flex-col items-start mb-8 pl-4">
-              <span className="text-xl mb-2">Opiniones:</span>
-              <Rate disabled defaultValue={4.5} className="text-xl mb-2" />
-              <span className="text-lg">4.5/5</span>
-            </div>
-            <Button className="bg-gradient-to-r from-purple-500 to-emerald-400 text-white rounded-lg px-10 py-5 text-xl font-bold">
-              Aprende
-            </Button>
-          </div>
-          <div className="md:w-1/3 text-center">
-            <img
-              src={zorro}
-              alt="Zorro"
-              className="w-full h-auto max-w-xl mx-auto"
-              style={{
-                maxHeight: "350px",
-                marginLeft: "0",
-                marginBottom: "1rem",
-              }}
-            />
-            <Button className="border-2 border-black text-black font-bold text-2xl px-6 py-4 mt-4">
-              Nivel Básico
-            </Button>
-          </div>
-        </div>
-        <div className="bg-[#D9D9D9] p-6 rounded-lg shadow-lg flex flex-col md:flex-row">
-          <div className="flex-1 md:mr-8">
-            <Collapse accordion>
-              <Panel
-                header={
-                  <span className="text-xl font-bold text-black">
-                    <FaArrowRight className="inline-block mr-2" />
-                    Introducción
-                  </span>
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (user && user.data && user.data.id) {
+                try {
+                    const userData = await getUserById(user.data.id);
+                    setUsername(userData.username);
+                } catch (error) {
+                    console.error('Error al obtener datos del usuario:', error);
                 }
-                key="1"
-                className="bg-white text-black font-bold"
-                
-              >
-                <p>No se que poner:v</p>
-              </Panel>
-              <Panel
-                header={
-                  <span className="text-xl font-bold text-black">
-                    <FaArrowRight className="inline-block mr-2" />
-                    Conceptos Básicos
-                  </span>
-                }
-                key="2"
-                className="bg-white text-black font-bold"
-                showArrow={false}
-              >
-                <p>Descripcion del curso</p>
-                <div className="flex justify-end mt-8">
-                  <Button className="bg-gradient-to-r from-purple-500 to-emerald-400 text-white rounded-lg px-10 py-5 text-xl font-bold">
-                    Comienza ahora
-                  </Button>
+            }
+        };
+
+        fetchUserData();
+    }, [user, getUserById]);
+
+    // Maneja el clic en el botón para navegar al recurso
+    const handleResourceClick = (resourceId) => {
+        console.log("Resource ID: ", resourceId);
+        navigate(`/resource/${resourceId}`);
+    };
+    
+
+    if (!course) return <div>Loading...</div>;
+
+    return (
+        <div className="min-h-screen bg-gradient-to-t from-blue-200 via-blue-300 to-blue-400">
+            <NavigationBar />
+            <section className="flex justify-center py-8">
+                <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Imagen del curso */}
+                        <div className="relative h-64 overflow-hidden rounded-lg sm:h-80 lg:order-last lg:h-full">
+                            <img
+                                src={course.image}
+                                className="absolute inset-0 h-full w-full object-cover rounded-lg"
+                                alt="Course"
+                            />
+                        </div>
+    
+                        {/* Detalles del curso */}
+                        <div className="lg:py-16">
+                            <Link to="/MyCourses" className="flex items-center text-blue-600 hover:text-blue-800 mb-4">
+                                <FaArrowLeft className="mr-2" /> Back
+                            </Link>
+                            
+                            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">{course.title}</h2>
+                            <p className="mt-4 text-gray-600">{course.description}</p>
+    
+                            <a
+                                href="#"
+                                className="mt-8 inline-block rounded-lg bg-indigo-600 px-8 py-3 text-sm font-medium text-white shadow-md transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Get Started Today
+                            </a>
+                        </div>
+                    </div>
                 </div>
-              </Panel>
-              <Panel
-                header={
-                  <span className="text-xl font-bold text-black">
-                    <FaArrowRight className="inline-block mr-2" />
-                    Introducción
-                  </span>
-                }
-                key="3"
-                className="bg-white text-black font-bold"
-                showArrow={false}
-              >
-                <p>No se que poner:v</p>
-              </Panel>
-              <Panel
-                header={
-                  <span className="text-xl font-bold text-black">
-                    <FaArrowRight className="inline-block mr-2" />
-                    Introducción
-                  </span>
-                }
-                key="4"
-                className="bg-white text-black font-bold"
-                showArrow={false}
-              >
-                <p>No se que poner:v</p>
-              </Panel>
-              <Panel
-                header={
-                  <span className="text-xl font-bold text-black">
-                    <FaArrowRight className="inline-block mr-2" />
-                    Introducción
-                  </span>
-                }
-                key="5"
-                className="bg-white text-black font-bold"
-                showArrow={false}
-              >
-                <p>No se que poner:v</p>
-              </Panel>
-              <Panel
-                header={
-                  <span className="text-xl font-bold text-black">
-                    <FaArrowRight className="inline-block mr-2" />
-                    Introducción
-                  </span>
-                }
-                key="6"
-                className="bg-white text-black font-bold"
-                showArrow={false}
-              >
-                <p>No se que poner:v</p>
-              </Panel>
-            </Collapse>
-          </div>
-          <div className="w-full md:w-64 bg-white p-4 rounded-lg shadow-md mt-8 md:mt-0">
-            <img
-              src={course.image}
-              alt="Imagen del curso"
-              className="w-full h-auto rounded mb-4"
-            />
-            <div className="text-center">
-              <p className="text-lg font-bold mt-4">
-                Instructor: {user.data.username}
-              </p>
-              <p className="text-lg font-bold">Cursos: {numCursos}</p>
-              {userCourses.length > 0 ? (
-                <ul className="">
-                  {userCourses.map((userCourse, index) => (
-                    <li key={index}>{userCourse.title}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-md mt-2">
-                  No estás registrado en ningún curso.
-                </p>
-              )}
-            </div>
-          </div>
+            </section>
+    
+            <section className="flex justify-center py-8">
+                <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full">
+                    <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl text-center mb-6">
+                        Temario y recursos del Curso de {course.title}
+                    </h2>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <Collapse accordion>
+                    {resources.map((resource) => (
+                        <Panel header={resource.title} key={resource._id} className="border border-gray-300 rounded-lg mb-4">
+                            <div className="p-4 text-gray-700">{resource.description}</div>
+                            {/* Botón de navegación */}
+                            <div
+                                key={resource._id}
+                                className="relative bg-white rounded-lg shadow-md border cursor-pointer transform hover:scale-105 transition-transform border-white mt-4"
+                                onClick={() => handleResourceClick(resource._id)}
+                            >
+                                <button className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                    Ver detalles
+                                </button>
+                            </div>
+                        </Panel>
+                    ))}
+                </Collapse>
+                        {/* Tarjeta de información */}
+                        <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                            <img className="rounded-t-lg" src={Logo} alt="Logo" />
+                            <div className="p-5">
+                                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                    Noteworthy technology acquisitions 2021
+                                </h5>
+                                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                                    Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.
+                                </p>
+                                <a
+                                    href="#"
+                                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                >
+                                    Read more
+                                    <svg
+                                        className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 14 10"
+                                    >
+                                        <path
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M1 5h12m0 0L9 1m4 4L9 9"
+                                        />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default CourseView;

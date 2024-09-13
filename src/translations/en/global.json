@@ -335,7 +335,8 @@
         "removeResourceSuccess": "Resource successfully removed",
         "removeResourceError": "Error removing the resource",
         "newCourse": "New course",
-        "assignedContent": "Assigned content"
+        "assignedContent": "Assigned content",
+        "ButtonUpContent": "Assign Content"
     },
     "courseDetails": {
         "detailsOfCourse": "Details of course:",
@@ -486,5 +487,57 @@
     "footer": {
         "description": "Mesadoko © developed by Disruptive IT",
          "copy_right": "Copyright 2024"
-    }
+    },
+    "UpdateResource": {
+       "ValidateTitle": "The title must be at least 3 characters long.",
+        "ValidateDescription": "The description must be at least 8 characters long.",
+        "ValidateLink": "The link is not valid. Please ensure it is a YouTube, Vimeo, or Google Drive link.",
+        "ValidateQuestion": "The question must be at least 3 characters long.",
+        "ValidateOptions": "There must be at least two options.",
+        "Option": "The option cannot be empty.",
+        "ValidationAnswer": "The correct answer must match one of the options.",
+        "ValidationAlertFile": "File type not allowed.",
+        "ValidationAlertFileDescription": "Please select a file with one of the allowed types.",
+        "UpdateAlert": "Resource successfully updated.",
+        "ErrorAlert": "An error occurred while saving the resource.",
+        "ModalTitle": "Edit Resource",
+        "Title": "Title",
+        "Description": "Description",
+        "Files": "File",
+        "ActualFile": "Current file:",
+        "LinkVideo": "Video link",
+        "AddLink": "Enter a link drive:",
+        "Question": "Question",
+        "DeleteOption": "Delete",
+        "AddOption": "Add option",
+        "CorrectAnswer": "Correct answer",
+        "OptionIndex": "Option {{optionNumber}}",
+        "ButtonCancel": "Cancel",
+        "ButtonUpdate": "Update",
+        "SelectOption": "Select an option",
+        "labelOption": "Options"
+    },
+    "CreateResource": {
+		"InvalidLink": "Invalid link",
+		"Create": "Resource created successfully",
+		"DeleteResource": "Resource deleted successfully",
+		"ErrorDelete": "Error deleting the resource",
+		"TitleResources": "Created Resources",
+		"Edit": "Edit",
+		"AlertDeleteTitle": "Are you sure?",
+		"AlertDeleteText": "You won't be able to undo this action!",
+		"AlertDeleteConfir": "Yes, delete",
+		"AlerteSuccesyDelete": "Deleted!",
+		"Delete": "Delete",
+		"DowloadPDF": "Download PDF",
+		"QuizzTitleModal": "Quiz",
+		"NoResources": "No resources created.",
+		"FormCreate": "Create New Resource",
+		"TipeResource": "Resource Type",
+		"UpFile": "Upload File",
+		"VideoLink": "Video Links",
+		"DeleteQuestion": "Delete question",
+		"AddQuestion": "Add Question",
+		"ButtonCreate": "Create Resource"
+	}
 }

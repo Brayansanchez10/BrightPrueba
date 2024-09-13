@@ -336,7 +336,8 @@
         "removeResourceSuccess": "Recurso eliminado con éxito",
         "removeResourceError": "Error al eliminar el recurso",
         "newCourse": "Nuevo curso",
-        "assignedContent": "Contenido asignado"
+        "assignedContent": "Contenido asignado",
+        "ButtonUpContent": "Asignar Contenido"
     },
     "courseDetails": {
         "detailsOfCourse": "Detalles del curso:",
@@ -487,5 +488,57 @@
     "footer": {
         "description": "Mesadoko © Desarrollado por Disruptive IT",
         "copy_right": "Copyright 2024"
+    },
+    "UpdateResource": {
+        "ValidateTitle": "El título debe tener al menos 3 caracteres.",
+        "ValidateDescription": "La descripción debe tener al menos 8 caracteres.",
+        "ValidateLink": "El enlace no es válido. Asegúrate de que sea un enlace de YouTube, Vimeo o Google Drive.",
+        "ValidateQuestion": "La pregunta debe tener al menos 3 caracteres.",
+        "ValidateOptions": "Debe haber al menos dos opciones.",
+        "Option": "La opción no puede estar vacía.",
+        "ValidationAnswer": "La respuesta correcta debe coincidir con una de las opciones.",
+        "ValidationAlertFile": "Tipo de archivo no permitido.",
+        "ValidationAlertFileDescription": "Por favor, selecciona un archivo con uno de los tipos permitidos.",
+        "UpdateAlert": "Recurso actualizado exitosamente.",
+        "ErrorAlert": "Ocurrió un error al guardar el recurso.",
+        "ModalTitle": "Editar Recurso",
+        "Title": "Título",
+        "Description": "Descripción",
+        "Files": "Archivo",
+        "ActualFile": "Archivo actual:",
+        "LinkVideo": "Enlace de video",
+        "AddLink": "Ingrese un link drive:",
+        "Question": "Pregunta",
+        "DeleteOption": "Eliminar",
+        "AddOption": "Añadir opción",
+        "CorrectAnswer": "Respuesta correcta",
+        "OptionIndex": "Opción {{optionNumber}}",
+        "ButtonCancel": "Cancelar",
+        "ButtonUpdate": "Actualizar",
+        "SelectOption": "Seleccione una opción",
+        "labelOption": "Opciones"
+    },
+    "CreateResource": {
+        "InvalidLink": "Enlace inválido",
+        "Create": "Recurso creado exitosamente",
+        "DeleteResource": "Recurso eliminado exitosamente",
+        "ErrorDelete": "Error al eliminar el recurso",
+        "TitleResources": "Recursos Creados",
+        "Edit": "Editar",
+        "AlertDeleteTitle": "¿Estás seguro?",
+        "AlertDeleteText": "¡No podrás revertir esta acción!",
+        "AlertDeleteConfir": "Sí, eliminar",
+        "AlerteSuccesyDelete": "¡Eliminado!",
+        "Delete": "Eliminar",
+        "DowloadPDF": "Descargar PDF",
+        "QuizzTitleModal": "Cuestionario",
+        "NoResources": "No hay recursos creados.",
+        "FormCreate": "Crear Nuevo Recurso",
+        "TipeResource": "Tipo de Recurso",
+        "UpFile": "Subir Archivo",
+        "VideoLink": "Enlaces de videos",
+        "DeleteQuestion": "Eliminar pregunta",
+        "AddQuestion": "Añadir Pregunta",
+        "ButtonCreate": "Crear Recurso"
     }
 }
