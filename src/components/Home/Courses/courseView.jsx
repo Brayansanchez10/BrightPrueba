@@ -6,7 +6,7 @@ import { useAuth } from '../../../context/auth.context';
 import { useUserContext } from '../../../context/user/user.context';
 import { Collapse, Button, Modal, Progress } from 'antd'; // Asegúrate de importar Progress
 import NavigationBar from '../NavigationBar';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaSadTear } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import zorro from '../../../assets/img/Zorro.jpeg';
 import derechaabajo from '../../../assets/img/DerechaAbajo.jpeg';
@@ -99,20 +99,15 @@ const CourseView = () => {
                         </div>
     
                         {/* Detalles del curso */}
-                        <div className="lg:py-16">
-                            <Link to="/MyCourses" className="flex items-center text-blue-600 hover:text-blue-800 mb-4">
+                        <div className="relative lg:py-16 min-h-[260px]">
+                            <Link to="/MyCourses" className="absolute -top-5 -left-5 flex items-center text-blue-600 hover:text-blue-800">
                                 <FaArrowLeft className="mr-2" /> Back
                             </Link>
                             
-                            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">{course.title}</h2>
-                            <p className="mt-4 text-gray-600">{course.description}</p>
-    
-                            <a
-                                href="#"
-                                className="mt-8 inline-block rounded-lg bg-indigo-600 px-8 py-3 text-sm font-medium text-white shadow-md transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            >
-                                Get Started Today
-                            </a>
+                            <div className="-mt-8">
+                                <h2 className="text-4xl font-bold text-gray-900 sm:text-5xl">{course.title}</h2>
+                                <p className="text-lg mt-4 text-gray-600">{course.description}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -124,34 +119,52 @@ const CourseView = () => {
                         Temario y recursos del Curso de {course.title}
                     </h2>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <Collapse accordion>
-                    {resources.map((resource) => (
-                        <Panel header={resource.title} key={resource._id} className="border border-gray-300 rounded-lg mb-4">
-                            <div className="p-4 text-gray-700">{resource.description}</div>
-                            {/* Botón de navegación */}
-                            <div
-                                key={resource._id}
-                                className="relative bg-white rounded-lg shadow-md border cursor-pointer transform hover:scale-105 transition-transform border-white mt-4"
-                                onClick={() => handleResourceClick(resource._id)}
-                            >
-                                <button className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                                    Ver detalles
-                                </button>
-                            </div>
-                        </Panel>
-                    ))}
-                </Collapse>
+                        <Collapse accordion>
+                            {/* Verificamos si hay recursos disponibles */}
+                            {resources.length > 0 ? (
+                                resources.map((resource) => (
+                                    <Panel
+                                        header={resource.title}
+                                        key={resource._id}
+                                        className="border border-gray-300 rounded-lg mb-4"
+                                    >
+                                        <div className="p-4 text-gray-700">
+                                            {resource.description}
+                                        </div>
+                                        {/* Botón de navegación */}
+                                        <div
+                                            key={resource._id}
+                                            className="relative bg-white rounded-lg shadow-md border cursor-pointer transform hover:scale-105 transition-transform border-white mt-4"
+                                            onClick={() => handleResourceClick(resource._id)}
+                                        >
+                                            <button className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                                Ver detalles
+                                            </button>
+                                        </div>
+                                    </Panel>
+                                ))
+                            ) : (
+                                // Mensaje cuando no hay recursos
+                                <div className="flex items-center justify-center lg:mt-[50%]">
+                                    <div className="flex flex-col items-center justify-center col-span-2 text-gray-500">
+                                        <FaSadTear className="text-6xl mb-4" />
+                                        <p className="text-lg">No hay recursos disponibles para este curso.</p>
+                                    </div>
+                                </div>
+                            )}
+                        </Collapse>
+                        
                         {/* Tarjeta de información */}
-                        <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                        <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
                             <img className="rounded-t-lg" src={Logo} alt="Logo" />
                             <div className="p-5">
-                                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                                    Noteworthy technology acquisitions 2021
+                                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                                    Disruptive Information Technologies
                                 </h5>
                                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                                    Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.
+                                    {/* Text Here */}
                                 </p>
-                                <a
+                                {/* <a
                                     href="#"
                                     className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                 >
@@ -171,7 +184,7 @@ const CourseView = () => {
                                             d="M1 5h12m0 0L9 1m4 4L9 9"
                                         />
                                     </svg>
-                                </a>
+                                </a> */}
                             </div>
                         </div>
                     </div>

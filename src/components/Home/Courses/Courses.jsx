@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import HoverCard from "../Cards/HoverCard";
 import NavigationBar from "../NavigationBar";
 import { useCoursesContext } from "../../../context/courses/courses.context";
@@ -76,20 +76,12 @@ const Course = () => {
     currentPage * itemsPerPage
   );
 
-  const goBack = () => {
-    try {
-      window.history.back();
-    } catch (error) {
-      console.error("Error al regresar a la página anterior");
-    }
-  };
-
   return (
     <div className="bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400 min-h-screen overflow-hidden">
       <NavigationBar />
-      <a className="inline-block bg-purple-700 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded transition-colors duration-300 cursor-pointer m-1" onClick={goBack}> 
+      <Link to="/Home" className="inline-block bg-purple-700 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded transition-colors duration-300 cursor-pointer m-1"> 
         &#8678; {t('notFound.return')}
-      </a>
+      </Link>
       {filteredCourses.length > 0 && (
         <div className="flex justify-center mt-14 font-black italic">
           <h1 className="text-3xl bg-gradient-to-br from-red-300 to-pink-500 py-1 border-white

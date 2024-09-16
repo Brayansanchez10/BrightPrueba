@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import NavigationBar from "./../NavigationBar";
 import { useUserContext } from "../../../context/user/user.context";
 import { useAuth } from "../../../context/auth.context";
@@ -53,23 +53,12 @@ const CoursesComponent = () => {
     })
     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-    const goBack = () => {
-      try {
-        window.history.back();
-      } catch (error) {
-        console.error("Error al regresar a la página anterior");
-      }
-    };
-
     return (
       <div className="bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400 min-h-screen overflow-hidden">
         <NavigationBar onSearch={handleSearch} /> {/* Se agrega el onSearch para poder realizar el filtrado de cursos por título */}
-        <a
-          className="inline-block bg-purple-700 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded transition-colors duration-300 cursor-pointer m-1"
-          onClick={goBack}
-        >
+        <Link to="/Home" className="inline-block bg-purple-700 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded transition-colors duration-300 cursor-pointer m-1">
           &#8678; {t('notFound.return')}
-        </a>
+        </Link>
         {userCourses.length > 0 ? (
           <>
             <div className="mt-10 flex justify-center">
