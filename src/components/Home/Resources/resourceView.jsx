@@ -221,10 +221,11 @@ const ResourceView = () => {
     if (!question) return <p>No hay preguntas disponibles.</p>;
 
     return (
-      <div className="quiz-container bg-white p-8 rounded-lg shadow-lg w-[600px] h-[400px] border-1 border-black">
-        <h3 className="text-lg font-bold mb-5">{question.question}</h3>
+      <div className="quiz-container bg-white rounded-3xl shadow-lg w-[600px] h-[400px] m-0 p-0">
+        <h2 className="p-4 bg-purple-500 rounded-t-3xl text-white text-lg">Qestion 1/3</h2>
+        <h3 className="font-bold mb-5 text-center pt-2 text-xl">{question.question}</h3>
         {question.options.map((option, index) => (
-          <div key={index} className="flex items-center mb-5">
+          <div key={index} className="flex items-center mb-5 mx-10">
             <input
               type="radio"
               id={`question-${currentQuestionIndex}-option-${index}`}
@@ -250,7 +251,7 @@ const ResourceView = () => {
             </label>
           </div>
         ))}
-        <div className="flex justify-between mt-10">
+        <div className="flex justify-between mt-10 mx-10">
           <button
             onClick={handlePreviousQuestion}
             disabled={currentQuestionIndex === 0}
