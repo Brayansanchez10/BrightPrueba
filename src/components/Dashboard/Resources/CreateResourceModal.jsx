@@ -12,6 +12,7 @@ import { Typography } from "antd";
 import Swal from "sweetalert2"; //Importamos SweetAlert
 import { useTranslation } from "react-i18next";
 
+
 const { Text } = Typography;
 
 const { Panel } = Collapse;

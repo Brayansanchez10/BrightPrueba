@@ -4,11 +4,11 @@ import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { useTranslation } from 'react-i18next';
 import { deleteResource, asignarLinkContenido, actualizarLinkContenido, actualizarContenidoArchivo } from "../../../api/courses/course.request";
 import Swal from 'sweetalert2';
+import "./css/AssignContentModal.css";
+import hola1 from "/src/assets/img/Zorro.png";
 
 const { Panel } = Collapse;
-const ALLOWED_FILE_TYPES = ['.mov', '.docx', '.pdf', '.jpg', '.png']; // Removido '.mp4'
-
-// Expresión regular para validar URLs de YouTube
+const ALLOWED_FILE_TYPES = ['.mov', '.docx', '.pdf', '.jpg', '.png']; 
 const YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
 const VIMEO_URL_REGEX = /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)$/i;
 const GOOGLE_DRIVE_URL_REGEX = /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
@@ -47,7 +47,6 @@ const AssignContentModal = ({
   };
   
   const getEmbedUrl = (url) => {
-    // Verifica si es un enlace de tipo 'youtu.be' o 'youtube.com/watch'
     if (YOUTUBE_URL_REGEX.test(url)) {
       if (url.includes('youtu.be/')) {
         const videoId = url.split('youtu.be/')[1].split('?')[0];
@@ -59,15 +58,13 @@ const AssignContentModal = ({
       return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
     }
 
-    // Verifica si es un enlace de Vimeo
     if (VIMEO_URL_REGEX.test(url)) {
-      const videoId = url.match(VIMEO_URL_REGEX)[4]; // El ID del video de Vimeo
+      const videoId = url.match(VIMEO_URL_REGEX)[4]; 
       return `https://player.vimeo.com/video/${videoId}`;
     }
 
-    // Verifica si es un enlace de Google Drive
     if (GOOGLE_DRIVE_URL_REGEX.test(url)) {
-      const fileId = url.match(GOOGLE_DRIVE_URL_REGEX)[3]; // El ID del archivo de Google Drive
+      const fileId = url.match(GOOGLE_DRIVE_URL_REGEX)[3]; 
       return `https://drive.google.com/file/d/${fileId}/preview`;
     }
 
@@ -125,7 +122,6 @@ const AssignContentModal = ({
     setLoading(true);
     try {
       if (editIndex !== null) {
-        // Update existing link
         await actualizarContenidoArchivo(selectedCourse._id, editIndex, fileSelected);
         Swal.fire({
           icon: 'success',
@@ -174,7 +170,6 @@ const AssignContentModal = ({
   
     const trimmedInput = textInput.trim();
     
-    // Validar URL de YouTube, Vimeo o Google Drive
     if (!YOUTUBE_URL_REGEX.test(trimmedInput) && !VIMEO_URL_REGEX.test(trimmedInput) && !GOOGLE_DRIVE_URL_REGEX.test(trimmedInput)) {
       Swal.fire({
         icon: 'warning',
@@ -287,7 +282,7 @@ const AssignContentModal = ({
                     header={
                       <div className="flex justify-between items-center">
                         <span>{t('assignContentModal.resource')} {index + 1}</span>
-                        <div className="flex ml-auto space-x-2"> {/* Nuevo div contenedor para los botones */}
+                        <div className="flex ml-auto space-x-2"> 
                           <Button
                             type="danger"
                             icon={<DeleteFilled />}

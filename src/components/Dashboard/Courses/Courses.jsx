@@ -48,8 +48,6 @@ const DataTablete = () => {
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
-
-
   useEffect(() => {
     getUsers();
     getAllCourses();
@@ -80,55 +78,49 @@ const DataTablete = () => {
   };
 
   const handleUpdateCourse = async (updatedCourse) => {
-    message.success(t('courses.updateSuccess'));
-    window.location.reload();
-    setShowUpdateForm(false);
-    setSelectedCourse(null);
+    try {
+      await updateCourse(updatedCourse);
+      message.success(t('courses.updateSuccess'));
+      window.location.reload();
+    } catch (error) {
+      message.error(t('courses.updateError'));
+    } finally {
+      setShowUpdateForm(false);
+      setSelectedCourse(null);
+    }
   };
 
-  // Abre el CreateResourceModal
   const handleCreateResourceClick = (course) => {
     setSelectedCourse(course);
-    setSelectedCourseId(course._id); // Establece el ID del curso seleccionado
+    setSelectedCourseId(course._id); 
     setIsCreateModalVisible(true);
   };
 
-
   const handleCreateResource = async () => {
-    if (selectedCourse && selectedCourse._id) { // Verifica si selectedCourse y _id están definidos
+    if (selectedCourse && selectedCourse._id) { 
       const courseId = selectedCourse._id;
       try {
         const res = await crearRecurso(courseId);
         message.success(t('courses.createdResource'));
         setIsCreateModalVisible(false);
-        await getAllCourses(); // Opcional, para refrescar los recursos creados
+        window.location.reload();
       } catch (error) {
-        console.error("Error al crear recurso:", error); // Verifica el error en la consola
+        console.error("Error al crear recurso:", error);
+        message.error(t('courses.createResourceError'));
       }
     } else {
       message.error(t('courses.noCourseSelected'));
     }
   };
-  
 
-  const handleCreateCourse = (curso) => {
-    console.log(t('courses.newCourse'), curso);
-    setShowCreateForm(false);
-  };
-
-  const handleAssignButtonClick = (course) => {
-    setSelectedCourse(course);
-    setIsAssignModalVisible(true);
-  };
-
-  const handleAssignContent = async () => {
-    if (selectedCourse && contentFile) {
-      const courseId = selectedCourse._id;
-      const res = await asignarContenido(courseId, contentFile);
-
-      console.log(t('courses.assignedContent'), res);
-      setIsAssignModalVisible(false);
+  const handleCreateCourse = async (curso) => {
+    try {
+      await createCourse(curso);
+      message.success(t('courses.createSuccess'));
+      setShowCreateForm(false);
       window.location.reload();
+    } catch (error) {
+      message.error(t('courses.createError'));
     }
   };
 
@@ -141,33 +133,12 @@ const DataTablete = () => {
     try {
       await deleteCourse(courseToDelete._id);
       message.success(t('courses.deleteSuccess'));
-      getAllCourses();
+      window.location.reload();
     } catch (error) {
       message.error(t('courses.deleteError'));
     } finally {
       setIsDeleteModalVisible(false);
       setCourseToDelete(null);
-    }
-  };
-
-  const handleRemoveResource = async (index) => {
-    if (selectedCourse) {
-      const updatedContent = [...selectedCourse.content];
-      updatedContent.splice(index, 1);
-
-      try {
-        await updateCourse(selectedCourse._id, {
-          ...selectedCourse,
-          content: updatedContent,
-        });
-        setSelectedCourse((prevCourse) => ({
-          ...prevCourse,
-          content: updatedContent,
-        }));
-        message.success(t('courses.removeResourceSuccess'));
-      } catch (error) {
-        message.error(t('courses.removeResourceError'));
-      }
     }
   };
 
@@ -296,7 +267,7 @@ const DataTablete = () => {
                                 <Button
                                   className="bg-green-500 h-10 text-lg text-white"
                                   onClick={() => handleCreateResourceClick(course)}
-                                  icon={<FileAddOutlined />} // Cambiado el ícono por uno que represente agregar un archivo o contenido
+                                  icon={<FileAddOutlined />} 
                                 >
                                   {t("courses.ButtonUpContent")}
                                 </Button>
@@ -352,11 +323,10 @@ const DataTablete = () => {
             courseId={selectedCourse ? selectedCourse._id : null}
           />
 
-           {/* Modal para crear recursos */}
            <CreateResourceModal
             isVisible={isCreateModalVisible}
             onCancel={() => setIsCreateModalVisible(false)}
-            courseId={selectedCourse?._id}  // Pasa el courseId aquí
+            courseId={selectedCourse?._id}  
             onCreate={handleCreateResource}
             resourceFile={resourceFile}
             onFileChange={(e) => setResourceFile(e.target.files[0])}
@@ -407,7 +377,7 @@ const DataTablete = () => {
           <button
             onClick={() => paginate(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="px-3 py-1 mx-1 bg-gray-200 text-gray-800 border"
+            className="px-1 mx-1 bg-gray-200 text-gray-800 border"
           >
             {t('courses.next')}
           </button>

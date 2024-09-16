@@ -1,46 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Input, message } from "antd";
 import { useTranslation } from "react-i18next";
 import axios from 'axios'; 
-import hola1 from "/src/assets/img/hola1.png";
+import hola1 from "/src/assets/img/Zorro.png";
 
 const NotifyCourseModal = ({ visible, onClose, courseId }) => {
   const { t } = useTranslation("global");
   const [emailList, setEmailList] = useState("");
   const [sendToAll, setSendToAll] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (visible) {
+      setSendToAll(false); 
+      setExpanded(false);  
+      setEmailList("");
+    }
+  }, [visible]);
 
   const handleEmailChange = (e) => setEmailList(e.target.value);
 
   const handleSendEmail = async () => {
     let recipients;
     if (sendToAll) {
-        recipients = 'all'; 
+      recipients = 'all';
     } else {
-        recipients = emailList.split(',').map(email => email.trim()).filter(email => email);
-        if (recipients.length === 0) {
-            message.error(t('notifyCourse.invalidEmails'));
-            return;
-        }
+      recipients = emailList.split(',').map(email => email.trim()).filter(email => email);
+      if (recipients.length === 0) {
+        message.error(t('notifyCourse.invalidEmails'));
+        return;
+      }
     }
 
     try {
-        const response = await axios.post('http://localhost:3068/api/send-email', {
-            recipients: recipients,
-            courseId: courseId
-        });
+      const response = await axios.post('http://localhost:3068/api/send-email', {
+        recipients: recipients,
+        courseId: courseId
+      });
 
-        if (response.data.success) {
-            message.success(t('notifyCourse.sendSuccess'));
-        } else {
-            message.error(t('notifyCourse.sendError'));
-        }
-    } catch (error) {
-        console.error('Error en el envío del correo:', error);
+      if (response.data.success) {
+        message.success(t('notifyCourse.sendSuccess'));
+      } else {
         message.error(t('notifyCourse.sendError'));
+      }
+    } catch (error) {
+      console.error('Error en el envío del correo:', error);
+      message.error(t('notifyCourse.sendError'));
     }
     onClose();
-};
-
+  };
 
   return (
     <Modal
@@ -49,106 +57,148 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
       onCancel={onClose}
       closable={false}
       footer={null}
-      width={544}
-      bodyStyle={{ padding: 0, borderRadius: '20px', overflow: 'hidden' }}
+      width={474}
+      bodyStyle={{
+        padding: 0,
+        borderRadius: '20px',
+        overflow: 'hidden',
+        height: expanded ? '530px' : '444px',
+        transition: 'height 0.3s ease',
+        margin: 0,
+      }}
     >
       <div
         style={{
-          height: '125px',
+          height: '100px',
           background: 'linear-gradient(to right, #350B48, #905BE8)',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           position: 'relative',
+          width: '100%',
         }}
       >
         <img
           src={hola1}
           alt="Encabezado"
           style={{
-            width: '187.61px',
-            height: '167.37px',
+            width: '150px', 
+            height: '120px', 
             position: 'absolute',
-            bottom: '-40px',
+            bottom: '-20px', 
+            zIndex: 2,
           }}
         />
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            background: 'none',
+            border: 'none',
+            fontSize: '28px',
+            fontWeight: '900',
+            color: 'white',
+            cursor: 'pointer',
+            zIndex: 3,
+          }}
+        >
+          ×
+        </button>
       </div>
 
-      <div style={{ padding: '60px 40px', backgroundColor: 'white', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#350B48' }}>
-          ENVÍA UNA NOTIFICACIÓN MEDIANTE EMAIL A TUS ESTUDIANTES
-        </h1>
+      <div style={{ padding: '20px 40px', backgroundColor: 'white', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#350B48' }}>NOTIFICACIÓN CURSO</h1>
         <p style={{ fontSize: '20px', fontWeight: 700, color: 'black', marginTop: '20px' }}>
           Selecciona de qué forma quieres hacer el envío de la notificación
         </p>
 
         <Button
           style={{
-            width: '454px',
-            height: '61px',
+            width: '239px',
+            height: '38px',
             borderRadius: '20px',
             backgroundColor: '#4A48AA',
             color: 'white',
-            fontSize: '20px',
+            fontSize: '16px',
             fontWeight: 700,
             marginTop: '40px',
-            boxShadow: '0px 4px 25px rgba(0, 0, 0, 0.45)',
+            boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.3)',
           }}
-          onClick={() => setSendToAll(true)}
+          onClick={() => {
+            setSendToAll(true);
+            setExpanded(false); 
+          }}
         >
-          Enviar a todos los estudiantes registrados
+          Todos los estudiantes
         </Button>
 
         <Button
           style={{
-            width: '454px',
-            height: '61px',
+            width: '239px',
+            height: '38px',
             borderRadius: '20px',
             backgroundColor: 'white',
             color: 'black',
-            fontSize: '20px',
+            fontSize: '16px',
             fontWeight: 700,
             marginTop: '20px',
-            boxShadow: '0px 4px 35px rgba(0, 0, 0, 0.50)',
+            boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.3)',
             border: '1px solid #e0e0e0',
           }}
-          onClick={() => setSendToAll(false)}
+          onClick={() => {
+            setSendToAll(false);
+            setExpanded(true); 
+          }}
         >
-          Escribe los correos de tus estudiantes...
+          Escribe los correos
         </Button>
 
-        {!sendToAll && (
-          <div className="mt-4">
+        {!sendToAll && expanded && (
+          <>
             <Input
               type="text"
-              placeholder={t('notifyCourse.emailPlaceholder')}
+              placeholder="Introduce los correos electrónicos"
               value={emailList}
               onChange={handleEmailChange}
-              className="w-full mt-4"
               style={{
-                width: '454px',
+                width: '239px',
+                height: '38px',
                 borderRadius: '10px',
-                marginTop: '30px',
+                marginTop: '20px',
               }}
             />
-          </div>
+            <p
+              style={{
+                textAlign: 'center',
+                marginTop: '20px',
+                color: 'black',
+                fontSize: '10px',
+              }}
+            >
+              Separa todos los correos electrónicos con una coma <span style={{ color: '#350B48', fontWeight: 'bold', fontSize: '14'}}>“ , ”</span> y continúa<br />
+              por ejemplo <span style={{ color: '#350B48', fontWeight: 'bold' }}>aprende@gmail.com, brightmind@gmail.com</span>
+            </p>
+          </>
         )}
 
         <Button
-          type="primary"
-          onClick={handleSendEmail}
           style={{
-            width: '454px',
-            height: '61px',
-            borderRadius: '20px',
-            backgroundColor: '#4A48AA',
+            position: 'absolute',
+            bottom: '20px',
+            right: '20px',
+            width: '110px',
+            height: '40px',
+            backgroundColor: '#1D164E',
             color: 'white',
-            fontSize: '20px',
-            fontWeight: 700,
-            marginTop: '40px',
+            fontSize: '18px',
+            fontWeight: 'bold',
+            borderRadius: '10px',
           }}
+          onClick={handleSendEmail}
         >
-          Enviar notificación
+          Enviar
         </Button>
       </div>
     </Modal>

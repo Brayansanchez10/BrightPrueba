@@ -1,42 +1,36 @@
 import React from "react";
-import { Modal, Button } from "antd";
-import { useTranslation } from "react-i18next";
+import { Modal } from "antd";
+import "./css/DeleteConfirmationModal.css";
+import pulpoImage from "../../../assets/img/pulpo.png";
 
 const DeleteConfirmationModal = ({ visible, onClose, onConfirm }) => {
-  const { t } = useTranslation("global");
-
   return (
     <Modal
-      className="shadow-orange shadow-white border-2 border-black rounded-lg"
+      className="custom-delete-modal"
       centered
       visible={visible}
       onCancel={onClose}
       closable={false}
-      maskStyle={{ backdropFilter: "blur(10px)" }}
       footer={null}
+      transitionName="" 
     >
-      <div>
-        <h1 className="text-xl text-center font-bold">
-          {t('deleteConfirmation.confirmDeletion')}
-        </h1>
-        <h3 className="text-center text-base mt-4">
-          {t('deleteConfirmation.deleteConfirmationMessage')}
-        </h3>
-        <h3 className="text-base text-red-600 text-center mt-2 font-bold">
-          {t('deleteConfirmation.cannotUndo')}
-        </h3>
-        <div className="flex justify-center space-x-4 mt-6">
+      <div className="close-icon-container" onClick={onClose}>
+        <span className="close-icon">X</span> 
+      </div>
+
+      <div className="modal-header">
+        <img src={pulpoImage} alt="Pulpo" className="header-image" />
+      </div>
+      <div className="modal-body">
+        <h1 className="delete-title">ELIMINAR CURSO</h1>
+        <p className="confirmation-message">¿Estás seguro que deseas eliminar el curso de Python?</p>
+        <p className="warning-message">Esta acción no se podrá revertir.</p>
+        <div className="button-container">
           <button 
-            className="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600 border border-red-700"
-            onClick={onConfirm}
+            className="delete-button"
+            onClick={onConfirm} 
           >
-            {t('deleteConfirmation.confirm')}
-          </button>
-          <button 
-            className="bg-neutral-700 font-semibold px-4 py-2 rounded-lg hover:bg-neutral-600 text-white"
-            onClick={onClose}
-          >
-            {t('deleteConfirmation.cancel')}
+            ELIMINAR
           </button>
         </div>
       </div>
