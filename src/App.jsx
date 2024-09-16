@@ -77,7 +77,7 @@ function App() {
                       <Route path="/MyCourses" element={<MyCourses />} />
                       <Route path="/CoursesHome" element={<CoursesHome />} />
                       <Route path="/course/:courseId" element={<CourseView />} />
-                      <Route path="/resource/:id" element={<ResourceView /> } />
+                      <Route path="/course/:courseId/resource/:id" element={<ResourceView /> } />
                       <Route path="/Account" element={<ProfileUser />} />
                       <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />
                       <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />

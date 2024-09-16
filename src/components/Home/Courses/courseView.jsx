@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useCoursesContext } from '../../../context/courses/courses.context';
 import { useResourceContext } from '../../../context/courses/resource.contex';
 import { useAuth } from '../../../context/auth.context';
@@ -14,25 +14,22 @@ import izquierdaarriba from '../../../assets/img/IzquierdaArriba.jpeg';
 import { Anothershabby_trial } from '../../../Tipografy/Anothershabby_trial-normal';
 import { getAllResources } from '../../../api/courses/resource.request';
 import Logo from "../../../assets/img/hola.png";
-import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const { Panel } = Collapse;
 
 const CourseView = () => {
     const { courseId } = useParams();
+    const { t } = useTranslation("global");
     const { getCourse } = useCoursesContext();
-    const { getResource  } = useResourceContext();
+    const { getResource } = useResourceContext();
     const { user } = useAuth();
     const { getUserById } = useUserContext();
     const [username, setUsername] = useState('');
     const [course, setCourse] = useState(null);
     const navigate = useNavigate();
-    const [resources, setResources] = useState([]); // Agrega estado para los recursos
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [currentViewedIndex, setCurrentViewedIndex] = useState(-1);
-    const [showFinishButton, setShowFinishButton] = useState(false);
-
+    const [resources, setResources] = useState([]);
+    
     useEffect(() => {
         const fetchCourse = async () => {
             try {
@@ -49,13 +46,13 @@ const CourseView = () => {
     useEffect(() => {
         const fetchResources = async () => {
             try {
-                const ResourceData = await getResource(courseId); 
+                const ResourceData = await getResource(courseId);
                 setResources(ResourceData);
             } catch (error) {
                 console.error('Error al obtener los recursos del curso:', error);
             }
         };
-    
+
         fetchResources();
     }, [courseId]);
 
@@ -74,12 +71,12 @@ const CourseView = () => {
         fetchUserData();
     }, [user, getUserById]);
 
-    // Maneja el clic en el botón para navegar al recurso
+   // Maneja el clic en el botón para navegar al recurso
     const handleResourceClick = (resourceId) => {
+        console.log("Course ID: ", courseId);
         console.log("Resource ID: ", resourceId);
-        navigate(`/resource/${resourceId}`);
+        navigate(`/course/${courseId}/resource/${resourceId}`);
     };
-    
 
     if (!course) return <div>Loading...</div>;
 
@@ -94,14 +91,14 @@ const CourseView = () => {
                             <img
                                 src={course.image}
                                 className="absolute inset-0 h-full w-full object-cover rounded-lg"
-                                alt="Course"
+                                alt={t('course_user.courseImageAlt')}
                             />
                         </div>
-    
+
                         {/* Detalles del curso */}
                         <div className="relative lg:py-16 min-h-[260px]">
                             <Link to="/MyCourses" className="absolute -top-5 -left-5 flex items-center text-blue-600 hover:text-blue-800">
-                                <FaArrowLeft className="mr-2" /> Back
+                                <FaArrowLeft className="mr-2" /> {t('course_user.back')}
                             </Link>
                             
                             <div className="-mt-8">
@@ -112,37 +109,40 @@ const CourseView = () => {
                     </div>
                 </div>
             </section>
-    
+
             <section className="flex justify-center py-8">
-                <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full">
+                <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full border">
                     <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl text-center mb-6">
-                        Temario y recursos del Curso de {course.title}
+                        {t('course_user.syllabusAndResources', { title: course.title })}
                     </h2>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <Collapse accordion>
-                            {/* Verificamos si hay recursos disponibles */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <Collapse accordion className='bg-gray-50'>
+                                    {/* Verificamos si hay recursos disponibles */}
                             {resources.length > 0 ? (
-                                resources.map((resource) => (
-                                    <Panel
-                                        header={resource.title}
-                                        key={resource._id}
-                                        className="border border-gray-300 rounded-lg mb-4"
+                                resources.map((resource, index) => (
+                                            <Panel
+                                       
+                                    header={resource.title}
+                                       
+                                    key={resource._id}
+                                       
+                                    className={`border bg-gray-300 ${index === resources.length - 1 ? 'rounded-b-lg' : 'rounded-lg'} mb-4 m-3`}
+                                
                                     >
-                                        <div className="p-4 text-gray-700">
+                                                <div className="p-4 text-gray-700">
                                             {resource.description}
                                         </div>
-                                        {/* Botón de navegación */}
-                                        <div
-                                            key={resource._id}
-                                            className="relative bg-white rounded-lg shadow-md border cursor-pointer transform hover:scale-105 transition-transform border-white mt-4"
-                                            onClick={() => handleResourceClick(resource._id)}
-                                        >
-                                            <button className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                                                Ver detalles
-                                            </button>
-                                        </div>
-                                    </Panel>
-                                ))
+                                                            <div
+                                                    key={resource._id}
+                                                    className="relative bg-white rounded-lg shadow-md border cursor-pointer transform hover:scale-105 transition-transform border-black mt-4"
+                                                    onClick={() => handleResourceClick(resource._id, resource.courseId)}
+                                                >
+                                                    <button className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                                        {t('course_user.viewDetails')}
+                                                    </button>
+                                                </div>
+                                            </Panel>
+                                        ))
                             ) : (
                                 // Mensaje cuando no hay recursos
                                 <div className="flex items-center justify-center lg:mt-[50%]">
@@ -152,23 +152,24 @@ const CourseView = () => {
                                     </div>
                                 </div>
                             )}
-                        </Collapse>
+                                </Collapse>
                         
+
                         {/* Tarjeta de información */}
                         <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
-                            <img className="rounded-t-lg" src={Logo} alt="Logo" />
+                            <img className="rounded-t-lg" src={Logo} alt={t('course_user.logoAlt')} />
                             <div className="p-5">
-                                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
-                                    Disruptive Information Technologies
+                                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                    {t('course_user.technologyAcquisitionsTitle')}
                                 </h5>
                                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                                    {/* Text Here */}
+                                    {t('course_user.technologyAcquisitionsDescription')}
                                 </p>
                                 {/* <a
                                     href="#"
                                     className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                 >
-                                    Read more
+                                    {t('course_user.readMore')}
                                     <svg
                                         className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
                                         aria-hidden="true"
