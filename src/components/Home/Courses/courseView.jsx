@@ -66,9 +66,11 @@ const CourseView = () => {
         fetchUserData();
     }, [user, getUserById]);
 
+   // Maneja el clic en el botón para navegar al recurso
     const handleResourceClick = (resourceId) => {
+        console.log("Course ID: ", courseId);
         console.log("Resource ID: ", resourceId);
-        navigate(`/resource/${resourceId}`);
+        navigate(`/course/${courseId}/resource/${resourceId}`);
     };
 
     if (!course) return <div>Loading...</div>;
@@ -123,7 +125,7 @@ const CourseView = () => {
                                     <div
                                         key={resource._id}
                                         className="relative bg-white rounded-lg shadow-md border cursor-pointer transform hover:scale-105 transition-transform border-black mt-4"
-                                        onClick={() => handleResourceClick(resource._id)}
+                                        onClick={() => handleResourceClick(resource._id, resource.courseId)}
                                     >
                                         <button className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                                             {t('course_user.viewDetails')}
