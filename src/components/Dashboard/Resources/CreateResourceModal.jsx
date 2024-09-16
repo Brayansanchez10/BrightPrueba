@@ -12,7 +12,6 @@ import { Typography } from "antd";
 import Swal from "sweetalert2"; //Importamos SweetAlert
 import { useTranslation } from "react-i18next";
 
-
 const { Text } = Typography;
 
 const { Panel } = Collapse;
@@ -377,6 +376,7 @@ const CreateResourceModal = ({
                             <Button
                               icon={<EditOutlined />}
                               onClick={() => openEditModal(resource)}
+                              className="bg-yellow-500 text-white hover:bg-yellow-600"
                             >
                               {t("CreateResource.Edit")}
                             </Button>
@@ -406,6 +406,7 @@ const CreateResourceModal = ({
                                   }
                                 });
                               }}
+                              className="bg-red-500 text-white hover:bg-yellow-600"
                             >
                               {t("CreateResource.Delete")}
                             </Button>
@@ -725,7 +726,7 @@ const CreateResourceModal = ({
                             <button
                               type="button"
                               onClick={() => removeOption(index, optIndex)}
-                              className="ml-2 text-red-500 hover:text-red-700"
+                              className="ml-2 bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
                             >
                               {t("UpdateResource.DeleteOption")}
                             </button>
@@ -735,7 +736,7 @@ const CreateResourceModal = ({
                       <button
                         type="button"
                         onClick={() => addOption(index)}
-                        className="mt-2 text-blue-500 hover:text-blue-700"
+                        className="mt-2 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
                       >
                         {t("UpdateResource.AddOption")}
                       </button>
@@ -769,7 +770,7 @@ const CreateResourceModal = ({
                         <button
                           type="button"
                           onClick={() => removeQuiz(index)}
-                          className="mt-2 text-red-500 hover:text-red-700"
+                          className="mt-2 bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
                         >
                           {t("CreateResource.DeleteQuestion")}
                         </button>
@@ -779,7 +780,7 @@ const CreateResourceModal = ({
                   <Button
                     type="dashed"
                     onClick={addQuiz}
-                    className="w-full mt-4"
+                    className="w-full mt-4 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
                   >
                     {t("CreateResource.AddQuestion")}
                   </Button>

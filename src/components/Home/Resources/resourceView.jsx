@@ -489,12 +489,15 @@ const ResourceView = () => {
               </button>
 
               <div className="flex-1 mx-4">
-                <div className="w-full bg-gray-200 rounded-full h-2.5 relative">
-                  <div
-                    className="bg-blue-500 h-2.5 rounded-full"
-                    style={{ width: `${progress}%` }}
-                  ></div>
-                </div>
+                <div className="w-full bg-gray-300 rounded-full h-3 mb-4 relative">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-blue-500 to-green-400"
+                      style={{ width: `${progress}%` }}
+                    ></div>
+                    <span className="absolute inset-0 flex justify-center items-center text-xs font-medium text-black">
+                      {Math.round(progress)}%
+                    </span>
+                  </div>
               </div>
 
               <button
