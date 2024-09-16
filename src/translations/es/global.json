@@ -540,5 +540,16 @@
         "DeleteQuestion": "Eliminar pregunta",
         "AddQuestion": "Añadir Pregunta",
         "ButtonCreate": "Crear Recurso"
+    },
+    "course_user": {
+        "courseImageAlt": "Imagen del curso",
+        "back": "Regresar",
+        "getStartedToday": "Empieza hoy",
+        "syllabusAndResources": "Temario y recursos de {{title}}",
+        "viewDetails": "Ver detalles",
+        "logoAlt": "Logo",
+        "technologyAcquisitionsTitle": "Adquisiciones tecnológicas destacadas 2021",
+        "technologyAcquisitionsDescription": "Estas son las mayores adquisiciones tecnológicas empresariales de 2021 hasta ahora, en orden cronológico inverso.",
+        "readMore": "Leer más"
     }
 }
