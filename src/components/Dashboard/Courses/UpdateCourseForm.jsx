@@ -3,7 +3,7 @@ import { Modal, Select } from "antd";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useCategoryContext } from "../../../context/courses/category.context";
 import Swal from "sweetalert2";
-import "./css/UpdateCourseForm.css";
+import "./css/Custom.css";
 
 const { Option } = Select;
 
@@ -112,38 +112,42 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
       visible={visible}
       footer={null}
       closable={false}
-      className="custom-modal"
+      className="custom w-[544px] h-[800px] rounded-2xl bg-white flex flex-col justify-between"
       centered
       onCancel={onClose}
     >
-      <div className="header">
-        <img src="/src/assets/img/imagen1.png" alt="Imagen de la cabecera" />
+      <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
+        <img
+          src="/src/assets/img/imagen1.png"
+          alt="Imagen de la cabecera"
+          className="w-[189.69px] h-[148px] object-contain mt-8"
+        />
         <button
           type="button"
-          className="close-button"
+          className="absolute top-4 right-5 text-white text-3xl font-extrabold bg-transparent border-none cursor-pointer"
           onClick={onClose}
         >
           &times;
         </button>
       </div>
-      <form onSubmit={handleSubmit} className="form-container">
-        <h1 className="title">ACTUALIZAR CURSO</h1>
+      <form onSubmit={handleSubmit} className="px-5 py-6">
+        <h1 className="text-center text-[#350b48] text-3xl font-extrabold mt-1 mb-5 text-shadow-md">ACTUALIZAR CURSO</h1>
 
-        <label className="label">Título del curso:</label>
+        <label className="block text-lg font-bold text-black mb-2">Título del curso:</label>
         <input
-          className="input"
+          className="w-full h-[34px] rounded-xl bg-white shadow-md px-3 mb-4"
           type="text"
           name="name"
           value={course.name}
           onChange={handleChange}
         />
         {errorMessage.name && (
-          <p className="error-text">{errorMessage.name}</p>
+          <p className="text-red-500 text-sm mb-4">{errorMessage.name}</p>
         )}
 
-        <label className="label">Categoría del curso:</label>
+        <label className="block text-lg font-bold text-black mb-2">Categoría del curso:</label>
         <Select
-          className="select"
+          className="w-full h-[34px] rounded-xl bg-white shadow-md mb-4"
           value={course.category}
           onChange={(value) => setCourse({ ...course, category: value })}
         >
@@ -154,41 +158,43 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
           ))}
         </Select>
         {errorMessage.category && (
-          <p className="error-text">{errorMessage.category}</p>
+          <p className="text-red-500 text-sm mb-4">{errorMessage.category}</p>
         )}
 
-        <label className="label">Descripción del curso:</label>
+        <label className="block text-lg font-bold text-black mb-2">Descripción del curso:</label>
         <textarea
-          className="textarea"
+          className="w-full h-[60px] rounded-xl bg-white shadow-md px-3 mb-4"
           name="description"
           value={course.description}
           onChange={handleChange}
         />
         {errorMessage.description && (
-          <p className="error-text">{errorMessage.description}</p>
+          <p className="text-red-500 text-sm mb-4">{errorMessage.description}</p>
         )}
 
-        <div className="image-section">
-          <label className="image-label">Imagen del curso:</label>
+        <div className="flex flex-col items-start mb-6">
+          <label className="block text-lg font-bold text-black mb-2">Imagen del curso:</label>
           <input
             type="file"
             accept="image/*"
-            className="image-input"
+            className="w-full h-[44px] rounded-xl bg-white shadow-md px-3 py-2 mb-4"
             ref={imageRef}
             onChange={handleImageChange}
           />
         </div>
 
-        <div className="image-preview-container">
-          <div className="image-preview">
-            {course.image && <img src={course.image} alt="Vista previa" />}
-          </div>
+        <div className="flex justify-center mb-6">
+          {course.image && (
+            <div className="w-[100px] h-[100px] border border-[#ddd] rounded-md flex items-center justify-center bg-[#f0f0f0] overflow-hidden">
+              <img src={course.image} alt="Vista previa" className="max-w-full max-h-full" />
+            </div>
+          )}
         </div>
 
-        <div className="button-group">
+        <div className="flex justify-end pt-2">
           <button
             type="submit"
-            className="btn-primary"
+            className="bg-[#350b48] text-white rounded-xl h-[41px] w-[133px] text-lg font-bold cursor-pointer"
           >
             Actualizar
           </button>
