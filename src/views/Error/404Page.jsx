@@ -4,7 +4,7 @@ import { useAuth } from '../../context/auth.context';
 
 const NotFoundPage = () => {
   const { t } = useTranslation('global');
-  const { logout } = useAuth();
+  const { logout, role } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -18,9 +18,13 @@ const NotFoundPage = () => {
 
   const goBack = () => {
     try {
-      window.history.back();
+      if (role === 'usuario') {
+        window.location.href = '/home';
+      } else {
+        window.location.href = '/admin';
+      }
     } catch (error) {
-      console.error("Error al regresar a la página anterior");
+      console.error("Error al redirigir", error);
     }
   };
 

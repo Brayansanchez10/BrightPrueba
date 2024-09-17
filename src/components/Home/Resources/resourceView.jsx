@@ -152,6 +152,8 @@ const ResourceView = () => {
     if (file) {
       if (isVideoLink(file)) {
         return (
+          <div className="relative w-full h-full">
+          {/* Contenedor del video */}
           <iframe
             title="Video"
             width="100%"
@@ -159,8 +161,21 @@ const ResourceView = () => {
             src={getEmbedUrl(file)}
             frameBorder="0"
             allowFullScreen
-            className="object-cover"
+            className="absolute top-0 left-0 w-full h-full object-cover z-0"
           ></iframe>
+
+          {/* Superposición de la imagen/logo */}
+          <img
+            src={izquierdaarriba}
+            alt="Superposición Izquierda Arriba"
+            className="absolute top-0 left-0 w-24 h-24 z-10"
+          />
+          <img
+            src={izquierdaarriba}
+            alt="Superposición Derecha Arriba"
+            className="absolute top-0 right-0 w-24 h-24 z-10 rotate-90"
+          />
+        </div>
         );
       } else if (file.endsWith(".pdf")) {
         return (
