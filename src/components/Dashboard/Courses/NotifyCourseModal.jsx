@@ -3,7 +3,7 @@ import { Modal, Input, message } from "antd";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import hola1 from "/src/assets/img/Zorro.png";
-import "./css/Custom.css";
+import "../css/Custom.css";
 
 const NotifyCourseModal = ({ visible, onClose, courseId }) => {
   const { t } = useTranslation("global");
@@ -87,9 +87,9 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
       </div>
 
       <div className="p-8 bg-white text-center">
-        <h1 className="text-2xl font-extrabold text-[#350B48]">NOTIFICACIÓN CURSO</h1>
+        <h1 className="text-2xl font-extrabold text-[#350B48]">{t('notifyCourse.notificationCourse')}</h1>
         <p className="text-xl font-bold text-black mt-5">
-          Selecciona de qué forma quieres hacer el envío de la notificación
+          {t('notifyCourse.selectNotificationMethod')}
         </p>
 
         <button
@@ -99,7 +99,7 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
             setExpanded(false);
           }}
         >
-          Todos los estudiantes
+          {t('notifyCourse.sendToAll')}
         </button>
 
         <button
@@ -109,27 +109,19 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
             setExpanded(true);
           }}
         >
-          Escribe los correos
+          {t('notifyCourse.sendToSpecific')}
         </button>
 
         {!sendToAll && expanded && (
           <>
             <Input
               type="text"
-              placeholder="Introduce los correos electrónicos"
+              placeholder={t('notifyCourse.emailPlaceholder')}
               value={emailList}
               onChange={handleEmailChange}
               className="w-[239px] h-[38px] rounded-lg mt-5"
             />
-            <p className="text-xs text-black mt-5">
-              Separa todos los correos electrónicos con una coma{" "}
-              <span className="text-[#350B48] font-bold text-sm">“ , ”</span> y
-              continúa<br />
-              por ejemplo{" "}
-              <span className="text-[#350B48] font-bold">
-                aprende@gmail.com, brightmind@gmail.com
-              </span>
-            </p>
+            <p className="text-xs text-black mt-5" dangerouslySetInnerHTML={{ __html: t('notifyCourse.emailInstructions') }} />
           </>
         )}
 
@@ -137,7 +129,7 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
           className="absolute bottom-5 right-5 w-[110px] h-[38px] bg-[#1D164E] text-white text-lg font-bold rounded-lg"
           onClick={handleSendEmail}
         >
-          Enviar
+          {t('notifyCourse.send')}
         </button>
       </div>
     </Modal>

@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Modal, Button, Input, message } from "antd";
-import "react-toastify/dist/ReactToastify.css";
+import { Modal, Input, message } from "antd";
 import { useCategoryContext } from "../../../context/courses/category.context";
 import { useTranslation } from "react-i18next";
+import holaImage from "../../../assets/img/hola.png";
 
 const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
   const { t } = useTranslation("global");
@@ -76,7 +76,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
     } catch (error) {
       console.error(error);
       message.error(t("createCategoryForm.createFailure"));
-      onclose();
+      onClose();
     }
   };
 
@@ -96,108 +96,103 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
   }, [visible]);
 
   return (
-    <>
-      <Modal
-        className="shadow-orange shadow-white border-2 border-black rounded-lg"
-        centered
-        visible={visible}
-        footer={null}
-        closable={false}
-        onCancel={onClose}
-        styles={{ mask: { backdropFilter: "blur(15px)" } }}
+    <Modal
+      className="custom"
+      centered
+      visible={visible}
+      footer={null}
+      closable={false}
+      onCancel={onClose}
+      bodyStyle={{
+        borderRadius: "20px",
+        overflow: "hidden",
+      }}
+    >
+      <div className="absolute top-5 right-8 cursor-pointer" onClick={onClose}>
+        <span className="text-white text-2xl font-bold">X</span>
+      </div>
+      <div className="h-[115px] bg-gradient-to-r from-[#18116A] to-blue-500 flex justify-center items-center">
+        <img src={holaImage} alt="Logo" className="w-[200px] h-[200px] mt-12 object-contain" />
+      </div>
+      <form
+        className="p-5 text-center"
+        onSubmit={handleSubmit}
       >
-        <form
-          className="w-full p-4 bg-gradient-to-tr from-teal-400 to-blue-500 rounded-lg shadow-lg relative"
-          onSubmit={handleSubmit}
-        >
-          <div>
-            <h1 className="text-3xl font-bold text-center mb-4 text-white">
-              {t("createCategoryForm.title")}
-            </h1>
-            <div className="mb-4">
-              <label className="block text-black text-lg font-medium mb-2">
-                {t("createCategoryForm.nameLabel")} <br />
-                <Input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-teal-300"
-                  type="text"
-                  name="name"
-                  value={category.name}
-                  onChange={handleChange}
-                  required
-                />
-                {errorMessage.name && (
-                  <p className="text-red-500 text-sm">{errorMessage.name}</p>
-                )}
-              </label>
-            </div>
-            <div className="">
-              <label className="block text-black text-lg font-medium mb-2">
-                {t("createCategoryForm.descriptionLabel")} <br />
-                <Input.TextArea
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-teal-300"
-                  name="description"
-                  value={category.description}
-                  onChange={handleChange}
-                  maxLength={MAX_DESCRIPTION_LENGTH}
-                  style={{ minHeight: "100px" }}
-                  required
-                />
-                <div className="text-gray-300 text-right">
-                  {category.description.length}/{MAX_DESCRIPTION_LENGTH}
-                </div>
-                {errorMessage.description && (
-                  <p className="text-red-500 text-sm ">
-                    {errorMessage.description}
-                  </p>
-                )}
-              </label>
-            </div>
-            <div className="mb-4">
-              <label className="block text-black text-lg font-medium mb-2">
-                {t("createCategoryForm.imageLabel")} <br />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="p-2 block w-full border rounded-md focus:outline-none focus:ring focus:border-teal-300 hover:bg-red-100"
-                  ref={imageRef}
-                  required
-                />
-                {errorMessage.image && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errorMessage.image}
-                  </p>
-                )}
-              </label>
-              {imagePreview && (
-                <div className="mt-2 flex justify-center">
-                  <img
-                    src={imagePreview}
-                    alt="preview"
-                    className="rounded-lg"
-                    style={{ maxWidth: "100%", maxHeight: "200px" }}
-                  />
-                </div>
-              )}
-            </div>
+        <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4">
+          {t("createCategoryForm.title")}
+        </h1>
+        <div className="text-left">
+          <label className="text-lg font-bold text-[#000000] block">
+            {t("createCategoryForm.nameLabel")}
+          </label>
+          <Input
+            className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+            type="text"
+            name="name"
+            value={category.name}
+            onChange={handleChange}
+            required
+          />
+          {errorMessage.name && (
+            <p className="text-red-500 text-sm mt-1">{errorMessage.name}</p>
+          )}
+        </div>
+        <div className="mt-4 text-left">
+          <label className="text-lg font-bold text-[#000000] block">
+            {t("createCategoryForm.descriptionLabel")}
+          </label>
+          <Input.TextArea
+            className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+            name="description"
+            value={category.description}
+            onChange={handleChange}
+            maxLength={MAX_DESCRIPTION_LENGTH}
+            style={{ minHeight: "100px" }}
+            required
+          />
+          <div className="text-gray-300 text-right">
+            {category.description.length}/{MAX_DESCRIPTION_LENGTH}
           </div>
-          <div className="flex justify-center mt-6 space-x-4">
-            <button
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
-              htmlType="submit"
-            >
-              {t("createCategoryForm.createButton")}
-            </button>
-            <button
-              className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"
-              onClick={onClose}
-            >
-              {t("createCategoryForm.cancelButton")}
-            </button>
-          </div>
-        </form>
-      </Modal>
-    </>
+          {errorMessage.description && (
+            <p className="text-red-500 text-sm mt-1">{errorMessage.description}</p>
+          )}
+        </div>
+        <div className="mt-4 text-left">
+          <label className="text-lg font-bold text-[#000000] block">
+            {t("createCategoryForm.imageLabel")}
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+            ref={imageRef}
+            required
+          />
+          {errorMessage.image && (
+            <p className="text-red-500 text-sm mt-1">{errorMessage.image}</p>
+          )}
+          {imagePreview && (
+            <div className="mt-2 flex justify-center">
+              <img
+                src={imagePreview}
+                alt="preview"
+                className="rounded-lg"
+                style={{ maxWidth: "100%", maxHeight: "200px" }}
+              />
+            </div>
+          )}
+        </div>
+        <div className="flex justify-center space-x-4 mt-6">
+          <button
+            type="submit"
+            className="bg-[#18116A] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#140e5b] transition-all duration-300"
+          >
+            {t("createCategoryForm.createButton")}
+          </button>
+        </div>
+      </form>
+    </Modal>
   );
 };
 

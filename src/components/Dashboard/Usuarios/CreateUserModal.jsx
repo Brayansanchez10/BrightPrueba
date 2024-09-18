@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Modal, Form, Input, Select } from "antd";
 import { useRoleContext } from "../../../context/user/role.context";
 import { useUserContext } from "../../../context/user/user.context";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
+import zorroImage from "../../../assets/img/Zorro.png"; 
 
 const { Option } = Select;
 
@@ -13,12 +14,17 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
   const [form] = Form.useForm();
   const { t } = useTranslation("global");
 
+  useEffect(() => {
+    if (visible) {
+      form.resetFields();
+    }
+  }, [visible, form]);
+
   const handleFormSubmit = async () => {
     try {
       const values = await form.validateFields();
       const { username, email } = values;
 
-      // Verifica si el usuario ya existe
       if (checkIfUserExists(username, email)) {
         Swal.fire({
           icon: "error",
@@ -30,16 +36,15 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
 
       onCreate(values);
 
-      // Mostrar mensaje de éxito con SweetAlert2
       Swal.fire({
         icon: "success",
         title: t("CreateUserModal.userCreatedSuccess"),
         showConfirmButton: false,
-        timer: 1500, // Duración del mensaje
+        timer: 1500,
       });
 
       form.resetFields();
-      onCancel(); // Cerrar el modal después de crear el usuario
+      onCancel(); 
     } catch (error) {
       console.error("Failed to create user:", error);
     }
@@ -47,52 +52,61 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
 
   return (
     <Modal
-      className="shadow-orange shadow-white border-2 border-black rounded-lg"
-      centered
+      className="custom w-[544px] h-[600px] rounded-2xl bg-white flex flex-col justify-between"
       visible={visible}
       closable={false}
-      onCancel={onCancel}
+      centered
       footer={null}
-      maskStyle={{ backdropFilter: "blur(15px)" }}
+      onCancel={onCancel}
     >
+        <div className="relative w-full h-[125px] bg-gradient-to-r from-[#18116A] to-blue-500 rounded-t-2xl flex items-center justify-center">
+        <img
+          src={zorroImage}
+          alt="Zorro"
+          className="absolute max-w-[200px] max-h-[150px] object-contain mt-8"
+        />
+        <button
+          type="button"
+          className="absolute top-4 right-5 text-white text-3xl font-extrabold bg-transparent border-none cursor-pointer"
+          onClick={onCancel}
+        >
+          &times;
+        </button>
+       </div>
       <Form
-        className="bg-gradient-to-tr from-teal-400 to-blue-500 shadow-lg rounded-lg py-2"
+        className="px-5 py-6"
         form={form}
         layout="vertical"
       >
-        <h1 className="text-2xl text-white text-center font-black">
+        <h1 className="text-center text-[#18116A] text-3xl font-extrabold mt-1 mb-5 text-shadow-md">
           {t("CreateUserModal.createUserTitle")}
         </h1>
+
         <Form.Item
-          className="text-base font-semibold mx-10 mt-4"
+          className="text-lg font-bold text-black mb-2"
           name="username"
           label={t("CreateUserModal.username")}
-          rules={[
-            { required: true, message: t("CreateUserModal.usernameRequired") },
-          ]}
+          rules={[{ required: true, message: t("CreateUserModal.usernameRequired") }]}
         >
-          <Input />
+          <Input className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
+
         <Form.Item
-          className="text-base font-semibold mx-10"
+          className="text-lg font-bold text-black mb-2"
           name="email"
           label={t("CreateUserModal.email")}
-          rules={[
-            { required: true, message: t("CreateUserModal.emailRequired") },
-            { type: "email", message: t("CreateUserModal.emailInvalid") },
-          ]}
+          rules={[{ required: true, message: t("CreateUserModal.emailRequired") }]}
         >
-          <Input />
+          <Input className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
+
         <Form.Item
-          className="text-base font-semibold mx-10"
+          className="text-lg font-bold text-black mb-2"
           name="role"
           label={t("CreateUserModal.role")}
-          rules={[
-            { required: true, message: t("CreateUserModal.roleRequired") },
-          ]}
+          rules={[{ required: true, message: t("CreateUserModal.roleRequired") }]}
         >
-          <Select>
+          <Select className="w-full h-[34px] rounded-xl bg-white shadow-md text-center">
             {rolesData.map((role) => (
               <Option key={role._id} value={role.nombre}>
                 {role.nombre}
@@ -100,32 +114,25 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
             ))}
           </Select>
         </Form.Item>
+
         <Form.Item
-          className="text-base font-semibold mx-10"
+          className="text-lg font-bold text-black mb-2"
           name="state"
           label={t("CreateUserModal.state")}
-          rules={[
-            { required: true, message: t("CreateUserModal.stateRequired") },
-          ]}
+          rules={[{ required: true, message: t("CreateUserModal.stateRequired") }]}
         >
-          <Select className="text-center">
-            <Option value={true}>{t("CreateUserModal.active")}</Option>
-            <Option value={false}>{t("CreateUserModal.inactive")}</Option>
+          <Select className="w-full h-[34px] rounded-xl bg-white shadow-md text-center">
+            <Option value="active">{t("CreateUserModal.active")}</Option>
+            <Option value="inactive">{t("CreateUserModal.inactive")}</Option>
           </Select>
         </Form.Item>
+
         <div className="flex justify-center mt-6 space-x-4">
           <button
-            className="bg-blue-600 px-4 py-2 hover:bg-blue-700 text-white font-medium rounded-lg"
+            className="bg-[#18116A] hover:bg-[#16105e] text-white font-semibold px-4 py-2 rounded-lg"
             onClick={handleFormSubmit}
           >
             {t("CreateUserModal.create")}
-          </button>
-          <button
-            className="bg-neutral-700 hover:bg-neutral-600 text-white font-medium px-4 py-2 rounded-lg"
-            key="cancel"
-            onClick={onCancel}
-          >
-            {t("CreateUserModal.cancel")}
           </button>
         </div>
       </Form>

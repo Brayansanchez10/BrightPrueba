@@ -1,9 +1,12 @@
 import React from "react";
 import { Modal } from "antd";
+import { useTranslation } from "react-i18next";
 import pulpoImage from "../../../assets/img/pulpo.png";
-import "./css/Custom.css"
+import "./css/Custom.css";
 
-const DeleteConfirmationModal = ({ visible, onClose, onConfirm }) => {
+const DeleteConfirmationModal = ({ visible, onClose, onConfirm, courseName }) => {
+  const { t } = useTranslation("global");
+
   return (
     <Modal
       className="custom"
@@ -30,13 +33,13 @@ const DeleteConfirmationModal = ({ visible, onClose, onConfirm }) => {
 
       <div className="p-5 text-center">
         <h1 className="text-2xl font-extrabold text-[#D84545] mt-5 mb-4">
-          ELIMINAR CURSO
+          {t('deleteCourse.title')}
         </h1>
         <p className="text-lg font-semibold mb-3">
-          ¿Estás seguro que deseas eliminar el curso de Python?
+          {t('deleteCourse.confirmationMessage', { courseName })}
         </p>
         <p className="text-sm font-extrabold text-red-500 mb-6">
-          Esta acción no se podrá revertir.
+          {t('deleteCourse.irreversibleMessage')}
         </p>
 
         <div className="flex justify-center">
@@ -44,7 +47,7 @@ const DeleteConfirmationModal = ({ visible, onClose, onConfirm }) => {
             className="bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#ff2f22] transition-all duration-300"
             onClick={onConfirm}
           >
-            ELIMINAR
+            {t('deleteCourse.confirmButton')}
           </button>
         </div>
       </div>

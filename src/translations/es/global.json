@@ -294,7 +294,8 @@
         "name": "Nombre",
         "actions": "Acciones",
         "viewPermissions": "Ver Permisos",
-        "assignPermissions": "Asignar Permisos",
+        "assignPermissions": "Asignar",
+        "description": "Estas seguro que deseas asignarle permisos a este rol",
         "permissions": "Permisos",
         "permissionsFor": "Permisos de",
         "rolePermissions": "Permisos del Rol",
@@ -314,7 +315,7 @@
         "namePlaceholder": "Por favor ingrese el nombre del rol",
         "roleExists": "El nombre del rol ya existe",
         "roleCreated": "Rol creado exitosamente",
-        "createButton": "Crear Rol",
+        "createButton": "Crear",
         "closeButton": "Cerrar",
         "maxRole": "El rol debe tener al menos 15 caracteres",
         "mixRole": "El rol debe tener como minimo 3"
@@ -347,7 +348,14 @@
         "description": "Descripción:",
         "imagePreview": "Vista previa de la imagen",
         "close": "Cerrar",
-        "noCourseSelected": "Ningún curso seleccionado"
+        "noCourseSelected": "Ningún curso seleccionado",
+        "courseTitle": "CURSO DE"
+    },
+    "deleteCourse" : {
+        "title": "ELIMINAR CURSO",
+        "confirmationMessage": "¿Estás seguro que deseas eliminar el curso de {{courseName}}?",
+        "irreversibleMessage": "Esta acción no se podrá revertir.",
+        "confirmButton": "Eliminar"
     },
     "deleteConfirmation": {
         "confirmDeletion": "Confirmar Eliminación",
@@ -376,7 +384,7 @@
         "category": "Categoría",
         "description": "Descripción",
         "image": "Imagen",
-        "createButton": "Crear Curso",
+        "createButton": "Crear",
         "closeButton": "Cerrar",
         "nameTooShort": "El nombre debe tener al menos 2 caracteres.",
         "descriptionTooShort": "La descripción debe tener al menos 6 caracteres.",
@@ -410,6 +418,18 @@
         "videoLink": "Video Ingresado",
         "invalidVideoLink": "El enlace del video no es válido",
         "invalidVideoLinkdescription": "Por favor ingrese un link válido"
+    },
+    "notifyCourse": {
+        "notificationCourse": "NOTIFICACION DE CURSO",
+        "selectNotificationMethod": "Selecciona cómo quieres enviar la notificación",
+        "sendToAll": "Todos los estudiantes",
+        "sendToSpecific": "Escribe los correos",
+        "emailPlaceholder": "Introduce los correos electrónicos",
+        "emailInstructions": "Separa todos los correos electrónicos con una coma <span class='font-bold text-sm'>‘ , ’</span> y continúa<br />por ejemplo <span class='font-bold'>aprende@gmail.com, brightmind@gmail.com</span>",
+        "invalidEmails": "Por favor, introduce correos electrónicos válidos.",
+        "sendSuccess": "Correos electrónicos enviados exitosamente.",
+        "sendError": "Hubo un error al enviar los correos electrónicos.",
+        "send": "Enviar"
     },
     "categories": {
         "title": "Categorías",
@@ -448,7 +468,7 @@
         "cancelButton": "Cancelar",
         "nameTooShort": "El nombre de la categoría debe tener al menos 8 caracteres.",
         "descriptionTooShort": "La descripción debe tener al menos 30 caracteres.",
-        "createButton": "Crear Categoría",
+        "createButton": "Crear",
         "createSuccess": "¡Categoría creada exitosamente!",
         "createFailure": "No se pudo crear la categoría. Por favor, intenta de nuevo.",
         "invalidImageFile": "Por favor, sube un archivo de imagen válido."

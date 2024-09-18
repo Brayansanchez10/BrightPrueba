@@ -14,6 +14,9 @@ import { usePermissionContext } from "../../../context/user/permissions.context"
 import CreateRolForm from "../Roles/CreateRolForm";
 import Navbar from "../../Dashboard/NavBar";
 import { useTranslation } from "react-i18next";
+import zorroImage from "../../../assets/img/Zorro.png";
+import "../css/Custom.css";
+import holaImage from "../../../assets/img/hola1.png";
 
 const { useForm } = Form;
 
@@ -383,146 +386,177 @@ const DataTable = () => {
           </div>
         </div>
       </div>
-      <Modal
-        className="shadow-orange shadow-white border-2 border-black rounded-lg"
-        visible={showDetailsModal}
-        onCancel={handleModalClose}
-        footer={null}
-        centered
-        closable={false}
-        maskStyle={{ backdropFilter: "blur(15px)" }}
-      >
-        <h1 className="text-center text-xl font-bold">
-          {t("roles.permissions")}
-        </h1>
-        {selectedRole && (
-          <div className="mt-4">
-            <b className="text-lg">{t("roles.role")} ID:</b>{" "}
-            <span className="text-sm text-green-500 font-medium">
-              {selectedRole._id}{" "}
-            </span>
-            <p>
-              <b className="text-lg">{t("roles.name")}</b>{" "}
-              <span className="text-sm text-green-500 font-medium">
-                {selectedRole.nombre}{" "}
-              </span>
-            </p>
-            <p>
-              <b className="text-lg">{t("roles.permissions")}:</b>
-              <span className="text-base text-green-600 font-medium">
-                {selectedRole &&
-                  selectedRole.permisos &&
-                  selectedRole.permisos.map((permiso) => (
-                    <li className="text-sm ml-10" key={permiso}>
-                      <span className="text-black text-lg">-</span> {permiso}
-                    </li>
-                  ))}
-              </span>
-            </p>
-            <div className="flex justify-center">
-              <button
-                className="px-4 py-2 mt-4 bg-neutral-700 text-base rounded-lg hover:bg-neutral-600 font-black text-white"
-                onClick={handleModalClose}
-              >
-                {t("roles.close")}
-              </button>
-            </div>
-          </div>
-        )}
-      </Modal>
-      <Modal
-        className="shadow-orange shadow-white border-2 border-black rounded-lg flex justify-center"
-        visible={showAssignModal}
-        onCancel={handleModalClose}
-        footer={null}
-        centered
-        closable={false}
-        maskStyle={{ backdropFilter: "blur(20px)" }}
-      >
-        <div>
-          <h1 className="text-center text-xl font-bold">
-            {t("roles.permissions")} 
+       <Modal
+      className="custom w-[543px] h-[400px] bg-white rounded-3xl"
+      centered
+      visible={showDetailsModal}
+      onCancel={handleModalClose}
+      footer={null}
+      closable={false}
+      bodyStyle={{
+        overflow: "hidden",
+      }}
+    >
+      <div className="p-0">
+        <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350B48] to-[#905BE8] flex items-center justify-center">
+          <img 
+            src={zorroImage} 
+            alt="Zorro"
+            className="absolute w-[146px] h-[155px] top-0 left-1/2 transform -translate-x-1/2" 
+          />
+          <button
+            className="absolute top-2 right-5 bg-transparent text-white text-3xl font-bold cursor-pointer"
+            onClick={handleModalClose}
+          >
+            ×
+          </button>
+        </div>
+        <div className="px-5 py-6">
+          <h1 className="text-center text-[#350B48] text-3xl font-extrabold mt-14 mb-5 overflow-hidden text-ellipsis whitespace-nowrap">
+            {t("roles.permissions")}
           </h1>
-          {permissionsData &&
-            permissionsData.info &&
-            permissionsData.info.map((permission) => (
-              <div key={permission._id} className="">
-                <Checkbox
-                  className="text-lg"
-                  checked={selectedPermissionsMap[selectedRoleId]?.includes(
-                    permission._id
-                  )}
-                  onChange={() =>
-                    handleCheckboxChange(selectedRoleId, permission._id)
-                  }
-                  style={{
-                    color: selectedPermissionsMap[selectedRoleId]?.includes(
-                      permission._id
-                    )
-                      ? "green"
-                      : "red",
-                  }}
-                >
-                  {permission.nombre}
-                </Checkbox>
-              </div>
-            ))}
-          <div className="space-x-2 flex justify-center mt-4">
-            <button
-              className=" bg-blue-500 text-white text-base font-medium px-4 py-2 rounded-lg hover:bg-blue-600"
-              onClick={handleAssignPermissionsSubmit}
-            >
-              {t("roles.assignPermissions")}
-            </button>
-            <button
-              className=" bg-neutral-700 text-white text-base font-medium px-4 py-2 rounded-lg hover:bg-neutral-600"
-              onClick={handleModalClose}
-            >
-              {t("roles.close")}
-            </button>
+          {selectedRole && (
+            <div>
+              <p className="mb-5">
+                <strong className="font-bold text-xl text-black">{t("roles.role")} ID:</strong>
+                <br />
+                <span className="text-lg text-black-500 font-medium">{selectedRole._id}</span>
+              </p>
+              <p className="mb-5">
+                <strong className="font-bold text-xl text-black">{t("roles.name")}:</strong>
+                <br />
+                <span className="text-lg text-black-500 font-medium">{selectedRole.nombre}</span>
+              </p>
+              <p className="mb-5">
+                <strong className="font-bold text-xl text-black">{t("roles.permissions")}:</strong>
+                <br />
+                <span className="text-base text-black-600 font-medium">
+                  {selectedRole &&
+                    selectedRole.permisos &&
+                    selectedRole.permisos.map((permiso) => (
+                      <li className="text-sm ml-10" key={permiso}>
+                        <span className="text-black text-lg">-</span> {permiso}
+                      </li>
+                    ))}
+                </span>
+              </p>
+            </div>
+          )}
+        </div>
+        <div className="px-5 py-4">
+          <div className="flex justify-center">
           </div>
         </div>
-      </Modal>
+      </div>
+    </Modal>
+    <Modal
+      className="custom"
+      centered
+      visible={showAssignModal}
+      onCancel={handleModalClose}
+      closable={false}
+      footer={null}
+      bodyStyle={{
+        borderRadius: "20px",
+        overflow: "hidden",
+      }}
+    >
+      <div className="absolute top-5 right-8 cursor-pointer" onClick={handleModalClose}>
+        <span className="text-white text-2xl font-bold">X</span>
+      </div>
+      <div className="h-[115px] bg-gradient-to-r from-[#18116A] to-blue-500 flex justify-center items-center">
+        <img src={holaImage} alt="Zorro" className="w-[182px] h-[168px] mt-12 object-contain" />
+      </div>
+      <div className="p-5 text-center">
+        <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4">
+          {t("roles.assignPermissions").toUpperCase()}
+        </h1>
+        <p className="text-lg font-medium text-gray-700 mb-6">
+          ¿{t("roles.description")}?
+        </p>
+        {permissionsData &&
+          permissionsData.info &&
+          permissionsData.info.map((permission) => (
+            <div key={permission._id} className="mb-3">
+              <Checkbox
+                className="text-lg"
+                checked={selectedPermissionsMap[selectedRoleId]?.includes(
+                  permission._id
+                )}
+                onChange={() =>
+                  handleCheckboxChange(selectedRoleId, permission._id)
+                }
+                style={{
+                  color: selectedPermissionsMap[selectedRoleId]?.includes(
+                    permission._id
+                  )
+                    ? "green"
+                    : "red",
+                }}
+              >
+                {permission.nombre}
+              </Checkbox>
+            </div>
+          ))}
+        <div className="flex justify-center space-x-2 mt-6">
+          <button
+            className="bg-[#18116A] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#140e5b] transition-all duration-300"
+            onClick={handleAssignPermissionsSubmit}
+          >
+            {t("roles.assignPermissions")}
+          </button>
+        </div>
+      </div>
+    </Modal>
       <CreateRolForm
         visible={showForm}
         onClose={handleFormClose}
         onCreate={handleCreateRol}
       />
-      <Modal
-        className="shadow-orange shadow-white border-2 border-black rounded-lg"
-        visible={showDeleteModal}
-        onCancel={() => setShowDeleteModal(false)}
-        footer={null}
-        closable={false}
-        centered
-        maskStyle={{ backdropFilter: "blur(20px)" }}
-      >
-        <div className="">
-          <h1 className="text-center text-xl font-bold">
-            {t("roles.confirmDeleteRole")}
-          </h1>
-          <p className="text-base text-black text-center mt-4 ">
-            {t("roles.deleteConfirmation")}
-          </p>
-          <p className="text-base text-red-600 text-center mt-2">
-            <b>{t("roles.deleteCannot")}</b>
-          </p>
-          <div className="flex justify-center mt-4 space-x-4">
-            <button
-              className="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600 border border-red-700"
-              onClick={confirmDeleteRole}
-            >
-              {t("roles.confirm")}
-            </button>
-            <button
-              className="bg-neutral-700 font-semibold px-4 py-2 rounded-xl hover:bg-neutral-600 text-white"
-              onClick={() => setShowDeleteModal(false)}
-            >
-              {t("roles.cancel")}
-            </button>
-          </div>
+     <Modal
+      className="custom w-[543px] h-[350px] bg-white rounded-3xl"
+      centered
+      visible={showDeleteModal}
+      onCancel={() => setShowDeleteModal(false)}
+      footer={null}
+      closable={false}
+      bodyStyle={{
+        overflow: "hidden",
+      }}
+    >
+      <div className="relative w-full h-[125px] bg-gradient-to-r from-[#872626] to-red-500 flex justify-center items-center">
+        <img 
+          src={zorroImage} 
+          alt="Zorro"
+          className="absolute w-[146px] h-[155px] top-0 left-1/2 transform -translate-x-1/2" 
+        />
+        <button
+          className="absolute top-2 right-5 bg-transparent text-white text-3xl font-bold cursor-pointer"
+          onClick={() => setShowDeleteModal(false)}
+        >
+          ×
+        </button>
+      </div>
+      <div className="p-5 text-center">
+        <h1 className="text-2xl font-extrabold text-[#D84545] mt-5 mb-4">
+          {t("roles.confirmDeleteRole")}
+        </h1>
+        <p className="text-lg font-semibold mb-3">
+          {t("roles.deleteConfirmation")}
+        </p>
+        <p className="text-sm font-extrabold text-red-500 mb-6">
+          <b>{t("roles.deleteCannot")}</b>
+        </p>
+        <div className="flex justify-center space-x-4">
+          <button
+            className="bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#ff2f22] transition-all duration-300"
+            onClick={confirmDeleteRole}
+          >
+            {t("roles.confirm")}
+          </button>
         </div>
-      </Modal>
+      </div>
+    </Modal>
     </div>
   );
 };
