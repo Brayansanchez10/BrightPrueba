@@ -431,7 +431,7 @@ const ResourceView = () => {
       <NavigationBar />
       <div className="flex flex-col lg:flex-row min-h-screen">
         {/* Left */}
-        <div className="relative">
+        <div className="relative hidden lg:block">
           {/* Navegador lateral */}
           <div
             className={`${

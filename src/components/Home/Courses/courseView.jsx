@@ -102,7 +102,7 @@ const CourseView = () => {
                             </Link>
                             
                             <div className="-mt-8">
-                                <h2 className="text-4xl font-bold text-gray-900 sm:text-5xl">{course.title}</h2>
+                                <h2 className="text-4xl pt-8 font-bold text-gray-900 sm:text-5xl sm:pt-8 md:pt-8 lg:pt-2">{course.title}</h2>
                                 <p className="text-lg mt-4 text-gray-600">{course.description}</p>
                             </div>
                         </div>
@@ -156,7 +156,7 @@ const CourseView = () => {
                         
 
                         {/* Tarjeta de información */}
-                        <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
+                        <div className="max-w-mx bg-white border border-gray-200 rounded-lg shadow">
                             <img className="rounded-t-lg" src={Logo} alt={t('course_user.logoAlt')} />
                             <div className="p-5">
                                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">

@@ -76,7 +76,7 @@
         "forgot_password": "Did you forget your password?",
         "enter_email": "Enter your email and we will send you a code to recover it",
         "email": "Email",
-        "enter_registered_email": "Enter registered email",
+        "enter_registered_email": "Enter your registered email",
         "send_recovery_code": "Send recovery code",
         "not_registered_yet": "Haven’t you registered yet",
         "register_now": "Register Now"

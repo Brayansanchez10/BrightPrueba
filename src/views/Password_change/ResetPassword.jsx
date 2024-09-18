@@ -51,30 +51,27 @@ const ResetPasswordForm = () => {
   });
 
   return (
-    <div className="bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600 min-h-screen flex justify-center">
+    <div className="bg-gradient-to-r from-purple-500 to-emerald-400 min-h-screen flex justify-center">
       <div className="flex justify-center items-center">
-        <div className="bg-gradient-to-r from-violet-600 to-rose-500 rounded-xl shadow-xl shadow-zinc-950 px-6 mx-2">
-          <h1 className="text-xl font-black text-slate-100 mt-4 text-center">
+        <div className="bg-white rounded-xl shadow-xl shadow-zinc-950 px-10 py-6 mx-4 max-w-lg">
+          <h1 className="text-2xl mx-auto text-center font-black bg-gradient-to-r from-emerald-400 to-purple-800 bg-clip-text text-transparent mb-3 pt-4">
             {t("reset_password.forgot_password")}
           </h1>
-          <p className="italic mt-6 font-semibold text-center text-lg text-slate-300">
+          <p className="italic mt-6 font-semibold text-center text-lg text-purple-800">
             {t("reset_password.enter_email")}
           </p>
           <div className="w-full flex flex-col items-center">
             <img src={logo} alt="Logo" className="h-48" />
           </div>
 
-          <form onSubmit={formik.handleSubmit} className="my-10">
+          <form onSubmit={formik.handleSubmit} className="my-2">
             <div className="flex flex-col space-y-4">
               <label htmlFor="email">
-                <p className="font-medium text-zinc-200">
-                  {t("reset_password.email")}
-                </p>
                 <input
                   id="email"
                   name="email"
                   type="email"
-                  className="w-full mt-2 py-2 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
+                  className="w-full mt-2 py-2 rounded-lg px-3 focus:outline-none border border-black hover:shadow"
                   placeholder={t("reset_password.enter_registered_email")}
                   value={formik.values.email}
                   onChange={formik.handleChange}
@@ -82,39 +79,40 @@ const ResetPasswordForm = () => {
                 />
               </label>
               {formik.touched.email && formik.errors.email ? (
-                <div className="text-red-400">{formik.errors.email}</div>
+                <div className="text-red-600">{formik.errors.email}</div>
               ) : null}
 
-              <button
-                type="submit"
-                className={`py-3 font-medium text-white bg-gradient-to-r from-cyan-300 to-cyan-800 rounded-lg inline-flex space-x-4 items-center justify-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={isSubmitting}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
+              <div className="flex items-center justify-center">
+                <button
+                  type="submit"
+                  className={`py-3 font-medium text-white rounded-lg w-3/4 bg-purple-800 inline-flex space-x-4 items-center justify-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={isSubmitting}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
-                  />
-                </svg>
-                <span>{t("reset_password.send_recovery_code")}</span>
-              </button>
-              <p className="text-center text-slate-100 font-medium">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
+                    />
+                  </svg>
+                  <span>{t("reset_password.send_recovery_code")}</span>
+                </button>
+              </div>
+
+              <p className="text-center text-slate-400 font-medium">
                 {t("reset_password.not_registered_yet")}{" "}
                 <Link
                   to="/register"
-                  className="text-black font-medium inline-flex space-x-1 items-center"
+                  className="text-purple-800 font-medium inline-flex space-x-1 items-center"
                 >
-                  <span className="hover:bg-white">
-                    {t("reset_password.register_now")}
-                  </span>
+                  <span>{t("reset_password.register_now")}</span>
                 </Link>
               </p>
             </div>
