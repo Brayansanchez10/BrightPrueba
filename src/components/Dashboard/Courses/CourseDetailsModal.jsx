@@ -2,7 +2,7 @@ import React from "react";
 import { Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import zorroImage from "../../../assets/img/Zorro.png";
-import "./css/Custom.css";
+import "../css/Custom.css";
 
 const CourseDetailsModal = ({ visible, onClose, course }) => {
   const { t } = useTranslation("global");

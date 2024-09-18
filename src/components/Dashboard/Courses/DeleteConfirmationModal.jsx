@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal } from "antd";
 import pulpoImage from "../../../assets/img/pulpo.png";
-import "./css/Custom.css"
+import "../css/Custom.css"
 
 const DeleteConfirmationModal = ({ visible, onClose, onConfirm }) => {
   return (

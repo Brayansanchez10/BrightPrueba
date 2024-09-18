@@ -3,7 +3,7 @@ import { Modal, Select } from "antd";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useCategoryContext } from "../../../context/courses/category.context";
 import Swal from "sweetalert2";
-import "./css/Custom.css";
+import "../css/Custom.css";
 
 const { Option } = Select;
 

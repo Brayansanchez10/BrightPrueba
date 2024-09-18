@@ -3,7 +3,7 @@ import { Modal, Input, message } from "antd";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import hola1 from "/src/assets/img/Zorro.png";
-import "./css/Custom.css";
+import "../css/Custom.css";
 
 const NotifyCourseModal = ({ visible, onClose, courseId }) => {
   const { t } = useTranslation("global");

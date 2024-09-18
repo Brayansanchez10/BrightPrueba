@@ -12,6 +12,7 @@ import zorro from '../../../assets/img/Zorro.jpeg';
 import derechaabajo from '../../../assets/img/DerechaAbajo.jpeg';
 import izquierdaarriba from '../../../assets/img/IzquierdaArriba.jpeg';
 import { Anothershabby_trial } from '../../../Tipografy/Anothershabby_trial-normal';
+import { FaCheckCircle, FaTimesCircle, FaQuestionCircle } from 'react-icons/fa';
 
 const { Panel } = Collapse;
 
@@ -27,6 +28,7 @@ const ResourceView = () => {
   const [courseId, setCourseId] = useState("");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
+  const [isAnswerSelected, setIsAnswerSelected] = useState(false);
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
@@ -115,6 +117,11 @@ const ResourceView = () => {
       updateProgress(index, resources.length);
     }
   }, [resources, resource]);
+
+  // Actualiza el estado de si se ha seleccionado una respuesta
+  useEffect(() => {
+    setIsAnswerSelected(answers[currentQuestionIndex] !== undefined);
+  }, [answers, currentQuestionIndex]);
 
   const isVideoLink = (url) => {
     return (
@@ -232,15 +239,19 @@ const ResourceView = () => {
   };
 
   const renderQuiz = () => {
-    const question = resource?.quizzes[currentQuestionIndex];
-    if (!question) return <p>No hay preguntas disponibles.</p>;
-
+    const question = resource.quizzes[currentQuestionIndex];
+  
     return (
-      <div className="quiz-container bg-white rounded-3xl shadow-lg w-[600px] h-[400px] m-0 p-0">
-        <h2 className="p-4 bg-purple-500 rounded-t-3xl text-white text-lg">Qestion 1/3</h2>
-        <h3 className="font-bold mb-5 text-center pt-2 text-xl">{question.question}</h3>
+    <div className="quiz-container bg-white rounded-lg shadow-md w-[600px] max-w-full mx-auto p-6">
+      <h2 className="text-lg font-bold text-gray-800 mb-4">
+        Pregunta {currentQuestionIndex + 1} de {resource?.quizzes.length}
+      </h2>
+      <div className="bg-gray-100 p-4 rounded-lg mb-6 shadow-sm">
+        <h3 className="text-2xl font-semibold text-gray-700 mb-4">
+          {question.question}
+        </h3>
         {question.options.map((option, index) => (
-          <div key={index} className="flex items-center mb-5 mx-10">
+          <div key={index} className="flex items-center mb-4">
             <input
               type="radio"
               id={`question-${currentQuestionIndex}-option-${index}`}
@@ -248,55 +259,91 @@ const ResourceView = () => {
               value={option}
               checked={answers[currentQuestionIndex] === option}
               onChange={() => handleAnswerChange(currentQuestionIndex, option)}
-              className="mr-2"
+              className="mr-3"
             />
             <label
               htmlFor={`question-${currentQuestionIndex}-option-${index}`}
               className={`${
-                isQuizCompleted && question.correctAnswer === option
-                  ? "text-green-500"
-                  : isQuizCompleted &&
-                    answers[currentQuestionIndex] === option &&
+                isQuizCompleted &&
+                (question.correctAnswer === option
+                  ? 'text-green-500 font-semibold'
+                  : answers[currentQuestionIndex] === option &&
                     answers[currentQuestionIndex] !== question.correctAnswer
-                  ? "text-red-500"
-                  : ""
+                  ? 'text-red-500 font-semibold'
+                  : '')
               }`}
             >
               {option}
             </label>
           </div>
         ))}
-        <div className="flex justify-between mt-10 mx-10">
-          <button
-            onClick={handlePreviousQuestion}
-            disabled={currentQuestionIndex === 0}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Anterior
-          </button>
-          <button
-            onClick={handleNextQuestion}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            {currentQuestionIndex === (resource?.quizzes.length || 0) - 1
-              ? "Finalizar"
-              : "Siguiente"}
-          </button>
-        </div>
       </div>
-    );
-  };
+      <div className="flex justify-between items-center mt-6">
+        <button
+          onClick={handlePreviousQuestion}
+          disabled={currentQuestionIndex === 0}
+          className={`py-2 px-4 rounded-lg text-white ${
+            currentQuestionIndex === 0 ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-600'
+          }`}
+        >
+          Anterior
+        </button>
+        <button
+          onClick={handleNextQuestion}
+          disabled={!answers[currentQuestionIndex]}
+          className={`py-2 px-4 rounded-lg text-white ${
+            !answers[currentQuestionIndex] ? 'bg-gray-300' : 'bg-blue-500 hover:bg-blue-600'
+          }`}
+        >
+          {currentQuestionIndex === (resource?.quizzes.length || 0) - 1
+            ? 'Finalizar'
+            : 'Siguiente'}
+        </button>
+      </div>
+    </div>
+  );
+};
 
   const renderQuizSummary = () => {
     return (
-      <div className="quiz-summary bg-white p-6 rounded-lg shadow-lg">
-        <h3 className="text-lg font-bold mb-2">Quiz Finalizado</h3>
-        <p>Preguntas totales: {resource?.quizzes.length}</p>
-        <p>Respuestas correctas: {correctAnswers}</p>
-        <p>Respuestas incorrectas: {incorrectAnswers}</p>
+      <div className="quiz-summary bg-white p-6 rounded-lg shadow-lg ring-1 ring-gray-200">
+        <h3 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+          Quiz Finalizado
+        </h3>
+        <div className="flex flex-col space-y-4">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+              <FaQuestionCircle className="text-gray-500 text-3xl" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-medium text-gray-700">Preguntas Totales</span>
+              <span className="text-lg text-gray-600">{resource?.quizzes.length}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <FaCheckCircle className="text-green-500 text-3xl" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-medium text-gray-700">Respuestas Correctas</span>
+              <span className="text-lg text-gray-600">{correctAnswers}</span>
+            </div>
+          </div>
+  
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+              <FaTimesCircle className="text-red-500 text-3xl" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-medium text-gray-700">Respuestas Incorrectas</span>
+              <span className="text-lg text-gray-600">{incorrectAnswers}</span>
+            </div>
+          </div>
+        </div>
       </div>
     );
-  };
+  };  
 
   // Actualiza la barra de progreso
   const updateProgress = (index, total) => {
