@@ -3,13 +3,15 @@ import { Modal, Select } from "antd";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useCategoryContext } from "../../../context/courses/category.context";
 import Swal from "sweetalert2";
-import "./css/UpdateCourseForm.css";
+import { useTranslation } from "react-i18next";
+import "../css/Custom.css";
 
 const { Option } = Select;
 
 const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
   const { categories } = useCategoryContext();
   const { updateCourse, getCourse } = useCoursesContext();
+  const { i18n } = useTranslation();
 
   const [course, setCourse] = useState({
     name: "",
@@ -65,13 +67,13 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
     };
 
     if (!course.name || course.name.length < 2) {
-      errors.name = "Título del curso es requerido y debe tener al menos 2 caracteres.";
+      errors.name = i18n.language === 'es' ? "El nombre debe tener al menos 2 caracteres." : "The course name must be at least 2 characters long.";
     }
     if (!course.category) {
-      errors.category = "Categoría del curso es requerida.";
+      errors.category = i18n.language === 'es' ? "Categoría del curso es requerida." : "Course category is required.";
     }
     if (!course.description || course.description.length < 6) {
-      errors.description = "Descripción del curso es requerida y debe tener al menos 6 caracteres.";
+      errors.description = i18n.language === 'es' ? "Descripción del curso es requerida y debe tener al menos 6 caracteres." : "The description must be at least 6 characters long.";
     }
 
     if (Object.values(errors).some((error) => error)) {
@@ -90,7 +92,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
       await updateCourse(courseId, courseData);
       Swal.fire({
         icon: 'success',
-        title: "Curso actualizado con éxito.",
+        title: i18n.language === 'es' ? "Actualización exitosa" : "Update successfully",
         timer: 1000,
         showConfirmButton: false,
       }).then(() => {
@@ -102,7 +104,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
       console.error(error);
       Swal.fire({
         icon: 'error',
-        title: "Error al actualizar el curso.",
+        title: i18n.language === 'es' ? "Error al actualizar el curso" : "Failed to update course",
       });
     }
   };
@@ -112,38 +114,48 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
       visible={visible}
       footer={null}
       closable={false}
-      className="custom-modal"
+      className={`custom w-[544px] h-[800px] rounded-2xl bg-white flex flex-col justify-between ${i18n.language === 'es' ? 'bg-gradient-es' : 'bg-gradient-en'}`}
       centered
       onCancel={onClose}
     >
-      <div className="header">
-        <img src="/src/assets/img/imagen1.png" alt="Imagen de la cabecera" />
+          <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
+          <img
+            src="/src/assets/img/imagen1.png"
+            alt="Imagen de la cabecera"
+            className="w-[189.69px] h-[148px] object-contain mt-8"
+          />
         <button
           type="button"
-          className="close-button"
+          className="absolute top-4 right-5 text-white text-3xl font-extrabold bg-transparent border-none cursor-pointer"
           onClick={onClose}
         >
-          &times;
+          {i18n.language === 'es' ? '×' : '×'}
         </button>
       </div>
-      <form onSubmit={handleSubmit} className="form-container">
-        <h1 className="title">ACTUALIZAR CURSO</h1>
+      <form onSubmit={handleSubmit} className="px-5 py-6">
+        <h1 className={`text-center text-[#350b48] text-3xl font-extrabold mt-1 mb-5 ${i18n.language === 'es' ? 'text-shadow-md-es' : 'text-shadow-md-en'}`}>
+          {i18n.language === 'es' ? 'ACTUALIZAR CURSO' : 'UPDATE COURSE'}
+        </h1>
 
-        <label className="label">Título del curso:</label>
+        <label className="block text-lg font-bold text-black mb-2">
+          {i18n.language === 'es' ? 'Título del curso:' : 'Course Title:'}
+        </label>
         <input
-          className="input"
+          className="w-full h-[34px] rounded-xl bg-white shadow-md px-3 mb-4"
           type="text"
           name="name"
           value={course.name}
           onChange={handleChange}
         />
         {errorMessage.name && (
-          <p className="error-text">{errorMessage.name}</p>
+          <p className="text-red-500 text-sm mb-4">{errorMessage.name}</p>
         )}
 
-        <label className="label">Categoría del curso:</label>
+        <label className="block text-lg font-bold text-black mb-2">
+          {i18n.language === 'es' ? 'Categoría del curso:' : 'Course Category:'}
+        </label>
         <Select
-          className="select"
+          className="w-full h-[34px] rounded-xl bg-white shadow-md mb-4"
           value={course.category}
           onChange={(value) => setCourse({ ...course, category: value })}
         >
@@ -154,43 +166,49 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
           ))}
         </Select>
         {errorMessage.category && (
-          <p className="error-text">{errorMessage.category}</p>
+          <p className="text-red-500 text-sm mb-4">{errorMessage.category}</p>
         )}
 
-        <label className="label">Descripción del curso:</label>
+        <label className="block text-lg font-bold text-black mb-2">
+          {i18n.language === 'es' ? 'Descripción del curso:' : 'Course Description:'}
+        </label>
         <textarea
-          className="textarea"
+          className="w-full h-[60px] rounded-xl bg-white shadow-md px-3 mb-4"
           name="description"
           value={course.description}
           onChange={handleChange}
         />
         {errorMessage.description && (
-          <p className="error-text">{errorMessage.description}</p>
+          <p className="text-red-500 text-sm mb-4">{errorMessage.description}</p>
         )}
 
-        <div className="image-section">
-          <label className="image-label">Imagen del curso:</label>
+        <div className="flex flex-col items-start mb-6">
+          <label className="block text-lg font-bold text-black mb-2">
+            {i18n.language === 'es' ? 'Imagen del curso:' : 'Course Image:'}
+          </label>
           <input
             type="file"
             accept="image/*"
-            className="image-input"
+            className="w-full h-[44px] rounded-xl bg-white shadow-md px-3 py-2 mb-4"
             ref={imageRef}
             onChange={handleImageChange}
           />
         </div>
 
-        <div className="image-preview-container">
-          <div className="image-preview">
-            {course.image && <img src={course.image} alt="Vista previa" />}
-          </div>
+        <div className="flex justify-center mb-6">
+          {course.image && (
+            <div className="w-[100px] h-[100px] border border-[#ddd] rounded-md flex items-center justify-center bg-[#f0f0f0] overflow-hidden">
+              <img src={course.image} alt="Vista previa" className="max-w-full max-h-full" />
+            </div>
+          )}
         </div>
 
-        <div className="button-group">
+        <div className="flex justify-end pt-2">
           <button
             type="submit"
-            className="btn-primary"
+            className="bg-[#350b48] text-white rounded-xl h-[41px] w-[133px] text-lg font-bold cursor-pointer"
           >
-            Actualizar
+            {i18n.language === 'es' ? 'Actualizar' : 'Update'}
           </button>
         </div>
       </form>

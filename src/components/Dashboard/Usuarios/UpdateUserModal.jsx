@@ -3,80 +3,98 @@ import { Modal, Form, Input, Select } from "antd";
 import { useRoleContext } from '../../../context/user/role.context';
 import Swal from "sweetalert2";
 import { useTranslation } from 'react-i18next';
+import "../css/Custom.css";
 
-const { Option } = Select;
+  const { Option } = Select;
 
-const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
-  const { rolesData } = useRoleContext();
-  const [form] = Form.useForm();
-  const { t } = useTranslation("global");
+  const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
+    const { rolesData } = useRoleContext();
+    const [form] = Form.useForm();
+    const { t } = useTranslation("global");
 
-  useEffect(() => {
-    if (visible) {
-      form.setFieldsValue(user);
-    }
-  }, [visible, user, form]);
+    useEffect(() => {
+      if (visible) {
+        form.setFieldsValue(user);
+      }
+    }, [visible, user, form]);
 
-  const handleFormSubmit = async () => {
-    try {
-      const values = await form.validateFields();
-      onUpdate(values);
-      onCancel(); // Close the modal
+    const handleFormSubmit = async () => {
+      try {
+        const values = await form.validateFields();
+        onUpdate(values);
+        onCancel(); 
 
-      // Mostrar mensaje de éxito con SweetAlert2
-      Swal.fire({
-        icon: 'success',
-        title: t('UpdateUserModal.userUpdatedSuccess'),
-        showConfirmButton: false,
-        timer: 1000, // Duración del mensaje
-      });
-    } catch (error) {
-      console.error("Failed to update user:", error);
-    }
-  };
+        Swal.fire({
+          icon: 'success',
+          title: t('UpdateUserModal.userUpdatedSuccess'),
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      } catch (error) {
+        console.error("Failed to update user:", error);
+      }
+    };
 
   return (
     <Modal
-      className="shadow-orange shadow-white border-2 border-black rounded-lg"
       visible={visible}
-      closable={false}
-      centered
-      maskStyle={{ backdropFilter: "blur(15px)" }}
       footer={null}
+      closable={false}
+      className="custom w-[544px] rounded-2xl bg-white flex flex-col"
+      centered
       onCancel={onCancel}
     >
+      <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
+        <img
+          src="/src/assets/img/imagen1.png"
+          alt="Imagen de la cabecera"
+          className="w-[189.69px] h-[148px] object-contain mt-8"
+        />
+        <button
+          type="button"
+          className="absolute top-4 right-5 text-white text-3xl font-extrabold bg-transparent border-none cursor-pointer"
+          onClick={onCancel}
+        >
+          &times;
+        </button>
+      </div>
+
       <Form
-        className="bg-gradient-to-tr from-teal-400 to-blue-500 shadow-lg rounded-lg py-2"
+        onFinish={handleFormSubmit}
+        className="px-5 py-6 bg-white shadow-md rounded-2xl"
         form={form}
         layout="vertical"
         initialValues={user}
       >
-        <h1 className="text-2xl text-white font-bold text-center">
+        <h1 className="text-center text-[#350b48] text-3xl font-extrabold mt-1 mb-5">
           {t('UpdateUserModal.updateUserTitle')}
         </h1>
+
         <Form.Item
-          className="text-base font-semibold mx-10 mt-4"
+          className="mb-4"
           name="username"
-          label={t('UpdateUserModal.username')}
+          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.username')}</span>}
           rules={[{ required: true, message: t('UpdateUserModal.usernameRequired') }]}
         >
-          <Input />
+          <Input className="w-full h-[34px] text-base font-normal rounded-xl bg-white shadow-md px-3 border-none" />
         </Form.Item>
+
         <Form.Item
-          className="text-base font-semibold mx-10"
+          className="mb-4"
           name="email"
-          label={t('UpdateUserModal.email')}
+          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.email')}</span>}
           rules={[{ required: true, message: t('UpdateUserModal.emailRequired') }]}
         >
-          <Input />
+          <Input className="w-full h-[34px] text-base font-normal rounded-xl bg-white shadow-md px-3 border-none" />
         </Form.Item>
+
         <Form.Item
-          className="text-base font-semibold mx-10"
+          className="mb-4"
           name="role"
-          label={t('UpdateUserModal.role')}
+          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.role')}</span>}
           rules={[{ required: true, message: t('UpdateUserModal.roleRequired') }]}
         >
-          <Select className="text-center">
+          <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">
             {rolesData.map((role) => (
               <Option key={role._id} value={role.nombre}>
                 {role.nombre}
@@ -84,27 +102,23 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
             ))}
           </Select>
         </Form.Item>
+
         <Form.Item
-          className="text-base font-semibold mx-10"
+          className="mb-4"
           name="state"
-          label={t('UpdateUserModal.state')}
+          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.state')}</span>}
           rules={[{ required: true, message: t('UpdateUserModal.stateRequired') }]}
         >
-          <Select className="text-center">
+          <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">
             <Option value={true}>{t('UpdateUserModal.active')}</Option>
             <Option value={false}>{t('UpdateUserModal.inactive')}</Option>
           </Select>
         </Form.Item>
-        <div className="flex justify-center mt-6 space-x-4">
+
+        <div className="flex justify-end pt-2 space-x-4">
           <button
-            className="bg-neutral-700 hover:bg-neutral-600 text-white font-medium px-4 py-2 rounded-lg"
-            onClick={onCancel}
-          >
-            {t('UpdateUserModal.cancel')}
-          </button>
-          <button
-            className="bg-blue-600 px-4 py-2 hover:bg-blue-700 text-white font-medium rounded-lg"
-            onClick={handleFormSubmit}
+            type="submit"
+            className="bg-[#350b48] text-white rounded-xl h-[41px] w-[133px] text-lg font-bold cursor-pointer"
           >
             {t('UpdateUserModal.update')}
           </button>
@@ -114,4 +128,4 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
   );
 };
 
-export default UpdateUserModal;
+  export default UpdateUserModal;

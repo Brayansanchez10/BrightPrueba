@@ -13,6 +13,7 @@ import derechaabajo from "../../../assets/img/DerechaAbajo.jpeg";
 import izquierdaarriba from "../../../assets/img/IzquierdaArriba.jpeg";
 import { Anothershabby_trial } from "../../../Tipografy/Anothershabby_trial-normal";
 import Swal from 'sweetalert2';
+import { FaCheckCircle, FaTimesCircle, FaQuestionCircle } from 'react-icons/fa';
 
 const { Panel } = Collapse;
 
@@ -28,6 +29,7 @@ const ResourceView = () => {
   const [courseId, setCourseId] = useState("");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
+  const [isAnswerSelected, setIsAnswerSelected] = useState(false);
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
@@ -116,6 +118,11 @@ const ResourceView = () => {
       updateProgress(index, resources.length);
     }
   }, [resources, resource]);
+
+  // Actualiza el estado de si se ha seleccionado una respuesta
+  useEffect(() => {
+    setIsAnswerSelected(answers[currentQuestionIndex] !== undefined);
+  }, [answers, currentQuestionIndex]);
 
   const isVideoLink = (url) => {
     return (
@@ -253,9 +260,8 @@ const ResourceView = () => {
   };
 
   const renderQuiz = () => {
-    const question = resource?.quizzes[currentQuestionIndex];
-    if (!question) return <p>No hay preguntas disponibles.</p>;
-
+    const question = resource.quizzes[currentQuestionIndex];
+  
     return (
       <div className="quiz-container bg-white rounded-xl shadow-lg border border-gray-300 w-full max-w-xl p-6 mx-auto my-10">
         <h2 className="p-4 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-t-xl text-white text-2xl font-semibold text-center">
@@ -329,28 +335,49 @@ const ResourceView = () => {
     return (
       <div className="quiz-summary bg-white p-6 rounded-xl shadow-lg border border-gray-300 w-full max-w-md mx-auto text-center my-10">
         <h3 className="text-2xl font-bold mb-6 text-gray-900">
-          ¡Quiz Finalizado!
+          Quiz Finalizado
         </h3>
-        <p className="text-gray-800 text-lg mb-4">
-          <span className="font-semibold">Preguntas totales:</span> {resource?.quizzes.length}
-        </p>
-        <p className="text-gray-800 text-lg mb-4">
-          <span className="font-semibold">Respuestas correctas:</span> {correctAnswers}
-        </p>
-        <p className="text-gray-800 text-lg mb-4">
-          <span className="font-semibold">Respuestas incorrectas:</span> {incorrectAnswers}
-        </p>
-        <div className="my-6">
+        <div className="flex flex-col space-y-4">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+              <FaQuestionCircle className="text-gray-500 text-3xl" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-medium text-gray-700">Preguntas Totales</span>
+              <span className="text-lg text-gray-600">{resource?.quizzes.length}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <FaCheckCircle className="text-green-500 text-3xl" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-medium text-gray-700">Respuestas Correctas</span>
+              <span className="text-lg text-gray-600">{correctAnswers}</span>
+            </div>
+          </div>
+  
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+              <FaTimesCircle className="text-red-500 text-3xl" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-medium text-gray-700">Respuestas Incorrectas</span>
+              <span className="text-lg text-gray-600">{incorrectAnswers}</span>
+            </div>
+          </div>
           <button
             onClick={handleRetakeQuiz}
             className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-600 hover:to-indigo-600 transition-all"
           >
             Volver a Intentar
           </button>
+
         </div>
       </div>
     );
-  };
+  };  
 
   // Actualiza la barra de progreso
   const updateProgress = (index, total) => {

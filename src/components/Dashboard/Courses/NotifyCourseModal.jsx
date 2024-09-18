@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Input, message } from "antd";
+import { Modal, Input, message } from "antd";
 import { useTranslation } from "react-i18next";
-import axios from 'axios'; 
+import axios from "axios";
 import hola1 from "/src/assets/img/Zorro.png";
+import "../css/Custom.css";
 
 const NotifyCourseModal = ({ visible, onClose, courseId }) => {
   const { t } = useTranslation("global");
@@ -12,8 +13,8 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
 
   useEffect(() => {
     if (visible) {
-      setSendToAll(false); 
-      setExpanded(false);  
+      setSendToAll(false);
+      setExpanded(false);
       setEmailList("");
     }
   }, [visible]);
@@ -23,35 +24,39 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
   const handleSendEmail = async () => {
     let recipients;
     if (sendToAll) {
-      recipients = 'all';
+      recipients = "all";
     } else {
-      recipients = emailList.split(',').map(email => email.trim()).filter(email => email);
+      recipients = emailList
+        .split(",")
+        .map((email) => email.trim())
+        .filter((email) => email);
       if (recipients.length === 0) {
-        message.error(t('notifyCourse.invalidEmails'));
+        message.error(t("notifyCourse.invalidEmails"));
         return;
       }
     }
 
     try {
-      const response = await axios.post('http://localhost:3068/api/send-email', {
+      const response = await axios.post("http://localhost:3068/api/send-email", {
         recipients: recipients,
-        courseId: courseId
+        courseId: courseId,
       });
 
       if (response.data.success) {
-        message.success(t('notifyCourse.sendSuccess'));
+        message.success(t("notifyCourse.sendSuccess"));
       } else {
-        message.error(t('notifyCourse.sendError'));
+        message.error(t("notifyCourse.sendError"));
       }
     } catch (error) {
-      console.error('Error en el envío del correo:', error);
-      message.error(t('notifyCourse.sendError'));
+      console.error("Error en el envío del correo:", error);
+      message.error(t("notifyCourse.sendError"));
     }
     onClose();
   };
 
   return (
     <Modal
+      className="custom"
       centered
       visible={visible}
       onCancel={onClose}
@@ -60,146 +65,72 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
       width={474}
       bodyStyle={{
         padding: 0,
-        borderRadius: '20px',
-        overflow: 'hidden',
-        height: expanded ? '530px' : '444px',
-        transition: 'height 0.3s ease',
+        borderRadius: "20px",
+        overflow: "hidden",
+        height: expanded ? "580px" : "470px",
+        transition: "height 0.3s ease",
         margin: 0,
       }}
     >
-      <div
-        style={{
-          height: '100px',
-          background: 'linear-gradient(to right, #350B48, #905BE8)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          position: 'relative',
-          width: '100%',
-        }}
-      >
+      <div className="relative h-[120px] bg-gradient-to-r from-[#350B48] to-[#905BE8] flex justify-center items-center">
         <img
           src={hola1}
           alt="Encabezado"
-          style={{
-            width: '150px', 
-            height: '120px', 
-            position: 'absolute',
-            bottom: '-20px', 
-            zIndex: 2,
-          }}
+          className="absolute w-[150px] h-[140px] bottom-[-20px] z-10"
         />
         <button
           onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: '10px',
-            right: '10px',
-            background: 'none',
-            border: 'none',
-            fontSize: '28px',
-            fontWeight: '900',
-            color: 'white',
-            cursor: 'pointer',
-            zIndex: 3,
-          }}
+          className="absolute top-2 right-4 text-white text-2xl font-extrabold z-10 cursor-pointer bg-transparent"
         >
           ×
         </button>
       </div>
 
-      <div style={{ padding: '20px 40px', backgroundColor: 'white', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#350B48' }}>NOTIFICACIÓN CURSO</h1>
-        <p style={{ fontSize: '20px', fontWeight: 700, color: 'black', marginTop: '20px' }}>
-          Selecciona de qué forma quieres hacer el envío de la notificación
+      <div className="p-8 bg-white text-center">
+        <h1 className="text-2xl font-extrabold text-[#350B48]">{t('notifyCourse.notificationCourse')}</h1>
+        <p className="text-xl font-bold text-black mt-5">
+          {t('notifyCourse.selectNotificationMethod')}
         </p>
 
-        <Button
-          style={{
-            width: '239px',
-            height: '38px',
-            borderRadius: '20px',
-            backgroundColor: '#4A48AA',
-            color: 'white',
-            fontSize: '16px',
-            fontWeight: 700,
-            marginTop: '40px',
-            boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.3)',
-          }}
+        <button
+          className="w-[239px] h-[38px] mt-10 bg-[#4A48AA] text-white text-lg font-bold rounded-2xl shadow-lg transition-transform duration-200"
           onClick={() => {
             setSendToAll(true);
-            setExpanded(false); 
+            setExpanded(false);
           }}
         >
-          Todos los estudiantes
-        </Button>
+          {t('notifyCourse.sendToAll')}
+        </button>
 
-        <Button
-          style={{
-            width: '239px',
-            height: '38px',
-            borderRadius: '20px',
-            backgroundColor: 'white',
-            color: 'black',
-            fontSize: '16px',
-            fontWeight: 700,
-            marginTop: '20px',
-            boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.3)',
-            border: '1px solid #e0e0e0',
-          }}
+        <button
+          className="w-[239px] h-[38px] mt-5 bg-white text-black text-lg font-bold rounded-2xl border border-gray-300 shadow-lg transition-transform duration-200"
           onClick={() => {
             setSendToAll(false);
-            setExpanded(true); 
+            setExpanded(true);
           }}
         >
-          Escribe los correos
-        </Button>
+          {t('notifyCourse.sendToSpecific')}
+        </button>
 
         {!sendToAll && expanded && (
           <>
             <Input
               type="text"
-              placeholder="Introduce los correos electrónicos"
+              placeholder={t('notifyCourse.emailPlaceholder')}
               value={emailList}
               onChange={handleEmailChange}
-              style={{
-                width: '239px',
-                height: '38px',
-                borderRadius: '10px',
-                marginTop: '20px',
-              }}
+              className="w-[239px] h-[38px] rounded-lg mt-5"
             />
-            <p
-              style={{
-                textAlign: 'center',
-                marginTop: '20px',
-                color: 'black',
-                fontSize: '10px',
-              }}
-            >
-              Separa todos los correos electrónicos con una coma <span style={{ color: '#350B48', fontWeight: 'bold', fontSize: '14'}}>“ , ”</span> y continúa<br />
-              por ejemplo <span style={{ color: '#350B48', fontWeight: 'bold' }}>aprende@gmail.com, brightmind@gmail.com</span>
-            </p>
+            <p className="text-xs text-black mt-5" dangerouslySetInnerHTML={{ __html: t('notifyCourse.emailInstructions') }} />
           </>
         )}
 
-        <Button
-          style={{
-            position: 'absolute',
-            bottom: '20px',
-            right: '20px',
-            width: '110px',
-            height: '40px',
-            backgroundColor: '#1D164E',
-            color: 'white',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            borderRadius: '10px',
-          }}
+        <button
+          className="absolute bottom-5 right-5 w-[110px] h-[38px] bg-[#1D164E] text-white text-lg font-bold rounded-lg"
           onClick={handleSendEmail}
         >
-          Enviar
-        </Button>
+          {t('notifyCourse.send')}
+        </button>
       </div>
     </Modal>
   );
