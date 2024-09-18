@@ -1,22 +1,44 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Modal, Select } from "antd";
 import Swal from "sweetalert2";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useCategoryContext } from "../../../context/courses/category.context";
+import { useAuth } from '../../../context/auth.context';
 import { useTranslation } from "react-i18next";
+import { useUserContext } from "../../../context/user/user.context";
 
 const { Option } = Select;
 
 const CreateCourseForm = ({ visible, onClose, onCreate }) => {
   const { categories } = useCategoryContext();
   const { createCourse } = useCoursesContext();
+  const { getUserById } = useUserContext();
+  const { user } = useAuth();
+  const [username, setUsername] = useState('');
   const { t } = useTranslation("global");
   const MAX_DESCRIPTION_LENGTH = 150;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+        if (user && user.data && user.data.id) {
+            try {
+                const userData = await getUserById(user.data.id);
+                setUsername(userData._id);
+                console.log("Información de usuario:", userData._id)
+            } catch (error) {
+                console.error('Error al obtener datos del usuario:', error);
+            }
+        }
+    };
+
+    fetchUserData();
+}, [user, getUserById]);
 
   const [course, setCourse] = useState({
     name: "",
     category: "",
     description: "",
+    userId: "",
     image: null,
     imagePreview: null,
   });
@@ -75,6 +97,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
       category: "",
       description: "",
       image: "",
+      userId: "",
     };
 
     if (!course.name || course.name.length < 2) {
@@ -100,7 +123,10 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
       category: course.category,
       description: course.description,
       image: course.image,
+      userId: username,
     };
+
+      console.log("Datos del curso a enviar:", courseData);
     try {
       await createCourse(courseData);
       Swal.fire({

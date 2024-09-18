@@ -49,12 +49,13 @@ export const CoursesProvider = ({ children }) => {
         }
     };
 
-    const createCourse = async ({ title, description, category, image }) => {
+    const createCourse = async ({ title, description, category, userId, image }) => {
         try {
             const newCourseData = {
                 title,
                 description,
-                category,              
+                category,  
+                userId,  
                 image
             };
             console.log(newCourseData);
