@@ -5,36 +5,35 @@ import Swal from "sweetalert2";
 import { useTranslation } from 'react-i18next';
 import "../css/Custom.css";
 
-const { Option } = Select;
+  const { Option } = Select;
 
-const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
-  const { rolesData } = useRoleContext();
-  const [form] = Form.useForm();
-  const { t } = useTranslation("global");
+  const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
+    const { rolesData } = useRoleContext();
+    const [form] = Form.useForm();
+    const { t } = useTranslation("global");
 
-  useEffect(() => {
-    if (visible) {
-      form.setFieldsValue(user);
-    }
-  }, [visible, user, form]);
+    useEffect(() => {
+      if (visible) {
+        form.setFieldsValue(user);
+      }
+    }, [visible, user, form]);
 
-  const handleFormSubmit = async () => {
-    try {
-      const values = await form.validateFields();
-      onUpdate(values);
-      onCancel(); // Close the modal
+    const handleFormSubmit = async () => {
+      try {
+        const values = await form.validateFields();
+        onUpdate(values);
+        onCancel(); 
 
-      // Mostrar mensaje de éxito con SweetAlert2
-      Swal.fire({
-        icon: 'success',
-        title: t('UpdateUserModal.userUpdatedSuccess'),
-        showConfirmButton: false,
-        timer: 1000, // Duración del mensaje
-      });
-    } catch (error) {
-      console.error("Failed to update user:", error);
-    }
-  };
+        Swal.fire({
+          icon: 'success',
+          title: t('UpdateUserModal.userUpdatedSuccess'),
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      } catch (error) {
+        console.error("Failed to update user:", error);
+      }
+    };
 
   return (
     <Modal
@@ -129,4 +128,4 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
   );
 };
 
-export default UpdateUserModal;
+  export default UpdateUserModal;

@@ -23,7 +23,7 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
         <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350B48] to-[#905BE8] flex items-center justify-center">
           <img
             src={zorroImage}
-            alt="Zorro"
+            alt={t('courseDetails.zorroAlt')}
             className="absolute w-[146px] h-[155px] top-0 left-1/2 transform -translate-x-1/2"
           />
           <button
@@ -36,7 +36,7 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
         {course ? (
           <div className="px-5 py-6">
             <h1 className="text-center text-[#350B48] text-3xl font-extrabold mt-14 mb-5 overflow-hidden text-ellipsis whitespace-nowrap">
-              CURSO DE <span className="font-extrabold uppercase">{course?.title.toUpperCase()}</span>
+              {t('courseDetails.courseTitle')} <span className="font-extrabold uppercase">{course?.title.toUpperCase()}</span>
             </h1>
             <div>
               <div className="mb-5">
