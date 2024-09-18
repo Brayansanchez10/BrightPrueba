@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { updateResource } from "../../../api/courses/resource.request";
 import Swal from "sweetalert2"; //Importamos SweetAlert
 import { useTranslation } from "react-i18next";
+import "../css/Custom.css"
 
 const ALLOWED_FILE_TYPES = [".mov", ".docx", ".pdf", ".jpg", ".png"];
 const YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
@@ -231,7 +232,7 @@ const UpdateResourceForm = ({
   return (
     <Modal
     title={
-      <h2 className="text-2xl font-semibold text-gray-800">
+      <h2 className="custom text-2xl font-semibold text-gray-800">
         {t("UpdateResource.ModalTitle")}
       </h2>
     }

@@ -1,0 +1,17 @@
+.custom .ant-modal-content{
+    padding: 0;
+    border-radius: 20px;
+}
+.custom .ant-modal-body{
+    padding: 0;
+    border-radius: 20px;
+}
+
+.ant-select-selector {
+    border: none !important;
+    box-shadow: none !important;
+}
+  
+.ant-select-dropdown {
+    border: none !important;
+}

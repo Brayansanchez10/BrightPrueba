@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useResourceContext } from "../../../context/courses/resource.contex";
-import { useCoursesContext } from '../../../context/courses/courses.context';
+import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useAuth } from "../../../context/auth.context";
 import { Collapse } from "antd";
 import { useUserContext } from "../../../context/user/user.context";
 import NavigationBar from "../NavigationBar";
 import { FiMenu, FiX } from "react-icons/fi"; // Importamos íconos de react-icons
-import jsPDF from 'jspdf';
-import zorro from '../../../assets/img/Zorro.jpeg';
-import derechaabajo from '../../../assets/img/DerechaAbajo.jpeg';
-import izquierdaarriba from '../../../assets/img/IzquierdaArriba.jpeg';
-import { Anothershabby_trial } from '../../../Tipografy/Anothershabby_trial-normal';
+import jsPDF from "jspdf";
+import zorro from "../../../assets/img/Zorro.jpeg";
+import derechaabajo from "../../../assets/img/DerechaAbajo.jpeg";
+import izquierdaarriba from "../../../assets/img/IzquierdaArriba.jpeg";
+import { Anothershabby_trial } from "../../../Tipografy/Anothershabby_trial-normal";
+import Swal from 'sweetalert2';
+import { FaCheckCircle, FaTimesCircle, FaQuestionCircle } from 'react-icons/fa';
 
 const { Panel } = Collapse;
 
@@ -27,6 +29,7 @@ const ResourceView = () => {
   const [courseId, setCourseId] = useState("");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
+  const [isAnswerSelected, setIsAnswerSelected] = useState(false);
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
@@ -77,18 +80,18 @@ const ResourceView = () => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-        try {
-          if (courseId) {
-            const courseData = await getCourse(courseId);
-            setCourse(courseData);
-          }
-        } catch (error) {
-            console.error('Error al obtener la información del curso:', error);
+      try {
+        if (courseId) {
+          const courseData = await getCourse(courseId);
+          setCourse(courseData);
         }
+      } catch (error) {
+        console.error("Error al obtener la información del curso:", error);
+      }
     };
 
     fetchCourse();
-}, [courseId, getCourse]);
+  }, [courseId, getCourse]);
 
   // Fetch user data on component mount or when `user` or `getUserById` changes
   useEffect(() => {
@@ -115,6 +118,11 @@ const ResourceView = () => {
       updateProgress(index, resources.length);
     }
   }, [resources, resource]);
+
+  // Actualiza el estado de si se ha seleccionado una respuesta
+  useEffect(() => {
+    setIsAnswerSelected(answers[currentQuestionIndex] !== undefined);
+  }, [answers, currentQuestionIndex]);
 
   const isVideoLink = (url) => {
     return (
@@ -153,29 +161,29 @@ const ResourceView = () => {
       if (isVideoLink(file)) {
         return (
           <div className="relative w-full h-full">
-          {/* Contenedor del video */}
-          <iframe
-            title="Video"
-            width="100%"
-            height="100%"
-            src={getEmbedUrl(file)}
-            frameBorder="0"
-            allowFullScreen
-            className="absolute top-0 left-0 w-full h-full object-cover z-0"
-          ></iframe>
+            {/* Contenedor del video */}
+            <iframe
+              title="Video"
+              width="100%"
+              height="100%"
+              src={getEmbedUrl(file)}
+              frameBorder="0"
+              allowFullScreen
+              className="absolute top-0 left-0 w-full h-full object-cover z-0"
+            ></iframe>
 
-          {/* Superposición de la imagen/logo */}
-          <img
-            src={izquierdaarriba}
-            alt="Superposición Izquierda Arriba"
-            className="absolute top-0 left-0 w-24 h-24 z-10"
-          />
-          <img
-            src={izquierdaarriba}
-            alt="Superposición Derecha Arriba"
-            className="absolute top-0 right-0 w-24 h-24 z-10 rotate-90"
-          />
-        </div>
+            {/* Superposición de la imagen/logo */}
+            <img
+              src={izquierdaarriba}
+              alt="Superposición Izquierda Arriba"
+              className="absolute top-0 left-0 w-24 h-24 z-10"
+            />
+            <img
+              src={izquierdaarriba}
+              alt="Superposición Derecha Arriba"
+              className="absolute top-0 right-0 w-24 h-24 z-10 rotate-90"
+            />
+          </div>
         );
       } else if (file.endsWith(".pdf")) {
         return (
@@ -208,23 +216,43 @@ const ResourceView = () => {
   };
 
   const handleNextQuestion = () => {
+    // Verificar si se ha seleccionado una respuesta antes de continuar
+    if (!answers[currentQuestionIndex]) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Advertencia',
+        text: 'Por favor selecciona una respuesta antes de continuar.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+  
     // Si es la última pregunta, finaliza el quiz
     if (currentQuestionIndex === (resource?.quizzes.length || 0) - 1) {
-      // Calcular respuestas correctas e incorrectas
       const correctCount = Object.keys(answers).filter(
         (index) => resource?.quizzes[index]?.correctAnswer === answers[index]
       ).length;
       const incorrectCount = Object.keys(answers).length - correctCount;
-
+  
       setCorrectAnswers(correctCount);
       setIncorrectAnswers(incorrectCount);
-      setIsQuizCompleted(true); // Actualiza el estado para mostrar el resumen
+      setIsQuizCompleted(true);
     } else {
-      // Pasa a la siguiente pregunta
       setCurrentQuestionIndex((prevIndex) =>
         Math.min(prevIndex + 1, (resource?.quizzes.length || 0) - 1)
       );
+      setError(null); // Limpiar el mensaje de error
     }
+  };
+
+  const handleRetakeQuiz = () => {
+    // Reiniciar el estado del cuestionario
+    setAnswers({}); // Vacía las respuestas
+    setCurrentQuestionIndex(0); // Vuelve a la primera pregunta
+    setCorrectAnswers(0); // Reinicia el contador de respuestas correctas
+    setIncorrectAnswers(0); // Reinicia el contador de respuestas incorrectas
+    setIsQuizCompleted(false); // Restablece el estado de quiz completado
   };
 
   const handlePreviousQuestion = () => {
@@ -232,15 +260,19 @@ const ResourceView = () => {
   };
 
   const renderQuiz = () => {
-    const question = resource?.quizzes[currentQuestionIndex];
-    if (!question) return <p>No hay preguntas disponibles.</p>;
-
+    const question = resource.quizzes[currentQuestionIndex];
+  
     return (
-      <div className="quiz-container bg-white rounded-3xl shadow-lg w-[600px] h-[400px] m-0 p-0">
-        <h2 className="p-4 bg-purple-500 rounded-t-3xl text-white text-lg">Qestion 1/3</h2>
-        <h3 className="font-bold mb-5 text-center pt-2 text-xl">{question.question}</h3>
+      <div className="quiz-container bg-white rounded-xl shadow-lg border border-gray-300 w-full max-w-xl p-6 mx-auto my-10">
+        <h2 className="p-4 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-t-xl text-white text-2xl font-semibold text-center">
+          Pregunta {currentQuestionIndex + 1}/{resource?.quizzes.length || 0}
+        </h2>
+        <h3 className="font-semibold mb-6 text-center text-xl text-gray-800 mt-3">
+          {question.question}
+        </h3>
+
         {question.options.map((option, index) => (
-          <div key={index} className="flex items-center mb-5 mx-10">
+          <div key={index} className="flex items-center mb-4 mx-auto w-11/12">
             <input
               type="radio"
               id={`question-${currentQuestionIndex}-option-${index}`}
@@ -248,17 +280,23 @@ const ResourceView = () => {
               value={option}
               checked={answers[currentQuestionIndex] === option}
               onChange={() => handleAnswerChange(currentQuestionIndex, option)}
-              className="mr-2"
+              className="hidden" // Mantén el input oculto
             />
             <label
               htmlFor={`question-${currentQuestionIndex}-option-${index}`}
-              className={`${
+              className={`flex-1 py-3 px-4 rounded-lg border text-lg cursor-pointer transition-colors 
+              ${
+                answers[currentQuestionIndex] === option
+                  ? "bg-indigo-100 border-indigo-400 text-indigo-700"
+                  : "bg-gray-50 border-gray-300 hover:bg-gray-200"
+              } 
+              ${
                 isQuizCompleted && question.correctAnswer === option
-                  ? "text-green-500"
+                  ? "border-green-500 bg-green-100 text-green-700"
                   : isQuizCompleted &&
                     answers[currentQuestionIndex] === option &&
                     answers[currentQuestionIndex] !== question.correctAnswer
-                  ? "text-red-500"
+                  ? "border-red-500 bg-red-100 text-red-700"
                   : ""
               }`}
             >
@@ -266,17 +304,23 @@ const ResourceView = () => {
             </label>
           </div>
         ))}
-        <div className="flex justify-between mt-10 mx-10">
+
+        <div className="flex justify-between mt-8 mx-5">
           <button
             onClick={handlePreviousQuestion}
             disabled={currentQuestionIndex === 0}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className={`px-6 py-2 rounded-lg font-semibold transition-all 
+            ${
+              currentQuestionIndex === 0
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-gray-800 text-white hover:bg-gray-700"
+            }`}
           >
             Anterior
           </button>
           <button
             onClick={handleNextQuestion}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-500 transition-all"
           >
             {currentQuestionIndex === (resource?.quizzes.length || 0) - 1
               ? "Finalizar"
@@ -289,14 +333,51 @@ const ResourceView = () => {
 
   const renderQuizSummary = () => {
     return (
-      <div className="quiz-summary bg-white p-6 rounded-lg shadow-lg">
-        <h3 className="text-lg font-bold mb-2">Quiz Finalizado</h3>
-        <p>Preguntas totales: {resource?.quizzes.length}</p>
-        <p>Respuestas correctas: {correctAnswers}</p>
-        <p>Respuestas incorrectas: {incorrectAnswers}</p>
+      <div className="quiz-summary bg-white p-6 rounded-xl shadow-lg border border-gray-300 w-full max-w-md mx-auto text-center my-10">
+        <h3 className="text-2xl font-bold mb-6 text-gray-900">
+          Quiz Finalizado
+        </h3>
+        <div className="flex flex-col space-y-4">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+              <FaQuestionCircle className="text-gray-500 text-3xl" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-medium text-gray-700">Preguntas Totales</span>
+              <span className="text-lg text-gray-600">{resource?.quizzes.length}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <FaCheckCircle className="text-green-500 text-3xl" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-medium text-gray-700">Respuestas Correctas</span>
+              <span className="text-lg text-gray-600">{correctAnswers}</span>
+            </div>
+          </div>
+  
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+              <FaTimesCircle className="text-red-500 text-3xl" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-medium text-gray-700">Respuestas Incorrectas</span>
+              <span className="text-lg text-gray-600">{incorrectAnswers}</span>
+            </div>
+          </div>
+          <button
+            onClick={handleRetakeQuiz}
+            className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-600 hover:to-indigo-600 transition-all"
+          >
+            Volver a Intentar
+          </button>
+
+        </div>
       </div>
     );
-  };
+  };  
 
   // Actualiza la barra de progreso
   const updateProgress = (index, total) => {
@@ -321,7 +402,6 @@ const ResourceView = () => {
     }
   };
 
-
   const handleResourceClick = (resourceId, courseId) => {
     console.log("Course ID: ", courseId);
     console.log("Resource ID: ", resourceId);
@@ -332,92 +412,110 @@ const ResourceView = () => {
     setIsOpen(!isOpen);
   };
 
-
-  //GenerarPDF 
+  //GenerarPDF
   const handleFinishCourse = () => {
-    generatePremiumCertificatePDF(username, course.title, zorro, derechaabajo, izquierdaarriba);
+    generatePremiumCertificatePDF(
+      username,
+      course.title,
+      zorro,
+      derechaabajo,
+      izquierdaarriba
+    );
     navigate(`/course/${courseId}`);
   };
 
-  const generatePremiumCertificatePDF = (username, courseTitle, zorroImage, derechaabajo, izquierdaarriba) => {
+  const generatePremiumCertificatePDF = (
+    username,
+    courseTitle,
+    zorroImage,
+    derechaabajo,
+    izquierdaarriba
+  ) => {
     const doc = new jsPDF({
-        orientation: 'landscape',
-        unit: 'cm',
-        format: [28, 21.6] // Tamaño A4 en centímetros
+      orientation: "landscape",
+      unit: "cm",
+      format: [28, 21.6], // Tamaño A4 en centímetros
     });
 
     // Fondo blanco
     doc.setFillColor(240, 248, 255);
-    doc.rect(0, 0, 28, 21.6, 'F');
+    doc.rect(0, 0, 28, 21.6, "F");
 
     // Añadir imágenes de bordes
     if (izquierdaarriba) {
-        doc.addImage(izquierdaarriba, 'JPEG', -1, -1, 10, 10);
+      doc.addImage(izquierdaarriba, "JPEG", -1, -1, 10, 10);
     }
     if (derechaabajo) {
-        doc.addImage(derechaabajo, 'JPEG', 19, 13, 10, 10);
+      doc.addImage(derechaabajo, "JPEG", 19, 13, 10, 10);
     }
 
     // Agregar fuente personalizada
-    doc.addFileToVFS('Anothershabby.ttf', Anothershabby_trial);
-    doc.addFont('Anothershabby.ttf', 'AnotherShabby', 'normal');
-    doc.setFont('AnotherShabby'); // Aplicar fuente personalizada
+    doc.addFileToVFS("Anothershabby.ttf", Anothershabby_trial);
+    doc.addFont("Anothershabby.ttf", "AnotherShabby", "normal");
+    doc.setFont("AnotherShabby"); // Aplicar fuente personalizada
 
     // Título del certificado
-    doc.setFont('AnotherShabby', 'normal');
+    doc.setFont("AnotherShabby", "normal");
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(70);
-    doc.text('CONSTANCIA', 14, 4.5, { align: 'center' });
+    doc.text("CONSTANCIA", 14, 4.5, { align: "center" });
 
     // Subtítulo
     doc.setFontSize(25);
-    doc.setFont('AnotherShabby', 'normal');
+    doc.setFont("AnotherShabby", "normal");
     doc.setTextColor(0, 0, 0);
-    doc.text('De aprendizaje', 18, 5.5, { align: 'center' });
+    doc.text("De aprendizaje", 18, 5.5, { align: "center" });
 
     // Imagen de Zorro
     if (zorroImage) {
-        doc.addImage(zorroImage, 'JPEG', 12, 7, 4, 4);
+      doc.addImage(zorroImage, "JPEG", 12, 7, 4, 4);
     }
 
     // Texto de reconocimiento
-    doc.setFont('times', 'bold');
+    doc.setFont("times", "bold");
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(18);
-    doc.text('ESTE CERTIFICADO SE OTORGA A', 14, 13.0, { align: 'center' });
+    doc.text("ESTE CERTIFICADO SE OTORGA A", 14, 13.0, { align: "center" });
 
     // Nombre del usuario
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(65);
-    doc.setFont('AnotherShabby', 'normal');
-    doc.text(`${username}`, 14, 15.5, { align: 'center' });
+    doc.setFont("AnotherShabby", "normal");
+    doc.text(`${username}`, 14, 15.5, { align: "center" });
 
-    
     // Línea debajo del nombre de usuario
     doc.setLineWidth(0.1); // Grosor de la línea
     doc.setDrawColor(0, 0, 0); // Color negro
     doc.line(6, 16, 22, 16); // Coordenadas de inicio y fin de la línea
 
-
     // Título del curso y Texto adicional
-    doc.setFont('times', 'normal');
+    doc.setFont("times", "normal");
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(14);
-    doc.text(`Por completar exitosamente el curso "${courseTitle}". `, 11, 17.5, { align: 'center' });
+    doc.text(
+      `Por completar exitosamente el curso "${courseTitle}". `,
+      11,
+      17.5,
+      { align: "center" }
+    );
 
     // Texto adicional
-    doc.setFont('times', 'normal');
+    doc.setFont("times", "normal");
     doc.setFontSize(14);
     doc.setTextColor(0, 0, 0);
-    doc.text('Gracias por tu dedicación y', 19, 17.5, { align: 'center' });
+    doc.text("Gracias por tu dedicación y", 19, 17.5, { align: "center" });
 
     doc.setFontSize(14);
     doc.setTextColor(0, 0, 0);
-    doc.text('esfuerzo. ¡Sigue aprendiendo y mejorando!', 14, 18.0, { align: 'center' });
+    doc.text("esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 18.0, {
+      align: "center",
+    });
 
     doc.setFontSize(14);
     doc.setTextColor(192, 192, 192);
-    doc.text('Este certificado fue generado automáticamente.', 14, 19.5, { align: 'center' });
+    doc.text("Este certificado fue generado automáticamente.", 14, 19.5, {
+      align: "center",
+    });
 
     // Guardar el PDF
     doc.save(`Certificado_${courseTitle}.pdf`);
@@ -505,14 +603,14 @@ const ResourceView = () => {
 
               <div className="flex-1 mx-4">
                 <div className="w-full bg-gray-300 rounded-full h-3 mb-4 relative">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-blue-500 to-green-400"
-                      style={{ width: `${progress}%` }}
-                    ></div>
-                    <span className="absolute inset-0 flex justify-center items-center text-xs font-medium text-black">
-                      {Math.round(progress)}%
-                    </span>
-                  </div>
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-blue-500 to-green-400"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                  <span className="absolute inset-0 flex justify-center items-center text-xs font-medium text-black">
+                    {Math.round(progress)}%
+                  </span>
+                </div>
               </div>
 
               <button

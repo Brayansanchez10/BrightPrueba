@@ -31,7 +31,7 @@ const DataTablete = () => {
 
   useEffect(() => {
     getCategories();
-  }, [getCategories]);
+  }, []);
 
   useEffect(() => {
     const filteredCategory = categories.filter(category =>

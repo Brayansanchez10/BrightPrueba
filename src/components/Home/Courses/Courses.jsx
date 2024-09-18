@@ -153,7 +153,7 @@ const Course = () => {
         </div>
       )}
       {isConfirmModalOpen && selectedCourse && (
-        <div className="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center border px-4">
+        <div className="fixed inset-0 bg-black bg-opacity-35 flex items-center justify-center px-4">
           <div className="bg-purple-200 p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
             <h2 className="text-2xl font-bold mb-4 text-center">
               {t('courseComponent.confirm_registration')}
@@ -170,17 +170,14 @@ const Course = () => {
               </p>
             )}
             <div className="flex justify-center gap-4 mt-2">
-              <button
-                className={`py-2 px-4 rounded transition-colors ${
-                  isRegistered
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-green-500 hover:bg-green-400 text-white"
-                }`}
-                onClick={handleRegister}
-                disabled={isRegistered}
-              >
-                {t('courseComponent.register')}
-              </button>
+              {!isRegistered && (
+                <button
+                  className="py-2 px-4 bg-green-500 hover:bg-green-400 text-white rounded transition-colors"
+                  onClick={handleRegister}
+                >
+                  {t('courseComponent.register')}
+                </button>
+              )}
               <button
                 className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-400 transition-colors"
                 onClick={closeConfirmModal}
@@ -192,7 +189,7 @@ const Course = () => {
         </div>
       )}
       {isSuccessModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-85 flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black bg-opacity-35 flex items-center justify-center z-50 px-4">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
             <h2 className="text-2xl font-bold mb-4 text-center">{t('courseComponent.successful_registration')}</h2>
             <p className="mb-4 text-center">

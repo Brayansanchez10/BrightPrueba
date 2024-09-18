@@ -293,7 +293,8 @@
         "name": "Name",
         "actions": "Actions",
         "viewPermissions": "View Permissions",
-        "assignPermissions": "Assign Permissions",
+        "assignPermissions": "Assign",
+        "description": "Are you sure you want to assign permissions to this role",
         "permissions": "Permissions",
         "permissionsFor": "Permissions for",
         "rolePermissions": "Role Permissions",
@@ -313,7 +314,7 @@
         "namePlaceholder": "Please enter a role name",
         "roleExists": "Role name already exists",
         "roleCreated": "Role created successfully",
-        "createButton": "Create Role",
+        "createButton": "Create",
         "closeButton": "Close",
         "maxRole": "The role must be at least 15 characters long",
         "mixRole": "The role must be at least 3 characters long"
@@ -346,7 +347,14 @@
         "description": "Description:",
         "imagePreview": "Image Preview",
         "close": "Close",
-        "noCourseSelected": "No course selected"
+        "noCourseSelected": "No course selected",
+        "courseTitle": "COURSE OF"
+    },
+    "deleteCourse" : {
+        "title": "DELETE COURSE",
+        "confirmationMessage": "Are you sure you want to delete the course {{courseName}}?",
+        "irreversibleMessage": "This action cannot be undone.",
+        "confirmButton": "Delete"
     },
     "deleteConfirmation": {
         "confirmDeletion": "Confirm Deletion",
@@ -375,7 +383,7 @@
         "category": "Category",
         "description": "Description",
         "image": "Image",
-        "createButton": "Create Course",
+        "createButton": "Create",
         "closeButton": "Close",
         "nameTooShort": "The course name must be at least 2 characters long.",
         "descriptionTooShort": "The description must be at least 6 characters long.",
@@ -409,6 +417,18 @@
         "videoLink": "Video uploaded",
         "invalidVideoLink": "The video link is invalid",
         "invalidVideoLinkdescription": "Please enter a valid link"
+    },
+    "notifyCourse": {
+        "notificationCourse": "COURSE NOTIFICATION",
+        "selectNotificationMethod": "Select how you want to send the notification",
+        "sendToAll": "Send to all students",
+        "sendToSpecific": "Enter emails",
+        "emailPlaceholder": "Enter email addresses",
+        "emailInstructions": "Separate all email addresses with a comma <span class='font-bold text-sm'>‘ , ’</span> and continue<br />for example <span class='font-bold'>learn@gmail.com, brightmind@gmail.com</span>",
+        "invalidEmails": "Please enter valid email addresses.",
+        "sendSuccess": "Emails sent successfully.",
+        "sendError": "There was an error sending the emails.",
+        "send": "Send"
     },
     "categories": {
         "title": "Categories",
@@ -447,7 +467,7 @@
         "cancelButton": "Cancel",
         "nameTooShort": "Category name must be at least 8 characters long.",
         "descriptionTooShort": "Description must be at least 30 characters long.",
-        "createButton": "Create Category",
+        "createButton": "Create",
         "createSuccess": "Category created successfully!",
         "createFailure": "Failed to create category. Please try again.",
         "invalidImageFile": "Please upload a valid image file."

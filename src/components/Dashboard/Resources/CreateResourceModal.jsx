@@ -6,11 +6,12 @@ import {
   getResource,
   deleteResource,
 } from "../../../api/courses/resource.request";
-import UpdateResourceForm from "./UpdateResourceForm"; // Corregir importación (nombre en mayúsculas)
+import UpdateResourceForm from "./UpdateResourceForm"; 
 import { EditOutlined, DeleteFilled, FilePdfOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
-import Swal from "sweetalert2"; //Importamos SweetAlert
+import Swal from "sweetalert2"; 
 import { useTranslation } from "react-i18next";
+import "../css/Custom.css"
 
 const { Text } = Typography;
 
@@ -342,294 +343,286 @@ const CreateResourceModal = ({
 
   return (
     <Modal
-      title=""
-      visible={isVisible}
-      onCancel={onCancel}
-      footer={null}
-      width={1200}
-      bodyStyle={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "75vh",
-      }} // Para centrar el modal y darle altura
-    >
-      {/* Contenedor principal centrado */}
-      <div className="flex justify-center items-center h-full">
-        {/* Contenedor de los paneles con separación y scroll */}
-        <div className="flex gap-8 h-full">
-          {/* Panel de recursos a la izquierda con scroll */}
-          <div
-            className="w-96 p-4 border border-gray-300 rounded-lg shadow-lg overflow-y-auto"
-            style={{ maxHeight: "700px", width: "600px" }}
-          >
-            <h3 className="text-lg font-bold mb-4">{t("CreateResource.TitleResources")}</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
-              {resources.length > 0 ? (
-                <Collapse accordion>
-                  {resources.map((resource) => (
-                    <Panel
-                      header={
-                        <div className="flex justify-between items-center">
-                          {resource.title}
-                          <div className="flex ml-auto space-x-2">
-                            <Button
-                              icon={<EditOutlined />}
-                              onClick={() => openEditModal(resource)}
-                              className="bg-yellow-500 text-white hover:bg-yellow-600"
-                            >
-                              {t("CreateResource.Edit")}
-                            </Button>
-                            <Button
-                              icon={<DeleteFilled />}
-                              onClick={() => {
-                                Swal.fire({
-                                  title: t("CreateResource.AlertDeleteTitle"),
-                                  text: t("CreateResource.AlertDeleteText"),
-                                  icon: "warning",
-                                  showCancelButton: true,
-                                  confirmButtonColor: "#28a745",
-                                  cancelButtonColor: "#d35",
-                                  confirmButtonText: t("CreateResource.AlertDeleteConfir"),
-                                  reverseButtons: true,
-                                }).then((result) => {
-                                  if (result.isConfirmed) {
-                                    // Aquí llamas a la función que elimina el recurso
-                                    handleRemoveResource(resource);
-
-                                    // Mostrar mensaje de éxito
-                                    Swal.fire({
-                                      title: t("CreateResource.AlerteSuccesyDelete"),
-                                      text: t("CreateResource.DeleteResource"),
-                                      icon: "success",
-                                    });
-                                  }
-                                });
-                              }}
-                              className="bg-red-500 text-white hover:bg-yellow-600"
-                            >
-                              {t("CreateResource.Delete")}
-                            </Button>
-                          </div>
+    title=""
+    visible={isVisible}
+    onCancel={onCancel}
+    footer={null}
+    width={1200}
+    bodyStyle={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "75vh",
+    }}
+  >
+    <div className="custom flex justify-center items-center h-full w-full">
+      <div className="flex gap-8 h-full w-full">
+        {/* Panel de recursos a la izquierda */}
+        <div
+          className="w-1/2 p-4 border border-gray-300 rounded-lg shadow-lg overflow-y-auto"
+          style={{ maxHeight: "700px" }}
+        >
+          <h3 className="text-lg font-bold mb-4">{t("CreateResource.TitleResources")}</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
+            {resources.length > 0 ? (
+              <Collapse accordion>
+                {resources.map((resource) => (
+                  <Panel
+                    header={
+                      <div className="flex justify-between items-center">
+                        {resource.title}
+                        <div className="flex ml-auto space-x-2">
+                          <Button
+                            icon={<EditOutlined />}
+                            onClick={() => openEditModal(resource)}
+                            className="bg-yellow-500 text-white hover:bg-yellow-600"
+                          >
+                            {t("CreateResource.Edit")}
+                          </Button>
+                          <Button
+                            icon={<DeleteFilled />}
+                            onClick={() => {
+                              Swal.fire({
+                                title: t("CreateResource.AlertDeleteTitle"),
+                                text: t("CreateResource.AlertDeleteText"),
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#28a745",
+                                cancelButtonColor: "#d35",
+                                confirmButtonText: t("CreateResource.AlertDeleteConfir"),
+                                reverseButtons: true,
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                  handleRemoveResource(resource);
+                                  Swal.fire({
+                                    title: t("CreateResource.AlerteSuccesyDelete"),
+                                    text: t("CreateResource.DeleteResource"),
+                                    icon: "success",
+                                  });
+                                }
+                              });
+                            }}
+                            className="bg-red-500 text-white hover:bg-red-600"
+                          >
+                            {t("CreateResource.Delete")}
+                          </Button>
                         </div>
-                      }
-                      key={resource._id}
-                    >
-                      <Card>
-                        {/* Flex container for video and description */}
-                        <div className="flex justify-between items-center">
-                          {/* Condición para mostrar quiz si no hay archivos, videos o imágenes */}
-                          {resource.files &&
-                          (isVideoLink(resource.files) ||
-                            resource.files.endsWith(".pdf") ||
-                            /\.(jpg|jpeg|png)$/i.test(resource.files)) ? (
-                            <>
-                              {/* Video o PDF a la izquierda */}
-                              <div className="w-1/2">
-                                {isVideoLink(resource.files) ? (
-                                  <iframe
-                                    src={getEmbedUrl(resource.files)}
-                                    frameBorder="0"
-                                    style={{ width: "250px", height: "250px" }} // Ajusta el ancho y la altura aquí
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                  />
-                                ) : resource.files.endsWith(".pdf") ? (
-                                  <div className="text-center">
-                                    <div className="flex items-center justify-center mb-4">
-                                      <FilePdfOutlined className="text-red-600 text-6xl" />
-                                    </div>
-                                    <a
-                                      href={resource.files}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-blue-500 hover:underline text-lg"
-                                      download
-                                    >
-                                      {t("CreateResource.DowloadPDF")}
-                                    </a>
+                      </div>
+                    }
+                    key={resource._id}
+                  >
+                    <Card>
+                      <div className="flex justify-between items-center">
+                        {resource.files &&
+                        (isVideoLink(resource.files) ||
+                          resource.files.endsWith(".pdf") ||
+                          /\.(jpg|jpeg|png)$/i.test(resource.files)) ? (
+                          <>
+                            <div className="w-1/2">
+                              {isVideoLink(resource.files) ? (
+                                <iframe
+                                  src={getEmbedUrl(resource.files)}
+                                  frameBorder="0"
+                                  style={{ width: "250px", height: "250px" }}
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                />
+                              ) : resource.files.endsWith(".pdf") ? (
+                                <div className="text-center">
+                                  <div className="flex items-center justify-center mb-4">
+                                    <FilePdfOutlined className="text-red-600 text-6xl" />
                                   </div>
-                                ) : (
-                                  <div className="flex justify-center">
-                                    <img
-                                      src={resource.files}
-                                      alt={`Content ${resource.title}`}
-                                      className="max-w-full h-auto"
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                              {/* Descripción a la derecha */}
-                              <div className="w-1/2 pl-10">
-                                <p>{resource.description}</p>
-                                {resource.file && (
-                                  <p>{t("UpdateResource.Files")}: {resource.file.name}</p>
-                                )}
-                              </div>
-                            </>
-                          ) : resource.quizzes &&
-                            resource.quizzes.length > 0 ? (
-                            <div className="w-full">
-                              <h4 className="text-md font-bold mb-4">
-                                {t("CreateResource.QuizzTitleModal")}
-                              </h4>
-                              {resource.quizzes.map((quiz, index) => (
-                                <div
-                                  key={index}
-                                  className="mb-6 p-4 border border-gray-300 rounded-md shadow-sm"
-                                >
-                                  <div className="mb-2">
-                                    <label className="block text-sm font-semibold text-gray-700">
-                                      {t("UpdateResource.Question")}:
-                                    </label>
-                                    <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
-                                      {quiz.question}
-                                    </p>
-                                  </div>
-                                  <div className="mb-2">
-                                    <label className="block text-sm font-semibold text-gray-700">
-                                      {t("UpdateResource.labelOption")}:
-                                    </label>
-                                    {quiz.options.map((option, optIndex) => (
-                                      <div
-                                        key={optIndex}
-                                        className="flex items-center mb-1"
-                                      >
-                                        <span className="mr-2 text-gray-600">
-                                          {String.fromCharCode(65 + optIndex)})
-                                        </span>
-                                        <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
-                                          {option}
-                                        </p>
-                                      </div>
-                                    ))}
-                                  </div>
-                                  <div>
-                                    <label className="block text-sm font-semibold text-gray-700">
-                                      {t("UpdateResource.CorrectAnswer")}:
-                                    </label>
-                                    <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
-                                      {quiz.correctAnswer}
-                                    </p>
-                                  </div>
+                                  <a
+                                    href={resource.files}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-500 hover:underline text-lg"
+                                    download
+                                  >
+                                    {t("CreateResource.DowloadPDF")}
+                                  </a>
                                 </div>
-                              ))}
+                              ) : (
+                                <div className="flex justify-center">
+                                  <img
+                                    src={resource.files}
+                                    alt={`Content ${resource.title}`}
+                                    className="max-w-full h-auto"
+                                  />
+                                </div>
+                              )}
                             </div>
-                          ) : (
-                            <p>{t("UpdateResource.labelOption")}: {resource.description}</p>
-                          )}
-                        </div>
-                      </Card>
-                    </Panel>
-                  ))}
-                </Collapse>
-              ) : (
-                <p>{t("CreateResource.NoResources")}</p>
+                            <div className="w-1/2 pl-10">
+                              <p>{resource.description}</p>
+                              {resource.file && (
+                                <p>{t("UpdateResource.Files")}: {resource.file.name}</p>
+                              )}
+                            </div>
+                          </>
+                        ) : resource.quizzes &&
+                          resource.quizzes.length > 0 ? (
+                          <div className="w-full">
+                            <h4 className="text-md font-bold mb-4">
+                              {t("CreateResource.QuizzTitleModal")}
+                            </h4>
+                            {resource.quizzes.map((quiz, index) => (
+                              <div
+                                key={index}
+                                className="mb-6 p-4 border border-gray-300 rounded-md shadow-sm"
+                              >
+                                <div className="mb-2">
+                                  <label className="block text-sm font-semibold text-gray-700">
+                                    {t("UpdateResource.Question")}:
+                                  </label>
+                                  <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
+                                    {quiz.question}
+                                  </p>
+                                </div>
+                                <div className="mb-2">
+                                  <label className="block text-sm font-semibold text-gray-700">
+                                    {t("UpdateResource.labelOption")}:
+                                  </label>
+                                  {quiz.options.map((option, optIndex) => (
+                                    <div
+                                      key={optIndex}
+                                      className="flex items-center mb-1"
+                                    >
+                                      <span className="mr-2 text-gray-600">
+                                        {String.fromCharCode(65 + optIndex)})
+                                      </span>
+                                      <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
+                                        {option}
+                                      </p>
+                                    </div>
+                                  ))}
+                                </div>
+                                <div>
+                                  <label className="block text-sm font-semibold text-gray-700">
+                                    {t("UpdateResource.CorrectAnswer")}:
+                                  </label>
+                                  <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
+                                    {quiz.correctAnswer}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p>{t("UpdateResource.labelOption")}: {resource.description}</p>
+                        )}
+                      </div>
+                    </Card>
+                  </Panel>
+                ))}
+              </Collapse>
+            ) : (
+              <p>{t("CreateResource.NoResources")}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Formulario de creación a la derecha */}
+        <div
+          className="w-1/2 p-6 border border-gray-300 rounded-lg shadow-lg overflow-y-auto bg-white"
+          style={{ maxHeight: "700px" }}
+        >
+          <h3 className="text-2xl font-bold mb-6 text-gray-800">
+            {t("CreateResource.FormCreate")}
+          </h3>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {t("UpdateResource.Title")}
+              </label>
+              <input
+                type="text"
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
+                  errors.title ? "border-red-500" : "border-gray-300"
+                } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
+                required
+              />
+              {errors.title && (
+                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
               )}
             </div>
-          </div>
 
-          {/* Formulario de creación a la derecha con scroll */}
-          <div
-            className="w-full max-w-md mx-auto p-6 border border-gray-300 rounded-lg shadow-lg overflow-y-auto bg-white"
-            style={{ maxHeight: "700px" }}
-          >
-            <h3 className="text-2xl font-bold mb-6 text-gray-800">
-              {t("CreateResource.FormCreate")}
-            </h3>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="title"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  {t("UpdateResource.Title")}
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
-                    errors.title ? "border-red-500" : "border-gray-300"
-                  } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
-                  required
-                />
-                {errors.title && (
-                  <p className="text-red-500 text-sm mt-1">{errors.title}</p>
-                )}
-              </div>
+            <div>
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {t("UpdateResource.Description")}
+              </label>
+              <textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
+                  errors.description ? "border-red-500" : "border-gray-300"
+                } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
+                required
+              />
+              {errors.description && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description}
+                </p>
+              )}
+            </div>
 
-              <div>
-                <label
-                  htmlFor="description"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  {t("UpdateResource.Description")}
-                </label>
-                <textarea
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
-                    errors.description ? "border-red-500" : "border-gray-300"
-                  } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
-                  required
-                />
-                {errors.description && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.description}
-                  </p>
-                )}
-              </div>
+            <div>
+              <label
+                htmlFor="type"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {t("CreateResource.TipeResource")}
+              </label>
+              <select
+                id="type"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              >
+                <option value="file">{t("UpdateResource.Files")}</option>
+                <option value="quiz">{t("CreateResource.QuizzTitleModal")}</option>
+              </select>
+            </div>
 
-              <div>
-                <label
-                  htmlFor="type"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  {t("CreateResource.TipeResource")}
-                </label>
-                <select
-                  id="type"
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
-                  className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                >
-                  <option value="file">{t("UpdateResource.Files")}</option>
-                  <option value="quiz">{t("CreateResource.QuizzTitleModal")}</option>
-                </select>
-              </div>
+            {type === "file" && (
+              <div className="space-y-4">
+                <div className="flex space-x-4">
+                  <button
+                    type="button"
+                    onClick={() => setSelection("file")}
+                    className={`flex-1 px-4 py-2 rounded-lg focus:outline-none ${
+                      selection === "file"
+                        ? "bg-blue-500 text-white hover:bg-blue-600"
+                        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                    }`}
+                  >
+                    {t("CreateResource.UpFile")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelection("link")}
+                    className={`flex-1 px-4 py-2 rounded-lg focus:outline-none ${
+                      selection === "link"
+                        ? "bg-blue-500 text-white hover:bg-blue-600"
+                        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                    }`}
+                  >
+                    {t("UpdateResource.LinkVideo")}
+                  </button>
+                </div>
 
-              {type === "file" && (
-                <>
-                  <div className="mb-4">
-                    <button
-                      type="button"
-                      onClick={() => setSelection("file")}
-                      className={`mr-4 px-4 py-2 rounded-lg focus:outline-none ${
-                        selection === "file"
-                          ? "bg-blue-500 text-white hover:bg-blue-600"
-                          : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-                      }`}
-                    >
-                      {t("CreateResource.UpFile")}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSelection("link")}
-                      className={`px-4 py-2 rounded-lg focus:outline-none ${
-                        selection === "link"
-                          ? "bg-blue-500 text-white hover:bg-blue-600"
-                          : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-                      }`}
-                    >
-                      {t("UpdateResource.LinkVideo")}
-                    </button>
-                  </div>
-
+                <div className="min-h-[100px]">
                   {selection === "file" && (
-                    <div className="mb-4">
+                    <div>
                       <label
                         htmlFor="file"
                         className="block text-sm font-medium text-gray-700"
@@ -646,7 +639,7 @@ const CreateResourceModal = ({
                   )}
 
                   {selection === "link" && (
-                    <div className="mb-4">
+                    <div>
                       <label
                         htmlFor="link"
                         className="block text-sm font-medium text-gray-700"
@@ -663,23 +656,22 @@ const CreateResourceModal = ({
                       />
                     </div>
                   )}
+                </div>
+              </div>
+            )}
 
-                  <div></div>
-                </>
-              )}
-
-              {type === "quiz" && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {t("CreateResource.QuizzTitleModal")}
-                  </label>
-                  {quizzes.map((quiz, index) => (
-                    <div
-                      key={index}
-                      className="mb-6 p-4 border border-gray-300 rounded-lg shadow-sm"
-                    >
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">
+            {type === "quiz" && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t("CreateResource.QuizzTitleModal")}
+                </label>
+                {quizzes.map((quiz, index) => (
+                  <div
+                    key={index}
+                    className="mb-6 p-4 border border-gray-300 rounded-lg shadow-sm"
+                  >
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700">
                           {t("UpdateResource.Question")}
                         </label>
                         <input
@@ -812,7 +804,7 @@ const CreateResourceModal = ({
           isVisible={isEditModalVisible}
           onCancel={closeEditModal}
           resourceData={selectedResource}
-          onUpdate={() => fetchResources(courseId)} // Actualiza la lista de recursos después de la edición
+          onUpdate={() => fetchResources(courseId)} 
         />
       )}
     </Modal>

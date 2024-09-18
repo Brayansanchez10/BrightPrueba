@@ -15,6 +15,7 @@ import { Anothershabby_trial } from '../../../Tipografy/Anothershabby_trial-norm
 import { getAllResources } from '../../../api/courses/resource.request';
 import Logo from "../../../assets/img/hola.png";
 import { useTranslation } from 'react-i18next';
+import { AiOutlineUsergroupAdd , AiFillGitlab, AiOutlineUser   } from "react-icons/ai";
 
 const { Panel } = Collapse;
 
@@ -29,12 +30,17 @@ const CourseView = () => {
     const [course, setCourse] = useState(null);
     const navigate = useNavigate();
     const [resources, setResources] = useState([]);
+    const [userId, setUserId] = useState("");
+    const [creator, setCreator] = useState(null);
     
     useEffect(() => {
         const fetchCourse = async () => {
             try {
                 const courseData = await getCourse(courseId);
                 setCourse(courseData);
+                if (courseData && courseData.userId){
+                    setUserId(courseData.userId);
+                }
             } catch (error) {
                 console.error('Error al obtener la información del curso:', error);
             }
@@ -70,6 +76,22 @@ const CourseView = () => {
 
         fetchUserData();
     }, [user, getUserById]);
+
+    useEffect(() => {
+        const fetchCreatorData = async () => {
+            try {
+                if (userId) {
+                    const creatorData = await getUserById(userId);
+                    setCreator(creatorData);
+                    console.log("Información User Creator: ", creatorData);
+                }
+            } catch (error) {
+                console.error("Error al obtener los datos del creador del curso:", error);
+            }
+        };
+    
+        fetchCreatorData();
+    }, [userId, getUserById]);
 
    // Maneja el clic en el botón para navegar al recurso
     const handleResourceClick = (resourceId) => {
@@ -156,36 +178,25 @@ const CourseView = () => {
                         
 
                         {/* Tarjeta de información */}
-                        <div className="max-w-mx bg-white border border-gray-200 rounded-lg shadow">
-                            <img className="rounded-t-lg" src={Logo} alt={t('course_user.logoAlt')} />
-                            <div className="p-5">
-                                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                                    {t('course_user.technologyAcquisitionsTitle')}
+                        <div className="max-w-mx bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
+                            <img
+                                className="w-full h-48 object-cover"
+                                src={creator && (creator.userImage !== null && creator.userImage !== 'null') ? creator.userImage : zorro}
+                                alt={t('course_user.logoAlt')}
+                            />
+                            <div className="p-6 space-y-4">
+                                <h5 className="text-2xl font-semibold text-gray-800 flex items-center">
+                                    <AiFillGitlab  ok className="mr-2 text-gray-600" /> {/* Icono para el título */}
+                                    {t('Disruptive')}
                                 </h5>
-                                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                                    {t('course_user.technologyAcquisitionsDescription')}
+                                <p className="text-gray-600 flex items-center">
+                                    <AiOutlineUser className="mr-2 text-gray-500" /> {/* Icono para el creador */}
+                                    <span className="font-medium">{t('creator')}:</span> {creator ? creator.username : t('loading')}
                                 </p>
-                                {/* <a
-                                    href="#"
-                                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                >
-                                    {t('course_user.readMore')}
-                                    <svg
-                                        className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 14 10"
-                                    >
-                                        <path
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M1 5h12m0 0L9 1m4 4L9 9"
-                                        />
-                                    </svg>
-                                </a> */}
+                                <p className="text-gray-600 flex items-center">
+                                    <AiOutlineUsergroupAdd   className="mr-2 text-gray-500" /> {/* Icono para el número de registros */}
+                                    <span className="font-medium">{t('Usuarios registrados')}:</span> {course.enrolledCount}
+                                </p>
                             </div>
                         </div>
                     </div>
