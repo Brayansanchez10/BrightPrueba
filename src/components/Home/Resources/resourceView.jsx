@@ -263,7 +263,7 @@ const ResourceView = () => {
     const question = resource.quizzes[currentQuestionIndex];
   
     return (
-      <div className="quiz-container bg-white rounded-xl shadow-lg border border-gray-300 w-full max-w-xl p-6 mx-auto my-10">
+      <div className="quiz-container bg-white rounded-xl shadow-lg border border-gray-300 w-full p-6 mx-auto my-10">
         <h2 className="p-4 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-t-xl text-white text-2xl font-semibold text-center">
           Pregunta {currentQuestionIndex + 1}/{resource?.quizzes.length || 0}
         </h2>
@@ -320,7 +320,12 @@ const ResourceView = () => {
           </button>
           <button
             onClick={handleNextQuestion}
-            className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-500 transition-all"
+            disabled={!isAnswerSelected}
+            className={`px-6 py-2 rounded-lg font-semibold transition-all ${
+              isAnswerSelected
+                ? "bg-indigo-600 text-white hover:bg-indigo-500"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
           >
             {currentQuestionIndex === (resource?.quizzes.length || 0) - 1
               ? "Finalizar"
@@ -632,7 +637,7 @@ const ResourceView = () => {
             </div>
           </div>
 
-          <div className="w-full lg:w-12/12 h-[480px] bg-gray-100 p-6 rounded-lg shadow-md overflow-hidden flex items-center justify-center">
+          <div className={`w-full lg:w-12/12 ${!resource?.quizzes || resource.quizzes.length === 0 ? 'h-[480px]' : ''} bg-gray-100 p-6 rounded-lg shadow-md overflow-hidden flex items-center justify-center`}>
             {/* Contenido que puede cambiar */}
             {isQuizCompleted
               ? renderQuizSummary()

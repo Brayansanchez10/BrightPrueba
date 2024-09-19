@@ -559,7 +559,9 @@
         "VideoLink": "Enlaces de videos",
         "DeleteQuestion": "Eliminar pregunta",
         "AddQuestion": "Añadir Pregunta",
-        "ButtonCreate": "Crear Recurso"
+        "ButtonCreate": "Crear Recurso",
+        "MaxOptionsAlert": "Limite de opciones",
+        "MaxOptionsText": "Has alcanzado el número de opciones máximas."
     },
     "course_user": {
         "courseImageAlt": "Imagen del curso",
