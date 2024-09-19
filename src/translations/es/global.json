@@ -570,6 +570,23 @@
         "logoAlt": "Logo",
         "technologyAcquisitionsTitle": "Adquisiciones tecnológicas destacadas 2021",
         "technologyAcquisitionsDescription": "Estas son las mayores adquisiciones tecnológicas empresariales de 2021 hasta ahora, en orden cronológico inverso.",
-        "readMore": "Leer más"
-    }
+        "readMore": "Leer más",
+        "creator": "Creado por",
+        "studensReg": "Estudiantes registrados"
+    },
+    "navigation": {
+        "previous": "Atrás",
+        "next": "Siguiente",
+        "finish": "Finalizado"
+      },
+      "resource_view": {
+        "title": "Título del Recurso",
+        "description": "Descripción del Recurso",
+        "publishedOn": "Publicado el"
+      },
+      "announcement": {
+        "comingSoon": "Aportes Proximamente",
+        "comingSoonNotes": "Notas Proximamente",
+        "stayTuned": "Mantente atento a nuestras próximas actualizaciones y eventos."
+      }
 }

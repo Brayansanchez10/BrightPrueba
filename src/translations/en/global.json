@@ -569,6 +569,23 @@
         "logoAlt": "Logo",
         "technologyAcquisitionsTitle": "Noteworthy technology acquisitions 2021",
         "technologyAcquisitionsDescription": "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
-        "readMore": "Read more"
-    }
+        "readMore": "Read more",
+        "creator": "Created by",
+        "studensReg": "Registered students"
+    },
+    "navigation": {
+        "previous": "Previous",
+        "next": "Next",
+        "finish": "Finish"
+      },
+      "resource_view": {
+        "title": "Resource Title",
+        "description": "Resource Description",
+        "publishedOn": "Published on"
+      },
+      "announcement": {
+        "comingSoon": "Coming Soon",
+        "comingSoonNotes": "Coming Soon Notes",
+        "stayTuned": "Stay tuned for our upcoming updates and events."
+      }
 }

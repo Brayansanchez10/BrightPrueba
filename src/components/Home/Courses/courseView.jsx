@@ -13,7 +13,7 @@ import derechaabajo from '../../../assets/img/DerechaAbajo.jpeg';
 import izquierdaarriba from '../../../assets/img/IzquierdaArriba.jpeg';
 import { Anothershabby_trial } from '../../../Tipografy/Anothershabby_trial-normal';
 import { getAllResources } from '../../../api/courses/resource.request';
-import Logo from "../../../assets/img/hola.png";
+import logoAlt from "../../../assets/img/hola.png";
 import { useTranslation } from 'react-i18next';
 import { AiOutlineUsergroupAdd , AiFillGitlab, AiOutlineUser   } from "react-icons/ai";
 
@@ -191,11 +191,12 @@ const CourseView = () => {
                                 </h5>
                                 <p className="text-gray-600 flex items-center">
                                     <AiOutlineUser className="mr-2 text-gray-500" /> {/* Icono para el creador */}
-                                    <span className="font-medium">{t('creator')}:</span> {creator ? creator.username : t('loading')}
+                                    <span className="font-medium">{t('course_user.creator')}:&nbsp;</span><span>{creator ? creator.username : t('Loading')}
+                                    </span>
                                 </p>
                                 <p className="text-gray-600 flex items-center">
-                                    <AiOutlineUsergroupAdd   className="mr-2 text-gray-500" /> {/* Icono para el número de registros */}
-                                    <span className="font-medium">{t('Usuarios registrados')}:</span> {course.enrolledCount}
+                                <AiOutlineUsergroupAdd className="mr-2 text-gray-500" /> {/* Icono para el número de registros */}
+                                <span className="font-medium">{t('course_user.studensReg')}:&nbsp;</span> {course.enrolledCount}
                                 </p>
                             </div>
                         </div>
