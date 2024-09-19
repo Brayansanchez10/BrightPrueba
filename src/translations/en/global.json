@@ -207,15 +207,19 @@
         "sign_off": "Sign off"
     },
     "cardsComponent": {
-        "activeUsers": "Active users",
-        "inactiveUsers": "Inactive users",
-        "courses": "Courses",
-        "registeredUsers": "Registered users",
+        "activeUsers": "ACTIVE USERS",
+        "inactiveUsers": "INACTIVE USERS",
+        "courses": "COURSES",
+        "registeredUsers": "REGISTERED USERS",
         "activeUsersDescription": "Active users on the platform",
         "inactiveUsersDescription": "Inactive users on the platform",
         "coursesDescription": "Courses available on the platform",
         "registeredUsersDescription": "Users registered on the platform",
-        "statistics": "Statistics"
+        "statistics": "Statistics",
+        "users": "Users",
+        "stadisticCourse": "Courses",
+        "stadisticTitle": "GENERAL",
+        "stadisticTitle1": "STATISTICS"
     },
     "datatable": {
         "Users": "Users",
@@ -558,7 +562,9 @@
 		"VideoLink": "Video Links",
 		"DeleteQuestion": "Delete question",
 		"AddQuestion": "Add Question",
-		"ButtonCreate": "Create Resource"
+		"ButtonCreate": "Create Resource",
+        "MaxOptionsAlert": "Options Limit",
+        "MaxOptionsText": "You have reached the maximum number of options."
 	},
     "course_user": {
         "courseImageAlt": "Course Image",

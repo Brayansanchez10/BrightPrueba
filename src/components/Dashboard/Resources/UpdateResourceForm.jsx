@@ -142,9 +142,21 @@ const UpdateResourceForm = ({
 
   const addOption = (quizIndex) => {
     const updatedQuizzes = [...quizzes];
-    updatedQuizzes[quizIndex].options.push(""); // Añadir una opción vacía
-    setQuizzes(updatedQuizzes);
-  };
+    
+    // Verificar si el número de opciones es menor a 6
+    if (updatedQuizzes[quizIndex].options.length < 6) {
+      updatedQuizzes[quizIndex].options.push(""); // Añadir una opción vacía
+      setQuizzes(updatedQuizzes);
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: t("CreateResource.MaxOptionsAlert"),
+        text: t("CreateResource.MaxOptionsText", { maxOptions: 6 }),
+        showConfirmButton: false,
+        timer: 2500,
+      });
+    }
+  };  
 
   const removeOption = (quizIndex, optionIndex) => {
     const updatedQuizzes = [...quizzes];
@@ -241,6 +253,7 @@ const UpdateResourceForm = ({
     footer={null}
     width={800}
     centered
+    zIndex={1000}
     className="p-6 max-h-[70vh] overflow-y-auto rounded-lg shadow-lg bg-white"
     bodyStyle={{
       padding: "20px",
