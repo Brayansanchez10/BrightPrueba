@@ -14,13 +14,10 @@ import izquierdaarriba from "../../../assets/img/IzquierdaArriba.jpeg";
 import { Anothershabby_trial } from "../../../Tipografy/Anothershabby_trial-normal";
 import Swal from 'sweetalert2';
 import { FaCheckCircle, FaTimesCircle, FaQuestionCircle } from 'react-icons/fa';
-import { useTranslation } from 'react-i18next';
-
 
 const { Panel } = Collapse;
 
 const ResourceView = () => {
-  const { t } = useTranslation("global");
   const { user } = useAuth();
   const { getUserById } = useUserContext();
   const [username, setUsername] = useState("");
@@ -597,116 +594,122 @@ const ResourceView = () => {
 
         {/* Middle */}
         <div className="w-full lg:w-7/12 p-4 lg:p-6 flex flex-col space-y-4">
-      {/* Controles de navegación y barra de progreso */}
-      <div className="bg-gray-200 p-4 rounded-t-xl shadow-md mb-4">
-        <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={handlePrevious}
-            disabled={currentResourceIndex === 0}
-            className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-300"
-          >
-            {t('navigation.previous')}
-          </button>
+          {/* Controles de navegación y barra de progreso */}
+          {/* Barra de progreso y botones */}
+          <div className="bg-gray-200 p-4 rounded-t-xl shadow-md mb-4">
+            <div className="flex items-center justify-between mb-4">
+              <button
+                onClick={handlePrevious}
+                disabled={currentResourceIndex === 0}
+                className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-300"
+              >
+                Atrás
+              </button>
 
-          <div className="flex-1 mx-4">
-            <div className="w-full bg-gray-300 rounded-full h-3 mb-4 relative">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-blue-500 to-green-400"
-                style={{ width: `${progress}%` }}
-              ></div>
-              <span className="absolute inset-0 flex justify-center items-center text-xs font-medium text-black">
-                {Math.round(progress)}%
-              </span>
+              <div className="flex-1 mx-4">
+                <div className="w-full bg-gray-300 rounded-full h-3 mb-4 relative">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-blue-500 to-green-400"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                  <span className="absolute inset-0 flex justify-center items-center text-xs font-medium text-black">
+                    {Math.round(progress)}%
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleNext}
+                disabled={currentResourceIndex === resources.length - 1}
+                className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-300"
+              >
+                Siguiente
+              </button>
+
+              {currentResourceIndex === resources.length - 1 && (
+                <button
+                  onClick={handleFinishCourse}
+                  className="py-2 px-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                >
+                  Finalizado
+                </button>
+              )}
             </div>
           </div>
 
-          <button
-            onClick={handleNext}
-            disabled={currentResourceIndex === resources.length - 1}
-            className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-300"
-          >
-            {t('navigation.next')}
-          </button>
-
-          {currentResourceIndex === resources.length - 1 && (
-            <button
-              onClick={handleFinishCourse}
-              className="py-2 px-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-            >
-              {t('navigation.finish')}
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className="w-full lg:w-12/12 h-[480px] bg-gray-100 p-6 rounded-lg shadow-md overflow-hidden flex items-center justify-center">
-        {isQuizCompleted
-          ? renderQuizSummary()
-          : resource?.quizzes && resource.quizzes.length > 0
-          ? renderQuiz()
-          : renderContent(resource?.files)}
-      </div>
-
-      <div className="bg-white p-6 rounded-2xl shadow-md flex flex-col space-y-6">
-        <div className="flex items-start space-x-4">
-          <div className="bg-gray-300 w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0">
-            {/* Aquí podrías agregar un ícono o imagen si es necesario */}
+          <div className={`w-full lg:w-12/12 ${!resource?.quizzes || resource.quizzes.length === 0 ? 'h-[480px]' : ''} bg-gray-100 p-6 rounded-lg shadow-md overflow-hidden flex items-center justify-center`}>
+            {/* Contenido que puede cambiar */}
+            {isQuizCompleted
+              ? renderQuizSummary()
+              : resource?.quizzes && resource.quizzes.length > 0
+              ? renderQuiz()
+              : renderContent(resource?.files)}
           </div>
-          <div className="flex flex-col">
-            <h2 className="text-2xl lg:text-3xl font-semibold text-gray-900 mb-2">
-              {resource.title || t('resource_view.title')}
-            </h2>
-       {/*      <p className="text-gray-600 text-base"> Pa preguntar como dejarlo
-              {t('resource_view.publishedOn')}{" "}
-              {new Intl.DateTimeFormat("es-ES", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              }).format(new Date(resource.createdAt))}
-            </p> */}
+
+          <div className="bg-white p-6 rounded-2xl shadow-md flex flex-col space-y-6">
+            {/* Contenedor principal para la imagen o ícono y la información */}
+            <div className="flex items-start space-x-4">
+              <div className="bg-gray-300 w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0">
+                {/* Aquí podrías agregar un ícono o imagen si es necesario */}
+              </div>
+              <div className="flex flex-col">
+                <h2 className="text-2xl lg:text-3xl font-semibold text-gray-900 mb-2">
+                  {resource.title || "Título del Recurso"}
+                </h2>
+                <p className="text-gray-600 text-base">
+                  Publicado el{" "}
+                  {new Intl.DateTimeFormat("es-ES", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }).format(new Date(resource.createdAt))}
+                </p>
+              </div>
+            </div>
+
+            {/* Descripción */}
+            <div className="bg-white p-4 rounded-xl shadow-sm">
+              <p className="text-gray-700 text-base">
+                {resource.description || "Descripción del Recurso"}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl shadow-sm">
-          <p className="text-gray-700 text-base">
-            {resource.description || t('resource_view.description')}
-          </p>
-        </div>
-      </div>
-    </div>
+        {/* Right */}
+        <div className="w-full lg:w-4/12 p-4 lg:p-6 flex flex-col space-y-4">
+          {/* Primer contenedor */}
+          <article className="rounded-2xl bg-white p-6 ring-1 ring-gray-200 shadow-lg flex flex-col items-center">
+            <div className="flex items-center justify-center w-20 h-20 bg-indigo-600 text-white rounded-full border-4 border-indigo-700 mb-4">
+              <span className="text-3xl">📅</span>
+            </div>
+            <div className="text-center">
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <a
+                  href="#"
+                  className="hover:text-indigo-700 transition-colors duration-300"
+                >
+                  Aportes Próximamente
+                </a>
+              </h3>
+              <p className="text-base text-gray-700">
+                Mantente atento a nuestras próximas actualizaciones y eventos.
+              </p>
+            </div>
+          </article>
 
-    {/* Right */}
-    <div className="w-full lg:w-4/12 p-4 lg:p-6 flex flex-col space-y-4">
-      <article className="rounded-2xl bg-white p-6 ring-1 ring-gray-200 shadow-lg flex flex-col items-center">
-        <div className="flex items-center justify-center w-20 h-20 bg-indigo-600 text-white rounded-full border-4 border-indigo-700 mb-4">
-          <span className="text-3xl">📅</span>
-        </div>
-        <div className="text-center">
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            <a
-              href="#"
-              className="hover:text-indigo-700 transition-colors duration-300"
-            >
-              {t('announcement.comingSoon')}
-            </a>
-          </h3>
-          <p className="text-base text-gray-700">
-            {t('announcement.stayTuned')}
-          </p>
-        </div>
-      </article>
           {/* Segundo contenedor */}
           <div className="bg-white p-6 rounded-2xl shadow-lg ring-1 ring-gray-200 flex flex-col items-center justify-center">
-          <div className="flex items-center justify-center w-20 h-20 bg-indigo-600 text-white rounded-full border-4 border-indigo-700 mb-4">
-            <span className="text-3xl">📅</span>
+            <div className="flex items-center justify-center w-20 h-20 bg-indigo-600 text-white rounded-full border-4 border-indigo-700 mb-4">
+              <span className="text-3xl">📅</span>
+            </div>
+            <div className="text-xl font-semibold text-gray-800 mb-2">
+              Notas Próximamente
+            </div>
+            <p className="text-base text-gray-700 text-center">
+              Mantente atento a nuestras próximas actualizaciones y eventos.
+            </p>
           </div>
-          <div className="text-xl font-semibold text-gray-800 mb-2">
-            {t('announcement.comingSoonNotes')}
-          </div>
-          <p className="text-base text-gray-700 text-center">
-            {t('announcement.stayTuned')}
-          </p>
-        </div>
         </div>
       </div>
     </div>
