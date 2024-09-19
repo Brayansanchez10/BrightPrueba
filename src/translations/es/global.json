@@ -208,15 +208,19 @@
         "sign_off": "Cerrar sesión"
     },
     "cardsComponent": {
-        "activeUsers": "Usuarios activos",
-        "inactiveUsers": "Usuarios inactivos",
-        "courses": "Cursos",
-        "registeredUsers": "Usuarios registrados",
+        "activeUsers": "USUARIOS ACTIVADOS",
+        "inactiveUsers": "USUARIOS INACTIVOS",
+        "courses": "CURSOS",
+        "registeredUsers": "USUARIOS REGISTRADOS",
         "activeUsersDescription": "Usuarios activos en la plataforma",
         "inactiveUsersDescription": "Usuarios inactivos en la plataforma",
         "coursesDescription": "Cursos disponibles en la plataforma",
         "registeredUsersDescription": "Usuarios registrados en la plataforma",
-        "statistics": "Estadísticas"
+        "statistics": "Estadísticas",
+        "users": "Usuarios",
+        "stadisticCourse": "Cursos",
+        "stadisticTitle": "ESTADISTICAS",
+        "stadisticTitle1": "GENERALES"
     },
     "datatable": {
         "Users": "Usuarios",
