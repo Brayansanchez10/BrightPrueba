@@ -12,6 +12,8 @@ import { Typography } from "antd";
 import Swal from "sweetalert2"; 
 import { useTranslation } from "react-i18next";
 import "../css/Custom.css"
+import image from "../../../assets/img/Zorro.png"
+import image2 from "../../../assets/img/hola1.png"
 
 const { Text } = Typography;
 
@@ -41,6 +43,7 @@ const CreateResourceModal = ({
   const [quizzes, setQuizzes] = useState([]); // Estado para quizzes
   const [errors, setErrors] = useState({});
   const { t } = useTranslation("global");
+  const [activeTab, setActiveTab] = useState('crear');
 
   const validateFields = () => {
     const newErrors = {};
@@ -353,6 +356,14 @@ const CreateResourceModal = ({
     onCancel();
   };
 
+  
+    
+  
+   // Función para cambiar la pestaña activa
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+
   return (
     <Modal
     title=""
@@ -367,29 +378,50 @@ const CreateResourceModal = ({
       height: "75vh",
     }}
   >
+    <div className="mb-4 sm:block md:hidden lg:hidden  absolute top-0 left-0">
+        <button
+          onClick={() => handleTabChange('crear')}
+          className={`px-6 py-2 rounded-ss-md ${activeTab === 'recursos' ? 'bg-gray-100 text-black' : 'bg-purple-800 text-white'}`}
+        >
+          Recursos
+        </button>
+        <button
+          onClick={() => handleTabChange('recursos')}
+          className={`px-6 py-2 ${activeTab === 'crear' ? 'bg-gray-100 text-black' : 'bg-purple-800 text-white'}`}
+        >
+          Crear
+        </button>
+    </div>
     <div className="custom flex justify-center items-center h-full w-full">
       <div className="flex gap-8 h-full w-full">
         {/* Panel de recursos a la izquierda */}
         <div
-          className="w-1/2 p-4 border border-gray-300 rounded-lg shadow-lg overflow-y-auto"
+          className={`w-full rounded-lg shadow-lg overflow-y-auto overflow-auto scrollbar-hide mt-6 ${activeTab === 'crear' ? 'block' : 'hidden'} sm:w-1/2 sm:block`}
           style={{ maxHeight: "700px" }}
         >
-          <h3 className="text-lg font-bold mb-4">{t("CreateResource.TitleResources")}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
+          <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
+            <img
+              src={image}
+              alt="Imagen de la cabecera"
+              className="w-[189.69px] h-[148px] object-contain mt-8"
+            />
+          </div>
+          <h3 className="text-xl font-bold mt-6 text-center text-purple-900">{t("CreateResource.TitleResources")}</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 p-4">
             {resources.length > 0 ? (
               <Collapse accordion>
                 {resources.map((resource) => (
                   <Panel
                     header={
-                      <div className="flex justify-between items-center">
+                      <div className="flex flex-col lg:flex-row justify-between items-center">
                         {resource.title}
-                        <div className="flex ml-auto space-x-2">
+                        <div className="flex flex-col lg:flex-row lg:ml-auto space-y-2 lg:space-y-0 lg:space-x-2">
                           <Button
                             icon={<EditOutlined />}
                             onClick={() => openEditModal(resource)}
                             className="bg-yellow-500 text-white hover:bg-yellow-600"
                           >
-                            {t("CreateResource.Edit")}
+                            <span className="hidden lg:inline">{t("CreateResource.Edit")}</span>
                           </Button>
                           <Button
                             icon={<DeleteFilled />}
@@ -414,9 +446,9 @@ const CreateResourceModal = ({
                                 }
                               });
                             }}
-                            className="bg-red-500 text-white hover:bg-red-600"
+                            className="bg-red-700 text-white hover:bg-red-600"
                           >
-                            {t("CreateResource.Delete")}
+                            <span className="hidden lg:inline">{t("CreateResource.Delete")}</span>
                           </Button>
                         </div>
                       </div>
@@ -535,13 +567,21 @@ const CreateResourceModal = ({
 
         {/* Formulario de creación a la derecha */}
         <div
-          className="w-1/2 p-6 border border-gray-300 rounded-lg shadow-lg overflow-y-auto bg-white"
+          className={`w-full rounded-lg shadow-lg overflow-y-auto bg-white mt-6 ${activeTab === 'recursos' ? 'block' : 'hidden'} sm:w-1/2 sm:block`}
           style={{ maxHeight: "700px" }}
         >
-          <h3 className="text-2xl font-bold mb-6 text-gray-800">
-            {t("CreateResource.FormCreate")}
-          </h3>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl items-center flex justify-between">
+            <h3 className="text-2xl font-bold text-white ml-2">
+              {t("CreateResource.FormCreate")}
+            </h3>
+            <img
+              src={image2}
+              alt="Imagen de la cabecera"
+              className="w-[80x] h-[80px] object-contain mr-2"
+            />
+          </div>
+          
+          <form onSubmit={handleSubmit} className="space-y-6 px-4 py-2">
             <div>
               <label
                 htmlFor="title"
