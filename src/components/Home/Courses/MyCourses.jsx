@@ -5,6 +5,7 @@ import { useUserContext } from "../../../context/user/user.context";
 import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from 'react-i18next';
 import Logo from "../../../assets/img/hola.png";
+import { FaFlagCheckered, FaSearch } from 'react-icons/fa';
 
 const CoursesComponent = () => {
   const { t } = useTranslation("global");
@@ -36,11 +37,6 @@ const CoursesComponent = () => {
     navigate(`/course/${courseId}`);
   };
 
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-    setCurrentPage(1); // Reinicia la página al hacer una búsqueda nueva
-  };
-
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const totalPages = Math.ceil(userCourses.length / itemsPerPage);
@@ -54,58 +50,84 @@ const CoursesComponent = () => {
     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
-      <div className="bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400 min-h-screen overflow-hidden">
-        <NavigationBar onSearch={handleSearch} /> {/* Se agrega el onSearch para poder realizar el filtrado de cursos por título */}
+      <div className="bg-gray-100 min-h-screen overflow-hidden">
+        <NavigationBar />
         <Link to="/Home" className="inline-block bg-purple-700 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded transition-colors duration-300 cursor-pointer m-1">
           &#8678; {t('notFound.return')}
         </Link>
         {userCourses.length > 0 ? (
           <>
-            <div className="mt-10 flex justify-center">
-              <h1 className="text-center text-3xl text-white font-black flex justify-center shadow-orange italic shadow-red-400 p-3 border border-white bg-gradient-to-t from-red-400 to-pink-300">
-                {t('coursesComponent.your_courses')}
-              </h1>
+            <div className="flex justify-between mt-8">
+              <div className="flex font-bungee ml-5 sm:ml-8 md:ml-10 lg:ml-14 xl:ml-24">
+                <h1 className="text-center text-2xl mr-2
+                md:text-3xl lg:text-4xl xl:text-4xl">
+                {t('coursesComponent.your')}
+                </h1>
+                <h1 className="text-center text-2xl text-purple-700
+                md:text-3xl lg:text-4xl xl:text-4xl">
+                  {t('coursesComponent.courses')}
+                </h1>
+              </div>
+              <div className="flex">
+                <div className="flex px-4 py-2 mr-6 -mt-1 border bg-white border-gray-300 rounded-xl shadow-md
+                  sm:mr-8 md:mr-12 lg:mr-16 xl:mr-24">
+                  <FaSearch size={"18px"} className="mt-1 mr-2 -ml-1" />
+                  <input
+                    type="search"
+                    className="outline-none -mr-4 pr-3 w-[180px]
+                    sm:w-[240px] md:w-[280px] lg:w-[360px] xl:w-[420px]"
+                    placeholder={t('coursesComponent.search_placeholder')}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
-            <div
-              className="grid  
-              grid-cols-1 gap-4 p-4 mx-1 mt-10
-              sm:grid-cols-2 sm:gap-3 sm:p-4 sm:mx-2 sm:mt-16     
-              md:grid-cols-3 md:gap-3 md:p-4 md:mt-20
-              lg:grid-cols-4 lg:gap-2 lg:p-4 lg:mt-14
-              xl:grid-cols-5 xl:gap-4 xl:p-4"
-            >
+            <div className="grid grid-cols-1 p-4 mx-10 mt-10 gap-5
+            md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2
+            sm:mx-4 md:mx-6 lg:mx-10 xl:mx-20
+            md:gap-x-8 md:gap-y-4 lg:gap-x-10 lg:gap-y-6 xl:gap-x-14 xl:gap-y-8">
               {paginatedCourses.map((course) => (
                 <div
-                  key={course._id} // Clave única para cada curso
-                  className="relative bg-white rounded-lg shadow-md border cursor-pointer transform hover:scale-105 transition-transform border-white"
+                  key={course._id}
+                  className="bg-white sm:p-5 min-h-[320px] rounded-2xl shadow-lg shadow-gray-400 border cursor-pointer transform hover:scale-105 transition-transform"
                   onClick={() => handleCourseClick(course._id)}
                 >
-                  <img
-                    src={course.image}
-                    alt={course.title}
-                    className="w-full h-32 sm:h-40 md:h-48 lg:h-56 xl:h-64 object-cover rounded-t-lg"
-                  />
-                  <div className="p-auto bg-gray-700 md:bg-gradient-to-tr md:p-2 from-purple-600 to-red-400 rounded-b-lg border border-white">
-                    <h3 className="text-lg sm:text-xl font-bold text-center text-white">
-                      {course.title}
-                    </h3>
-                    <p className="text-base mt-1 text-slate-200 text-center md:hidden py-2">
-                      {course.description}
-                    </p>
+                  {/* Contenedor para el título y la imagen en línea */}
+                  <div className="sm:flex sm:flex-row-reverse justify-between">
+                    {/* Imagen */}
+                    <div className="sm:flex-shrink-0">
+                      <img
+                        src={course.image}
+                        alt={course.title}
+                        className="w-full h-[220px] sm:w-36 sm:h-36 rounded-t-xl sm:rounded-xl"
+                      />
+                    </div>
+
+                    {/* Título y descripción */}
+                    <div className="flex-grow p-5">
+                      <h3 className="text-xl sm:text-3xl font-bold text-gray-800 mb-2 sm:mb-4 -mt-3">
+                        {course.title}
+                      </h3>
+                      <p className="text-[12px] sm:text-base text-gray-400 font-semibold -mb-12">
+                        {course.description}
+                      </p>
+                    </div>
                   </div>
-                  <div
-                    className="absolute inset-0 
-                    bg-opacity-90 flex items-center justify-center opacity-0
-                    sm:hover:opacity-90 sm:border sm:border-white
-                    bg-gradient-to-b from-red-400 to-pink-500 lg:hover:opacity-95 lg:border lg:border-white transition-opacity"
-                  >
-                    <p className="text-center text-gray-900 overflow-hidden whitespace-wrap
-                    sm:text-lg sm:text-white sm:font-semibold
-                    md:text-lg md:text-white md:font-semibold 
-                    lg:text-white lg:font-semibold lg:border-white lg:text-ellipsis lg:text-xl"
-                    >
-                      {course.description}
-                    </p>
+
+                  {/* Barra de progreso */}
+                  <div className="text-white mt-14 sm:mt-20 px-5 pb-5">
+                    <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="absolute top-0 left-0 h-full bg-green-500 rounded-full"
+                        style={{ width: "75%" /* `${course.progress}%` */ }}
+                      ></div>
+                    </div>
+                    <div className="flex mt-2">
+                      <FaFlagCheckered className="text-gray-400 mt-1"/>
+                      <p className="text-gray-400 font-semibold ml-2 mr-1">{"Progreso:"}</p>
+                      <p className="text-green-600 font-semibold">{"75%"}</p>
+                    </div>
                   </div>
                 </div>
               ))}

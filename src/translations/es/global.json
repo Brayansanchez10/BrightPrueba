@@ -153,10 +153,11 @@
         "failed_to_delete_image": "No se pudo eliminar la imagen."
     },
     "navigationBar": {
-        "search_placeholder": "Buscar...",
-        "my_courses": "Mis Cursos",
-        "bright": "Bright",
-        "mind": "Mind",
+        "home": "INICIO",
+        "courses": "CURSOS",
+        "my_courses": "MIS CURSOS",
+        "bright": "BRIGHT",
+        "mind": "MIND",
         "welcome_message": "¡Bienvenido, {{username}}!",
         "check_courses": "Mira tus cursos aquí:",
         "see_my_courses": "Ver mis cursos",
@@ -178,7 +179,9 @@
         "fetch_email_error": "Error al obtener el correo del usuario"
     },
     "coursesComponent": {
-        "your_courses": "Tus cursos",
+        "your": "TUS",
+        "courses": "CURSOS",
+        "search_placeholder": "Buscar cursos...",
         "previous": "Anterior",
         "next": "Siguiente"
     },
