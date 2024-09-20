@@ -1,32 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useUserContext } from "../../context/user/user.context.jsx";
 import { useCoursesContext } from "../../context/courses/courses.context.jsx";
 import { useTranslation } from "react-i18next";
 import { Bar, Doughnut } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  ArcElement,
-} from "chart.js";
+import * as echarts from 'echarts'; // Importación de ECharts
+
 import { AiFillBook } from "react-icons/ai";
 import { FaUsersSlash } from "react-icons/fa";
 import { HiMiniUsers } from "react-icons/hi2";
 import { HiUserPlus } from "react-icons/hi2";
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  ArcElement
-);
 
 const Cards = ({ isLeftBarVisible }) => {
   const { usersData } = useUserContext();
@@ -38,6 +21,142 @@ const Cards = ({ isLeftBarVisible }) => {
     usuariosActivos: 0,
     usuariosInactivos: 0,
   });
+
+  const chartRef = useRef(null); // Referencia para el contenedor del gráfico
+  const pieChartRef = useRef(null); // Referencia para el gráfico de pastel
+
+  useEffect(() => {
+    // Configuración del gráfico de barras avanzado de ECharts
+    if (chartRef.current) {
+      const myChart = echarts.init(chartRef.current);
+
+      const option = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow',
+          },
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true,
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: [t("cardsComponent.titleactiveUsers"), t("cardsComponent.titleinactiveUsers"), t("cardsComponent.titleregisteredUsers")], // Ejes con traducción
+            axisTick: {
+              alignWithLabel: true,
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: 'value',
+          },
+        ],
+        series: [
+          {
+            type: 'bar',
+            barWidth: '60%', // Ancho de las barras
+            data: [
+              {
+                value: stats.usuariosActivos,
+                itemStyle: {
+                  color: '#31BF71', // Color para usuarios activos
+                  name: t(""), // Traducción para el nombre de la serie
+                },
+              },
+              {
+                value: stats.usuariosInactivos,
+                itemStyle: {
+                  color: '#F45442', // Color para usuarios inactivos
+                },
+              },
+              {
+                value: stats.usuariosRegistrados,
+                itemStyle: {
+                  color: '#FBBF24', // Color para usuarios registrados
+                },
+              },
+            ], // Datos dinámicos con color específico
+          },
+        ],
+      };
+
+      myChart.setOption(option);
+
+      // Configurar el gráfico para ser responsivo
+      window.addEventListener('resize', myChart.resize);
+
+      // Destruir el gráfico cuando el componente se desmonte
+      return () => {
+        myChart.dispose();
+        window.removeEventListener('resize', myChart.resize);
+      };
+    }
+  }, [stats, t]);
+
+  useEffect(() => {
+    // Configuración del gráfico de pastel de ECharts
+    if (pieChartRef.current) {
+      const myChart = echarts.init(pieChartRef.current);
+
+      const option = {
+        tooltip: {
+          trigger: 'item',
+        },
+        legend: {
+          top: '5%',
+          left: 'center',
+        },
+        series: [
+          {
+            name: t("cardsComponent.StatisticsCoures"), // Nombre del gráfico, traducible
+            type: 'pie',
+            radius: ['40%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+              show: false,
+              position: 'center',
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: 20,
+                fontWeight: 'bold',
+              },
+            },
+            labelLine: {
+              show: false,
+            },
+            data: [
+              {
+                value: stats.cursos,
+                name: t("cardsComponent.titlecourses"),
+                itemStyle: {
+                  color: '#783CDA', // Color para cursos
+                },
+              },
+            ],
+          },
+        ],
+      };
+
+      myChart.setOption(option);
+
+      // Configurar el gráfico para ser responsivo
+      window.addEventListener('resize', myChart.resize);
+
+      // Destruir el gráfico cuando el componente se desmonte
+      return () => {
+        myChart.dispose();
+        window.removeEventListener('resize', myChart.resize);
+      };
+    }
+  }, [stats, t]);
 
   useEffect(() => {
     const activeUsers = usersData.filter((user) => user.state);
@@ -51,98 +170,6 @@ const Cards = ({ isLeftBarVisible }) => {
     });
   }, [usersData, courses]);
 
-  const userStatsData = {
-    labels: [
-      t("cardsComponent.activeUsers"),
-      t("cardsComponent.inactiveUsers"),
-      t("cardsComponent.registeredUsers"),
-    ],
-    datasets: [
-      {
-        label: t("cardsComponent.userStatistics"),
-        data: [
-          stats.usuariosActivos,
-          stats.usuariosInactivos,
-          stats.usuariosRegistrados,
-        ],
-        backgroundColor: [
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-        ],
-        borderColor: [
-          "rgba(75, 192, 192, 1)",
-          "rgba(255, 99, 132, 1)",
-          "rgba(153, 102, 255, 1)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const coursesData = {
-    labels: [t("cardsComponent.courses")],
-    datasets: [
-      {
-        label: t("cardsComponent.courseCount"),
-        data: [stats.cursos],
-        backgroundColor: ["rgba(54, 162, 235, 0.2)"],
-        borderColor: ["rgba(54, 162, 235, 1)"],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const optionsBar = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            return `${context.label}: ${context.raw}`;
-          },
-        },
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-    layout: {
-      padding: {
-        left: 0,
-        right: 0,
-      },
-    },
-  };
-
-  const optionsDoughnut = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            return `${context.label}: ${context.raw}`;
-          },
-        },
-      },
-    },
-    layout: {
-      padding: {
-        left: 0,
-        right: 0,
-      },
-    },
-  };
 
   return (
     <div className="bg-white overflow-hidden min-h-screen">
@@ -240,23 +267,18 @@ const Cards = ({ isLeftBarVisible }) => {
 
             {/* Estadísticas de Usuarios y Cursos */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-              {/* Gráfico de Usuarios */}
-              <div className="w-full h-80 bg-[#F8F2F2] shadow-lg p-4 rounded-lg flex flex-col items-center shadow-lg shadow-[#0080B2] hover:shadow-lg transition-shadow duration-300">
-                <h3 className="text-lg font-semibold mb-0 text-left w-full">
-                  {t("cardsComponent.users")}
-                </h3>
+               {/* Contenedor de gráficos responsivos */}
+              <div className="w-full h-80 bg-[#F8F2F2] shadow-lg p-4 rounded-lg flex flex-col items-center shadow-lg shadow-[#1E1034] hover:shadow-lg transition-shadow duration-300">
+                <h3 className="text-lg font-semibold mb-2">{t("cardsComponent.users")}</h3>
                 <div className="w-full h-full">
-                  <Bar data={userStatsData} options={optionsBar} />
+                  <div ref={chartRef} style={{ width: '100%', height: '100%' }}></div>
                 </div>
               </div>
 
-              {/* Gráfico de Cursos */}
-              <div className="w-full h-80 bg-[#F8F2F2] shadow-lg p-4 rounded-lg flex flex-col items-center shadow-lg shadow-[#0080B2] hover:shadow-lg transition-shadow duration-300">
-                <h3 className="text-lg font-semibold mb-0 text-left w-full">
-                  {t("cardsComponent.stadisticCourse")}
-                </h3>
+              <div className="w-full h-80 bg-[#F8F2F2] shadow-lg p-4 rounded-lg flex flex-col items-center shadow-lg shadow-[#1E1034] hover:shadow-lg transition-shadow duration-300">
+                <h3 className="text-lg font-semibold mb-2">{t("cardsComponent.stadisticCourse")}</h3>
                 <div className="w-full h-full">
-                  <Doughnut  data={coursesData} options={optionsDoughnut} />
+                  <div ref={pieChartRef} style={{ width: '100%', height: '100%' }}></div>
                 </div>
               </div>
             </div>
