@@ -21,3 +21,18 @@
     }
   }
   
+  @font-face {
+    font-family: 'Bungee';
+    src: url('./fonts/Bungee-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  .font-bungee {
+    font-family: 'Bungee', cursive; 
+    font-weight: normal; 
+    font-size: 1;
+    line-height: 1.5; 
+    letter-spacing: 0.09em; 
+  }
+  

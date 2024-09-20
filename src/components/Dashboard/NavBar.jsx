@@ -35,7 +35,7 @@ const Navbar = () => {
       if (user && user.data && user.data.id) {
         try {
           const userData = await getUserById(user.data.id);
-          setUsername(userData.username);
+          setUsername(userData.username.toUpperCase());
           setUserImage(userData.userImage !== "null" ? userData.userImage : null);
         } catch (error) {
           console.error(error);

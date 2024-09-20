@@ -186,16 +186,16 @@ const CourseView = () => {
                             />
                             <div className="p-6 space-y-4">
                                 <h5 className="text-2xl font-semibold text-gray-800 flex items-center">
-                                    <AiFillGitlab  ok className="mr-2 text-gray-600" /> {/* Icono para el título */}
+                                    <AiFillGitlab  ok className="mr-2 text-gray-600" />
                                     {t('Disruptive')}
                                 </h5>
                                 <p className="text-gray-600 flex items-center">
-                                    <AiOutlineUser className="mr-2 text-gray-500" /> {/* Icono para el creador */}
+                                    <AiOutlineUser className="mr-2 text-gray-500" />
                                     <span className="font-medium">{t('course_user.creator')}:&nbsp;</span><span>{creator ? creator.username : t('Loading')}
                                     </span>
                                 </p>
                                 <p className="text-gray-600 flex items-center">
-                                <AiOutlineUsergroupAdd className="mr-2 text-gray-500" /> {/* Icono para el número de registros */}
+                                <AiOutlineUsergroupAdd className="mr-2 text-gray-500" />
                                 <span className="font-medium">{t('course_user.studensReg')}:&nbsp;</span> {course.enrolledCount}
                                 </p>
                             </div>

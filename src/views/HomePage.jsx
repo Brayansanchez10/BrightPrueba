@@ -8,7 +8,7 @@ import HoverCard from '../components/Home/Cards/HoverCard';
 import { useTranslation } from 'react-i18next';
 
 const HomePage = () => {
-    const { getCoursesByCategory } = useCoursesContext();
+    const { getCoursesByCategory, getAllCourses, courses } = useCoursesContext();
     const { categories, getCategories } = useCategoryContext();
     const navigate = useNavigate();
     const [categoriesLoaded, setCategoriesLoaded] = useState(false);
@@ -25,6 +25,10 @@ const HomePage = () => {
         }
     }, [categoriesLoaded, getCategories]);
 
+    useEffect(() => {
+        getAllCourses(); 
+    }, [getAllCourses]);
+
     const phrases = [
         { text: t('home.quotes.da_vinci'), author: 'Leonardo da Vinci', imageUrl: 'https://th.bing.com/th/id/OIP.DtC3ATqwhnlc_X8KeBv7aAHaJg?rs=1&pid=ImgDetMain' },
         { text: t('home.quotes.mandela'), author: 'Nelson Mandela', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Nelson_Mandela_1994_%282%29.jpg/1200px-Nelson_Mandela_1994_%282%29.jpg' },
@@ -39,10 +43,18 @@ const HomePage = () => {
         navigate(`/CoursesHome`, { state: { title: category.name } });
     };
 
-    const handleSearch = (term) => { //Se agrega esta función para poder filtrar por el nombre de la categoria
+    const handleCourseClick = (course) => {
+        navigate(`/CourseDetail/${course.id}`);
+    };
+
+    const handleAllCoursesClick = () => {
+        navigate('/AllCourses'); 
+    };
+
+    const handleSearch = (term) => {
         setSearchTerm(term);
-        setCurrentPage(1); // Reinicia la página al hacer una búsqueda nueva
-      };
+        setCurrentPage(1);
+    };
 
     const handleNextPage = () => {
         if ((currentPage * categoriesPerPage) < categories.length) {
@@ -58,21 +70,21 @@ const HomePage = () => {
 
     const totalPages = Math.ceil(categories.length / categoriesPerPage);
     
-    const paginatedCategories = categories //Se modifica esta función para poder filtrar por el nombre de la categoria
-        .filter(category => category.name.toLowerCase().includes(searchTerm.toLowerCase())) // Filtrar categorías por término de búsqueda
+    const paginatedCategories = categories
+        .filter(category => category.name.toLowerCase().includes(searchTerm.toLowerCase()))
         .slice((currentPage - 1) * categoriesPerPage, currentPage * categoriesPerPage);
 
     return (
         <div className="bg-gradient-to-t from-blue-200 via-blue-400 to-blue-600 min-h-screen">
             <div className='flex flex-col'>
-                <NavigationBar onSearch={handleSearch}/> {/*Se agrega El onSearch Para poder Filtrar mediante Categorias*/}
+                <NavigationBar onSearch={handleSearch} />
                 <QuoteCarousel phrases={phrases} />
                 <div className="text-center justify-center items-center">
                     <h1 className="flex justify-center p-2 text-4xl mt-8 font-black text-white sm:text-3xl md:text-5xl">{t('home.explore_categories')}</h1>
                     <p className="mt-4 text-base sm:text-lg text-gray-200 font-semibold flex justify-center">{t('home.find_course')}</p>
                 </div>
                 
-                <div className="flex justify-center">
+            {/*     <div className="flex justify-center">
                     <div className="grid grid-cols-1 w-full mx-2 gap-1 mt-10 sm:grid-cols-2 sm:mx-3 sm:gap-3 sm:mt-16 md:grid-cols-3 md:mx-4 lg:grid-cols-4 lg:mx-5 xl:grid-cols-5 xl:mx-6">
                         {paginatedCategories.map((category, index) => (
                             <HoverCard
@@ -83,8 +95,14 @@ const HomePage = () => {
                                 onClick={() => handleCardClick(category)}
                             />
                         ))}
+                        <HoverCard
+                            title="Todos los cursos"
+                            description="Ver todos los cursos disponibles."
+                            onClick={handleAllCoursesClick}
+                        />
                     </div>
-                </div>
+                </div> */}
+
                 {totalPages > 1 && (
                     <div className="flex justify-center mb-8 mt-10">
                         <button
