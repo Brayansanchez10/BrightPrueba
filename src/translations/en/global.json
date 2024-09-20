@@ -219,7 +219,12 @@
         "users": "Users",
         "stadisticCourse": "Courses",
         "stadisticTitle": "GENERAL",
-        "stadisticTitle1": "STATISTICS"
+        "stadisticTitle1": "STATISTICS",
+        "titleactiveUsers": "Active Users",
+        "titleinactiveUsers": "Inactive Users",
+        "titlecourses": "Courses",
+        "titleregisteredUsers": "Registered Users",
+        "StatisticsCoures": "Statistics Courses"
     },
     "datatable": {
         "Users": "Users",

@@ -220,7 +220,12 @@
         "users": "Usuarios",
         "stadisticCourse": "Cursos",
         "stadisticTitle": "ESTADISTICAS",
-        "stadisticTitle1": "GENERALES"
+        "stadisticTitle1": "GENERALES",
+        "titleactiveUsers": "Usuarios Activos",
+        "titleinactiveUsers": "Usuarios Inactivos",
+        "titlecourses": "Cursos",
+        "titleregisteredUsers": "Usuarios Registrados",
+        "StatisticsCoures": "Curso Estadisticas"
     },
     "datatable": {
         "Users": "Usuarios",

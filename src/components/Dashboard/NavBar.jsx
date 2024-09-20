@@ -72,7 +72,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="shadow-lg shadow-teal-200 bg-gradient-to-r from-[#200E3E] to-[#783CDA] py-2 transition-all duration-500 justify-center flex w-full">
+      <nav className="shadow-lg shadow-teal-200 bg-[#1E1034] py-2 transition-all duration-500 justify-center flex w-full">
         <div ref={sidebarRef}>
           <LeftBar onVisibilityChange={(isVisible) => setIsSidebarVisible(isVisible)} />
         </div>
@@ -88,7 +88,7 @@ const Navbar = () => {
           <div className="flex-1 justify-center text-center flex items-center md:ml-48 ml-12 sm:ml-48">
             <Link to="/admin" className="flex items-center text-white text-2xl font-black">
               <span>BRING</span>
-              <span className="text-[#00D8A1] ml-1">MIND</span> {/* Añadir un pequeño margen si es necesario */}
+              <span className="text-[#00D8A1] ">MIND</span> {/* Añadir un pequeño margen si es necesario */}
               <img className="h-12 ml-2" src={Logo} alt="Logo" /> {/* Espacio entre "MIND" y el logo */}
             </Link>
           </div>
