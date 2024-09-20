@@ -44,6 +44,7 @@ const CreateResourceModal = ({
   const [errors, setErrors] = useState({});
   const { t } = useTranslation("global");
   const [activeTab, setActiveTab] = useState('crear');
+  const MAX_DESCRIPTION_LENGTH = 500;
 
   const validateFields = () => {
     const newErrors = {};
@@ -615,13 +616,17 @@ const CreateResourceModal = ({
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                maxLength={MAX_DESCRIPTION_LENGTH}
                 className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
                   errors.description ? "border-red-500" : "border-gray-300"
                 } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
                 required
               />
+              <div className="text-gray-600 text-right mt-1">
+                {description.length}/{MAX_DESCRIPTION_LENGTH}
+              </div>
               {errors.description && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-0">
                   {errors.description}
                 </p>
               )}
