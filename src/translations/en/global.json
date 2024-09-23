@@ -155,14 +155,16 @@
     "navigationBar": {
         "home": "HOME",
         "courses": "COURSES",
-        "my_courses": "MY COURSES",
         "bright": "BRIGHT",
         "mind": "MIND",
         "welcome_message": "Welcome, {{username}}!",
         "check_courses": "Check out your courses here:",
         "see_my_courses": "See my courses",
         "configure_profile": "Configure Profile",
-        "logout": "Log Out"
+        "logout": "Log Out",
+        "myCourses": "My Courses",
+        "myAccount": "My account",
+        "configProfile": "Configure Profile"
     },
     "newPasswordUser": {
         "change_password": "Change Password",
@@ -198,7 +200,11 @@
         "success_message": "You have successfully registered for the course!",
         "no_courses_available": "Coming soon",
         "check_back_later": "There are no courses available at the moment. New courses will be available soon! Please check back later.",
-        "no_courses_enrolled": "You are not enrolled in any courses yet."
+        "no_courses_enrolled": "You are not enrolled in any courses yet.",
+
+         "title": "Courses",
+         "favorites": "Your favorites",
+         "desFavorites": "Here will be shown your favorite courses."
     },
     "leftBarComponent": {
         "start": "Start",

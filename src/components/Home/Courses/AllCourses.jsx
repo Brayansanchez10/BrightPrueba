@@ -100,35 +100,37 @@ const AllCourses = () => {
   return (
     <div className="min-h-screen overflow-hidden bg-gray-100">
       <NavigationBar />
-      <h1 className="text-4xl font-bold text-black text-center mt-6 font-bungee">CURSOS</h1>
+      <h1 className="text-4xl font-bold text-black text-center mt-6 font-bungee">{t('courseComponent.title')}</h1>
       <div className="mt-8">
-        <h2 className="text-[20px] font-bold text-gray-800 font-bungee text-left ml-60">
-          TUS FAVORITOS
-        </h2>
-        {favoriteCourses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-40 mt-6 mx-auto max-w-7xl">
-            {favoriteCourses.map(renderCourseCard)}
-          </div>
-        ) : (
-          <div className="flex justify-center items-center mt-4">
-            <p className="text-center text-gray-500">
-              {t("Aquí se mostrarán tus cursos favoritos")}
-            </p>
-          </div>
-        )}
-      </div>
-      {Object.entries(categorizedCourses).map(([category, coursesInCategory]) => (
-        <div key={category}>
-          <div className="flex justify-left mt-8 ml-60">
-            <h2 className="text-[20px] font-bold text-gray-800 font-bungee">
-              {category}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-40 mt-6 mx-auto max-w-7xl">
-            {coursesInCategory.map(renderCourseCard)}
-          </div>
-        </div>
-      ))}
+  <h2 className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60">
+  {t('courseComponent.favorites')}
+  </h2>
+  {favoriteCourses.length > 0 ? (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
+    {favoriteCourses.map(renderCourseCard)}
+  </div>
+) : (
+  <div className="flex justify-center items-center mt-4">
+    <p className="text-center text-gray-500">
+      {t("courseComponent.desFavorites")}
+    </p>
+  </div>
+)}
+</div>
+
+{Object.entries(categorizedCourses).map(([category, coursesInCategory]) => (
+  <div key={category}>
+    <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60 mt-14">
+      <h2 className="text-[20px] font-bold text-gray-800 font-bungee">
+        {category}
+      </h2>
+    </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
+      {coursesInCategory.map(renderCourseCard)}
+    </div>
+  </div>
+))}
+
       {isConfirmModalOpen && selectedCourse && (
         <div
           className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center px-4"
