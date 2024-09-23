@@ -52,9 +52,9 @@ const CoursesComponent = () => {
     return (
       <div className="bg-gray-100 min-h-screen overflow-hidden">
         <NavigationBar />
-        <Link to="/Home" className="inline-block bg-purple-700 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded transition-colors duration-300 cursor-pointer m-1">
+       {/*  <Link to="/Home" className="inline-block bg-purple-700 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded transition-colors duration-300 cursor-pointer m-1">
           &#8678; {t('notFound.return')}
-        </Link>
+        </Link> */}
         {userCourses.length > 0 ? (
           <>
             <div className="flex justify-between mt-8">

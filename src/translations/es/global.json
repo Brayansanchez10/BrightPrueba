@@ -155,14 +155,16 @@
     "navigationBar": {
         "home": "INICIO",
         "courses": "CURSOS",
-        "my_courses": "MIS CURSOS",
         "bright": "BRIGHT",
         "mind": "MIND",
         "welcome_message": "¡Bienvenido, {{username}}!",
         "check_courses": "Mira tus cursos aquí:",
         "see_my_courses": "Ver mis cursos",
         "configure_profile": "Configurar Perfil",
-        "logout": "Cerrar Sesión"
+        "logout": "Cerrar Sesión",
+        "myCourses": "Mis cursos",
+        "myAccount": "Mi cuenta",
+        "configProfile": "Configurar perfil"
     },
     "newPasswordUser": {
         "change_password": "Cambiar Contraseña",
@@ -198,8 +200,11 @@
         "success_message": "¡Te has registrado exitosamente en el curso!",
         "no_courses_available": "Próximamente",
         "check_back_later": "No hay cursos disponibles en este momento. ¡Próximamente, nuevos cursos estarán disponibles! Por favor, vuelve más tarde.",
-        "no_courses_enrolled": "No estás inscrito en ningún curso aún."
+        "no_courses_enrolled": "No estás inscrito en ningún curso aún.", 
 
+        "title": "Cursos",
+        "favorites": "Tus favoritos",
+        "desFavorites": "Aquí se mostrarán tus cursos favoritos"
     },
     "leftBarComponent": {
         "start": "Inicio",
