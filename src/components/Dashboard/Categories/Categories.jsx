@@ -28,10 +28,11 @@ const DataTablete = () => {
   const [form] = Form.useForm();
   const [imagePreview, setImagePreview] = useState(null);
   const pagesToShow = 1;
+  const [dataFlag, setDataFlag] = useState(false)
 
   useEffect(() => {
     getCategories();
-  }, []);
+  }, [dataFlag]);
 
   useEffect(() => {
     const filteredCategory = categories.filter(category =>
@@ -51,6 +52,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false
       });
+      setDataFlag(prevFlag => !prevFlag);  // Cambiamos el flag
     } catch (error) {
       Swal.fire({
         title: t("categories.createError"),
@@ -72,6 +74,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false
       });
+      setDataFlag(prevFlag => !prevFlag);  // Cambiamos el flag
     } catch (error) {
       Swal.fire({
         title: t("categories.updateError"),
@@ -93,6 +96,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false
       });
+      setDataFlag(prevFlag => !prevFlag);  // Cambiamos el flag
     } catch (error) {
       Swal.fire({
         title: t("categories.deleteError"),

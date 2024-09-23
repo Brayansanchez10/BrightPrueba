@@ -47,6 +47,7 @@ const DataTablete = () => {
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [dataFlag, setDataFlag] = useState(false);
 
   useEffect(() => {
     getUsers();
@@ -78,13 +79,16 @@ const DataTablete = () => {
   };
 
   const handleUpdateCourse = async (updatedCourse) => {
+    if (dataFlag) return;
+
+    setDataFlag(true);
     try {
       await updateCourse(updatedCourse);
       message.success(t('courses.updateSuccess'));
-      window.location.reload();
     } catch (error) {
       message.error(t('courses.updateError'));
     } finally {
+      setDataFlag(false);
       setShowUpdateForm(false);
       setSelectedCourse(null);
     }
@@ -97,30 +101,35 @@ const DataTablete = () => {
   };
 
   const handleCreateResource = async () => {
+    if (dataFlag) return;
+
+    setDataFlag(true);
     if (selectedCourse && selectedCourse._id) { 
       const courseId = selectedCourse._id;
       try {
         const res = await crearRecurso(courseId);
-        message.success(t('courses.createdResource'));
         setIsCreateModalVisible(false);
-        window.location.reload();
       } catch (error) {
         console.error("Error al crear recurso:", error);
-        message.error(t('courses.createResourceError'));
+      } finally {
+        setDataFlag(false);
       }
     } else {
       message.error(t('courses.noCourseSelected'));
-    }
+    } 
   };
 
   const handleCreateCourse = async (curso) => {
+    if (dataFlag) return;
+    setDataFlag(true);
     try {
       await createCourse(curso);
-      message.success(t('courses.createSuccess'));
       setShowCreateForm(false);
-      window.location.reload();
     } catch (error) {
-      message.error(t('courses.createError'));
+      console.log();
+    } finally {
+      setDataFlag(false);
+      getAllCourses();
     }
   };
 
@@ -130,6 +139,9 @@ const DataTablete = () => {
   };
 
   const handleDeleteConfirm = async () => {
+    if (dataFlag) return;
+    setDataFlag(true);
+
     try {
       await deleteCourse(courseToDelete._id);
       message.success(t('courses.deleteSuccess'));
@@ -137,6 +149,7 @@ const DataTablete = () => {
     } catch (error) {
       message.error(t('courses.deleteError'));
     } finally {
+      setDataFlag(false);
       setIsDeleteModalVisible(false);
       setCourseToDelete(null);
     }
@@ -210,6 +223,7 @@ const DataTablete = () => {
                   style={{ backgroundColor: "green" }}
                   onClick={handleCreateCourseClick}
                   className="text-center font-medium text-base"
+                  disabled={dataFlag}
                 >
                   <b>{t('courses.createCourse')}</b>
                 </Button>
@@ -336,6 +350,7 @@ const DataTablete = () => {
             visible={isDeleteModalVisible}
             onClose={() => setIsDeleteModalVisible(false)}
             onConfirm={handleDeleteConfirm}
+            courseName={courseToDelete?.title}
           />
 
           <CourseDetailsModal

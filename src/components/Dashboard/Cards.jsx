@@ -172,7 +172,7 @@ const Cards = ({ isLeftBarVisible }) => {
 
 
   return (
-    <div className="bg-white overflow-hidden min-h-screen">
+    <div className="bg-gray-300 overflow-hidden min-h-screen">
       <div className="p-24 space-y-16">
               <div className="flex flex-col sm:flex-row space-x-0 sm:space-x-4">
                 <h1 className="text-3xl relative font-bold mb-0 top-[-4rem] text-left">
