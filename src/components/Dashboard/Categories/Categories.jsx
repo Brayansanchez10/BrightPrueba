@@ -28,10 +28,11 @@ const DataTablete = () => {
   const [form] = Form.useForm();
   const [imagePreview, setImagePreview] = useState(null);
   const pagesToShow = 1;
+  const [dataFlag, setDataFlag] = useState(false)
 
   useEffect(() => {
     getCategories();
-  }, []);
+  }, [dataFlag]);
 
   useEffect(() => {
     const filteredCategory = categories.filter(category =>
@@ -51,6 +52,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false
       });
+      setDataFlag(prevFlag => !prevFlag);  // Cambiamos el flag
     } catch (error) {
       Swal.fire({
         title: t("categories.createError"),
@@ -72,6 +74,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false
       });
+      setDataFlag(prevFlag => !prevFlag);  // Cambiamos el flag
     } catch (error) {
       Swal.fire({
         title: t("categories.updateError"),
@@ -93,6 +96,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false
       });
+      setDataFlag(prevFlag => !prevFlag);  // Cambiamos el flag
     } catch (error) {
       Swal.fire({
         title: t("categories.deleteError"),
@@ -194,7 +198,7 @@ const DataTablete = () => {
   );
 
   return (
-    <div className="bg-gradient-to-t from-blue-200 via-blue-400 to-blue-600 overflow-hidden min-h-screen">
+    <div className="bg-gray-300 overflow-hidden min-h-screen">
       <div className="flex h-full">
         <LeftBar onVisibilityChange={setIsLeftBarVisible} />
         <div
@@ -203,7 +207,7 @@ const DataTablete = () => {
           <Navbar />
           <div className="flex flex-col mt-6 px-4">
             <div>
-              <h2 className="text-2xl font-black text-white text-center">{t("categories.title")}</h2>
+              <h2 className="text-2xl font-black text-black text-center">{t("categories.title")}</h2>
               <div className="flex flex-col items-center justify-center mt-4">
                 <Button
                   type="primary"
