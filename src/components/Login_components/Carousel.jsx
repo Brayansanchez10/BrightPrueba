@@ -43,7 +43,7 @@ function Carousel() {
           </p>
         </div>
         
-        <p className="text-lg mt-0.5 sm:text-xl sm:mt-16 lg:mt-6 font-bold mb-14">
+        <p className="text-lg mt-8 sm:text-sm text-gray-300 text-opacity-90 sm:mt-16 lg:mt-8 font-bold mb-16">
           {t('footer.description')}
           <p className="text-sm">{t('footer.copy_right')}</p>
         </p>

@@ -95,7 +95,7 @@ const LoginForm = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-emerald-400">
-      <div className="flex w-full max-w-7xl sm:rounded-none md:rounded-3xl shadow-xl shadow-slate-800">
+      <div className="flex w-full max-w-7xl sm:rounded-none sm:m-0 md:rounded-3xl shadow-xl shadow-slate-800 md:m-4">
         
         <div className="w-3/4 h-full justify-center items-center hidden md:block">
           <Carousel />
@@ -188,6 +188,12 @@ const LoginForm = () => {
               >
                 {t("login.register")}
               </Link>
+            </div>
+            <div className="flex items-center justify-center md:hidden">
+              <p className="text-xs text-gray-300 font-bold text-center">
+                {t('footer.description')}
+                <p className="text-xs text-center">{t('footer.copy_right')}</p>
+              </p>
             </div>
           </form>
         </div>

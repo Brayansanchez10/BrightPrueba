@@ -260,7 +260,7 @@ const DataTable = () => {
   };
 
   return (
-    <div className="bg-gradient-to-t from-blue-200 via-blue-400 to-blue-600 overflow-hidden min-h-screen">
+    <div className="bg-gray-300 overflow-hidden min-h-screen">
       <div className="flex h-full">
         <LeftBar onVisibilityChange={setIsLeftBarVisible} />
         <div
@@ -271,7 +271,7 @@ const DataTable = () => {
           <Navbar />
           <div className="flex justify-center mt-10">
             <div>
-              <h2 className="text-2xl font-black text-white text-center">
+              <h2 className="text-2xl font-black text-black text-center">
                 {t("roles.title")}
               </h2>
               <div className="flex flex-col items-center justify-center mt-6">
