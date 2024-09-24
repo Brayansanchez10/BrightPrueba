@@ -27,7 +27,7 @@ const HomePage = () => {
 
     useEffect(() => {
         getAllCourses(); 
-    }, [getAllCourses]);
+    }, []);
 
     const phrases = [
         { text: t('home.quotes.da_vinci'), author: 'Leonardo da Vinci', imageUrl: 'https://th.bing.com/th/id/OIP.DtC3ATqwhnlc_X8KeBv7aAHaJg?rs=1&pid=ImgDetMain' },
