@@ -11,6 +11,7 @@ import { FaRegChartBar } from "react-icons/fa";
 import '../../../css/Style.css';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import Footer from "../../Footer"; 
 import { FaFlagCheckered, FaSearch } from 'react-icons/fa';
 
 const AllCourses = () => {
@@ -107,7 +108,7 @@ const AllCourses = () => {
   }, {});
 
   return (
-    <div className="min-h-screen overflow-hidden bg-gray-100">
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <NavigationBar />
 
       <div className="flex flex-col sm:flex-row justify-between mt-6 mx-6">
@@ -147,6 +148,23 @@ const AllCourses = () => {
           </div>
         )}
       </div>
+      <h1 className="text-4xl font-bold text-black text-center mt-6 font-bungee">{t('courseComponent.title')}</h1>
+      <div className="mt-8 flex-grow">
+        <h2 className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60">
+          {t('courseComponent.favorites')}
+        </h2>
+        {favoriteCourses.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center mb-16"> 
+            {favoriteCourses.map(renderCourseCard)}
+          </div>
+        ) : (
+          <div className="flex justify-center items-center mt-4">
+            <p className="text-center text-gray-500">
+              {t("courseComponent.desFavorites")}
+            </p>
+          </div>
+        )}
+      </div>
 
       {Object.entries(categorizedCourses).map(([category, coursesInCategory]) => (
         <div key={category}>
@@ -156,6 +174,18 @@ const AllCourses = () => {
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
+            {coursesInCategory.map(renderCourseCard)}
+          </div>
+        </div>
+      ))}
+      {Object.entries(categorizedCourses).map(([category, coursesInCategory]) => (
+        <div key={category}>
+          <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60 mt-14">
+            <h2 className="text-[20px] font-bold text-gray-800 font-bungee">
+              {category}
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center mb-16">
             {coursesInCategory.map(renderCourseCard)}
           </div>
         </div>
@@ -225,6 +255,7 @@ const AllCourses = () => {
           </div>
         </div>
       )}
+
       {isSuccessModalOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center px-4"
@@ -237,17 +268,13 @@ const AllCourses = () => {
             >
               X
             </button>
-            <h2 className="font-bold text-center">¡Registro Exitoso!</h2>
-            <p className="text-center mt-2">Te has registrado en el curso exitosamente.</p>
-            <button
-              onClick={closeSuccessModal}
-              className="bg-[#783CDA] text-white font-bold text-[12px] rounded-[5px] shadow-md px-3 py-1 mt-4 w-full"
-            >
-              Cerrar
-            </button>
+            <h2 className="text-center font-bold text-lg mb-4">¡Éxito!</h2>
+            <p className="text-center">Te has registrado en el curso exitosamente.</p>
           </div>
         </div>
       )}
+
+      <Footer />
     </div>
   );
 };
