@@ -6,6 +6,7 @@ import NavigationBar from '../components/Home/NavigationBar';
 import QuoteCarousel from '../components/Home/QuoteCarousel';
 import HoverCard from '../components/Home/Cards/HoverCard';
 import { useTranslation } from 'react-i18next';
+import Footer from '../components/Footer';
 
 const HomePage = () => {
     const { getCoursesByCategory, getAllCourses, courses } = useCoursesContext();
@@ -131,6 +132,7 @@ const HomePage = () => {
                     </div>
                 )}
             </div>
+            <Footer />
         </div>
     );
 }
