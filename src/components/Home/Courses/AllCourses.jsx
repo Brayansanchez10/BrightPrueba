@@ -11,6 +11,8 @@ import { FaRegChartBar } from "react-icons/fa";
 import '../../../css/Style.css';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import Footer from "../../Footer"; 
+import { FaFlagCheckered, FaSearch } from 'react-icons/fa';
 
 const AllCourses = () => {
   const { t } = useTranslation("global");
@@ -22,6 +24,9 @@ const AllCourses = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
+  // Estado para la barra de búsqueda
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (user && user.data) {
@@ -72,6 +77,11 @@ const AllCourses = () => {
     setIsSuccessModalOpen(false);
   };
 
+  const filteredCourses = courses.filter(course => 
+    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const renderCourseCard = (course) => (
     <HoverCard
       key={course._id}
@@ -88,8 +98,8 @@ const AllCourses = () => {
     />
   );
 
-  const favoriteCourses = courses.filter(course => favorites.includes(course._id));
-  const categorizedCourses = courses.reduce((acc, course) => {
+  const favoriteCourses = filteredCourses.filter(course => favorites.includes(course._id));
+  const categorizedCourses = filteredCourses.reduce((acc, course) => {
     if (!acc[course.category]) {
       acc[course.category] = [];
     }
@@ -98,38 +108,58 @@ const AllCourses = () => {
   }, {});
 
   return (
-    <div className="min-h-screen overflow-hidden bg-gray-100">
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <NavigationBar />
-      <h1 className="text-4xl font-bold text-black text-center mt-6 font-bungee">{t('courseComponent.title')}</h1>
-      <div className="mt-8">
-  <h2 className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60">
-  {t('courseComponent.favorites')}
-  </h2>
-  {favoriteCourses.length > 0 ? (
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
-    {favoriteCourses.map(renderCourseCard)}
-  </div>
-) : (
-  <div className="flex justify-center items-center mt-4">
-    <p className="text-center text-gray-500">
-      {t("courseComponent.desFavorites")}
-    </p>
-  </div>
-)}
-</div>
 
-{Object.entries(categorizedCourses).map(([category, coursesInCategory]) => (
-  <div key={category}>
-    <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60 mt-14">
-      <h2 className="text-[20px] font-bold text-gray-800 font-bungee">
-        {category}
-      </h2>
-    </div>
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
-      {coursesInCategory.map(renderCourseCard)}
-    </div>
-  </div>
-))}
+      <div className="flex flex-col sm:flex-row justify-between mt-6 mx-6">
+        <div className="w-full sm:w-auto">
+          <h1 className="text-4xl font-bold text-black text-center sm:text-left font-bungee">
+            {t('courseComponent.title')}
+          </h1>
+        </div>
+
+        <div className="w-full sm:w-auto mt-4 sm:mt-0">
+          <div className="flex px-4 py-3 border bg-white border-gray-300 rounded-xl shadow-md w-full">
+            <FaSearch size={"18px"} className="mt-1 mr-2 -ml-1" />
+            <input
+              type="text"
+              placeholder={t('coursesComponent.search_placeholder')}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="outline-none pr-3 w-full"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60">
+          {t('courseComponent.favorites')}
+        </h2>
+        {favoriteCourses.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
+            {favoriteCourses.map(renderCourseCard)}
+          </div>
+        ) : (
+          <div className="flex justify-center items-center mt-4">
+            <p className="text-center text-gray-500">
+              {t("courseComponent.desFavorites")}
+            </p>
+          </div>
+        )}
+      </div>
+      {Object.entries(categorizedCourses).map(([category, coursesInCategory]) => (
+        <div key={category}>
+          <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60 mt-14">
+            <h2 className="text-[20px] font-bold text-gray-800 font-bungee">
+              {category}
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center mb-16">
+            {coursesInCategory.map(renderCourseCard)}
+          </div>
+        </div>
+      ))}
 
       {isConfirmModalOpen && selectedCourse && (
         <div
@@ -195,6 +225,7 @@ const AllCourses = () => {
           </div>
         </div>
       )}
+
       {isSuccessModalOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center px-4"
@@ -207,17 +238,13 @@ const AllCourses = () => {
             >
               X
             </button>
-            <h2 className="font-bold text-center">¡Registro Exitoso!</h2>
-            <p className="text-center mt-2">Te has registrado en el curso exitosamente.</p>
-            <button
-              onClick={closeSuccessModal}
-              className="bg-[#783CDA] text-white font-bold text-[12px] rounded-[5px] shadow-md px-3 py-1 mt-4 w-full"
-            >
-              Cerrar
-            </button>
+            <h2 className="text-center font-bold text-lg mb-4">¡Éxito!</h2>
+            <p className="text-center">Te has registrado en el curso exitosamente.</p>
           </div>
         </div>
       )}
+
+      <Footer />
     </div>
   );
 };

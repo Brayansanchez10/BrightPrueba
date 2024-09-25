@@ -6,6 +6,7 @@ import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from 'react-i18next';
 import Logo from "../../../assets/img/hola.png";
 import { FaFlagCheckered, FaSearch } from 'react-icons/fa';
+import Footer from "../../Footer"; 
 
 const CoursesComponent = () => {
   const { t } = useTranslation("global");
@@ -178,6 +179,7 @@ const CoursesComponent = () => {
             </button>
           </div>
         )}
+      <Footer />
       </div>
     );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   FaUserCircle,
   FaUserCog,
@@ -27,6 +27,7 @@ function NavigationBar() {
   const { getUserById } = useUserContext();
   const [username, setUsername] = useState("");
   const [userImage, setUserImage] = useState("");
+  const location = useLocation();
 
   const menuRef = useRef(null);
 
@@ -74,6 +75,12 @@ function NavigationBar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const getActiveClass = (path) => {
+    return location.pathname === path
+      ? "text-[#00D8A1] border-b-4 border-[#00D8A1]"
+      : "text-white hover:text-[#00D8A1]";
+  };
+
   return (
     <nav className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] h-16 p-2 flex justify-between items-center w-full shadow-md font-bungee">
       <div className="hidden md:flex items-center">
@@ -94,21 +101,21 @@ function NavigationBar() {
       <div className="hidden md:flex items-center space-x-8">
         <Link
           to="/Home"
-          className="text-white font-bold text-lg hover:text-[#00D8A1]"
+          className={`${getActiveClass("/Home")} font-bold text-lg`}
         >
           {t('navigationBar.home')}
         </Link>
         <Link
           to="/AllCourses"
-          className="text-white font-bold text-lg hover:text-[#00D8A1]"
+          className={`${getActiveClass("/AllCourses")} font-bold text-lg`}
         >
-         {t('navigationBar.courses')}
+          {t('navigationBar.courses')}
         </Link>
         <Link
           to="/MyCourses"
-          className="text-white font-bold text-lg hover:text-[#00D8A1]"
+          className={`${getActiveClass("/MyCourses")} font-bold text-lg`}
         >
-         {t('navigationBar.myCourses')}
+          {t('navigationBar.myCourses')}
         </Link>
       </div>
       <div className="hidden md:flex items-center">
@@ -184,7 +191,7 @@ function NavigationBar() {
                     {username}
                   </span>
                   <span className="text-white text-lg font-sans">
-                   {t('navigationBar.myAccount')}
+                    {t('navigationBar.myAccount')}
                   </span>
                 </div>
               </div>

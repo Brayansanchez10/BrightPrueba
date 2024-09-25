@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../../../context/user/user.context";
 import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from "react-i18next";
+import { Lock, UserX } from 'lucide-react';
 
 const MySwal = withReactContent(Swal);
 
@@ -46,23 +47,28 @@ const SettingsBar = () => {
   };
 
   return (
-    <div className=" mt-8 md:mt-6 bg-gradient-to-b from-blue-500 to-purple-400 rounded-lg shadow-md mx-4 px-4 ">
-      <h2 className="text-center font-black text-white p-3 text-lg md:text-xl">
-        {t('settingsBar.account_settings')}
-      </h2>
+    <div className="mt-8 md:mt-6 bg-white rounded-xl shadow-lg mx-4 overflow-hidden">
+      <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-4 px-6">
+        <h2 className="text-center font-black text-white text-xl md:text-2xl">
+          {t('settingsBar.account_settings')}
+        </h2>
+      </div>
+      <div className="p-6 space-y-4">
         <Link
           to="/ChangePassword"
-          className="py-1 text-base font-semibold text-white w-full hover:bg-slate-600 text-center block rounded-lg"
+          className="flex items-center justify-center w-full py-3 px-4 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 rounded-lg shadow-md hover:shadow-lg"
         >
+          <Lock className="mr-2" size={20} />
           {t('settingsBar.change_password')}
         </Link>
-      <Link 
-      className="text-base py-1 mt-1 hover:bg-red-600 block text-center font-semibold  rounded-lg text-white"
-      href="#" 
-      onClick={handleDeleteAccount}
-      >  
-        {t('settingsBar.delete_account')}
-      </Link>
+        <button
+          className="flex items-center justify-center w-full py-3 px-4 text-base font-semibold text-white bg-red-500 hover:bg-red-600 transition-all duration-300 rounded-lg shadow-md hover:shadow-lg"
+          onClick={handleDeleteAccount}
+        >
+          <UserX className="mr-2" size={20} />
+          {t('settingsBar.delete_account')}
+        </button>
+      </div>
     </div>
   );
 };

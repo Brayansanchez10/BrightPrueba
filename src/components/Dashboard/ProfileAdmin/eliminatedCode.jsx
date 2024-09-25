@@ -5,6 +5,7 @@ import { useAuth } from "../../../context/auth.context";
 import Swal from "sweetalert2";
 import logo from "../../../assets/img/hola.png";
 import { useTranslation } from 'react-i18next';
+import { Trash2, X } from 'lucide-react';
 
 const DeleteAccountConfirmation = () => {
   const navigate = useNavigate();
@@ -27,11 +28,9 @@ const DeleteAccountConfirmation = () => {
     newConfirmationCode[index] = value;
     setConfirmationCode(newConfirmationCode);
 
-    // Move to next input if current one is filled
     if (value !== "" && index < confirmationCode.length - 1) {
       inputRefs.current[index + 1]?.focus();
     }
-    // Move to previous input if backspace is pressed and current input is empty
     if (value === "" && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -59,7 +58,6 @@ const DeleteAccountConfirmation = () => {
       console.log("Confirmation code to send:", code);
       
       const response = await deleteUserConfirmation(user.data.id, code);
-      //Verica la respuesta y contiene el mensaje esperado.
       if (response && response.msg === "User deleted successfully") {
         Swal.fire({
           icon: 'success',
@@ -71,7 +69,6 @@ const DeleteAccountConfirmation = () => {
           navigate("/");
         });
       } else {
-         // Lanza un error si la respuesta no indica éxito
          throw new Error(response?.msg || "Failed to delete user");
       }   
     } catch (error) {
@@ -86,52 +83,56 @@ const DeleteAccountConfirmation = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600 p-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-lg bg-gradient-to-br from-violet-600 to-rose-500 py-6 px-6 rounded-xl shadow-xl shadow-pink-400"
+        className="w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden"
       >
-        <h1 className="text-center font-black text-5xl text-slate-100">
-          {t("deleteAccountConfirmation.title")}
-        </h1>
-        <p className="italic font-semibold text-center text-2xl text-slate-300 my-10">
-          {t("deleteAccountConfirmation.description")}
-        </p>
-        <div className="py-4 my-10 w-full flex justify-center">
-          <img src={logo} alt="Logo" className="h-40" />
+        <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-6 px-6">
+          <h1 className="text-center font-black text-3xl md:text-4xl text-white">
+            {t("deleteAccountConfirmation.title")}
+          </h1>
         </div>
-        <div className="flex flex-col ">
+        <div className="p-6 space-y-6">
+          <p className="text-center text-lg text-gray-700">
+            {t("deleteAccountConfirmation.description")}
+          </p>
+          <div className="flex justify-center">
+            <img src={logo} alt="Logo" className="h-32 w-auto" />
+          </div>
           <div className="flex justify-center items-center space-x-2">
             {confirmationCode.map((code, index) => (
               <input
                 key={index}
                 ref={(el) => inputRefs.current[index] = el}
                 type="text"
-                className="block w-10 h-10 bg-white text-center text-3xl rounded-lg border border-black focus:outline-red-500 focus:bg-zinc-200"
+                className="w-12 h-12 text-center text-2xl font-bold rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 maxLength="1"
                 value={code}
                 onChange={(e) =>
                   handleConfirmationCodeChange(index, e.target.value)
                 }
                 onKeyDown={(e) => handleKeyDown(e, index)}
-                autoFocus={index === 0} // Automatically focus the first input
+                autoFocus={index === 0}
                 required
               />
             ))}
           </div>
-        </div>
-        <div className="flex justify-center space-x-8 items-center mt-5">
-          <button
-            type="submit"
-            className="w-32 py-3 font-medium text-white bg-red-950 shadow shadow-white hover:bg-red-800 rounded-lg"
-          >
-            <span>{t("deleteAccountConfirmation.deleteButton")}</span>
-          </button>
-          <Link to={"/ProfileEditor"}>
-            <button className="w-32 py-3 font-medium text-white bg-slate-950 shadow-white shadow hover:bg-gray-800 rounded-lg">
-              <span>{t("deleteAccountConfirmation.cancelButton")}</span>
+          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
+            <button
+              type="submit"
+              className="flex items-center justify-center w-full sm:w-auto px-6 py-3 font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg"
+            >
+              <Trash2 className="mr-2" size={18} />
+              <span>{t("deleteAccountConfirmation.deleteButton")}</span>
             </button>
-          </Link>
+            <Link to="/ProfileEditor" className="w-full sm:w-auto">
+              <button className="flex items-center justify-center w-full px-6 py-3 font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg">
+                <X className="mr-2" size={18} />
+                <span>{t("deleteAccountConfirmation.cancelButton")}</span>
+              </button>
+            </Link>
+          </div>
         </div>
       </form>
     </div>
