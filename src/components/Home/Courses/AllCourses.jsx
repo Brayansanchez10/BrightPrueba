@@ -11,7 +11,7 @@ import { FaRegChartBar } from "react-icons/fa";
 import '../../../css/Style.css';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
-import Footer from "../../footer";
+import Footer from "../../Footer";
 import { FaFlagCheckered, FaSearch } from 'react-icons/fa';
 
 const AllCourses = () => {
@@ -128,12 +128,13 @@ const AllCourses = () => {
               </div>
         </div>
       </div>
-      <div className="mt-8 flex-grow">
+
+      <div className="mt-8">
         <h2 className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60">
           {t('courseComponent.favorites')}
         </h2>
         {favoriteCourses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center mb-16"> 
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
             {favoriteCourses.map(renderCourseCard)}
           </div>
         ) : (
@@ -144,19 +145,6 @@ const AllCourses = () => {
           </div>
         )}
       </div>
-
-      {Object.entries(categorizedCourses).map(([category, coursesInCategory]) => (
-        <div key={category}>
-          <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60 mt-14">
-            <h2 className="text-[20px] font-bold text-gray-800 font-bungee">
-              {category}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
-            {coursesInCategory.map(renderCourseCard)}
-          </div>
-        </div>
-      ))}
       {Object.entries(categorizedCourses).map(([category, coursesInCategory]) => (
         <div key={category}>
           <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60 mt-14">

@@ -75,6 +75,12 @@ function NavigationBar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const getActiveClass = (path) => {
+    return location.pathname === path
+      ? "text-[#00D8A1] border-b-4 border-[#00D8A1]"
+      : "text-white hover:text-[#00D8A1]";
+  };
+
   const formatUsername = (name) => {
     const words = name.split(' ');
     return words.map((word, index) => (
@@ -125,7 +131,7 @@ function NavigationBar() {
         </Link>
       </div>
       <div className="hidden md:flex items-center">
-        <div className="relative text-white text-lg font-bold mr-4 cursor-pointer">
+        <div className="relative text-white text-lg font-bold mr-4 cursor-pointer max-w-[200px] truncate">
           {username}
         </div>
         <div
@@ -197,7 +203,7 @@ function NavigationBar() {
                     {formatUsername(username)}
                   </span>
                   <span className="text-white text-lg font-sans truncate">
-                   {t('navigationBar.myAccount')}
+                    {t('navigationBar.myAccount')}
                   </span>
                 </div>
               </div>
