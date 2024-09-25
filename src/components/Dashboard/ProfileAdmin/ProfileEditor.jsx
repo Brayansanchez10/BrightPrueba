@@ -35,7 +35,7 @@ const ProfileEditor = () => {
   
 
   return (
-    <div className="bg-gray-300 flex min-h-screen">
+    <div className="bg-gray-300 flex min-h-screen overflow-hidden">
         <LeftBar  onVisibilityChange={handleLeftBarVisibilityChange} />
         <div className={`w-full transition-all duration-300 ${isLeftBarVisible ? 'ml-56' : ''}`}>
           <Navbar/>

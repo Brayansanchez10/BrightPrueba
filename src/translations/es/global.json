@@ -523,8 +523,16 @@
         "errorMessage": "Código de confirmación inválido o expirado."
     },
     "footer": {
-        "description": "Mesadoko © Desarrollado por Disruptive IT",
-        "copy_right": "Copyright 2024"
+        "text": "Descubre un mundo lleno de oportunidades y aprende a tu propio ritmo. Con nuestros cursos flexibles, podrás mejorar tus habilidades de manera práctica y efectiva, adaptando el aprendizaje a tus necesidades y tiempo disponible.",
+        "title": "Aprende con Bright",
+        "developed": "Desarrollado en Disruptive",
+        "copy": "© 2024 Mesadoko - BrightMind. Todos los derechos reservados.",
+        "options": "Explora nuestro mundo",
+        "courses": "Cursos disponibles",
+        "blog": "Blog informativo",
+        "yourCourses": "Tus cursos",
+        "events": "Eventos",
+        "Contact": "Contáctanos"
     },
     "UpdateResource": {
         "ValidateTitle": "El título debe tener al menos 3 caracteres.",
@@ -591,7 +599,8 @@
         "technologyAcquisitionsDescription": "Estas son las mayores adquisiciones tecnológicas empresariales de 2021 hasta ahora, en orden cronológico inverso.",
         "readMore": "Leer más",
         "creator": "Creado por",
-        "studensReg": "Estudiantes registrados"
+        "studensReg": "Estudiantes registrados",
+        "Not resources": "No hay recursos disponibles para este curso."
     },
     "navigation": {
         "previous": "Atrás",
@@ -607,5 +616,19 @@
         "comingSoon": "Aportes Proximamente",
         "comingSoonNotes": "Notas Proximamente",
         "stayTuned": "Mantente atento a nuestras próximas actualizaciones y eventos."
-      }
+      },
+    "months": {
+        "january": "Enero",
+        "february": "Febrero",
+        "march": "Marzo",
+        "april": "Abril",
+        "may": "Mayo",
+        "june": "Junio",
+        "july": "Julio",
+        "august": "Agosto",
+        "september": "Septiembre",
+        "october": "Octubre",
+        "november": "Noviembre",
+        "december": "Diciembre"
+    }
 }

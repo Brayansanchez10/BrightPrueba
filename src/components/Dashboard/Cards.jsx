@@ -29,12 +29,12 @@ const Cards = ({ isLeftBarVisible }) => {
     // Configuración del gráfico de barras avanzado de ECharts
     if (chartRef.current) {
       const myChart = echarts.init(chartRef.current);
-
+  
       const option = {
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'shadow',
+            type: 'cross',
           },
         },
         grid: {
@@ -43,55 +43,63 @@ const Cards = ({ isLeftBarVisible }) => {
           bottom: '3%',
           containLabel: true,
         },
-        xAxis: [
+        xAxis: {
+          type: 'category',
+          data: [
+            t("months.january"),
+            t("months.february"),
+            t("months.march"),
+            t("months.april"),
+            t("months.may"),
+            t("months.june"),
+            t("months.july"),
+            t("months.august"),
+            t("months.september"),
+            t("months.october"),
+            t("months.november"),
+            t("months.december"),
+          ], // Eje X con nombres de los meses utilizando traducciones
+          axisTick: {
+            alignWithLabel: true,
+          },
+        },
+        yAxis: {
+          type: 'value',
+        },
+        series: [
           {
-            type: 'category',
-            data: [t("cardsComponent.titleactiveUsers"), t("cardsComponent.titleinactiveUsers"), t("cardsComponent.titleregisteredUsers")], // Ejes con traducción
-            axisTick: {
-              alignWithLabel: true,
+            name: t("cardsComponent.activeUsers"),
+            type: 'line', // Cambiado a gráfico de líneas
+            data: [10, 30, 45, 60, 55, 75, 80, 40, 45, 60, 55, 85, stats.usuariosActivos],
+            itemStyle: {
+              color: '#31BF71', // Color verde para usuarios activos
+            },
+          },
+          {
+            name: t("cardsComponent.inactiveUsers"),
+            type: 'line', // Cambiado a gráfico de líneas
+            data: [5, 20, 15, 10, 25, 30, 10, 15, 15, 20, 25, 15, stats.usuariosInactivos],
+            itemStyle: {
+              color: '#F45442', // Color rojo para usuarios inactivos
+            },
+          },
+          {
+            name: t("cardsComponent.registeredUsers"),
+            type: 'line', // Cambiado a gráfico de líneas
+            data: [15, 50, 60, 70, 80, 90, 90, 55, 60, 80, 80, 100, stats.usuariosRegistrados],
+            itemStyle: {
+              color: '#FBBF24', // Color amarillo para usuarios registrados
             },
           },
         ],
-        yAxis: [
-          {
-            type: 'value',
-          },
-        ],
-        series: [
-          {
-            type: 'bar',
-            barWidth: '60%', // Ancho de las barras
-            data: [
-              {
-                value: stats.usuariosActivos,
-                itemStyle: {
-                  color: '#31BF71', // Color para usuarios activos
-                  name: t(""), // Traducción para el nombre de la serie
-                },
-              },
-              {
-                value: stats.usuariosInactivos,
-                itemStyle: {
-                  color: '#F45442', // Color para usuarios inactivos
-                },
-              },
-              {
-                value: stats.usuariosRegistrados,
-                itemStyle: {
-                  color: '#FBBF24', // Color para usuarios registrados
-                },
-              },
-            ], // Datos dinámicos con color específico
-          },
-        ],
       };
-
+  
       myChart.setOption(option);
-
-      // Configurar el gráfico para ser responsivo
+  
+      // Configurar el gráfico para que sea responsivo
       window.addEventListener('resize', myChart.resize);
-
-      // Destruir el gráfico cuando el componente se desmonte
+  
+      // Limpiar cuando el componente se desmonte
       return () => {
         myChart.dispose();
         window.removeEventListener('resize', myChart.resize);
@@ -268,14 +276,14 @@ const Cards = ({ isLeftBarVisible }) => {
             {/* Estadísticas de Usuarios y Cursos */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                {/* Contenedor de gráficos responsivos */}
-              <div className="w-full h-80 bg-[#F8F2F2] shadow-lg p-4 rounded-lg flex flex-col items-center shadow-lg shadow-[#1E1034] hover:shadow-lg transition-shadow duration-300">
+              <div className="w-full h-80 bg-[#F8F2F2] shadow-lg p-4 rounded-lg flex flex-col items-center shadow-[#1E1034] hover:shadow-lg transition-shadow duration-300">
                 <h3 className="text-lg font-semibold mb-2">{t("cardsComponent.users")}</h3>
                 <div className="w-full h-full">
                   <div ref={chartRef} style={{ width: '100%', height: '100%' }}></div>
                 </div>
               </div>
 
-              <div className="w-full h-80 bg-[#F8F2F2] shadow-lg p-4 rounded-lg flex flex-col items-center shadow-lg shadow-[#1E1034] hover:shadow-lg transition-shadow duration-300">
+              <div className="w-full h-80 bg-[#F8F2F2] shadow-lg p-4 rounded-lg flex flex-col items-center shadow-[#1E1034] hover:shadow-lg transition-shadow duration-300">
                 <h3 className="text-lg font-semibold mb-2">{t("cardsComponent.stadisticCourse")}</h3>
                 <div className="w-full h-full">
                   <div ref={pieChartRef} style={{ width: '100%', height: '100%' }}></div>
