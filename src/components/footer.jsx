@@ -6,14 +6,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import Logo from "../assets/img/hola.png";
 
 const Footer = () => {
-  const { i18n } = useTranslation("global");
   const [isExpanded, setIsExpanded] = useState(false);
+  const { t } = useTranslation("global");
 
   const toggleFooter = () => setIsExpanded(!isExpanded);
-
-  const changeLanguage = (lang) => {
-    i18n.changeLanguage(lang);
-  };
 
   return (
     <footer className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] text-white w-full fixed bottom-0 shadow-lg">
@@ -40,7 +36,7 @@ const Footer = () => {
             {!isExpanded && (
               <>
                 <span className="text-xs">
-                  © 2024 Mesadoko - BrightMind. Todos los derechos reservados.
+                  {t('footer.copy')}
                 </span>
                 <img src={Logo} alt="Logo" className="h-10" />
               </>
@@ -58,14 +54,10 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-2">
                   <div className="flex flex-col items-start">
                     <h3 className="text-xl font-bold font-bungee mb-2">
-                      Aprende con Bright<span className="text-[#00D8A1]">Mind</span>
+                      {t('footer.title')}<span className="text-[#00D8A1]">Mind</span>
                     </h3>
                     <p className="text-sm max-w-md font-sans mb-4">
-                      Descubre un mundo lleno de oportunidades y aprende a tu
-                      propio ritmo. Con nuestros cursos flexibles, podrás
-                      mejorar tus habilidades de manera práctica y efectiva,
-                      adaptando el aprendizaje a tus necesidades y tiempo
-                      disponible.
+                {t('footer.text')}
                     </p>
                     <div className="flex space-x-4">
                       {["facebook", "twitter", "instagram"].map((social) => (
@@ -93,7 +85,7 @@ const Footer = () => {
                        /*  onClick={() => changeLanguage("en")} */
                         className="text-sm hover:text-[#00D8A1] transition-colors duration-300 font-bungee"
                       >
-                        Desarrollado en Disruptive
+                       {t('footer.developed')}
                       </button>
                      {/*  <button
                         onClick={() => changeLanguage("es")}
@@ -103,14 +95,14 @@ const Footer = () => {
                       </button> */}
                     </div>
                     <span className="text-xs">
-                      © 2024 Mesadoko - BrightMind. Todos los derechos reservados.
+                      {t('footer.copy')}
                     </span>
                   </div>
 
                   <div className="flex flex-col items-start md:items-end justify-between">
                     <div className="w-full">
                       <h4 className="text-lg font-bold mb-3 text-[#00D8A1]">
-                        Explora nuestro mundo
+                        {t('footer.options')}
                       </h4>
                       <div className="grid grid-cols-2 gap-4">
                         <motion.a
@@ -119,7 +111,7 @@ const Footer = () => {
                           whileHover={{ x: 5 }}
                         >
                           <BookOpenIcon size={16} />
-                          <span>Cursos disponibles</span>
+                          <span>{t('footer.courses')}</span>
                         </motion.a>
                         <motion.a
                           href="#"
@@ -127,7 +119,7 @@ const Footer = () => {
                           whileHover={{ x: 5 }}
                         >
                           <GlobeIcon size={16} />
-                          <span>Blog informativo</span>
+                          <span>{t('footer.blog')}</span>
                         </motion.a>
                         <motion.a
                           href="#"
@@ -135,7 +127,7 @@ const Footer = () => {
                           whileHover={{ x: 5 }}
                         >
                           <BookOpenIcon size={16} />
-                          <span>Tus cursos</span>
+                          <span>{t('footer.yourCourses')}</span>
                         </motion.a>
                         <motion.a
                           href="#"
@@ -143,7 +135,7 @@ const Footer = () => {
                           whileHover={{ x: 5 }}
                         >
                           <GlobeIcon size={16} />
-                          <span>No se que mas poner jaja</span>
+                          <span>{t('footer.events')}</span>
                         </motion.a>
                       </div>
                     </div>
@@ -154,7 +146,7 @@ const Footer = () => {
                       whileTap={{ scale: 0.95 }}
                     >
                       <MailIcon className="w-5 h-5" />
-                      <span>Contáctanos</span>
+                      <span>{t('footer.Contact')}</span>
                     </motion.button>
                   </div>
                 </div>

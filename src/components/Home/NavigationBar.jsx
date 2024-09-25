@@ -74,6 +74,18 @@ function NavigationBar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const formatUsername = (name) => {
+    const words = name.split(' ');
+    return words.map((word, index) => (
+      <React.Fragment key={index}>
+        <span className="inline-block max-w-full break-words hyphens-auto">
+          {word}
+        </span>
+        {index < words.length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
+
   return (
     <nav className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] h-16 p-2 flex justify-between items-center w-full shadow-md font-bungee">
       <div className="hidden md:flex items-center">
@@ -164,7 +176,7 @@ function NavigationBar() {
             >
               <div className="flex items-center w-full">
                 <div
-                  className={`h-16 w-16 rounded-full border transition-all duration-300 ${
+                  className={`h-16 w-16 flex-shrink-0 rounded-full border transition-all duration-300 ${
                     userImage
                       ? ""
                       : "bg-purple-500 flex items-center justify-center"
@@ -179,18 +191,18 @@ function NavigationBar() {
                     <FaUserCircle className="text-white h-12 w-12" />
                   )}
                 </div>
-                <div className="flex flex-col justify-center ml-2 w-full">
-                  <span className="text-white font-bungee text-2xl break-words leading-tight">
-                    {username}
+                <div className="flex flex-col justify-center ml-2 w-full min-w-0">
+                  <span className="text-white font-bungee text-2xl leading-tight">
+                    {formatUsername(username)}
                   </span>
-                  <span className="text-white text-lg font-sans">
+                  <span className="text-white text-lg font-sans truncate">
                    {t('navigationBar.myAccount')}
                   </span>
                 </div>
               </div>
             </Link>
             <div className="w-[80%] border-b-2 border-white opacity-50 my-2 mt-6" />
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center w-full">
               <Link
                 to="/Home"
                 className="flex items-center py-4 w-full justify-center text-[#783CDA] text-3xl font-bold"

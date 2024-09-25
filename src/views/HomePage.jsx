@@ -80,11 +80,7 @@ const HomePage = () => {
             <div className='flex flex-col'>
                 <NavigationBar onSearch={handleSearch} />
                 <QuoteCarousel phrases={phrases} />
-                <div className="text-center justify-center items-center">
-                    <h1 className="flex justify-center p-2 text-4xl mt-8 font-black text-white sm:text-3xl md:text-5xl">{t('home.explore_categories')}</h1>
-                    <p className="mt-4 text-base sm:text-lg text-gray-200 font-semibold flex justify-center">{t('home.find_course')}</p>
-                </div>
-                
+             
             {/*     <div className="flex justify-center">
                     <div className="grid grid-cols-1 w-full mx-2 gap-1 mt-10 sm:grid-cols-2 sm:mx-3 sm:gap-3 sm:mt-16 md:grid-cols-3 md:mx-4 lg:grid-cols-4 lg:mx-5 xl:grid-cols-5 xl:mx-6">
                         {paginatedCategories.map((category, index) => (
@@ -103,34 +99,6 @@ const HomePage = () => {
                         />
                     </div>
                 </div> */}
-
-                {totalPages > 1 && (
-                    <div className="flex justify-center mb-8 mt-10">
-                        <button
-                            onClick={handlePreviousPage}
-                            disabled={currentPage === 1}
-                            className="px-3 py-1 mx-1 bg-gray-200 text-gray-800 border"
-                        >
-                            {t('home.previous')}
-                        </button>
-                        {Array.from({ length: totalPages }, (_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setCurrentPage(index + 1)}
-                                className={`px-3 py-1 mx-1 ${currentPage === index + 1 ? "bg-black border text-white" : "bg-gray-200 text-gray-800 border"}`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-                        <button
-                            onClick={handleNextPage}
-                            disabled={currentPage === totalPages}
-                            className="px-3 py-1 mx-1 bg-gray-200 text-gray-800 border"
-                        >
-                            {t('home.next')}
-                        </button>
-                    </div>
-                )}
             </div>
             <Footer />
         </div>
