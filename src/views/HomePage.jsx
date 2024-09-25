@@ -1,34 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCategoryContext } from '../context/courses/category.context';
-import { useCoursesContext } from '../context/courses/courses.context';
 import NavigationBar from '../components/Home/NavigationBar';
 import QuoteCarousel from '../components/Home/QuoteCarousel';
-import HoverCard from '../components/Home/Cards/HoverCard';
-import { useTranslation } from 'react-i18next';
 import Footer from '../components/Footer';
+import { useTranslation } from 'react-i18next';
+import logo from '../assets/img/hola.png';
 
 const HomePage = () => {
-    const { getCoursesByCategory, getAllCourses, courses } = useCoursesContext();
-    const { categories, getCategories } = useCategoryContext();
-    const navigate = useNavigate();
-    const [categoriesLoaded, setCategoriesLoaded] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const { t } = useTranslation('global');
-    const [searchTerm, setSearchTerm] = useState("");
-
-    const categoriesPerPage = 15;
-
-    useEffect(() => {
-        if (!categoriesLoaded) {
-            getCategories();
-            setCategoriesLoaded(true);
-        }
-    }, [categoriesLoaded, getCategories]);
-
-    useEffect(() => {
-        getAllCourses(); 
-    }, [getAllCourses]);
+    const { t } = useTranslation("global");
 
     const phrases = [
         { text: t('home.quotes.da_vinci'), author: 'Leonardo da Vinci', imageUrl: 'https://th.bing.com/th/id/OIP.DtC3ATqwhnlc_X8KeBv7aAHaJg?rs=1&pid=ImgDetMain' },
@@ -38,102 +15,99 @@ const HomePage = () => {
         { text: t('home.quotes.davis'), author: 'Colin R. Davis', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Colin_Davis_%281967%29.jpg' },
         { text: t('home.quotes.einstein_knowledge'), author: 'Albert Einstein', imageUrl: 'https://c.files.bbci.co.uk/assets/aabea4fb-7ebf-43e9-b431-b1480f3ca926' }
     ];
-
-    const handleCardClick = (category) => {
-        getCoursesByCategory(category.name);
-        navigate(`/CoursesHome`, { state: { title: category.name } });
-    };
-
-    const handleCourseClick = (course) => {
-        navigate(`/CourseDetail/${course.id}`);
-    };
-
-    const handleAllCoursesClick = () => {
-        navigate('/AllCourses'); 
-    };
-
-    const handleSearch = (term) => {
-        setSearchTerm(term);
-        setCurrentPage(1);
-    };
-
-    const handleNextPage = () => {
-        if ((currentPage * categoriesPerPage) < categories.length) {
-            setCurrentPage((prevPage) => prevPage + 1);
-        }
-    };
-
-    const handlePreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage((prevPage) => prevPage - 1);
-        }
-    };
-
-    const totalPages = Math.ceil(categories.length / categoriesPerPage);
     
-    const paginatedCategories = categories
-        .filter(category => category.name.toLowerCase().includes(searchTerm.toLowerCase()))
-        .slice((currentPage - 1) * categoriesPerPage, currentPage * categoriesPerPage);
 
     return (
-        <div className="bg-gradient-to-t from-blue-200 via-blue-400 to-blue-600 min-h-screen">
-            <div className='flex flex-col'>
-                <NavigationBar onSearch={handleSearch} />
-                <QuoteCarousel phrases={phrases} />
-                <div className="text-center justify-center items-center">
-                    <h1 className="flex justify-center p-2 text-4xl mt-8 font-black text-white sm:text-3xl md:text-5xl">{t('home.explore_categories')}</h1>
-                    <p className="mt-4 text-base sm:text-lg text-gray-200 font-semibold flex justify-center">{t('home.find_course')}</p>
-                </div>
-                
-            {/*     <div className="flex justify-center">
-                    <div className="grid grid-cols-1 w-full mx-2 gap-1 mt-10 sm:grid-cols-2 sm:mx-3 sm:gap-3 sm:mt-16 md:grid-cols-3 md:mx-4 lg:grid-cols-4 lg:mx-5 xl:grid-cols-5 xl:mx-6">
-                        {paginatedCategories.map((category, index) => (
-                            <HoverCard
-                                key={index}
-                                title={category.name}
-                                description={category.description}
-                                ruta={category.image}
-                                onClick={() => handleCardClick(category)}
-                            />
-                        ))}
-                        <HoverCard
-                            title="Todos los cursos"
-                            description="Ver todos los cursos disponibles."
-                            onClick={handleAllCoursesClick}
-                        />
+        <div className=''>
+            <NavigationBar/>
+            <div className="flex flex-col bg-slate-300">
+                <div className='m-0 p-0'>
+                    <div className='md:pb-5  sm:pb-0 lg:pb-20'>
+                        <QuoteCarousel phrases={phrases} />
                     </div>
-                </div> */}
 
-                {totalPages > 1 && (
-                    <div className="flex justify-center mb-8 mt-10">
-                        <button
-                            onClick={handlePreviousPage}
-                            disabled={currentPage === 1}
-                            className="px-3 py-1 mx-1 bg-gray-200 text-gray-800 border"
-                        >
-                            {t('home.previous')}
-                        </button>
-                        {Array.from({ length: totalPages }, (_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setCurrentPage(index + 1)}
-                                className={`px-3 py-1 mx-1 ${currentPage === index + 1 ? "bg-black border text-white" : "bg-gray-200 text-gray-800 border"}`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-                        <button
-                            onClick={handleNextPage}
-                            disabled={currentPage === totalPages}
-                            className="px-3 py-1 mx-1 bg-gray-200 text-gray-800 border"
-                        >
-                            {t('home.next')}
-                        </button>
+                    <div className='md:pb-5  sm:pb-0 lg:pb-20'>
+                        <div className='flex flex-col lg:flex-row gap-10 mx-5 md:mx-10 lg:mx-20 my-10'>
+                            <div className='w-full lg:w-1/3 mx-auto p-6'>
+                                <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee pt-10'>Welcome to <span className='text-purple-900'>BRIGMIND</span></h2>
+                                <p className='text-base md:text-xl lg:text-2xl text-justify pt-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae aspernatur, culpa asperiores cupiditate dignissimos minima itaque beatae atque repellendus sapiente. Est laboriosam reprehenderit adipisci tempore aliquam voluptatum earum magnam, porro quibusdam cumque voluptate beatae alias consequuntur repellat recusandae assumenda voluptates nobis eveniet. Nobis corporis itaque quo voluptate ducimus nisi dolore.</p>
+                            </div>
+                            <div className='bg-purple-900 rounded-t-full rounded-b-3xl w-1/3 items-center hidden lg:flex mx-auto'>
+                                <img src={logo} alt="Aquí hay una imagen" className='py-20 mx-auto' />
+                            </div>
+                            <div className='w-full lg:w-1/3 pt-6'>
+                                <h2 className='text-center text-4xl md:text-5xl lg:text-5xl text-purple-900 font-bungee pt-10'>our mission</h2>
+                                <p className='text-base md:text-xl lg:text-2xl text-justify pt-5 pb-10'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, inventore ex optio ullam recusandae voluptate.</p>
+                                <div className='flex flex-col md:flex-row gap-5 mx-4'>
+                                    <div className='w-full md:w-1/3 text-center'>
+                                        <h2 className='font-bungee text-2xl md:text-3xl text-purple-900'>10+</h2>
+                                        <p className='text-lg md:text-2xl'>Year<br/>Experience</p>
+                                    </div>
+                                    <div className='w-full md:w-1/3 text-center'>
+                                        <h2 className='font-bungee text-2xl md:text-3xl text-purple-900'>29+</h2>
+                                        <p className='text-lg md:text-2xl'>Total<br/>Course</p>
+                                    </div>
+                                    <div className='w-full md:w-1/3 text-center'>
+                                        <h2 className='font-bungee text-2xl md:text-3xl text-purple-900'>50k+</h2>
+                                        <p className='text-lg md:text-2xl'>Student<br/>Active</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                )}
+                    
+                    <div className='md:pb-5  sm:pb-0 lg:pb-20'>
+                        <div className='my-10 p-6'>
+                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee'>
+                                <span className='text-purple-900'>bringmind</span> offers knowledge like
+                            </h2>
+                            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pt-20 mx-5 md:mx-10 lg:mx-20'>
+                                <div className='border border-black bg-white rounded-3xl'>
+                                    <div className='my-10 lg:my-24 text-center'>
+                                        <img src={logo} alt="" className='w-32 lg:w-48 mx-auto'/>
+                                        <h3 className='text-xl lg:text-2xl'>Quality information</h3>
+                                        <p className='pt-6 text-base lg:text-lg'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis, ut?</p>
+                                    </div>
+                                </div>
+                                <div className='border border-black bg-white rounded-3xl'>
+                                    <div className='my-10 lg:my-24 text-center'>
+                                        <img src={logo} alt="" className='w-32 lg:w-48 mx-auto'/>
+                                        <h3 className='text-xl lg:text-2xl'>Online course</h3>
+                                        <p className='pt-6 text-base lg:text-lg'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis, ut?</p>
+                                    </div>
+                                </div>
+                                <div className='border border-black bg-white rounded-3xl'>
+                                    <div className='my-10 lg:my-24 text-center'>
+                                        <img src={logo} alt="" className='w-32 lg:w-48 mx-auto'/>
+                                        <h3 className='text-xl lg:text-2xl'>Certificate course</h3>
+                                        <p className='pt-6 text-base lg:text-lg'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis, ut?</p>
+                                    </div>
+                                </div>
+                                <div className='border border-black bg-white rounded-3xl'>
+                                    <div className='my-10 lg:my-24 text-center'>
+                                        <img src={logo} alt="" className='w-32 lg:w-48 mx-auto'/>
+                                        <h3 className='text-xl lg:text-2xl'>Diversity of courses</h3>
+                                        <p className='pt-6 text-base lg:text-lg'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis, ut?</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p>feature</p>
+                    </div>
+                    <div>
+                        <p>testiminio</p>
+                    </div>
+                    <div>
+                        <p>partnes</p>
+                    </div>
+                </div>
             </div>
             <Footer />
         </div>
+        
     );
 }
 
