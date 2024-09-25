@@ -607,5 +607,19 @@
         "comingSoon": "Coming Soon",
         "comingSoonNotes": "Coming Soon Notes",
         "stayTuned": "Stay tuned for our upcoming updates and events."
-      }
+      },
+    "months": {
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "Septemebr",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+    }
 }
