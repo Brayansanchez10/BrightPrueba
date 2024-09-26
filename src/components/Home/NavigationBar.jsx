@@ -94,7 +94,7 @@ function NavigationBar() {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] h-16 p-2 flex justify-between items-center w-full shadow-md font-bungee">
+    <nav className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] h-16 p-2 flex justify-between items-center w-full shadow-md font-bungee relative z-50">
       <div className="hidden md:flex items-center">
         <img className="h-20 w-auto mr-3" src={Logo} alt="Logo" />
         <span className="text-white font-bold text-2xl">
@@ -150,7 +150,7 @@ function NavigationBar() {
         {isMenuVisible && (
           <div
             ref={menuRef}
-            className="absolute right-2 top-16 w-72 bg-[#200E3E] shadow-[0_6px_40px_rgba(0,0,0,0.75)] rounded-md text-white"
+            className="absolute right-2 top-16 w-72 bg-[#200E3E] shadow-[0_6px_40px_rgba(0,0,0,0.75)] rounded-md text-white z-50"
           >
             <div className="py-2 relative">
               <div className="absolute right-3 top-0 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-8 border-b-[#200E3E]" />
@@ -173,10 +173,10 @@ function NavigationBar() {
       {isMobileMenuOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-10"
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
             onClick={toggleMobileMenu}
           ></div>
-          <div className="fixed top-16 left-0 right-0 bottom-0 bg-gradient-to-r from-[#783CDA] to-[#200E3E] flex flex-col items-center py-4 z-20 overflow-y-auto">
+          <div className="fixed top-16 left-0 right-0 bottom-0 bg-gradient-to-r from-[#783CDA] to-[#200E3E] flex flex-col items-center py-4 z-50 overflow-y-auto">
             <Link
               to="/Account"
               className="p-4 flex m-auto w-[85%] bg-gradient-to-r from-[#512599] to-[#190736] rounded-xl shadow-[#8f77b6] shadow-[0_10px_20px]"

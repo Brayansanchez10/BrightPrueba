@@ -600,7 +600,21 @@
         "readMore": "Read more",
         "creator": "Created by",
         "studensReg": "Registered students",
-        "Not resources": "There are no resources available for this course."
+        "Not resources": "There are no resources available for this course.",
+        "resources": "Total resources",
+        "themes": "Syllabus and Resources",
+        "NoResources": "There are no resources available for this course.",
+        "aboutCreator": "About the Creator",
+        "expert": "Expert in",
+        "specialties": "Specialties:",
+        "web": "Web development",
+        "desing": "UX/UI Design",
+        "programming": "Advanced programming",
+        "description1": "is a visionary in their field, with a unique ability to transform ideas into practical knowledge.",
+        "description2": "is a respected authority, recognized for their ability to simplify complex topics.",
+        "description3": "is passionate about continuous learning, always seeking to refine their skills and share them with others.",
+        "description4": "is an admired professional, with a career marked by significant achievements and an unwavering commitment to education.",
+        "description5": "is an intellectual leader, dedicated to positively influencing their community through teaching."
     },
     "navigation": {
         "previous": "Previous",
