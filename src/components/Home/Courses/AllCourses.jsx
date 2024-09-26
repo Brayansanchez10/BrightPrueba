@@ -106,7 +106,7 @@ const AllCourses = () => {
   }, {});
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="min-h-screen flex flex-col mt-16 bg-gray-100">
       <NavigationBar />
 
       <div className="flex flex-col sm:flex-row justify-between mt-6 mx-6">

@@ -7,6 +7,7 @@ import {
   CaretUpOutlined,
   CaretDownOutlined,
 } from "@ant-design/icons";
+import { FaCircle, FaSearch } from "react-icons/fa";
 import LeftBar from "../LeftBar";
 import Navbar from "../NavBar";
 import DetailsUserModal from "./UserDetailsModal";
@@ -19,8 +20,7 @@ import { useTranslation } from 'react-i18next';
 const DataTable = () => {
   const { t } = useTranslation("global");
   const { rolesData } = useRoleContext();
-  const { getUsers, usersData, activateAccount, updateUser, createUser } =
-    useUserContext();
+  const { getUsers, usersData, activateAccount, updateUser, createUser } = useUserContext();
   const [updatedDataFlag, setUpdatedDataFlag] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [form] = Form.useForm();
@@ -146,7 +146,7 @@ const DataTable = () => {
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
   return (
-    <div className="bg-gray-300 overflow-hidden min-h-screen">
+    <div className="bg-gray-200 overflow-hidden min-h-screen">
       <div className="flex h-full">
         <LeftBar onVisibilityChange={setIsLeftBarVisible} />
         <div
@@ -155,12 +155,12 @@ const DataTable = () => {
           }`}
         >
           <Navbar className="" />
-          <div className="flex flex-col mt-10">
+          <div className="flex flex-col mt-14">
             <div>
-              <h2 className="text-2xl font-black  text-black text-center">
-                {t("datatable.Users")}
-              </h2>
-              <div className="flex flex-col items-center justify-center mt-4">
+              <div className="flex flex-row items-center justify-between pl-[72px] pr-12">
+                <h2 className="text-3xl text-purple-900 font-bungee">
+                  {t("datatable.Users")}
+                </h2>
                 <Button
                   type="primary"
                   style={{ backgroundColor: "green" }}
@@ -169,27 +169,31 @@ const DataTable = () => {
                 >
                   <b>{t("datatable.CreateUser")}</b>
                 </Button>
-                <Input
-                  placeholder={t("datatable.SearchByName")}
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  className="w-40 text-center font-medium text-base mt-2"
-                />
+                <div className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg">
+                  <FaSearch size={"18px"} className="mt-1 mr-2" />
+                  <input
+                    type="search"
+                    className="outline-none w-full md:w-[280px] lg:w-[360px]"
+                    placeholder={t('datatable.SearchByName')}
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
-            <div className="mt-10 flex justify-center">
-            <div className="overflow-auto w-full px-4">
+            <div className="mt-6 flex justify-center">
+            <div className="overflow-auto w-full px-6 mx-12 py-6 bg-white rounded-t-xl rounded-b-xl shadow-lg shadow-purple-300">
               <table className="min-w-full overflow-x-auto">
                 <thead>
                   <tr>
                     <th
-                      className="text-xl px-3 py-3 bg-blue-500 text-white border-2 cursor-pointer border-blue-800"
+                      className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                       onClick={() => orderBy("id")}
                     >
                       {t("datatable.ID")}{" "}
                     </th>
                     <th
-                      className="text-xl px-8 py-3  bg-yellow-500 text-white border-2 cursor-pointer border-blue-800"
+                      className="text-lg px-8 py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                       onClick={() => orderBy("role")}
                     >
                       {t("datatable.Role")}{" "}
@@ -201,7 +205,7 @@ const DataTable = () => {
                         ))}
                     </th>
                     <th
-                      className="text-xl px-6 py-3 bg-green-500 text-white border-2 cursor-pointer border-blue-800"
+                      className="text-lg px-6 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                       onClick={() => orderBy("username")}
                     >
                       {t("datatable.Name")}{" "}
@@ -213,18 +217,18 @@ const DataTable = () => {
                         ))}
                     </th>
                     <th
-                      className="text-xl px-10 py-3 bg-purple-500 text-white border-2 cursor-pointer border-blue-800"
+                      className="text-lg px-10 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                       onClick={() => orderBy("email")}
                     >
                       {t("datatable.Email")}{" "}
                     </th>
                     <th
-                      className="text-xl px-10 py-3 bg-gray-500 text-white border-2 cursor-pointer border-blue-800"
+                      className="text-lg px-10 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                       onClick={() => orderBy("state")}
                     >
                       {t("datatable.Status")}{" "}  
                     </th>
-                    <th className="px-40 py-3 bg-red-500 text-white text-xl border-2 border-blue-800">
+                    <th className="px-40 py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                       {t("datatable.Actions")}
                     </th>
                   </tr>
@@ -232,35 +236,36 @@ const DataTable = () => {
                 <tbody>
                   {currentItems.map((item, index) => (
                     <tr key={item._id}>
-                      <td className="border-2 border-blue-800 px-6 py-2 bg-gray-300 text-lg text-black mt-1 font-black text-center">
+                      <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                         {generateIds()[index]}
                       </td>
-                      <td className=" text-center border-2 border-blue-800 px-6 py-2 bg-gray-300 text-lg text-black mt-1">
+                      <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
                         {item.role}
                       </td>
-                      <td className="border-2 border-blue-800 px-6 py-2 bg-gray-300 text-lg text-black mt-1 text-center">
+                      <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                         {item.username}
                       </td>
-                      <td className=" text-center border-2 border-blue-800 px-6 py-2 bg-gray-300 text-lg text-black mt-1">
+                      <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
                         {item.email}
                       </td>
-                      <td className="text-center border-2 border-blue-800 px-6 py-2 bg-gray-300 text-lg text-black mt-1">
+                      <td className="pl-14 border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                        {item.state ? <FaCircle size="14px" className="text-green-500 -mb-[21px] -ml-8" /> : <FaCircle size="14px" className="text-red-500 -mb-[21px] -ml-8" />}
                         {item.state ? t("datatable.Active") : t("datatable.Inactive")}
                       </td> 
-                      <td className="border-2 border-blue-800 px-6 py-2 bg-gray-300 text-lg text-black mt-1 text-center ">
+                      <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                         <button 
                           onClick={() => handleActivateAccount(item._id)}
                           className={`${
                             item.state
                               ? "bg-red-500 hover:bg-red-700"
                               : "bg-green-500 hover:bg-green-700"
-                          } text-white font-bold py-2 px-4 rounded flex-1  `}
+                          } text-white font-bold py-1.5 px-4 rounded-3xl flex-1 min-w-[120px] shadow-md shadow-gray-400`}
                         >
                           {item.state ? t("datatable.Desactivate") : t("datatable.Activate")}
                         </button>
                         <button
                           onClick={() => handleUpdateButtonClick(item)}
-                          className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded ml-2 flex-1"
+                          className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 flex-1 min-w-[120px] shadow-md shadow-gray-400"
                         >
                           {t("datatable.Update")}
                         </button>
@@ -269,9 +274,9 @@ const DataTable = () => {
                             setSelectedUserId(item._id);
                             setShowDetailsModal(true);
                           }}
-                          className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-2 px-4 rounded ml-2 flex-1"
+                          className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 flex-1 min-w-[120px] shadow-md shadow-gray-400"
                         >
-                          <InfoCircleOutlined />
+                          {t("datatable.Details")}
                         </button>
                       </td>
                     </tr>

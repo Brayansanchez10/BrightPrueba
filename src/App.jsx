@@ -50,7 +50,7 @@ import ActivationComponent from "./components/Activate";
 import DeleteAccountConfirmation from "./components/Dashboard/ProfileAdmin/eliminatedCode";
 
 // Footer
-import Footer from "./components/footer";
+import Footer from "./components/Footer";
 
 function App() {
   return (

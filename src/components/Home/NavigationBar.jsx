@@ -31,6 +31,9 @@ function NavigationBar() {
 
   const menuRef = useRef(null);
 
+  // Estado para controlar la dirección del scroll y visibilidad del navbar
+  const [scrollDirection, setScrollDirection] = useState("up");
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (user && user.data && user.data.id) {
@@ -93,8 +96,32 @@ function NavigationBar() {
     ));
   };
 
+  // Efecto para manejar el scroll y detectar la dirección
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY) {
+        setScrollDirection("down");
+      } else {
+        setScrollDirection("up");
+      }
+      lastScrollY = window.scrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <nav className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] h-16 p-2 flex justify-between items-center w-full shadow-md font-bungee">
+    <nav
+      className={`bg-gradient-to-r from-[#783CDA] to-[#200E3E] h-16 p-2 flex justify-between items-center w-full shadow-md font-bungee fixed top-0 z-50 transition-transform duration-300 ${
+        scrollDirection === "down" ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
       <div className="hidden md:flex items-center">
         <img className="h-20 w-auto mr-3" src={Logo} alt="Logo" />
         <span className="text-white font-bold text-2xl">
@@ -176,7 +203,7 @@ function NavigationBar() {
             className="fixed inset-0 bg-black bg-opacity-50 z-10"
             onClick={toggleMobileMenu}
           ></div>
-          <div className="fixed top-16 left-0 right-0 bottom-0 bg-gradient-to-r from-[#783CDA] to-[#200E3E] flex flex-col items-center py-4 z-20 overflow-y-auto">
+          <div className="h-screen fixed top-16 left-0 right-0 bottom-0 bg-gradient-to-r from-[#783CDA] to-[#200E3E] flex flex-col items-center py-4 z-20 overflow-y-auto">
             <Link
               to="/Account"
               className="p-4 flex m-auto w-[85%] bg-gradient-to-r from-[#512599] to-[#190736] rounded-xl shadow-[#8f77b6] shadow-[0_10px_20px]"
