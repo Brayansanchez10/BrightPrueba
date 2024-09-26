@@ -6,7 +6,7 @@ import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from 'react-i18next';
 import Logo from "../../../assets/img/hola.png";
 import { FaFlagCheckered, FaSearch } from 'react-icons/fa';
-import Footer from "../../Footer"; 
+import Footer from "../../footer.jsx"; 
 
 const CoursesComponent = () => {
   const { t } = useTranslation("global");
@@ -50,7 +50,7 @@ const CoursesComponent = () => {
     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <div className="bg-gray-100 min-h-screen overflow-hidden">
+    <div className="bg-gray-100 min-h-screen mt-16 overflow-hidden">
       <NavigationBar />
       {userCourses.length > 0 ? (
         <>

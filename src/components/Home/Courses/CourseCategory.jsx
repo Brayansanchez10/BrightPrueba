@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import HoverCard from "../Cards/HoverCard";
 import NavigationBar from "../NavigationBar";
 import { useCoursesContext } from "../../../context/courses/courses.context";
@@ -12,9 +12,10 @@ import { FaRegChartBar, FaSearch } from "react-icons/fa";
 import '../../../css/Style.css';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
-import Footer from "../../footer.jsx";
+import Footer from "../../footer";
 
-const AllCourses = () => {
+const CourseCategory = () => {
+  const { category } = useParams();
   const { t } = useTranslation("global");
   const { courses } = useCoursesContext();
   const { user } = useAuth();
@@ -76,8 +77,9 @@ const AllCourses = () => {
   };
 
   const filteredCourses = courses.filter(course => 
-    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.category.toLowerCase().includes(searchTerm.toLowerCase())
+    course.category === decodeURIComponent(category) &&
+    (course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.category.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const renderCourseCard = (course) => (
@@ -96,23 +98,14 @@ const AllCourses = () => {
     />
   );
 
-  const favoriteCourses = filteredCourses.filter(course => favorites.includes(course.id));
-  const categorizedCourses = filteredCourses.reduce((acc, course) => {
-    if (!acc[course.category]) {
-      acc[course.category] = [];
-    }
-    acc[course.category].push(course);
-    return acc;
-  }, {});
-
   return (
-    <div className="min-h-screen flex flex-col mt-16 bg-gray-100">
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <NavigationBar />
 
       <div className="flex flex-col sm:flex-row justify-between mt-6 mx-6">
         <div className="w-full sm:w-auto">
           <h1 className="text-4xl font-bold text-black text-center sm:text-left font-bungee">
-            {t('courseComponent.title')}
+            {decodeURIComponent(category)}
           </h1>
         </div>
         <div className="w-full md:w-auto">
@@ -129,36 +122,9 @@ const AllCourses = () => {
         </div>
       </div>
 
-      <div className="mt-8">
-        <h2 className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60">
-          {t('courseComponent.favorites')}
-        </h2>
-        {favoriteCourses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
-            {favoriteCourses.map(renderCourseCard)}
-          </div>
-        ) : (
-          <div className="flex justify-center items-center mt-4">
-            <p className="text-center text-gray-500">
-              {t("courseComponent.desFavorites")}
-            </p>
-          </div>
-        )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center mb-16">
+        {filteredCourses.map(renderCourseCard)}
       </div>
-      {Object.entries(categorizedCourses).map(([category, coursesInCategory]) => (
-        <div key={category}>
-          <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60 mt-14">
-            <Link to={`/CourseCategory/${encodeURIComponent(category)}`} className="hover:text-blue-600 transition-colors duration-200">
-              <h2 className="text-[20px] font-bold text-gray-800 font-bungee">
-                {category}
-              </h2>
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center mb-16">
-            {coursesInCategory.map(renderCourseCard)}
-          </div>
-        </div>
-      ))}
 
       {isConfirmModalOpen && selectedCourse && (
         <div
@@ -248,4 +214,4 @@ const AllCourses = () => {
   );
 };
 
-export default AllCourses;
+export default CourseCategory;

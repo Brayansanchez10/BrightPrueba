@@ -3,17 +3,46 @@ import QuoteCarousel from '../components/Home/QuoteCarousel';
 import Footer from '../components/Footer';
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/img/hola.png';
+import Testimonials from '../components/Home/Testimonials';
 
 const HomePage = () => {
     const { t } = useTranslation("global");
 
     const phrases = [
-        { text: t('home.quotes.da_vinci'), author: 'Leonardo da Vinci', imageUrl: 'https://th.bing.com/th/id/OIP.DtC3ATqwhnlc_X8KeBv7aAHaJg?rs=1&pid=ImgDetMain' },
-        { text: t('home.quotes.mandela'), author: 'Nelson Mandela', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Nelson_Mandela_1994_%282%29.jpg/1200px-Nelson_Mandela_1994_%282%29.jpg' },
-        { text: t('home.quotes.sassoon'), author: 'Vidal Sassoon', imageUrl: 'https://cdijum.mx/wp-content/uploads/2018/01/sassoon-nyt.jpg' },
-        { text: t('home.quotes.einstein_idea'), author: 'Albert Einstein', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d3/Albert_Einstein_Head.jpg' },
-        { text: t('home.quotes.davis'), author: 'Colin R. Davis', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Colin_Davis_%281967%29.jpg' },
-        { text: t('home.quotes.einstein_knowledge'), author: 'Albert Einstein', imageUrl: 'https://c.files.bbci.co.uk/assets/aabea4fb-7ebf-43e9-b431-b1480f3ca926' }
+        { text: t('home.quotes.da_vinci'), author: 'Leonardo da Vinci', imageUrl: 'https://fotos.perfil.com/2021/04/29/leonardo-da-vinci-1165623.jpg' },
+        { text: t('home.quotes.mandela'), author: 'Nelson Mandela', imageUrl: 'https://www.lavanguardia.com/files/og_thumbnail/uploads/2019/05/03/5fa532fa58cb7.jpeg' },
+        { text: t('home.quotes.sassoon'), author: 'Vidal Sassoon', imageUrl: 'https://www.hola.com/horizon/landscape/6ec9f609b7e9-portrait-of-british-hairdresser-businessman-vidal-sassoon-london-england-septemb.jpg' },
+        { text: t('home.quotes.einstein_idea'), author: 'Albert Einstein', imageUrl: 'https://www.cronista.com/files/image/714/714111/6560f70c1366a.jpg' },
+        { text: t('home.quotes.davis'), author: 'Colin R. Davis', imageUrl: 'https://cdn.images.express.co.uk/img/dynamic/140/590x/sir-colin-davic-conductor-393267.jpg?r=1686998680160' },
+        { text: t('home.quotes.einstein_knowledge'), author: 'Albert Einstein', imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT82A-ADUvO5mdNwh2omNUDF4Y0xHqMh5wVpQ&s' }
+    ];
+
+    const profiles = [
+        {
+            name: 'Park Jee',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            imageUrl: logo ,
+        },
+        {
+            name: 'Jasmine Vandervort',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            imageUrl: logo,
+        },
+        {
+            name: 'Jasmine Vandervort',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            imageUrl: logo,
+        },
+        {
+            name: 'Jasmine Vandervort',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            imageUrl: logo,
+        },
+        {
+            name: 'Jasmine Vandervort',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            imageUrl: logo,
+        },
     ];
     
 
@@ -21,7 +50,7 @@ const HomePage = () => {
         <div className=''>
             <NavigationBar/>
             <div className="flex flex-col bg-slate-300">
-                <div className='m-0 p-0'>
+                <div className='mt-16 p-0'>
                     <div className='md:pb-5  sm:pb-0 lg:pb-20'>
                         <QuoteCarousel phrases={phrases} />
                     </div>
@@ -58,9 +87,7 @@ const HomePage = () => {
                     
                     <div className='md:pb-5  sm:pb-0 lg:pb-20'>
                         <div className='my-10 p-6'>
-                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee'>
-                                <span className='text-purple-900'>bringmind</span> offers knowledge like
-                            </h2>
+                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee'><span className='text-purple-900'>bringmind</span> offers knowledge like</h2>
                             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pt-20 mx-5 md:mx-10 lg:mx-20'>
                                 <div className='border border-black bg-white rounded-3xl'>
                                     <div className='my-10 lg:my-24 text-center'>
@@ -91,18 +118,107 @@ const HomePage = () => {
                                     </div>
                                 </div>
                             </div>
+                            <div className='pt-10 flex justify-center'>
+                                <a href="/AllCourses"><button className='bg-purple-800 text-white text-xl rounded-3xl h-14 w-48 hover:bg-purple-600 transition-all duration-500'>Go to courses</button></a>
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <p>feature</p>
+                    <div className='md:pb-5  sm:pb-0 lg:pb-20'>
+                        <div className='my-10 p-6'>
+                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee'>Our Featured Course at <span className='text-purple-900'>bringmmind</span></h2>
+                            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-10 mx-3 md:mx-10 lg:mx-20'>
+                                <div>
+                                    <div className='text-center border border-black bg-white rounded-3xl p-4 sm:p-6 md:p-8'>
+                                        <img src={logo} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full'/>
+                                    </div>
+                                    <div className='text-center'>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee pt-2'>JS Courses</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className='text-center border border-black bg-white rounded-3xl p-4 sm:p-6 md:p-8'>
+                                        <img src={logo} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full'/>
+                                    </div>
+                                    <div className='text-center'>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee pt-2'>PHP Courses</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className='text-center border border-black bg-white rounded-3xl p-4 sm:p-6 md:p-8'>
+                                        <img src={logo} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full'/>
+                                    </div>
+                                    <div className='text-center'>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee pt-2'>Music Courses</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className='text-center border border-black bg-white rounded-3xl p-4 sm:p-6 md:p-8'>
+                                        <img src={logo} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full'/>
+                                    </div>
+                                    <div className='text-center'>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee pt-2'>Art Courses</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className='text-center border border-black bg-white rounded-3xl p-4 sm:p-6 md:p-8'>
+                                        <img src={logo} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full'/>
+                                    </div>
+                                    <div className='text-center'>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee pt-2'>Exercise Courses</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className='text-center border border-black bg-white rounded-3xl p-4 sm:p-6 md:p-8'>
+                                        <img src={logo} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full'/>
+                                    </div>
+                                    <div className='text-center'>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee pt-2'>Cooking Courses</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className='text-center border border-black bg-white rounded-3xl p-4 sm:p-6 md:p-8'>
+                                        <img src={logo} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full'/>
+                                    </div>
+                                    <div className='text-center'>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee pt-2'>Sport Courses</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className='text-center border border-black bg-white rounded-3xl p-4 sm:p-6 md:p-8'>
+                                        <img src={logo} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full'/>
+                                    </div>
+                                    <div className='text-center'>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee pt-2'>Ecology Courses</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <p>testiminio</p>
+
+                    <div className='md:pb-5  sm:pb-0 lg:pb-20'>
+                        <div className='my-10 p-6'>
+                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee'>Our Testimonial at <span className='text-purple-900'>bringmind</span></h2>
+                            <div className='md:mx-16 lg:mx-12 pt-10'>
+                                <Testimonials profiles={profiles} />
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <p>partnes</p>
+
+                    <div className='md:pb-5  sm:pb-0 lg:pb-10'>
+                        <div className='my-10 p-6'>
+                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee text-purple-900'>Partners</h2>
+                            <div className='flex justify-center mt-6'>
+                                <div className='w-full sm:w-2/3 md:w-1/2 lg:w-1/3'>
+                                    <p className='text-xl text-center pb-5'>This company is characterized by its effort and dedication, contributing a lot to society.</p>
+                                    <div className='bg-white border border-black text-center p-6 rounded-3xl'>
+                                        <img src={logo} alt="" className='mt-4 mx-auto' />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
             <Footer />
