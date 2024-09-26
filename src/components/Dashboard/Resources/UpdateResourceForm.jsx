@@ -203,7 +203,7 @@ const UpdateResourceForm = ({
     };
 
     try {
-      await updateResource(resourceData._id, updatedData);
+      await updateResource(resourceData.id, updatedData);
       Swal.fire({
         icon: "success",
         title: t("UpdateResource.UpdateAlert"),

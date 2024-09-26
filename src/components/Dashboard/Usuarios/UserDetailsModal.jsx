@@ -42,7 +42,7 @@ const DetailsUserModal = ({ visible, onCancel, user }) => {
               <p className="mb-5">
                 <strong className="font-bold text-xl text-black">{t('userDetails.id')}:</strong>
                 <br />
-                <span className="text-lg">{user._id}</span>
+                <span className="text-lg">{user.id}</span>
               </p>
               <p className="mb-5">
                 <strong className="font-bold text-xl text-black">{t('userDetails.name')}:</strong>

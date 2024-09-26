@@ -53,7 +53,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
-      setCourse({ ...course, image: URL.createObjectURL(file) });
+      setCourse({ ...course, image: file });
     }
   };
 
@@ -160,7 +160,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
           onChange={(value) => setCourse({ ...course, category: value })}
         >
           {categories.map((category) => (
-            <Option key={category._id} value={category.name}>
+            <Option key={category.id} value={category.name}>
               {category.name}
             </Option>
           ))}

@@ -77,9 +77,9 @@ const CoursesComponent = () => {
           <div className="grid grid-cols-1 p-4 mx-4 mt-10 gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 md:mx-6 lg:mx-10 xl:mx-20 md:gap-x-8 md:gap-y-4 lg:gap-x-10 lg:gap-y-6 xl:gap-x-14 xl:gap-y-8">
             {paginatedCourses.map((course) => (
               <div
-                key={course._id}
+                key={course.id}
                 className="bg-white sm:p-5 min-h-[320px] rounded-2xl shadow-lg shadow-gray-400 border cursor-pointer transform hover:scale-105 transition-transform"
-                onClick={() => handleCourseClick(course._id)}
+                onClick={() => handleCourseClick(course.id)}
               >
                 <div className="sm:flex sm:flex-row-reverse justify-between">
                   <div className="sm:flex-shrink-0">

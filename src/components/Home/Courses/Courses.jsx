@@ -48,13 +48,13 @@ const Course = () => {
       user &&
       user.data &&
       user.data.id &&
-      !userCourses.includes(selectedCourse._id)
+      !userCourses.includes(selectedCourse.id)
     ) {
       try {
-        await registerToCourse(user.data.id, selectedCourse._id);
+        await registerToCourse(user.data.id, selectedCourse.id);
         setIsConfirmModalOpen(false);
         setIsSuccessModalOpen(true);
-        setUserCourses((prev) => [...prev, selectedCourse._id]);
+        setUserCourses((prev) => [...prev, selectedCourse.id]);
       } catch (error) {
         console.error("Error al registrar el curso:", error);
       }
@@ -95,10 +95,10 @@ const Course = () => {
       {filteredCourses.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-40 mt-10 mx-auto max-w-7xl">
           {paginatedCourses.map((course) => {
-            const isRegistered = userCourses.includes(course._id);
+            const isRegistered = userCourses.includes(course.id);
             return (
               <HoverCard
-                key={course._id}
+                key={course.id}
                 title={course.title}
                 description={course.description}
                 ruta={course.image}
@@ -220,13 +220,13 @@ const Course = () => {
               <button
                 onClick={handleRegister}
                 className={`bg-[#783CDA] text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${
-                  userCourses.includes(selectedCourse._id)
+                  userCourses.includes(selectedCourse.id)
                     ? "opacity-50 cursor-not-allowed"
                     : ""
                 }`}
-                disabled={userCourses.includes(selectedCourse._id)}
+                disabled={userCourses.includes(selectedCourse.id)}
               >
-                {userCourses.includes(selectedCourse._id)
+                {userCourses.includes(selectedCourse.id)
                   ? "YA REGISTRADO!"
                   : "INSCRÍBETE!"}
               </button>

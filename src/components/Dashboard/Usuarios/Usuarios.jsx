@@ -49,7 +49,7 @@ const DataTable = () => {
 
   useEffect(() => {
     if (selectedUserId) {
-      setSelectedUser(usersData.find((user) => user._id === selectedUserId));
+      setSelectedUser(usersData.find((user) => user.id === selectedUserId));
     }
   }, [selectedUserId, usersData]);
 
@@ -137,7 +137,7 @@ const DataTable = () => {
 
   const handleUpdateUser = (values) => {
     const { username, email, role, state } = values;
-    updateUser(selectedUser._id, { username, email, role, state });
+    updateUser(selectedUser.id, { username, email, role, state });
     setShowUpdateModal(false);
     setUpdatedDataFlag(true);
     setSelectedUser(null);
@@ -231,7 +231,7 @@ const DataTable = () => {
                 </thead>
                 <tbody>
                   {currentItems.map((item, index) => (
-                    <tr key={item._id}>
+                    <tr key={item.id}>
                       <td className="border-2 border-blue-800 px-6 py-2 bg-gray-300 text-lg text-black mt-1 font-black text-center">
                         {generateIds()[index]}
                       </td>
@@ -249,7 +249,7 @@ const DataTable = () => {
                       </td> 
                       <td className="border-2 border-blue-800 px-6 py-2 bg-gray-300 text-lg text-black mt-1 text-center ">
                         <button 
-                          onClick={() => handleActivateAccount(item._id)}
+                          onClick={() => handleActivateAccount(item.id)}
                           className={`${
                             item.state
                               ? "bg-red-500 hover:bg-red-700"
@@ -266,7 +266,7 @@ const DataTable = () => {
                         </button>
                         <button
                           onClick={() => {
-                            setSelectedUserId(item._id);
+                            setSelectedUserId(item.id);
                             setShowDetailsModal(true);
                           }}
                           className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-2 px-4 rounded ml-2 flex-1"

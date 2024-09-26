@@ -56,12 +56,12 @@ const AllCourses = () => {
 
   const handleRegister = async () => {
     if (user && user.data && selectedCourse) {
-      if (!userCourses.includes(selectedCourse._id)) {
+      if (!userCourses.includes(selectedCourse.id)) {
         try {
-          await registerToCourse(user.data.id, selectedCourse._id);
+          await registerToCourse(user.data.id, selectedCourse.id);
           setIsConfirmModalOpen(false);
           setIsSuccessModalOpen(true);
-          setUserCourses((prev) => [...prev, selectedCourse._id]);
+          setUserCourses((prev) => [...prev, selectedCourse.id]);
         } catch (error) {
           console.error("Error al registrar el curso:", error);
         }
@@ -82,7 +82,7 @@ const AllCourses = () => {
 
   const renderCourseCard = (course) => (
     <HoverCard
-      key={course._id}
+      key={course.id}
       title={course.title}
       description={course.description}
       ruta={course.image}
@@ -91,12 +91,12 @@ const AllCourses = () => {
       duration="6 horas"
       lessons="12 lecciones"
       onClick={() => handleCardClick(course)}
-      onFavoriteToggle={() => handleFavoriteToggle(course._id)}
-      isFavorite={favorites.includes(course._id)}
+      onFavoriteToggle={() => handleFavoriteToggle(course.id)}
+      isFavorite={favorites.includes(course.id)}
     />
   );
 
-  const favoriteCourses = filteredCourses.filter(course => favorites.includes(course._id));
+  const favoriteCourses = filteredCourses.filter(course => favorites.includes(course.id));
   const categorizedCourses = filteredCourses.reduce((acc, course) => {
     if (!acc[course.category]) {
       acc[course.category] = [];
@@ -213,10 +213,10 @@ const AllCourses = () => {
               </div>
               <button
                 onClick={handleRegister}
-                className={`bg-[#783CDA] text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${userCourses.includes(selectedCourse._id) ? "opacity-50 cursor-not-allowed" : ""}`}
-                disabled={userCourses.includes(selectedCourse._id)}
+                className={`bg-[#783CDA] text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${userCourses.includes(selectedCourse.id) ? "opacity-50 cursor-not-allowed" : ""}`}
+                disabled={userCourses.includes(selectedCourse.id)}
               >
-                {userCourses.includes(selectedCourse._id) ? "YA REGISTRADO!" : "INSCRÍBETE!"}
+                {userCourses.includes(selectedCourse.id) ? "YA REGISTRADO!" : "INSCRÍBETE!"}
               </button>
             </div>
           </div>

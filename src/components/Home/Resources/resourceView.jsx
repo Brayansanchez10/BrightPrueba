@@ -115,7 +115,7 @@ const ResourceView = () => {
   // Encuentra el índice del recurso actual en la lista de recursos
   useEffect(() => {
     if (resources.length > 0 && resource) {
-      const index = resources.findIndex((r) => r._id === resource._id);
+      const index = resources.findIndex((r) => r.id === resource.id);
       setCurrentResourceIndex(index);
       updateProgress(index, resources.length);
     }
@@ -397,7 +397,7 @@ const ResourceView = () => {
   const handlePrevious = () => {
     if (currentResourceIndex > 0) {
       const previousResource = resources[currentResourceIndex - 1];
-      handleResourceClick(previousResource._id, previousResource.courseId);
+      handleResourceClick(previousResource.id, previousResource.courseId);
     }
   };
 
@@ -405,7 +405,7 @@ const ResourceView = () => {
   const handleNext = () => {
     if (currentResourceIndex < resources.length - 1) {
       const nextResource = resources[currentResourceIndex + 1];
-      handleResourceClick(nextResource._id, nextResource.courseId);
+      handleResourceClick(nextResource.id, nextResource.courseId);
     }
   };
 
@@ -547,10 +547,10 @@ const ResourceView = () => {
               <div className="flex flex-col space-y-6 w-full mt-12">
                 {resources.map((resource, index) => (
                   <div
-                    key={resource._id}
+                    key={resource.id}
                     className="flex items-center space-x-4 p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
                     onClick={() =>
-                      handleResourceClick(resource._id, resource.courseId)
+                      handleResourceClick(resource.id, resource.courseId)
                     }
                   >
                     {/* Círculo con número */}
@@ -572,10 +572,10 @@ const ResourceView = () => {
               <div className="flex flex-col items-center w-full mt-12">
                 {resources.map((resource, index) => (
                   <div
-                    key={resource._id}
+                    key={resource.id}
                     className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500 text-white font-bold mb-4 cursor-pointer"
                     onClick={() =>
-                      handleResourceClick(resource._id, resource.courseId)
+                      handleResourceClick(resource.id, resource.courseId)
                     }
                   >
                     {index + 1}

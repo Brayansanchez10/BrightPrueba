@@ -332,7 +332,7 @@ const CreateResourceModal = ({
 
   const handleRemoveResource = async (resource) => {
     try {
-      await deleteResource(resource._id);
+      await deleteResource(resource.id);
       Swal.fire({
         position: "top-end",
         icon: "success",
@@ -454,7 +454,7 @@ const CreateResourceModal = ({
                         </div>
                       </div>
                     }
-                    key={resource._id}
+                    key={resource.id}
                   >
                     <Card>
                       <div className="flex justify-between items-center">

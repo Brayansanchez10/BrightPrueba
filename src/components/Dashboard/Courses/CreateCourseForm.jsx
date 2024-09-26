@@ -25,8 +25,8 @@
           if (user && user.data && user.data.id) {
               try {
                   const userData = await getUserById(user.data.id);
-                  setUsername(userData._id);
-                  console.log("Información de usuario:", userData._id)
+                  setUsername(userData.id);
+                  console.log("Información de usuario:", userData.id)
               } catch (error) {
                   console.error('Error al obtener datos del usuario:', error);
               }
@@ -222,7 +222,7 @@
               required
             >
               {categories.map((category) => (
-                <Option key={category._id} value={category.name}>
+                <Option key={category.id} value={category.name}>
                   {category.name}
                 </Option>
               ))}

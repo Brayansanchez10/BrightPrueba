@@ -15,6 +15,9 @@ export const getResource = (courseId) => resourceRequest.get(`/getResource/${cou
 //Función obtenere Recursos vista Usuario
 export const getResourceUser = (id) => resourceRequest.get(`/getResourceUser/${id}`);
 
+// Función para obtener un recurso con sus quizzes
+export const getResourceWithQuizzes = (id) => resourceRequest.get(`/getResourceWithQuizzes/${id}`);
+
 // Función para crear un recurso
 export const createResource = async (resourceData) => {
     try {
@@ -25,9 +28,13 @@ export const createResource = async (resourceData) => {
         if (resourceData.file) formData.append('file', resourceData.file);
         if (resourceData.link) formData.append('link', resourceData.link);
 
-         // Añadir quizzes si existen
+        // Añadir quizzes si existen
         if (resourceData.quizzes && resourceData.quizzes.length > 0) {
-            formData.append('quizzes', JSON.stringify(resourceData.quizzes)); // Enviar el array de quizzes como JSON string
+            resourceData.quizzes.forEach((quiz, index) => {
+                formData.append(`quizzes[${index}][question]`, quiz.question);
+                formData.append(`quizzes[${index}][options]`, JSON.stringify(quiz.options)); // Opciones como string
+                formData.append(`quizzes[${index}][correctAnswer]`, quiz.correctAnswer);
+            });
         }
 
         console.log([...formData]);  // Verifica qué datos estás enviando
@@ -54,11 +61,15 @@ export const updateResource = async (id, resourceData) => {
 
         // Añadir quizzes si existen
         if (resourceData.quizzes && resourceData.quizzes.length > 0) {
-            formData.append('quizzes', JSON.stringify(resourceData.quizzes)); // Enviar el array de quizzes como JSON string
+            resourceData.quizzes.forEach((quiz, index) => {
+                formData.append(`quizzes[${index}][question]`, quiz.question);
+                formData.append(`quizzes[${index}][options]`, JSON.stringify(quiz.options));
+                formData.append(`quizzes[${index}][correctAnswer]`, quiz.correctAnswer);
+            });
         }
 
-         // Verifica qué datos estás enviando
-         console.log([...formData]);
+        // Verifica qué datos estás enviando
+        console.log([...formData]);
 
         return resourceRequest.put(`/updateResource/${id}`, formData, {
             headers: {
@@ -70,7 +81,6 @@ export const updateResource = async (id, resourceData) => {
         throw error;
     }
 };
-
 // Función para eliminar un recurso
 export const deleteResource = (id) => resourceRequest.delete(`/deleteResource/${id}`);
 

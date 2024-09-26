@@ -53,7 +53,7 @@ const CourseView = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [courseId, getCourse, getResource, getUserById]);
+    }, [courseId]);
 
     useEffect(() => {
         fetchCourseData();
@@ -150,12 +150,12 @@ const CourseView = () => {
                                                     <span className="text-lg font-medium">{resource.title}</span>
                                                 </div>
                                             }
-                                            key={resource._id}
+                                            key={resource.id}
                                         >
                                             <div className="p-4">
                                                 <p className="text-gray-600 mb-4">{resource.description}</p>
                                                 <button
-                                                    onClick={() => handleResourceClick(resource._id)}
+                                                    onClick={() => handleResourceClick(resource.id)}
                                                     className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200"
                                                 >
                                                     <FaPlay className="mr-2" />

@@ -44,7 +44,7 @@ const DataTable = () => {
 
   useEffect(() => {
     if (selectedRoleId) {
-      setSelectedRole(rolesData.find((role) => role._id === selectedRoleId));
+      setSelectedRole(rolesData.find((role) => role.id === selectedRoleId));
     }
   }, [selectedRoleId, rolesData]);
 
@@ -146,7 +146,7 @@ const DataTable = () => {
 
   const handleViewPermissions = (role) => {
     setShowDetailsModal(true);
-    setSelectedRoleId(role._id);
+    setSelectedRoleId(role.id);
   };
 
   const handleDeleteRole = (roleId) => {
@@ -200,16 +200,16 @@ const DataTable = () => {
   useEffect(() => {
     const storedPermissionsMap = {};
     rolesData.forEach((role) => {
-      const storedPermissions = JSON.parse(localStorage.getItem(role._id));
+      const storedPermissions = JSON.parse(localStorage.getItem(role.id));
       if (storedPermissions) {
-        storedPermissionsMap[role._id] = storedPermissions;
+        storedPermissionsMap[role.id] = storedPermissions;
       }
     });
     setSelectedPermissionsMap(storedPermissionsMap);
   }, [rolesData]);
 
   const handleAssignPermissions = (role) => {
-    setSelectedRoleId(role._id);
+    setSelectedRoleId(role.id);
     setShowAssignModal(true);
   };
 
@@ -233,7 +233,7 @@ const DataTable = () => {
       if (selectedRole) {
         const permissionIdMap = {};
         permissionsData.info.forEach((permission) => {
-          permissionIdMap[permission.nombre] = permission._id;
+          permissionIdMap[permission.nombre] = permission.id;
           setPermissionsUpdated(true);
         });
 
@@ -320,7 +320,7 @@ const DataTable = () => {
                   <tbody>
                     {rolesData &&
                       currentItems.map((role, index) => (
-                        <tr key={role._id}>
+                        <tr key={role.id}>
                           <td className="border-2 border-blue-800  text-black text-center py-4 text-lg font-black">
                             {generateIds()[index]}
                           </td>
@@ -342,7 +342,7 @@ const DataTable = () => {
                               <Button
                                 className="bg-red-600 h-10 text-lg text-white"
                                 icon={<DeleteOutlined />}
-                                onClick={() => handleDeleteRole(role._id)}
+                                onClick={() => handleDeleteRole(role.id)}
                               />
                             </div>
                           </td>
@@ -420,7 +420,7 @@ const DataTable = () => {
               <p className="mb-5">
                 <strong className="font-bold text-xl text-black">{t("roles.role")} ID:</strong>
                 <br />
-                <span className="text-lg text-black-500 font-medium">{selectedRole._id}</span>
+                <span className="text-lg text-black-500 font-medium">{selectedRole.id}</span>
               </p>
               <p className="mb-5">
                 <strong className="font-bold text-xl text-black">{t("roles.name")}:</strong>
@@ -477,18 +477,18 @@ const DataTable = () => {
         {permissionsData &&
           permissionsData.info &&
           permissionsData.info.map((permission) => (
-            <div key={permission._id} className="mb-3">
+            <div key={permission.id} className="mb-3">
               <Checkbox
                 className="text-lg"
                 checked={selectedPermissionsMap[selectedRoleId]?.includes(
-                  permission._id
+                  permission.id
                 )}
                 onChange={() =>
-                  handleCheckboxChange(selectedRoleId, permission._id)
+                  handleCheckboxChange(selectedRoleId, permission.id)
                 }
                 style={{
                   color: selectedPermissionsMap[selectedRoleId]?.includes(
-                    permission._id
+                    permission.id
                   )
                     ? "green"
                     : "red",

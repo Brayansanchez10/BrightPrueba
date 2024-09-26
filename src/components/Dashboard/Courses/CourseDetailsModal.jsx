@@ -41,7 +41,7 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
             <div>
               <div className="mb-5">
                 <strong className="text-black font-bold text-xl">{t('courseDetails.id')}</strong>
-                <p className="text-black text-lg">{course._id}</p>
+                <p className="text-black text-lg">{course.id}</p>
               </div>
               <div className="mb-5">
                 <strong className="text-black font-bold text-xl">{t('courseDetails.category')}</strong>

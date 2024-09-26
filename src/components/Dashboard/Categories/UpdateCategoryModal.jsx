@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 
@@ -7,9 +7,32 @@ const UpdateCategoryModal = ({
   onClose,
   onUpdate,
   form,
-  imagePreview
+  imagePreview: initialImagePreview, // Imagen previa pasada como prop
 }) => {
   const { t } = useTranslation("global");
+  const [imagePreview, setImagePreview] = useState(null); // Estado para almacenar la previsualización de la imagen
+  const [imageFile, setImageFile] = useState(null); // Estado para almacenar el archivo de imagen seleccionado
+
+  
+  useEffect(() => {
+    if (initialImagePreview) {
+      setImagePreview(initialImagePreview); 
+    }
+  }, [initialImagePreview]);
+
+
+  // Manejar el cambio de la imagen
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setImageFile(file); 
+      setImagePreview(URL.createObjectURL(file)); 
+    }
+  };
+
+  const handleSubmit = (values) => {
+    onUpdate({ ...values, image: imageFile }); 
+  };
 
   return (
     <Modal
@@ -22,9 +45,9 @@ const UpdateCategoryModal = ({
     >
       <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
         <img 
-        src="/src/assets/img/imagen1.png" 
-        alt="Imagen de la cabecera"
-        className="w-[189.69px] h-[148px] object-contain mt-8" 
+          src="/src/assets/img/imagen1.png" 
+          alt="Imagen de la cabecera"
+          className="w-[189.69px] h-[148px] object-contain mt-8" 
         />
         <button
           type="button"
@@ -38,11 +61,11 @@ const UpdateCategoryModal = ({
       <Form
         className="px-5 py-6"
         form={form}
-        onFinish={onUpdate}
+        onFinish={handleSubmit}
         layout="vertical"
       >
         <h1 className="text-center text-[#350b48] text-3xl font-extrabold mt-1 mb-5 text-shadow-md">
-        {t('updateCategoryModal.title')}
+          {t('updateCategoryModal.title')}
         </h1>
         <Form.Item
           className="text-lg font-bold text-black mb-2"
@@ -62,11 +85,20 @@ const UpdateCategoryModal = ({
           <Input.TextArea rows={3} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
 
-        <div>
-          <h1 className='text-center text-lg font-semibold'>
+        {/* Input para seleccionar la imagen */}
+        <div className="mb-4">
+          <label className="block text-lg font-bold text-black mb-2">
             {t('updateCategoryModal.imagePreview')}
-          </h1>
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            className="w-full h-[44px] rounded-xl bg-white shadow-md px-3 py-2"
+            onChange={handleImageChange}
+          />
         </div>
+
+        {/* Previsualización de la imagen */}
         {imagePreview && (
           <div className="flex justify-center mt-2">
             <img

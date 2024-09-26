@@ -37,6 +37,8 @@ export const ResourceProvider = ({ children }) => {
             return null;
         }
     };
+
+
     
     //Función para obtener un recurso Vista User
     const getResourceUser = async (id) => {
@@ -130,7 +132,7 @@ export const ResourceProvider = ({ children }) => {
     }, []);
 
     return (
-        <ResourceContext.Provider value={{ resources, getResource, createResource, updateResource, deleteResource, getResourceUser }}>
+        <ResourceContext.Provider value={{ resources, getResource, createResource, updateResource, deleteResource, getResourceUser  }}>
             {children}
         </ResourceContext.Provider>
     );

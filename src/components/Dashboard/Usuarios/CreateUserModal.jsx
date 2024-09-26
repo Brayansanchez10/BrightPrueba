@@ -108,7 +108,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
         >
           <Select className="w-full h-[34px] rounded-xl bg-white shadow-md text-center">
             {rolesData.map((role) => (
-              <Option key={role._id} value={role.nombre}>
+              <Option key={role.id} value={role.nombre}>
                 {role.nombre}
               </Option>
             ))}

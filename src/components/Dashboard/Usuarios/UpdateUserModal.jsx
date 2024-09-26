@@ -96,7 +96,7 @@ import "../css/Custom.css";
         >
           <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">
             {rolesData.map((role) => (
-              <Option key={role._id} value={role.nombre}>
+              <Option key={role.id} value={role.nombre}>
                 {role.nombre}
               </Option>
             ))}

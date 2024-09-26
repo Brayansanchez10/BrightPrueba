@@ -67,7 +67,7 @@ const DataTablete = () => {
 
   const handleUpdateSubmit = async (values) => {
     try {
-      await updateCategory(selectedCategory._id, values);
+      await updateCategory(selectedCategory.id, values);
       Swal.fire({
         title: t("categories.updateSuccess"),
         icon: 'success',
@@ -89,7 +89,7 @@ const DataTablete = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await deleteCategory(categoryToDelete._id);
+      await deleteCategory(categoryToDelete.id);
       Swal.fire({
         title: t("categories.deleteSuccess"),
         icon: 'success',
@@ -242,7 +242,7 @@ const DataTablete = () => {
                           currentPage * itemsPerPage
                         )
                         .map((category, index) => (
-                          <tr key={category._id}>
+                          <tr key={category.id}>
                             <td className="border-2 border-blue-800 bg-gray-300 text-lg text-black mt-1 text-center font-black">
                               {generateIds()[index]}
                             </td>

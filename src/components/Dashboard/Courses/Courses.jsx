@@ -96,7 +96,7 @@ const DataTablete = () => {
 
   const handleCreateResourceClick = (course) => {
     setSelectedCourse(course);
-    setSelectedCourseId(course._id); 
+    setSelectedCourseId(course.id); 
     setIsCreateModalVisible(true);
   };
 
@@ -104,8 +104,8 @@ const DataTablete = () => {
     if (dataFlag) return;
 
     setDataFlag(true);
-    if (selectedCourse && selectedCourse._id) { 
-      const courseId = selectedCourse._id;
+    if (selectedCourse && selectedCourse.id) { 
+      const courseId = selectedCourse.id;
       try {
         const res = await crearRecurso(courseId);
         setIsCreateModalVisible(false);
@@ -143,7 +143,7 @@ const DataTablete = () => {
     setDataFlag(true);
 
     try {
-      await deleteCourse(courseToDelete._id);
+      await deleteCourse(courseToDelete.id);
       message.success(t('courses.deleteSuccess'));
       window.location.reload();
     } catch (error) {
@@ -168,7 +168,7 @@ const DataTablete = () => {
   const handleSendNotification = async (recipients) => {
     try {
       const response = await axios.post('/api/users/notify-course', {
-        courseId: selectedCourse._id,
+        courseId: selectedCourse.id,
         recipients: recipients
       });
       if (response.data.message === "Course notification emails sent successfully") {
@@ -263,7 +263,7 @@ const DataTablete = () => {
                           currentPage * itemsPerPage
                         )
                         .map((course, index) => (
-                          <tr key={course._id}>
+                          <tr key={course.id}>
                             <td className="border-2 border-blue-800 bg-gray-300 text-lg text-black mt-1 text-center font-black">
                               {generateIds()[index]}
                             </td>
@@ -334,13 +334,13 @@ const DataTablete = () => {
             visible={showUpdateForm}
             onClose={handleUpdateFormClose}
             onUpdate={handleUpdateCourse}
-            courseId={selectedCourse ? selectedCourse._id : null}
+            courseId={selectedCourse ? selectedCourse.id : null}
           />
 
            <CreateResourceModal
             isVisible={isCreateModalVisible}
             onCancel={() => setIsCreateModalVisible(false)}
-            courseId={selectedCourse?._id}  
+            courseId={selectedCourse?.id}  
             onCreate={handleCreateResource}
             resourceFile={resourceFile}
             onFileChange={(e) => setResourceFile(e.target.files[0])}

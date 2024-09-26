@@ -27,7 +27,7 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
       if (user && user.data && user.data.id) {
         try {
           const userData = await getUserById(user.data.id);
-          setUserId(userData._id);
+          setUserId(userData.id);
           setName(userData.username);
           setEmail(userData.email);
 
@@ -81,7 +81,7 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
         const userData = {
           username: name,
           email,
-          userImage: deleteProfileImage ? null : profileImage,
+          userImage: deleteProfileImage ? null : (profileImage || previewProfileImage),
         };
   
         await updateUserPartial(userId, userData);
