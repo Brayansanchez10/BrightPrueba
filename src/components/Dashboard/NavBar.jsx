@@ -71,7 +71,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="shadow-lg shadow-teal-200 bg-[#160a2b] py-2 transition-all duration-500 justify-center flex w-full max-h-16">
+      <nav className="shadow-lg bg-[#160a2b] py-2 transition-all duration-500 justify-center flex w-full max-h-16">
         <div ref={sidebarRef}>
           <LeftBar onVisibilityChange={(isVisible) => setIsSidebarVisible(isVisible)} />
         </div>

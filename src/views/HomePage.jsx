@@ -9,12 +9,12 @@ const HomePage = () => {
     const { t } = useTranslation("global");
 
     const phrases = [
-        { text: t('home.quotes.da_vinci'), author: 'Leonardo da Vinci', imageUrl: 'https://th.bing.com/th/id/OIP.DtC3ATqwhnlc_X8KeBv7aAHaJg?rs=1&pid=ImgDetMain' },
-        { text: t('home.quotes.mandela'), author: 'Nelson Mandela', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Nelson_Mandela_1994_%282%29.jpg/1200px-Nelson_Mandela_1994_%282%29.jpg' },
-        { text: t('home.quotes.sassoon'), author: 'Vidal Sassoon', imageUrl: 'https://cdijum.mx/wp-content/uploads/2018/01/sassoon-nyt.jpg' },
-        { text: t('home.quotes.einstein_idea'), author: 'Albert Einstein', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d3/Albert_Einstein_Head.jpg' },
-        { text: t('home.quotes.davis'), author: 'Colin R. Davis', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Colin_Davis_%281967%29.jpg' },
-        { text: t('home.quotes.einstein_knowledge'), author: 'Albert Einstein', imageUrl: 'https://c.files.bbci.co.uk/assets/aabea4fb-7ebf-43e9-b431-b1480f3ca926' }
+        { text: t('home.quotes.da_vinci'), author: 'Leonardo da Vinci', imageUrl: 'https://fotos.perfil.com/2021/04/29/leonardo-da-vinci-1165623.jpg' },
+        { text: t('home.quotes.mandela'), author: 'Nelson Mandela', imageUrl: 'https://www.lavanguardia.com/files/og_thumbnail/uploads/2019/05/03/5fa532fa58cb7.jpeg' },
+        { text: t('home.quotes.sassoon'), author: 'Vidal Sassoon', imageUrl: 'https://www.hola.com/horizon/landscape/6ec9f609b7e9-portrait-of-british-hairdresser-businessman-vidal-sassoon-london-england-septemb.jpg' },
+        { text: t('home.quotes.einstein_idea'), author: 'Albert Einstein', imageUrl: 'https://www.cronista.com/files/image/714/714111/6560f70c1366a.jpg' },
+        { text: t('home.quotes.davis'), author: 'Colin R. Davis', imageUrl: 'https://cdn.images.express.co.uk/img/dynamic/140/590x/sir-colin-davic-conductor-393267.jpg?r=1686998680160' },
+        { text: t('home.quotes.einstein_knowledge'), author: 'Albert Einstein', imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT82A-ADUvO5mdNwh2omNUDF4Y0xHqMh5wVpQ&s' }
     ];
 
     const profiles = [
@@ -50,7 +50,7 @@ const HomePage = () => {
         <div className=''>
             <NavigationBar/>
             <div className="flex flex-col bg-slate-300">
-                <div className='m-0 p-0'>
+                <div className='mt-16 p-0'>
                     <div className='md:pb-5  sm:pb-0 lg:pb-20'>
                         <QuoteCarousel phrases={phrases} />
                     </div>

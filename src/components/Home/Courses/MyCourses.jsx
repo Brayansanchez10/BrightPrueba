@@ -50,7 +50,7 @@ const CoursesComponent = () => {
     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <div className="bg-gray-100 min-h-screen overflow-hidden">
+    <div className="bg-gray-100 min-h-screen mt-16 overflow-hidden">
       <NavigationBar />
       {userCourses.length > 0 ? (
         <>

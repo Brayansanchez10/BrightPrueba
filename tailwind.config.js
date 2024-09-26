@@ -11,6 +11,9 @@ module.exports = {
       fontFamily: {
         bungee: ['Bungee', 'sans-serif'],
       },
+      fontFamily: {
+        satisfy: ['Satisfy', 'sans-serif'],
+      },
       screens: {
         'h720': {'raw': '(min-height: 720px)'},
       },
