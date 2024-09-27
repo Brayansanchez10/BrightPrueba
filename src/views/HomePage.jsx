@@ -50,7 +50,7 @@ const HomePage = () => {
         <div className=''>
             <NavigationBar/>
             <div className="flex flex-col bg-slate-300">
-                <div className='mt-16 p-0'>
+                <div className='mt-4 p-0'>
                     <div className='md:pb-5  sm:pb-0 lg:pb-20'>
                         <QuoteCarousel phrases={phrases} />
                     </div>
