@@ -19,25 +19,22 @@ import CourseDetailsModal from "./CourseDetailsModal";
 import NotifyCourseModal from "./NotifyCourseModal";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
+import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 
 const DataTablete = () => {
   const { t } = useTranslation("global");
   const { getUsers, usersData } = useUserContext();
-  const {
-    getAllCourses,
-    courses,
-    deleteCourse,
-    updateCourse,
-    crearRecurso,
-  } = useCoursesContext();
+  const { getAllCourses, courses, deleteCourse, updateCourse, crearRecurso } =
+    useCoursesContext();
   const [searchValue, setSearchValue] = useState("");
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [contentFile, setContentFile] = useState(null);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(12);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0); // Agregar estado para totalItems
   const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
   const [courseToDelete, setCourseToDelete] = useState(null);
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
@@ -55,12 +52,14 @@ const DataTablete = () => {
   }, []);
 
   useEffect(() => {
-    const filteredCourses = courses.filter(course =>
-      course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-      course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
-      course.description.toLowerCase().includes(searchValue.toLowerCase())
+    const filteredCourses = courses.filter(
+      (course) =>
+        course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+        course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
+        course.description.toLowerCase().includes(searchValue.toLowerCase())
     );
 
+    setTotalItems(filteredCourses.length); // Actualizamos totalItems
     setTotalPages(Math.ceil(filteredCourses.length / itemsPerPage));
   }, [courses, searchValue, itemsPerPage]);
 
@@ -84,9 +83,9 @@ const DataTablete = () => {
     setDataFlag(true);
     try {
       await updateCourse(updatedCourse);
-      message.success(t('courses.updateSuccess'));
+      message.success(t("courses.updateSuccess"));
     } catch (error) {
-      message.error(t('courses.updateError'));
+      message.error(t("courses.updateError"));
     } finally {
       setDataFlag(false);
       setShowUpdateForm(false);
@@ -96,7 +95,7 @@ const DataTablete = () => {
 
   const handleCreateResourceClick = (course) => {
     setSelectedCourse(course);
-    setSelectedCourseId(course.id); 
+    setSelectedCourseId(course.id);
     setIsCreateModalVisible(true);
   };
 
@@ -104,7 +103,7 @@ const DataTablete = () => {
     if (dataFlag) return;
 
     setDataFlag(true);
-    if (selectedCourse && selectedCourse.id) { 
+    if (selectedCourse && selectedCourse.id) {
       const courseId = selectedCourse.id;
       try {
         const res = await crearRecurso(courseId);
@@ -115,8 +114,8 @@ const DataTablete = () => {
         setDataFlag(false);
       }
     } else {
-      message.error(t('courses.noCourseSelected'));
-    } 
+      message.error(t("courses.noCourseSelected"));
+    }
   };
 
   const handleCreateCourse = async (curso) => {
@@ -144,10 +143,10 @@ const DataTablete = () => {
 
     try {
       await deleteCourse(courseToDelete.id);
-      message.success(t('courses.deleteSuccess'));
+      message.success(t("courses.deleteSuccess"));
       window.location.reload();
     } catch (error) {
-      message.error(t('courses.deleteError'));
+      message.error(t("courses.deleteError"));
     } finally {
       setDataFlag(false);
       setIsDeleteModalVisible(false);
@@ -167,28 +166,31 @@ const DataTablete = () => {
 
   const handleSendNotification = async (recipients) => {
     try {
-      const response = await axios.post('/api/users/notify-course', {
+      const response = await axios.post("/api/users/notify-course", {
         courseId: selectedCourse.id,
-        recipients: recipients
+        recipients: recipients,
       });
-      if (response.data.message === "Course notification emails sent successfully") {
-        message.success(t('courses.notificationSent'));
+      if (
+        response.data.message === "Course notification emails sent successfully"
+      ) {
+        message.success(t("courses.notificationSent"));
       } else {
         throw new Error("Unexpected response");
       }
     } catch (error) {
       console.error("Error sending notification:", error);
-      message.error(t('courses.notificationError'));
+      message.error(t("courses.notificationError"));
     }
   };
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const generateIds = () => {
-    const filteredCourses = courses.filter(course =>
-      course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-      course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
-      course.description.toLowerCase().includes(searchValue.toLowerCase())
+    const filteredCourses = courses.filter(
+      (course) =>
+        course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+        course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
+        course.description.toLowerCase().includes(searchValue.toLowerCase())
     );
 
     return filteredCourses
@@ -196,14 +198,15 @@ const DataTablete = () => {
       .map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
   };
 
-  const filteredCourses = courses.filter(course =>
-    course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-    course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
-    course.description.toLowerCase().includes(searchValue.toLowerCase())
+  const filteredCourses = courses.filter(
+    (course) =>
+      course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+      course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
+      course.description.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   return (
-    <div className="bg-gray-300 overflow-hidden min-h-screen">
+    <div className="bg-gray-200 overflow-hidden min-h-screen">
       <div className="flex h-full">
         <LeftBar onVisibilityChange={setIsLeftBarVisible} />
         <div
@@ -212,114 +215,151 @@ const DataTablete = () => {
           }`}
         >
           <Navbar />
-          <div className="flex flex-col mt-6 px-4">
+          <div className="flex flex-col mt-14">
             <div>
-              <h2 className="text-2xl font-black text-black text-center">
-                {t('courses.title')}
-              </h2>
-              <div className="flex flex-col items-center justify-center mt-4">
-                <Button
-                  type="primary"
-                  style={{ backgroundColor: "green" }}
-                  onClick={handleCreateCourseClick}
-                  className="text-center font-medium text-base"
-                  disabled={dataFlag}
-                >
-                  <b>{t('courses.createCourse')}</b>
-                </Button>
-                <Input
-                  placeholder={t('courses.searchPlaceholder')}
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  className="w-44 text-center font-medium text-base mt-2"
-                />
-              </div>
-              <div className="mt-10 flex justify-center">
-                <div className="overflow-auto w-full">
-                  <table className="min-w-full overflow-x-auto mb-4">
-                    <thead>
-                      <tr>
-                        <th className="text-xl px-3 py-3 bg-blue-500 text-white border-2 cursor-pointer border-blue-800">
-                          {t('courses.id')}
-                        </th>
-                        <th className="text-xl px-8 py-3 bg-yellow-500 text-white border-2 cursor-pointer border-blue-800">
-                          {t('courses.category')}
-                        </th>
-                        <th className="text-xl px-6 py-3 bg-green-500 text-white border-2 cursor-pointer border-blue-800">
-                          {t('courses.name')}
-                        </th>
-                        <th className="text-xl px-48 py-3 bg-purple-500 text-white border-2 cursor-pointer border-blue-800">
-                          {t('courses.description')}
-                        </th>
-                        <th className="text-xl px-20 py-3 bg-red-500 text-white border-2 border-blue-800">
-                          {t('courses.actions')}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredCourses
-                        .slice(
-                          (currentPage - 1) * itemsPerPage,
-                          currentPage * itemsPerPage
-                        )
-                        .map((course, index) => (
-                          <tr key={course.id}>
-                            <td className="border-2 border-blue-800 bg-gray-300 text-lg text-black mt-1 text-center font-black">
-                              {generateIds()[index]}
-                            </td>
-                            <td className="border-2 border-blue-800 bg-gray-300 text-lg text-black mt-1 text-center">
-                              {course.category}
-                            </td>
-                            <td className="border-2 border-blue-800 bg-gray-300 text-lg text-black mt-1 text-center">
-                              {course.title}
-                            </td>
-                            <td className="border-2 border-blue-800 bg-gray-300 text-lg text-black mt-1 text-balance px-1">
-                              {course.description}
-                            </td>
-                            <td className="border-2 border-blue-800 px-1 py-2 bg-gray-300">
-                              <div className="flex justify-center space-x-2">
-                                <Button
-                                  className="bg-green-500 h-10 text-lg text-white"
-                                  onClick={() => handleCreateResourceClick(course)}
-                                  icon={<FileAddOutlined />} 
-                                >
-                                  {t("courses.ButtonUpContent")}
-                                </Button>
-                                <Button
-                                  className=" bg-blue-500 h-10 text-lg text-white"
-                                  icon={<ReloadOutlined />}
-                                  onClick={() =>
-                                    handleUpdateButtonClick(course)
-                                  }
-                                />
-                                <Button
-                                  className="bg-purple-600 text-white text-lg h-10"
-                                  icon={<InfoCircleOutlined />}
-                                  onClick={() =>
-                                    handleDetailsButtonClick(course)
-                                  }
-                                />
-                                <Button
-                                  className="bg-orange-500 h-10 text-lg text-white"
-                                  icon={<BellOutlined />}
-                                  onClick={() =>
-                                    handleNotifyButtonClick(course)
-                                  }
-                                />
-                                <Button
-                                  className="bg-red-500 h-10 text-lg text-white"
-                                  icon={<DeleteOutlined />}
-                                  onClick={() =>
-                                    handleDeleteButtonClick(course)
-                                  }
-                                />
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
+              <div className="flex flex-row items-center justify-between pl-[72px] pr-12">
+                <h2 className="text-3xl text-purple-900 font-bungee">
+                  {t("courses.title")}
+                </h2>
+                <div className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg">
+                  <FaSearch size={"18px"} className="mt-1 mr-2" />
+                  <input
+                    type="search"
+                    className="outline-none w-full md:w-[280px] lg:w-[360px]"
+                    placeholder={t("datatable.SearchByName")}
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                  />
                 </div>
+              </div>
+              <Button
+                type="primary"
+                style={{ backgroundColor: "#4c1d95" }}
+                onClick={handleCreateCourseClick}
+                className="text-center font-medium text-base ml-[72px]"
+                disabled={dataFlag}
+              >
+                <b>{t("courses.createCourse")}</b>
+              </Button>
+            </div>
+            <div className="mt-6 flex justify-center">
+              <div className="overflow-auto w-full px-6 mx-12 py-6 bg-white rounded-t-xl rounded-b-xl shadow-lg shadow-purple-300">
+                <table className="min-w-full overflow-x-auto">
+                  <thead>
+                    <tr>
+                      <th className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                        {t("courses.id")}
+                      </th>
+                      <th className="text-lg px-8 py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                        {t("courses.category")}
+                      </th>
+                      <th className="text-lg px-6 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                        {t("courses.name")}
+                      </th>
+                      <th className="text-lg px-10 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                        {t("courses.description")}
+                      </th>
+                      <th className="px-40 py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                        {t("courses.actions")}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCourses
+                      .slice(
+                        (currentPage - 1) * itemsPerPage,
+                        currentPage * itemsPerPage
+                      )
+                      .map((course, index) => (
+                        <tr key={course.id}>
+                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                            {generateIds()[index]}
+                          </td>
+                          <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                            {course.category}
+                          </td>
+                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                            {course.title}
+                          </td>
+                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                            {course.description}
+                          </td>
+                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                            <div className="flex justify-center space-x-2">
+                              <Button
+                                className="bg-green-500 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
+                                onClick={() =>
+                                  handleCreateResourceClick(course)
+                                }
+                                icon={<FileAddOutlined />}
+                              >
+                                {t("courses.ButtonUpContent")}
+                              </Button>
+                              <Button
+                                className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-lg ml-2 shadow-md shadow-gray-400"
+                                icon={<ReloadOutlined />}
+                                onClick={() => handleUpdateButtonClick(course)}
+                              />
+                              <Button
+                                className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-lg ml-2 shadow-md shadow-gray-400"
+                                icon={<InfoCircleOutlined />}
+                                onClick={() => handleDetailsButtonClick(course)}
+                              />
+                              <Button
+                                className="bg-orange-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-lg ml-2 shadow-md shadow-gray-400"
+                                icon={<BellOutlined />}
+                                onClick={() => handleNotifyButtonClick(course)}
+                              />
+                              <Button
+                                className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-lg ml-2 shadow-md shadow-gray-400"
+                                icon={<DeleteOutlined />}
+                                onClick={() => handleDeleteButtonClick(course)}
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+                {totalPages > 1 && (
+                  <div className="flex justify-end items-center mt-5 space-x-2">
+                    {/* Botón anterior */}
+                    <button
+                      onClick={() => paginate(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className={`px-2 py-1 rounded-full ${
+                        currentPage === 1
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-gray-800"
+                      }`}
+                    >
+                      <FaChevronLeft size={13} />
+                    </button>
+
+                    {/* Mostrar el rango actual */}
+                    <span className="text-gray-600">
+                      {`${(currentPage - 1) * itemsPerPage + 1} - ${
+                        currentPage * itemsPerPage > totalItems
+                          ? totalItems
+                          : currentPage * itemsPerPage
+                      }`}{" "}
+                      {t("datatable.of")} {totalItems}
+                    </span>
+
+                    {/* Botón siguiente */}
+                    <button
+                      onClick={() => paginate(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className={`px-2 py-1 rounded-full ${
+                        currentPage === totalPages
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-gray-800"
+                      }`}
+                    >
+                      <FaChevronRight size={13} />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -337,10 +377,10 @@ const DataTablete = () => {
             courseId={selectedCourse ? selectedCourse.id : null}
           />
 
-           <CreateResourceModal
+          <CreateResourceModal
             isVisible={isCreateModalVisible}
             onCancel={() => setIsCreateModalVisible(false)}
-            courseId={selectedCourse?.id}  
+            courseId={selectedCourse?.id}
             onCreate={handleCreateResource}
             resourceFile={resourceFile}
             onFileChange={(e) => setResourceFile(e.target.files[0])}
@@ -360,44 +400,13 @@ const DataTablete = () => {
           />
 
           <NotifyCourseModal
-                visible={isNotifyModalVisible}
-                onClose={() => setIsNotifyModalVisible(false)}
-                onSendEmail={handleSendNotification}
-                usersData={usersData}
-              />
+            visible={isNotifyModalVisible}
+            onClose={() => setIsNotifyModalVisible(false)}
+            onSendEmail={handleSendNotification}
+            usersData={usersData}
+          />
         </div>
       </div>
-      {totalPages > 1 && (
-        <div className="flex justify-center mb-8 mt-10">
-          <button
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-3 py-1 mx-1 bg-gray-200 text-gray-800 border"
-          >
-            {t('courses.previous')}
-          </button>
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index}
-              onClick={() => paginate(index + 1)}
-              className={`px-3 py-1 mx-1 ${
-                currentPage === index + 1
-                  ? "bg-black border text-white"
-                  : "bg-gray-200 text-gray-800 border"
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-1 mx-1 bg-gray-200 text-gray-800 border"
-          >
-            {t('courses.next')}
-          </button>
-        </div>
-      )}
     </div>
   );
 };

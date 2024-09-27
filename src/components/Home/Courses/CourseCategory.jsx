@@ -18,21 +18,53 @@ const CourseCategory = () => {
   const { category } = useParams();
   const { t } = useTranslation("global");
   const { courses } = useCoursesContext();
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const { registerToCourse, updateFavorites } = useUserContext();
-  const [userCourses, setUserCourses] = useState([]);
-  const [favorites, setFavorites] = useState([]);
+  const [userCourses, setUserCourses] = useState(() => {
+    const saved = localStorage.getItem('userCourses');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem('favorites');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    if (user && user.data) {
-      setUserCourses(user.data.courses || []);
-      setFavorites(user.data.favorites || []);
-    }
-  }, [user]);
+    const loadUserData = async () => {
+      if (user) {
+        await refreshUser();
+        if (user.data) {
+          const serverUserCourses = user.data.courses || [];
+          const serverFavorites = user.data.favorites || [];
+
+          setUserCourses(prevUserCourses => {
+            const newUserCourses = [...new Set([...prevUserCourses, ...serverUserCourses])];
+            localStorage.setItem('userCourses', JSON.stringify(newUserCourses));
+            return newUserCourses;
+          });
+
+          setFavorites(prevFavorites => {
+            const newFavorites = [...new Set([...prevFavorites, ...serverFavorites])];
+            localStorage.setItem('favorites', JSON.stringify(newFavorites));
+            return newFavorites;
+          });
+        }
+      }
+    };
+    loadUserData();
+  }, [user, refreshUser]);
+
+  useEffect(() => {
+    localStorage.setItem('userCourses', JSON.stringify(userCourses));
+  }, [userCourses]);
+
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
 
   const handleCardClick = (course) => {
     setSelectedCourse(course);
@@ -43,11 +75,18 @@ const CourseCategory = () => {
     const isFavorite = favorites.includes(courseId);
     
     if (isFavorite) {
-      setFavorites((prevFavorites) => prevFavorites.filter(id => id !== courseId));
-      await updateFavorites(user.data.id, courseId, 'remove');
+      setFavorites(prevFavorites => prevFavorites.filter(id => id !== courseId));
     } else {
-      setFavorites((prevFavorites) => [...prevFavorites, courseId]);
-      await updateFavorites(user.data.id, courseId, 'add');
+      setFavorites(prevFavorites => [...prevFavorites, courseId]);
+    }
+
+    if (user && user.data) {
+      try {
+        await updateFavorites(user.data.id, courseId, isFavorite ? 'remove' : 'add');
+      } catch (error) {
+        console.error("Error al actualizar favoritos:", error);
+        setFavorites(prevFavorites => isFavorite ? [...prevFavorites, courseId] : prevFavorites.filter(id => id !== courseId));
+      }
     }
   };
 
@@ -56,19 +95,23 @@ const CourseCategory = () => {
   };
 
   const handleRegister = async () => {
-    if (user && user.data && selectedCourse) {
-      if (!userCourses.includes(selectedCourse.id)) {
+    if (selectedCourse && !userCourses.includes(selectedCourse.id)) {
+      setUserCourses(prevUserCourses => [...prevUserCourses, selectedCourse.id]);
+      setIsConfirmModalOpen(false);
+      setIsSuccessModalOpen(true);
+
+      if (user && user.data) {
         try {
           await registerToCourse(user.data.id, selectedCourse.id);
-          setIsConfirmModalOpen(false);
-          setIsSuccessModalOpen(true);
-          setUserCourses((prev) => [...prev, selectedCourse.id]);
         } catch (error) {
           console.error("Error al registrar el curso:", error);
+          setUserCourses(prevUserCourses => prevUserCourses.filter(id => id !== selectedCourse.id));
+          setIsSuccessModalOpen(false);
+          alert("Hubo un error al registrar el curso. Por favor, inténtalo de nuevo.");
         }
-      } else {
-        alert("Ya estás inscrito en este curso.");
       }
+    } else {
+      alert("Ya estás inscrito en este curso.");
     }
   };
 
@@ -99,7 +142,7 @@ const CourseCategory = () => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="min-h-screen flex flex-col bg-gray-100 mt-16">
       <NavigationBar />
 
       <div className="flex flex-col sm:flex-row justify-between mt-6 mx-6">
