@@ -122,7 +122,21 @@ export const actualizarLinkContenido = (id, nuevoTexto, index) => {
   });
 };
 
+// Función para notificar a todos los usuarios inscritos en un curso
+export const notifyAllUsersInCourse = (courseId) => {
+  return courseRequest.post(`/${courseId}/notify-all`);
+};
 
+// Función para notificar a un usuario específico
+export const notifySpecificUser = (courseId, email) => {
+  const data = { email }; // Crear un objeto con el correo del usuario
+
+  return courseRequest.post(`/${courseId}/notify-specific`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
 
 // Función para eliminar un curso
 export const deleteCourse = (id) => courseRequest.delete(`/deleteCourse/${id}`);

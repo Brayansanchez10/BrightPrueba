@@ -10,7 +10,9 @@ import {
     actualizarLinkContenido as actualizarLinkContenidoApi,
     actualizarContenidoArchivo as actualizarContenidoArchivoApi,
 
-    asignarContenido as asignarContenidoApi // Importa la función asignarContenido desde tu archivo api
+    asignarContenido as asignarContenidoApi, // Importa la función asignarContenido desde tu archivo api
+    notifyAllUsersInCourse as notifyAllUsersInCourseApi,
+    notifySpecificUser as notifySpecificUserApi
 } from '../../api/courses/course.request'; // Importa las funciones de tu archivo api
 
 export const CoursesContext = createContext();
@@ -101,6 +103,28 @@ export const CoursesProvider = ({ children }) => {
         }
     };
 
+    const notifyAllUsersInCourse = async (courseId) => {
+        try {
+            const res = await notifyAllUsersInCourseApi(courseId);
+            console.log(res.data.message); // Mensaje de éxito
+            return res.data;
+        } catch (error) {
+            console.error('Error notificando a todos los usuarios:', error.response.data);
+            return null;
+        }
+    };
+    
+    const notifySpecificUser = async (courseId, email) => {
+        try {
+            const res = await notifySpecificUserApi(courseId, email);
+            console.log(res.data.message); // Mensaje de éxito
+            return res.data;
+        } catch (error) {
+            console.error(`Error notificando al usuario ${email}:`, error.response.data);
+            return null;
+        }
+    };
+
     const asignarContenido = async (id, contentFile) => {
         try {
             console.log("llego",id);
@@ -168,7 +192,7 @@ export const CoursesProvider = ({ children }) => {
     }, []);
 
     return (
-        <CoursesContext.Provider value={{ courses, getAllCourses, getCourse, createCourse, getCoursesByCategory, updateCourse, deleteCourse, asignarContenido, asignarLinkContenido, actualizarContenidoArchivo, actualizarLinkContenido }}>
+        <CoursesContext.Provider value={{ courses, getAllCourses, getCourse, createCourse, getCoursesByCategory, updateCourse, deleteCourse, asignarContenido, asignarLinkContenido, actualizarContenidoArchivo, actualizarLinkContenido, notifyAllUsersInCourse, notifySpecificUser }}>
             {children}
         </CoursesContext.Provider>
     );

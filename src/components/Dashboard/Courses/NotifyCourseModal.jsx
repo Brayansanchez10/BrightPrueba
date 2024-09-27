@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Input, message } from "antd";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
+import { useCoursesContext } from "../../../context/courses/courses.context";
 import hola1 from "/src/assets/img/Zorro.png";
 import "../css/Custom.css";
 
@@ -11,6 +11,8 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
   const [sendToAll, setSendToAll] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
+  const { notifyAllUsersInCourse, notifySpecificUser } = useCoursesContext();
+
   useEffect(() => {
     if (visible) {
       setSendToAll(false);
@@ -19,39 +21,27 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
     }
   }, [visible]);
 
-  const handleEmailChange = (e) => setEmailList(e.target.value);
+  const handleEmailChange = (e) => {
+    setEmailList(e.target.value);
+  };
 
   const handleSendEmail = async () => {
-    let recipients;
-    if (sendToAll) {
-      recipients = "all";
-    } else {
-      recipients = emailList
-        .split(",")
-        .map((email) => email.trim())
-        .filter((email) => email);
-      if (recipients.length === 0) {
-        message.error(t("notifyCourse.invalidEmails"));
-        return;
-      }
-    }
-
     try {
-      const response = await axios.post("http://localhost:3068/api/send-email", {
-        recipients: recipients,
-        courseId: courseId,
-      });
-
-      if (response.data.success) {
-        message.success(t("notifyCourse.sendSuccess"));
+      if (sendToAll) {
+        await notifyAllUsersInCourse(courseId);
+        message.success(t('notifyCourse.successNotifyAll'));
       } else {
-        message.error(t("notifyCourse.sendError"));
+        if (emailList.trim()) {
+          await notifySpecificUser(courseId, emailList.trim());
+          message.success(t('notifyCourse.successNotifySpecific'));
+        } else {
+          message.error(t('notifyCourse.emptyEmail'));
+        }
       }
+      onClose();
     } catch (error) {
-      console.error("Error en el envío del correo:", error);
-      message.error(t("notifyCourse.sendError"));
+      message.error(t('notifyCourse.errorSending'));
     }
-    onClose();
   };
 
   return (

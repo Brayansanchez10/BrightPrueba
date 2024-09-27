@@ -161,16 +161,20 @@ const DataTablete = () => {
   };
 
   const handleNotifyButtonClick = (course) => {
-    setSelectedCourse(course);
+    setSelectedCourse(course); // Asegúrate de guardar todo el curso, no solo el ID
     setIsNotifyModalVisible(true);
   };
 
   const handleSendNotification = async (recipients) => {
     try {
-      const response = await axios.post('/api/users/notify-course', {
-        courseId: selectedCourse.id,
-        recipients: recipients
+      if (!selectedCourse || !selectedCourse.id) {
+        throw new Error("Course ID is not defined");
+      }
+  
+      const response = await axios.post(`http://localhost:3068/PE/courses/${selectedCourse.id}/notify-specific`, {
+        recipients: recipients, // Pasa los destinatarios como está configurado
       });
+  
       if (response.data.message === "Course notification emails sent successfully") {
         message.success(t('courses.notificationSent'));
       } else {
@@ -360,11 +364,11 @@ const DataTablete = () => {
           />
 
           <NotifyCourseModal
-                visible={isNotifyModalVisible}
-                onClose={() => setIsNotifyModalVisible(false)}
-                onSendEmail={handleSendNotification}
-                usersData={usersData}
-              />
+            visible={isNotifyModalVisible}
+            onClose={() => setIsNotifyModalVisible(false)}
+            courseId={selectedCourse?.id} // Pasamos el ID del curso seleccionado al modal
+            onSendEmail={handleSendNotification}
+          />
         </div>
       </div>
       {totalPages > 1 && (

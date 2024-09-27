@@ -55,7 +55,7 @@ export default function CourseView() {
         } finally {
             setIsLoading(false)
         }
-    }, [courseId, getCourse, getResource, getUserById])
+    }, [courseId])
 
     useEffect(() => {
         fetchCourseData()

@@ -4,6 +4,7 @@ import HoverCard from "../Cards/HoverCard";
 import NavigationBar from "../NavigationBar";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useUserContext } from "../../../context/user/user.context";
+import { useResourceContext } from '../../../context/courses/resource.contex';
 import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from "react-i18next";
 import { AiOutlineClockCircle } from "react-icons/ai";
@@ -26,13 +27,28 @@ const CourseCategory = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const { getResource } = useResourceContext();
+  const [resourcesCount, setResourcesCount] = useState({});
 
   useEffect(() => {
-    if (user && user.data) {
-      setUserCourses(user.data.courses || []);
-      setFavorites(user.data.favorites || []);
-    }
-  }, [user]);
+    const fetchData = async () => {
+      if (user && user.data) {
+        setUserCourses(user.data.courses || []);
+        setFavorites(user.data.favorites || []);
+        
+        // Llama a la función getResource para obtener los recursos de cada curso
+        const counts = {};
+        await Promise.all(courses.map(async (course) => {
+          const resourceData = await getResource(course.id);
+          counts[course.id] = resourceData.length; // Guardar el conteo de recursos
+        }));
+        setResourcesCount(counts); // Establecer el estado de conteo de recursos
+      }
+    };
+  
+    fetchData();
+  }, [user, courses]);
+
 
   const handleCardClick = (course) => {
     setSelectedCourse(course);
@@ -91,7 +107,7 @@ const CourseCategory = () => {
       creatorName={course.instructor || "Instructor Desconocido"}
       rating={course.rating || 4}
       duration="6 horas"
-      lessons="12 lecciones"
+      lessons={`${resourcesCount[course.id] || 0} lecciones`} 
       onClick={() => handleCardClick(course)}
       onFavoriteToggle={() => handleFavoriteToggle(course.id)}
       isFavorite={favorites.includes(course.id)}
@@ -99,7 +115,7 @@ const CourseCategory = () => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="min-h-screen flex flex-col bg-gray-100 mt-16">
       <NavigationBar />
 
       <div className="flex flex-col sm:flex-row justify-between mt-6 mx-6">
@@ -172,7 +188,7 @@ const CourseCategory = () => {
                 </div>
                 <div className="flex items-center mt-1">
                   <MdPlayCircleOutline className="mr-1" />
-                  <span>12 lecciones</span>
+                  <span>{resourcesCount[selectedCourse.id] || 0} {t('course_user.resources')}</span>
                 </div>
                 <div className="flex items-center mt-1">
                   <FaRegChartBar className="mr-1" />
