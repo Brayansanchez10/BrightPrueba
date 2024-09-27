@@ -94,133 +94,137 @@ export default function CourseView() {
     }
 
     return (
-        <div className="bg-gray-100 min-h-screen">
+        <div className="bg-gray-100 min-h-screen flex flex-col">
             <NavigationBar />
-            <section className="relative py-20">
-                <div className="absolute inset-0 z-0 overflow-hidden">
-                    <div 
-                        className="w-full h-full bg-no-repeat bg-center bg-cover"
-                        style={{
-                            backgroundImage: `url(${course.image})`,
-                            filter: 'blur(5px)',
-                        }}
-                    />
-                    <div className="absolute inset-0 bg-black opacity-60"></div>
-                </div>
-                <div className="container mx-auto px-4 relative z-10">
-                    <Link to="/MyCourses" className="inline-flex items-center text-white hover:text-blue-300 transition-colors duration-200 mb-6">
-                        <FaArrowLeft className="mr-2" /> {t('course_user.back')}
-                    </Link>
-                    <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-                        {course.title}
-                    </h1>
-                    <p className="text-xl text-gray-300 mb-8 max-w-2xl">
-                        {course.description}
-                    </p>
-                    <div className="flex flex-wrap items-center gap-6 text-gray-300">
-                        <div className="flex items-center">
-                            <FaUser className="mr-2" />
-                            <span>{creator ? creator.username : t('Loading')}</span>
-                        </div>
-                        <div className="flex items-center">
-                            <FaUsers className="mr-2" />
-                            <span>{course.enrolledCount} {t('course_user.studensReg')}</span>
-                        </div>
-                        <div className="flex items-center">
-                            <MdPlayCircleOutline className="mr-2" />
-                            <span>{resources.length} {t('course_user.resources')}</span>
+            <main className="flex-grow">
+                <section className="relative py-20">
+                    <div className="absolute inset-0 z-0 overflow-hidden">
+                        <div 
+                            className="w-full h-full bg-no-repeat bg-center bg-cover"
+                            style={{
+                                backgroundImage: `url(${course.image})`,
+                                filter: 'blur(5px)',
+                            }}
+                        />
+                        <div className="absolute inset-0 bg-black opacity-60"></div>
+                    </div>
+                    <div className="container mx-auto px-4 relative z-10">
+                        <Link to="/MyCourses" className="inline-flex items-center text-white hover:text-blue-300 transition-colors duration-200 mb-6">
+                            <FaArrowLeft className="mr-2" /> {t('course_user.back')}
+                        </Link>
+                        <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+                            {course.title}
+                        </h1>
+                        <p className="text-xl text-gray-300 mb-8 max-w-2xl">
+                            {course.description}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-6 text-gray-300">
+                            <div className="flex items-center">
+                                <FaUser className="mr-2" />
+                                <span>{creator ? creator.username : t('Loading')}</span>
+                            </div>
+                            <div className="flex items-center">
+                                <FaUsers className="mr-2" />
+                                <span>{course.enrolledCount} {t('course_user.studensReg')}</span>
+                            </div>
+                            <div className="flex items-center">
+                                <MdPlayCircleOutline className="mr-2" />
+                                <span>{resources.length} {t('course_user.resources')}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section className="py-6">
-                <div className="container mx-auto px-4">
-                    <div className="grid md:grid-cols-3 gap-8">
-                        <div className="md:col-span-2">
-                            <h2 className="text-3xl font-bold text-gray-800 mb-8">{t('course_user.themes')}</h2>
-                            {resources.length > 0 ? (
-                                <Collapse 
-                                    accordion 
-                                    className="bg-white shadow-lg rounded-lg overflow-hidden"
-                                    expandIconPosition="right"
-                                >
-                                    {resources.map((resource, index) => (
-                                        <Panel
-                                            header={
-                                                <div className="flex items-center py-3">
-                                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                                                        {index + 1}
+                <section className="py-6">
+                    <div className="container mx-auto px-4">
+                        <div className="grid md:grid-cols-3 gap-8">
+                            <div className="md:col-span-2">
+                                <h2 className="text-3xl font-bold text-gray-800 mb-8">{t('course_user.themes')}</h2>
+                                {resources.length > 0 ? (
+                                    <Collapse 
+                                        accordion 
+                                        className="bg-white shadow-lg rounded-lg overflow-hidden"
+                                        expandIconPosition="right"
+                                    >
+                                        {resources.map((resource, index) => (
+                                            <Panel
+                                                header={
+                                                    <div className="flex items-center py-3">
+                                                        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                                                            {index + 1}
+                                                        </div>
+                                                        <span className="text-lg font-medium">{resource.title}</span>
                                                     </div>
-                                                    <span className="text-lg font-medium">{resource.title}</span>
+                                                }
+                                                key={resource.id}
+                                            >
+                                                <div className="p-4">
+                                                    <p className="text-gray-600 mb-4">{resource.description}</p>
+                                                    <motion.button
+                                                        whileHover={{ scale: 1.01 }}
+                                                        whileTap={{ scale: 0.99 }}
+                                                        onClick={() => handleResourceClick(resource.id)}
+                                                        className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-150"
+                                                    >
+                                                        <FaPlay className="mr-2" />
+                                                        {t('course_user.viewDetails')}
+                                                    </motion.button>
                                                 </div>
-                                            }
-                                            key={resource.id}
-                                        >
-                                            <div className="p-4">
-                                                <p className="text-gray-600 mb-4">{resource.description}</p>
-                                                <motion.button
-                                                    whileHover={{ scale: 1.01 }}
-                                                    whileTap={{ scale: 0.99 }}
-                                                    onClick={() => handleResourceClick(resource.id)}
-                                                    className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-150"
-                                                >
-                                                    <FaPlay className="mr-2" />
-                                                    {t('course_user.viewDetails')}
-                                                </motion.button>
-                                            </div>
-                                        </Panel>
-                                    ))}
-                                </Collapse>
-                            ) : (
-                                <div className="bg-white shadow-lg rounded-lg p-8 text-center">
-                                    <FaSadTear className="text-6xl text-gray-400 mb-4 mx-auto" />
-                                    <p className="text-xl text-gray-600">{t('course_user.NoResources')}</p>
-                                </div>
-                            )}
-                        </div>
-                        <div>
-                            <h2 className="text-3xl font-bold text-gray-800 mb-8">{t('course_user.aboutCreator')}</h2>
-                            <div className="bg-white shadow-lg rounded-lg overflow-hidden sticky top-24">
-                                <div className="p-6">
-                                    <div className="flex items-center mb-4">
-                                        <img
-                                            className="w-20 h-20 rounded-full object-cover mr-4"
-                                            src={creator && creator.userImage && creator.userImage !== 'null' ? creator.userImage : 'https://i.pinimg.com/originals/39/2c/86/392c86f7ba1c2600562cd0f36313fc20.png'}
-                                            alt={t('course_user.creatorImage')}
-                                        />
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-gray-800">{creator ? creator.username : t('Loading')}</h3>
-                                            <div className="flex items-center text- text-gray-500 mt-1">
-                                                <FaGraduationCap className="mr-2" />
-                                                <span>{t('course_user.expert')} {course.title}</span>
+                                            </Panel>
+                                        ))}
+                                    </Collapse>
+                                ) : (
+                                    <div className="bg-white shadow-lg rounded-lg p-8 text-center">
+                                        <FaSadTear className="text-6xl text-gray-400 mb-4 mx-auto" />
+                                        <p className="text-xl text-gray-600">{t('course_user.NoResources')}</p>
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <h2 className="text-3xl font-bold text-gray-800 mb-8">{t('course_user.aboutCreator')}</h2>
+                                <div className="bg-white shadow-lg rounded-lg overflow-hidden sticky top-24">
+                                    <div className="p-6">
+                                        <div className="flex items-center mb-4">
+                                            <img
+                                                className="w-20 h-20 rounded-full object-cover mr-4"
+                                                src={creator && creator.userImage && creator.userImage !== 'null' ? creator.userImage : 'https://i.pinimg.com/originals/39/2c/86/392c86f7ba1c2600562cd0f36313fc20.png'}
+                                                alt={t('course_user.creatorImage')}
+                                            />
+                                            <div>
+                                                <h3 className="text-xl font-semibold text-gray-800">{creator ? creator.username : t('Loading')}</h3>
+                                                <div className="flex items-center text-gray-500 mt-1">
+                                                    <FaGraduationCap className="mr-2" />
+                                                    <span>{t('course_user.expert')} {course.title}</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <motion.p 
-                                        key={creatorDescription}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ duration: 0.5 }}
-                                        className="text-gray-600 mb-4"
-                                    >
-                                    <strong>{creator ? creator.username :t('Loading')} </strong> {creatorDescription} 
-                                    </motion.p>
-                                    <div className="mt-4 pt-4 border-t border-gray-200">
-                                        <h5 className="text-md font-semibold text-gray-800 mb-2">{t('course_user.specialties')}</h5>
-                                        <ul className="list-disc list-inside text-gray-600">
-                                            <li>{t('course_user.web')}</li>
-                                            <li>{t('course_user.desing')}</li>
-                                            <li>{t('course_user.programming')}</li>
-                                        </ul>
+                                        <motion.p 
+                                            key={creatorDescription}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ duration: 0.5 }}
+                                            className="text-gray-600 mb-4"
+                                        >
+                                        <strong>{creator ? creator.username : t('Loading')}</strong> {creatorDescription}
+                                        </motion.p>
+                                        <div className="mt-4 pt-4 border-t border-gray-200">
+                                            <h5 className="text-md font-semibold text-gray-800 mb-2">{t('course_user.specialties')}</h5>
+                                            <ul className="list-disc list-inside text-gray-600">
+                                                <li>{t('course_user.web')}</li>
+                                                <li>{t('course_user.desing')}</li>
+                                                <li>{t('course_user.programming')}</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-            <Footer />
+                </section>
+            </main>
+            <div className="mt-16">
+                <Footer />
+            </div>
         </div>
     )
 }

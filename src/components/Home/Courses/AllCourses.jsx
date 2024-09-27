@@ -18,10 +18,14 @@ import Footer from "../../footer.jsx";
 const AllCourses = () => {
   const { t } = useTranslation("global");
   const { courses } = useCoursesContext();
-  const { user } = useAuth();
-  const { registerToCourse, updateFavorites } = useUserContext();
-  const [userCourses, setUserCourses] = useState([]);
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem('favorites');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [userCourses, setUserCourses] = useState(() => {
+    const saved = localStorage.getItem('userCourses');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -29,6 +33,7 @@ const AllCourses = () => {
   const [resources, setResources] = useState([]);
   const { getResource } = useResourceContext();
   const [resourcesCount, setResourcesCount] = useState({});
+  const { user } = useAuth();
 
 
     useEffect(() => {
@@ -50,41 +55,40 @@ const AllCourses = () => {
       fetchData();
     }, [user, courses]);
 
+    useEffect(() => {
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+    }, [favorites]);
+
+    useEffect(() => {
+      localStorage.setItem('userCourses', JSON.stringify(userCourses));
+    }, [userCourses]);
+
   const handleCardClick = (course) => {
     setSelectedCourse(course);
     setIsConfirmModalOpen(true);
   };
 
-  const handleFavoriteToggle = async (courseId) => {
-    const isFavorite = favorites.includes(courseId);
-    
-    if (isFavorite) {
-      setFavorites((prevFavorites) => prevFavorites.filter(id => id !== courseId));
-      await updateFavorites(user.data.id, courseId, 'remove');
-    } else {
-      setFavorites((prevFavorites) => [...prevFavorites, courseId]);
-      await updateFavorites(user.data.id, courseId, 'add');
-    }
+  const handleFavoriteToggle = (courseId) => {
+    setFavorites(prevFavorites => {
+      if (prevFavorites.includes(courseId)) {
+        return prevFavorites.filter(id => id !== courseId);
+      } else {
+        return [...prevFavorites, courseId];
+      }
+    });
   };
 
   const closeConfirmModal = () => {
     setIsConfirmModalOpen(false);
   };
 
-  const handleRegister = async () => {
-    if (user && user.data && selectedCourse) {
-      if (!userCourses.includes(selectedCourse.id)) {
-        try {
-          await registerToCourse(user.data.id, selectedCourse.id);
-          setIsConfirmModalOpen(false);
-          setIsSuccessModalOpen(true);
-          setUserCourses((prev) => [...prev, selectedCourse.id]);
-        } catch (error) {
-          console.error("Error al registrar el curso:", error);
-        }
-      } else {
-        alert("Ya estás inscrito en este curso.");
-      }
+  const handleRegister = () => {
+    if (selectedCourse && !userCourses.includes(selectedCourse.id)) {
+      setUserCourses(prevUserCourses => [...prevUserCourses, selectedCourse.id]);
+      setIsConfirmModalOpen(false);
+      setIsSuccessModalOpen(true);
+    } else {
+      alert("Ya estás inscrito en este curso.");
     }
   };
 
