@@ -7,7 +7,7 @@ import {
   CaretUpOutlined,
   CaretDownOutlined,
 } from "@ant-design/icons";
-import { FaCircle, FaSearch } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaCircle, FaSearch } from "react-icons/fa";
 import LeftBar from "../LeftBar";
 import Navbar from "../NavBar";
 import DetailsUserModal from "./UserDetailsModal";
@@ -15,12 +15,13 @@ import CreateUserModal from "./CreateUserModal";
 import UpdateUserModal from "./UpdateUserModal";
 import { useUserContext } from "../../../context/user/user.context";
 import { useRoleContext } from "../../../context/user/role.context";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const DataTable = () => {
   const { t } = useTranslation("global");
   const { rolesData } = useRoleContext();
-  const { getUsers, usersData, activateAccount, updateUser, createUser } = useUserContext();
+  const { getUsers, usersData, activateAccount, updateUser, createUser } =
+    useUserContext();
   const [updatedDataFlag, setUpdatedDataFlag] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [form] = Form.useForm();
@@ -34,7 +35,8 @@ const DataTable = () => {
     direction: "ascending",
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(12);
+  const [totalItems, setTotalItems] = useState(0); // Agregar estado para totalItems
   const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
 
   useEffect(() => {
@@ -71,6 +73,11 @@ const DataTable = () => {
     )
   );
 
+  useEffect(() => {
+    // Actualiza el total de ítems filtrados
+    setTotalItems(filteredUsers.length);
+  }, [filteredUsers]);
+
   const handleActivateAccount = (userId) => {
     setUpdatedDataFlag(true);
     activateAccount(userId);
@@ -78,7 +85,11 @@ const DataTable = () => {
 
   const orderBy = (key) => {
     let direction = "ascending";
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === "ascending") {
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "ascending"
+    ) {
       direction = "descending";
     }
     setSortConfig({ key, direction });
@@ -161,161 +172,183 @@ const DataTable = () => {
                 <h2 className="text-3xl text-purple-900 font-bungee">
                   {t("datatable.Users")}
                 </h2>
-                <Button
-                  type="primary"
-                  style={{ backgroundColor: "green" }}
-                  onClick={() => setShowCreateModal(true)}
-                  className="text-center font-medium text-base"
-                >
-                  <b>{t("datatable.CreateUser")}</b>
-                </Button>
                 <div className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg">
                   <FaSearch size={"18px"} className="mt-1 mr-2" />
                   <input
                     type="search"
                     className="outline-none w-full md:w-[280px] lg:w-[360px]"
-                    placeholder={t('datatable.SearchByName')}
+                    placeholder={t("datatable.SearchByName")}
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                   />
                 </div>
               </div>
+              <Button
+                type="primary"
+                style={{ backgroundColor: "#4c1d95" }}
+                onClick={() => setShowCreateModal(true)}
+                className="text-center font-medium text-base ml-[72px]"
+              >
+                <b>{t("datatable.CreateUser")}</b>
+              </Button>
             </div>
             <div className="mt-6 flex justify-center">
-            <div className="overflow-auto w-full px-6 mx-12 py-6 bg-white rounded-t-xl rounded-b-xl shadow-lg shadow-purple-300">
-              <table className="min-w-full overflow-x-auto">
-                <thead>
-                  <tr>
-                    <th
-                      className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
-                      onClick={() => orderBy("id")}
-                    >
-                      {t("datatable.ID")}{" "}
-                    </th>
-                    <th
-                      className="text-lg px-8 py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
-                      onClick={() => orderBy("role")}
-                    >
-                      {t("datatable.Role")}{" "}
-                      {sortConfig.key === "role" &&
-                        (sortConfig.direction === "ascending" ? (
-                          <CaretUpOutlined />
-                        ) : (
-                          <CaretDownOutlined />
-                        ))}
-                    </th>
-                    <th
-                      className="text-lg px-6 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
-                      onClick={() => orderBy("username")}
-                    >
-                      {t("datatable.Name")}{" "}
-                      {sortConfig.key === "username" &&
-                        (sortConfig.direction === "ascending" ? (
-                          <CaretUpOutlined />
-                        ) : (
-                          <CaretDownOutlined />
-                        ))}
-                    </th>
-                    <th
-                      className="text-lg px-10 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
-                      onClick={() => orderBy("email")}
-                    >
-                      {t("datatable.Email")}{" "}
-                    </th>
-                    <th
-                      className="text-lg px-10 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
-                      onClick={() => orderBy("state")}
-                    >
-                      {t("datatable.Status")}{" "}  
-                    </th>
-                    <th className="px-40 py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
-                      {t("datatable.Actions")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentItems.map((item, index) => (
-                    <tr key={item.id}>
-                      <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
-                        {generateIds()[index]}
-                      </td>
-                      <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
-                        {item.role}
-                      </td>
-                      <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
-                        {item.username}
-                      </td>
-                      <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
-                        {item.email}
-                      </td>
-                      <td className="pl-14 border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
-                        {item.state ? <FaCircle size="14px" className="text-green-500 -mb-[21px] -ml-8" /> : <FaCircle size="14px" className="text-red-500 -mb-[21px] -ml-8" />}
-                        {item.state ? t("datatable.Active") : t("datatable.Inactive")}
-                      </td> 
-                      <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
-                        <button 
-                          onClick={() => handleActivateAccount(item.id)}
-                          className={`${
-                            item.state
-                              ? "bg-red-500 hover:bg-red-700"
-                              : "bg-green-500 hover:bg-green-700"
-                          } text-white font-bold py-1.5 px-4 rounded-3xl flex-1 min-w-[120px] shadow-md shadow-gray-400`}
-                        >
-                          {item.state ? t("datatable.Desactivate") : t("datatable.Activate")}
-                        </button>
-                        <button
-                          onClick={() => handleUpdateButtonClick(item)}
-                          className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 flex-1 min-w-[120px] shadow-md shadow-gray-400"
-                        >
-                          {t("datatable.Update")}
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedUserId(item.id);
-                            setShowDetailsModal(true);
-                          }}
-                          className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 flex-1 min-w-[120px] shadow-md shadow-gray-400"
-                        >
-                          {t("datatable.Details")}
-                        </button>
-                      </td>
+              <div className="overflow-auto w-full px-6 mx-12 py-6 bg-white rounded-t-xl rounded-b-xl shadow-lg shadow-purple-300">
+                <table className="min-w-full overflow-x-auto">
+                  <thead>
+                    <tr>
+                      <th
+                        className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        onClick={() => orderBy("id")}
+                      >
+                        {t("datatable.ID")}{" "}
+                      </th>
+                      <th
+                        className="text-lg px-8 py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        onClick={() => orderBy("role")}
+                      >
+                        {t("datatable.Role")}{" "}
+                        {sortConfig.key === "role" &&
+                          (sortConfig.direction === "ascending" ? (
+                            <CaretUpOutlined />
+                          ) : (
+                            <CaretDownOutlined />
+                          ))}
+                      </th>
+                      <th
+                        className="text-lg px-6 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        onClick={() => orderBy("username")}
+                      >
+                        {t("datatable.Name")}{" "}
+                        {sortConfig.key === "username" &&
+                          (sortConfig.direction === "ascending" ? (
+                            <CaretUpOutlined />
+                          ) : (
+                            <CaretDownOutlined />
+                          ))}
+                      </th>
+                      <th
+                        className="text-lg px-10 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        onClick={() => orderBy("email")}
+                      >
+                        {t("datatable.Email")}{" "}
+                      </th>
+                      <th
+                        className="text-lg px-10 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        onClick={() => orderBy("state")}
+                      >
+                        {t("datatable.Status")}{" "}
+                      </th>
+                      <th className="px-40 py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                        {t("datatable.Actions")}
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {currentItems.map((item, index) => (
+                      <tr key={item.id}>
+                        <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                          {generateIds()[index]}
+                        </td>
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                          {item.role}
+                        </td>
+                        <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                          {item.username}
+                        </td>
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                          {item.email}
+                        </td>
+                        <td className="pl-14 border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                          {item.state ? (
+                            <FaCircle
+                              size="14px"
+                              className="text-green-500 -mb-[21px] -ml-8"
+                            />
+                          ) : (
+                            <FaCircle
+                              size="14px"
+                              className="text-red-500 -mb-[21px] -ml-8"
+                            />
+                          )}
+                          {item.state
+                            ? t("datatable.Active")
+                            : t("datatable.Inactive")}
+                        </td>
+                        <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                          <button
+                            onClick={() => handleActivateAccount(item.id)}
+                            className={`${
+                              item.state
+                                ? "bg-red-500 hover:bg-red-700"
+                                : "bg-green-500 hover:bg-green-700"
+                            } text-white font-bold py-1.5 px-4 rounded-3xl flex-1 min-w-[120px] shadow-md shadow-gray-400`}
+                          >
+                            {item.state
+                              ? t("datatable.Desactivate")
+                              : t("datatable.Activate")}
+                          </button>
+                          <button
+                            onClick={() => handleUpdateButtonClick(item)}
+                            className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 flex-1 min-w-[120px] shadow-md shadow-gray-400"
+                          >
+                            {t("datatable.Update")}
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedUserId(item.id);
+                              setShowDetailsModal(true);
+                            }}
+                            className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 flex-1 min-w-[120px] shadow-md shadow-gray-400"
+                          >
+                            {t("datatable.Details")}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {totalPages > 1 && (
+                  <div className="flex justify-end items-center mt-5 space-x-2">
+                    {/* Botón anterior */}
+                    <button
+                      onClick={() => paginate(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className={`px-2 py-1 rounded-full ${
+                        currentPage === 1
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-gray-800"
+                      }`}
+                    >
+                      <FaChevronLeft size={13} />
+                    </button>
+
+                    {/* Mostrar el rango actual */}
+                    <span className="text-gray-600">
+                      {`${(currentPage - 1) * itemsPerPage + 1} - ${
+                        currentPage * itemsPerPage > totalItems
+                          ? totalItems
+                          : currentPage * itemsPerPage
+                      }`}{" "}
+                      {t("datatable.of")} {totalItems}
+                    </span>
+
+                    {/* Botón siguiente */}
+                    <button
+                      onClick={() => paginate(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className={`px-2 py-1 rounded-full ${
+                        currentPage === totalPages
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-gray-800"
+                      }`}
+                    >
+                      <FaChevronRight size={13} />
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-            </div>
-            {totalPages > 1 && (
-            <div className="flex justify-center mt-10 mb-10">
-              <button
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-3 py-1 mx-1 bg-gray-200 text-gray-800 border"
-              >
-                {t("datatable.Previous")}
-              </button>
-              {Array.from({ length: totalPages }, (_, index) => (
-                <button
-                  key={index}
-                  onClick={() => paginate(index + 1)}
-                  className={`px-3 py-1 mx-1 ${
-                    currentPage === index + 1
-                      ? "bg-black border text-white"
-                      : "bg-gray-200 text-gray-800 border"
-                  }`}
-                >
-                  {index + 1}
-                </button>
-              ))}
-              <button
-                onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="px-3 py-1 mx-1 bg-gray-200 text-gray-800 border"
-              >
-                {t("datatable.Next")}
-              </button>
-            </div>
-          )}
           </div>
         </div>
       </div>
@@ -327,7 +360,7 @@ const DataTable = () => {
         rolesData={rolesData}
       />
 
-      <UpdateUserModal 
+      <UpdateUserModal
         visible={showUpdateModal}
         onCancel={handleCloseUpdateModal}
         onUpdate={handleUpdateUser}
