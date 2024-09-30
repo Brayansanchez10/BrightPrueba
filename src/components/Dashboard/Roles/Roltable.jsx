@@ -72,7 +72,7 @@ const DataTable = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
-  const [totalItems, setTotalItems] = useState(0); // Agregar estado para totalItems
+  const [totalItems, setTotalItems] = useState(0); 
 
   useEffect(() => {
     const handleResize = () => {
@@ -87,7 +87,7 @@ const DataTable = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Initial call to set the correct itemsPerPage
+    handleResize(); 
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -105,7 +105,6 @@ const DataTable = () => {
   }, [itemsPerPage]);
 
   useEffect(() => {
-    // Actualiza el total de ítems filtrados
     setTotalItems(filteredRoles.length);
   }, [filteredRoles]);
 
@@ -172,7 +171,7 @@ const DataTable = () => {
         showConfirmButton: false,
       }).then(() => {
         setShowDeleteModal(false);
-        setUpdatedDataFlag(true); // Trigger data refresh
+        setUpdatedDataFlag(true);
       });
     } catch (error) {
       Swal.fire({
@@ -430,7 +429,7 @@ const DataTable = () => {
             </button>
           </div>
           <div className="px-5 py-6">
-            <h1 className="text-center text-[#350B48] text-3xl font-extrabold mt-14 mb-5 overflow-hidden text-ellipsis whitespace-nowrap">
+            <h1 className="text-center text-[#350B48] text-3xl font-extrabold mt-6 mb-5 overflow-hidden text-ellipsis whitespace-nowrap font-bungee">
               {t("roles.permissions")}
             </h1>
             {selectedRole && (

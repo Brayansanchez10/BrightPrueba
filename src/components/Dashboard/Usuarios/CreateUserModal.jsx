@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Form, Input, Select } from "antd";
 import { useRoleContext } from "../../../context/user/role.context";
 import { useUserContext } from "../../../context/user/user.context";
@@ -13,6 +13,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
   const { checkIfUserExists } = useUserContext();
   const [form] = Form.useForm();
   const { t } = useTranslation("global");
+  const [shake, setShake] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -46,20 +47,21 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
       form.resetFields();
       onCancel(); 
     } catch (error) {
-      console.error("Failed to create user:", error);
+      setShake(true); 
+      setTimeout(() => setShake(false), 500); 
     }
   };
 
   return (
     <Modal
-      className="custom w-[544px] h-[600px] rounded-2xl bg-white flex flex-col justify-between"
+      className={`custom w-[544px] h-[600px] rounded-2xl bg-white flex flex-col justify-between ${shake ? "shake" : ""}`} 
       visible={visible}
       closable={false}
       centered
       footer={null}
       onCancel={onCancel}
     >
-        <div className="relative w-full h-[125px] bg-gradient-to-r from-[#18116A] to-blue-500 rounded-t-2xl flex items-center justify-center">
+      <div className="relative w-full h-[125px] bg-gradient-to-r from-[#18116A] to-blue-500 rounded-t-2xl flex items-center justify-center">
         <img
           src={zorroImage}
           alt="Zorro"
@@ -72,34 +74,39 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
         >
           &times;
         </button>
-       </div>
+      </div>
       <Form
         className="px-5 py-6"
         form={form}
         layout="vertical"
       >
-        <h1 className="text-center text-[#18116A] text-3xl font-extrabold mt-1 mb-5 text-shadow-md">
+        <h1 className="text-center text-[#18116A] text-3xl font-extrabold mt-1 mb-5 text-shadow-md font-bungee">
           {t("CreateUserModal.createUserTitle")}
         </h1>
-
         <Form.Item
           className="text-lg font-bold text-black mb-2"
           name="username"
           label={t("CreateUserModal.username")}
-          rules={[{ required: true, message: t("CreateUserModal.usernameRequired") }]}
+          rules={[
+            { required: true, message: t("validations.usernameRequired") },
+            { min: 5, message: t("validations.usernameMinLength") },
+            { max: 30, message: t("validations.usernameMaxLength") }
+          ]}
         >
           <Input className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
-
         <Form.Item
           className="text-lg font-bold text-black mb-2"
           name="email"
           label={t("CreateUserModal.email")}
-          rules={[{ required: true, message: t("CreateUserModal.emailRequired") }]}
+          rules={[
+            { required: true, message: t("CreateUserModal.emailRequired") },
+            { type: "email", message: t("CreateUserModal.emailInvalid") },
+            { max: 30, message: t("validations.maxEmail") }
+          ]}
         >
           <Input className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
-
         <Form.Item
           className="text-lg font-bold text-black mb-2"
           name="role"
@@ -114,7 +121,6 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
             ))}
           </Select>
         </Form.Item>
-
         <Form.Item
           className="text-lg font-bold text-black mb-2"
           name="state"
@@ -126,7 +132,6 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
             <Option value="inactive">{t("CreateUserModal.inactive")}</Option>
           </Select>
         </Form.Item>
-
         <div className="flex justify-center mt-6 space-x-4">
           <button
             className="bg-[#18116A] hover:bg-[#16105e] text-white font-semibold px-4 py-2 rounded-lg"

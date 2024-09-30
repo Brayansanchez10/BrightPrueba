@@ -23,9 +23,9 @@ const CreateRolForm = ({ visible, onClose }) => {
   const validateField = (name, value) => {
     switch (name) {
       case "nombre":
-        if (value.length < 3) {
+        if (value.length < 4) {  
           setError((prev) => ({ ...prev, nombre: t("createRoleForm.mixRole") }));
-        } else if (value.length > 15) {
+        } else if (value.length > 10) {  
           setError((prev) => ({ ...prev, nombre: t("createRoleForm.maxRole") }));
         } else {
           setError((prev) => ({ ...prev, nombre: "" }));
@@ -43,12 +43,12 @@ const CreateRolForm = ({ visible, onClose }) => {
       nombre: "",
     };
 
-    if (!role.nombre || role.nombre.length < 3 || role.nombre.length > 10) {
-      errors.nombre = t("createRoleForm.mixRole");
+    if (!role.nombre || role.nombre.length < 4 || role.nombre.length > 10) {
+      errors.nombre = t("createRoleForm.minMaxRole"); 
     }
 
     if (rolesData.some((existingRole) => existingRole.nombre === role.nombre)) {
-      errors.nombre = t("createRoleForm.maxRole");
+      errors.nombre = t("createRoleForm.roleExists");
     }
 
     if (Object.values(errors).some((error) => error)) {
@@ -107,7 +107,7 @@ const CreateRolForm = ({ visible, onClose }) => {
         className="w-[200px] h-[200px] mt-12 object-contain" />
       </div>
       <div className="p-5 text-center">
-        <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4">
+        <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4 font-bungee">
           {t('createRoleForm.title')}
         </h1>
         <div className="mt-4 text-left"> 

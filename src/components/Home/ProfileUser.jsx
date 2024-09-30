@@ -18,8 +18,6 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
   const [profileImage, setProfileImage] = useState(null);
   const [previewProfileImage, setPreviewProfileImage] = useState(null);
   const [deleteProfileImage, setDeleteProfileImage] = useState(false);
-
-  // Estado para almacenar errores
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -46,18 +44,35 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) { 
+        setErrors(prev => ({
+          ...prev,
+          image: t("userProfileSettings.image_too_large")
+        }));
+        return;
+      }
+      if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+        setErrors(prev => ({
+          ...prev,
+          image: t("userProfileSettings.invalid_image_format")
+        }));
+        return;
+      }
       setProfileImage(file);
       setPreviewProfileImage(URL.createObjectURL(file));
-      setDeleteProfileImage(false); // Reset flag if new image is selected
+      setDeleteProfileImage(false);
+      setErrors(prev => ({ ...prev, image: '' }));
     }
   };
-
-  // Validación centralizada para los campos del formulario
   const validate = () => {
     const newErrors = {
-      name: name.length < 4 ? t("userProfileSettings.name_invalid") : "",
+      name: name.length < 5 || name.length > 30 
+        ? t("userProfileSettings.name_length_invalid") 
+        : "",
       email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
         ? t("userProfileSettings.invalid_email")
+        : email.length > 30
+        ? t("userProfileSettings.email_too_long")
         : "",
     };
     setErrors(newErrors);
@@ -190,6 +205,9 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
                     className="w-full border text-sm border-gray-300 rounded-md p-2 hover:bg-gray-100"
                     onChange={handleImageChange}
                   />
+                  {errors.image && (
+                    <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+                  )}
                 </div>
               </div>
               <form onSubmit={handleSubmit}>

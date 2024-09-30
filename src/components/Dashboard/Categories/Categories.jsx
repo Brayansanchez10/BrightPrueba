@@ -36,7 +36,7 @@ const DataTablete = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
-  const [totalItems, setTotalItems] = useState(0); // Agregar estado para totalItems
+  const [totalItems, setTotalItems] = useState(0); 
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
@@ -60,7 +60,7 @@ const DataTablete = () => {
         category.description.toLowerCase().includes(searchValue.toLowerCase())
     );
 
-    setTotalItems(filteredCategory.length); // Actualizamos totalItems
+    setTotalItems(filteredCategory.length); 
     setTotalPages(Math.ceil(filteredCategory.length / itemsPerPage));
   }, [categories, searchValue, itemsPerPage]);
 
@@ -73,7 +73,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-      setDataFlag((prevFlag) => !prevFlag); // Cambiamos el flag
+      setDataFlag((prevFlag) => !prevFlag); 
     } catch (error) {
       Swal.fire({
         title: t("categories.createError"),
@@ -95,7 +95,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-      setDataFlag((prevFlag) => !prevFlag); // Cambiamos el flag
+      setDataFlag((prevFlag) => !prevFlag); 
     } catch (error) {
       Swal.fire({
         title: t("categories.updateError"),
@@ -117,7 +117,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-      setDataFlag((prevFlag) => !prevFlag); // Cambiamos el flag
+      setDataFlag((prevFlag) => !prevFlag);
     } catch (error) {
       Swal.fire({
         title: t("categories.deleteError"),

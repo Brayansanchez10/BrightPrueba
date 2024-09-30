@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 const UpdateCategoryModal = ({
@@ -7,21 +7,17 @@ const UpdateCategoryModal = ({
   onClose,
   onUpdate,
   form,
-  imagePreview: initialImagePreview, // Imagen previa pasada como prop
+  imagePreview: initialImagePreview, 
 }) => {
   const { t } = useTranslation("global");
-  const [imagePreview, setImagePreview] = useState(null); // Estado para almacenar la previsualización de la imagen
-  const [imageFile, setImageFile] = useState(null); // Estado para almacenar el archivo de imagen seleccionado
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null); 
 
-  
   useEffect(() => {
     if (initialImagePreview) {
       setImagePreview(initialImagePreview); 
     }
   }, [initialImagePreview]);
-
-
-  // Manejar el cambio de la imagen
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
@@ -30,7 +26,40 @@ const UpdateCategoryModal = ({
     }
   };
 
+  const validateFields = (values) => {
+    const errors = {};
+    if (!values.name) {
+      errors.name = t('updateCategoryModal.namePlaceholder'); 
+    } else if (values.name.length < 3) {
+      errors.name = t('updateCategoryModal.nameShort');
+    } else if (values.name.length > 20) {
+      errors.name = t('updateCategoryModal.nameLong');
+    }
+
+    if (!values.description) {
+      errors.description = t('updateCategoryModal.descriptionPlaceholder'); 
+    } else if (values.description.length < 30) {
+      errors.description = t('updateCategoryModal.descriptionShort'); 
+    } else if (values.description.length > 150) {
+      errors.description = t('updateCategoryModal.descriptionLong'); 
+    }
+
+    if (!imageFile) {
+      errors.image = t('updateCategoryModal.imageRequired');
+    }
+
+    return errors;
+  };
+
   const handleSubmit = (values) => {
+    const errors = validateFields(values);
+    if (Object.keys(errors).length > 0) {
+      Object.entries(errors).forEach(([field, message]) => {
+        form.setFields([{ name: field, errors: [message] }]); 
+      });
+      return;
+    }
+    
     onUpdate({ ...values, image: imageFile }); 
   };
 
@@ -64,7 +93,7 @@ const UpdateCategoryModal = ({
         onFinish={handleSubmit}
         layout="vertical"
       >
-        <h1 className="text-center text-[#350b48] text-3xl font-extrabold mt-1 mb-5 text-shadow-md">
+        <h1 className="text-center text-[#350b48] text-3xl font-extrabold mt-1 mb-5 text-shadow-md font-bungee">
           {t('updateCategoryModal.title')}
         </h1>
         <Form.Item
@@ -84,8 +113,6 @@ const UpdateCategoryModal = ({
         >
           <Input.TextArea rows={3} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
-
-        {/* Input para seleccionar la imagen */}
         <div className="mb-4">
           <label className="block text-lg font-bold text-black mb-2">
             {t('updateCategoryModal.imagePreview')}
@@ -96,9 +123,8 @@ const UpdateCategoryModal = ({
             className="w-full h-[44px] rounded-xl bg-white shadow-md px-3 py-2"
             onChange={handleImageChange}
           />
+          <span className="text-red-500">{imageFile ? '' : t('updateCategoryModal.imageRequired')}</span>
         </div>
-
-        {/* Previsualización de la imagen */}
         {imagePreview && (
           <div className="flex justify-center mt-2">
             <img

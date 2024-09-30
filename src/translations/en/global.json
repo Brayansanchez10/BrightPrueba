@@ -133,10 +133,10 @@
         "deleted_account": "The account has been deleted successfully."
     },
     "userProfileSettings": {
-        "edit_profile": "Edit Profile",
-        "invalid_email": "Invalid email",
-        "name_invalid": "The name must be at least 4 characters long",
+       "edit_profile": "Edit Profile",
         "name": "Name",
+        "invalid_email": "Invalid Email",
+        "name_invalid": "Name must be at least 4 characters long",
         "email": "Email",
         "profile_image": "Profile Image",
         "save": "Save",
@@ -150,8 +150,12 @@
         "confirm_image_deletion": "Are you sure you want to delete this image?",
         "yes_delete_it": "Yes, delete it!",
         "image_deleted_successfully": "Image deleted successfully!",
-        "failed_to_delete_image": "Failed to delete image."
-    },
+        "failed_to_delete_image": "Failed to delete image.",
+        "name_length_invalid": "Name must be between 5 and 30 characters",
+        "email_too_long": "Email must not exceed 30 characters",
+        "image_too_large": "Image size must not exceed 5MB",
+        "invalid_image_format": "Invalid image format. Please use JPEG or PNG"
+        },
     "navigationBar": {
         "home": "HOME",
         "courses": "COURSES",
@@ -302,6 +306,13 @@
         "roleRequired": "Please select a role",
         "stateRequired": "Please select a state"
     },
+    "validations": {
+        "name": "Username",
+        "usernameRequired": "Username is required",
+        "usernameMinLength": "Username must be at least 5 characters",
+        "usernameMaxLength": "Username cannot exceed 30 characters",
+        "maxEmail": "Email cannot exceed 30 characters"
+    },
     "roles": {
         "title": "Role Management",
         "createRole": "Create Role",
@@ -334,8 +345,8 @@
         "roleCreated": "Role created successfully",
         "createButton": "Create",
         "closeButton": "Close",
-        "maxRole": "The role must be at least 15 characters long",
-        "mixRole": "The role must be at least 3 characters long"
+        "maxRole": "The role must be at least 10 characters long",
+        "mixRole": "The role must be at least 4 characters long"
     },
     "courses": {
         "title": "Courses",
@@ -403,12 +414,13 @@
         "image": "Image",
         "createButton": "Create",
         "closeButton": "Close",
-        "nameTooShort": "The course name must be at least 2 characters long.",
-        "descriptionTooShort": "The description must be at least 6 characters long.",
+        "nameTooShort": "The course name must be at least 3 characters long.",
+        "descriptionTooShort": "The description must be at least 30 characters long.",
         "invalidImageFile": "Please select a valid image file.",
         "allFieldsRequired": "All fields are required.",
         "createSuccess": "Course created successfully!",
-        "createFailure": "Failed to create course. Please try again."
+        "createFailure": "Failed to create course. Please try again.",
+        "nameInvalidLength": "The course name must be at least 3 characters long and a maximum of 30" 
     },
     "assignContentModal": {
         "title": "Add Content To",
@@ -488,7 +500,10 @@
         "createButton": "Create",
         "createSuccess": "Category created successfully!",
         "createFailure": "Failed to create category. Please try again.",
-        "invalidImageFile": "Please upload a valid image file."
+        "invalidImageFile": "Please upload a valid image file.",
+        "nameRequired": "Please enter the category name",
+        "descriptionRequired": "Please enter the description",
+        "nameTooLong": "The category name must be a maximum of 20 characters"
     },
     "deleteCategory": {
         "confirmDeletion": "Confirm Deletion",
@@ -507,12 +522,17 @@
     "updateCategoryModal": {
         "title": "Update Category",
         "nameLabel": "Name",
-        "namePlaceholder": "Please input the category name!",
+        "namePlaceholder": "Please enter the category name!",
+        "nameShort": "The category name must be at least 3 characters.",
+        "nameLong": "The category name must be a maximum of 20 characters.",
         "descriptionLabel": "Description",
-        "descriptionPlaceholder": "Please input the category description!",
+        "descriptionPlaceholder": "Please enter the category description!",
+        "descriptionShort": "The description must be at least 30 characters.",
+        "descriptionLong": "The description must be a maximum of 150 characters.",
         "imagePreview": "Image Preview",
         "updateButton": "Update",
-        "cancelButton": "Cancel"
+        "cancelButton": "Cancel",
+        "imageRequired": "Please select an image!"
     },
     "deleteAccountConfirmation": {
         "title": "Delete Account",
@@ -627,9 +647,11 @@
         "publishedOn": "Published on"
       },
       "announcement": {
-        "comingSoon": "Coming Soon",
-        "comingSoonNotes": "Coming Soon Notes",
-        "stayTuned": "Stay tuned for our upcoming updates and events."
+        "comingSoon": "User contributions",
+        "comingSoonNotes": "Ratings and reviews",
+        "stayTuned": "Stay tuned for our upcoming updates and events.",
+        "descriptionSoon": "Discover feedback from other users and share your experience by engaging with the course.",
+        "descriptionNotes": "Check out the ratings and reviews to learn about the course quality from other students."
       },
     "months": {
         "january": "January",

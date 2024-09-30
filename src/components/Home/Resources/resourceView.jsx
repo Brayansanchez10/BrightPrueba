@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from "react";
+"use client"
+
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useResourceContext } from "../../../context/courses/resource.contex";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useAuth } from "../../../context/auth.context";
 import { useUserContext } from "../../../context/user/user.context";
 import NavigationBar from "../NavigationBar";
-import { FiMenu, FiX, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiMenu, FiX, FiChevronLeft, FiChevronRight, FiSend } from "react-icons/fi";
+import { FaCheckCircle, FaTimesCircle, FaQuestionCircle, FaStar, FaComment, FaUser } from 'react-icons/fa';
 import jsPDF from "jspdf";
 import zorro from "../../../assets/img/Zorro.jpeg";
 import derechaabajo from "../../../assets/img/DerechaAbajo.jpeg";
 import izquierdaarriba from "../../../assets/img/IzquierdaArriba.jpeg";
 import { Anothershabby_trial } from "../../../Tipografy/Anothershabby_trial-normal";
 import Swal from 'sweetalert2';
-import { FaCheckCircle, FaTimesCircle, FaQuestionCircle } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
 export default function ResourceView() {
@@ -37,7 +39,17 @@ export default function ResourceView() {
   const [currentResourceIndex, setCurrentResourceIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [course, setCourse] = useState(null);
+  const [isContentCompleted, setIsContentCompleted] = useState(false);
+  const [rightSideContent, setRightSideContent] = useState("default");
+  const videoRef = useRef(null);
   const navigate = useNavigate();
+  const [userComment, setUserComment] = useState("");
+  const [userRating, setUserRating] = useState(0);
+  const [ratingComment, setRatingComment] = useState("");
+  const [comments, setComments] = useState([
+    { user: "Usuario1", comment: "Excelente curso, muy informativo.", avatar: null },
+    { user: "Usuario2", comment: "Me gustaría ver más ejemplos prácticos.", avatar: null }
+  ]);
 
   useEffect(() => {
     const fetchResource = async () => {
@@ -131,12 +143,12 @@ export default function ResourceView() {
     if (url.includes("youtu.be/") || url.includes("youtube.com/watch")) {
       if (url.includes("youtu.be/")) {
         const videoId = url.split("youtu.be/")[1];
-        return `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1`;
+        return `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1&enablejsapi=1`;
       }
       const urlParams = new URLSearchParams(new URL(url).search);
       const videoId = urlParams.get("v");
       return videoId
-        ? `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1`
+        ? `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1&enablejsapi=1`
         : "";
     } else if (url.includes("vimeo.com/")) {
       const videoId = url.split("vimeo.com/")[1];
@@ -150,47 +162,45 @@ export default function ResourceView() {
     return "";
   };
 
+  const handleVideoEnd = () => {
+    setIsContentCompleted(true);
+  };
+
   const renderContent = (file) => {
     if (file) {
       if (isVideoLink(file)) {
         return (
-          <div className="relative w-full lg:w-4/5 xl:w-3/4" style={{ paddingBottom: '28.125%' }}>
+          <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
             <iframe
+              ref={videoRef}
               title="Video"
               src={getEmbedUrl(file)}
               frameBorder="0"
               allowFullScreen
               className="absolute top-0 left-0 w-full h-full"
+              onEnded={handleVideoEnd}
             ></iframe>
-            <div className="absolute top-0 left-0 w-24 h-24 bg-transparent"></div>
-            <div className="absolute top-0 right-0 w-24 h-24 bg-transparent"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-24 bg-transparent"></div>
           </div>
         );
       } else if (file.endsWith(".pdf")) {
         return (
-          <div className="relative w-full lg:w-4/5 xl:w-3/4 h-[400px]">
+          <div className="relative w-full h-[400px]">
             <iframe
               src={file}
               title="PDF Viewer"
               className="absolute top-0 left-0 w-full h-full"
             ></iframe>
-            <div className="absolute top-0 left-0 w-24 h-24 bg-transparent"></div>
-            <div className="absolute top-0 right-0 w-24 h-24 bg-transparent"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-24 bg-transparent"></div>
           </div>
         );
       } else if (file.startsWith("http")) {
         return (
-          <div className="relative w-full lg:w-4/5 xl:w-3/4">
+          <div className="relative w-full">
             <img
               src={file}
               alt="Contenido"
               className="w-full h-auto object-contain max-h-[400px]"
+              onLoad={() => setIsContentCompleted(true)}
             />
-            <div className="absolute top-0 left-0 w-24 h-24 bg-transparent"></div>
-            <div className="absolute top-0 right-0 w-24 h-24 bg-transparent"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-24 bg-transparent"></div>
           </div>
         );
       }
@@ -226,6 +236,7 @@ export default function ResourceView() {
       setCorrectAnswers(correctCount);
       setIncorrectAnswers(incorrectCount);
       setIsQuizCompleted(true);
+      setIsContentCompleted(true);
     } else {
       setCurrentQuestionIndex((prevIndex) =>
         Math.min(prevIndex + 1, (resource?.quizzes.length || 0) - 1)
@@ -240,6 +251,7 @@ export default function ResourceView() {
     setCorrectAnswers(0);
     setIncorrectAnswers(0);
     setIsQuizCompleted(false);
+    setIsContentCompleted(false);
   };
 
   const handlePreviousQuestion = () => {
@@ -248,75 +260,78 @@ export default function ResourceView() {
 
   const renderQuiz = () => {
     const question = resource.quizzes[currentQuestionIndex];
+    const quizProgress = ((currentQuestionIndex + 1) / resource.quizzes.length) * 100;
   
     return (
-      <div className="quiz-container bg-white rounded-xl shadow-lg border border-gray-300 w-full lg:w-4/5 xl:w-3/4 p-4 my-6">
-        <h2 className="p-3 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-t-xl text-white text-xl font-semibold text-center">
-          Pregunta {currentQuestionIndex + 1}/{resource?.quizzes.length || 0}
-        </h2>
-        <h3 className="font-semibold mb-4 text-center text-lg text-gray-800 mt-2">
+      <div className="quiz-container bg-white rounded-xl shadow-lg border border-gray-200 w-full p-6 my-6">
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-ls font-bold text-gray-500">Progreso del quiz</span>
+            <span className="text-ls font-bold text-gray-500">{currentQuestionIndex + 1}/{resource.quizzes.length}</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div
+              className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-in-out"
+              style={{ width: `${quizProgress}%` }}
+            ></div>
+          </div>
+        </div>
+        
+        <h3 className="text-xl font-semibold text-gray-800 mb-6 text-center">
           {question.question}
         </h3>
 
-        {question.options.map((option, index) => (
-          <div key={index} className="flex items-center mb-3 mx-auto w-11/12">
-            <input
-              type="radio"
-              id={`question-${currentQuestionIndex}-option-${index}`}
-              name={`question-${currentQuestionIndex}`}
-              value={option}
-              checked={answers[currentQuestionIndex] === option}
-              onChange={() => handleAnswerChange(currentQuestionIndex, option)}
-              className="hidden"
-            />
-            <label
-              htmlFor={`question-${currentQuestionIndex}-option-${index}`}
-              className={`flex-1 py-2 px-3 rounded-lg border text-base cursor-pointer transition-colors 
-              ${
-                answers[currentQuestionIndex] === option
-                  ? "bg-indigo-100 border-indigo-400 text-indigo-700"
-                  : "bg-gray-50 border-gray-300 hover:bg-gray-200"
-              } 
-              ${
-                isQuizCompleted && question.correctAnswer === option
-                  ? "border-green-500 bg-green-100 text-green-700"
-                  : isQuizCompleted &&
-                    answers[currentQuestionIndex] === option &&
-                    answers[currentQuestionIndex] !== question.correctAnswer
-                  ? "border-red-500 bg-red-100 text-red-700"
-                  : ""
-              }`}
-            >
-              {option}
-            </label>
-          </div>
-        ))}
+        <div className="space-y-4">
+          {question.options.map((option, index) => (
+            <div key={index} className="flex items-center">
+              <input
+                type="radio"
+                id={`question-${currentQuestionIndex}-option-${index}`}
+                name={`question-${currentQuestionIndex}`}
+                value={option}
+                checked={answers[currentQuestionIndex] === option}
+                onChange={() => handleAnswerChange(currentQuestionIndex, option)}
+                className="hidden"
+              />
+              <label
+                htmlFor={`question-${currentQuestionIndex}-option-${index}`}
+                className={`flex-1 py-3 px-4 rounded-lg border-2 text-base cursor-pointer transition-all duration-200 
+                ${
+                  answers[currentQuestionIndex] === option
+                    ? "border-blue-500 bg-blue-50 text-blue-700 font-medium"
+                    : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                }`}
+              >
+                {option}
+              </label>
+            </div>
+          ))}
+        </div>
 
-        <div className="flex justify-between mt-6 mx-4">
+        <div className="flex justify-between mt-8">
           <button
             onClick={handlePreviousQuestion}
             disabled={currentQuestionIndex === 0}
-            className={`px-4 py-2 rounded-lg font-semibold transition-all 
-            ${
+            className={`px-4 py-2 rounded-lg transition-all duration-200 ${
               currentQuestionIndex === 0
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-gray-800 text-white hover:bg-gray-700"
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-blue-500 text-white hover:bg-blue-600"
             }`}
+            aria-label="Pregunta anterior"
           >
-            Anterior
+            <FiChevronLeft size={24} />
           </button>
           <button
             onClick={handleNextQuestion}
             disabled={!isAnswerSelected}
-            className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+            className={`px-4 py-2 rounded-lg transition-all duration-200 ${
               isAnswerSelected
-                ? "bg-indigo-600 text-white hover:bg-indigo-500"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                ? "bg-blue-500 text-white hover:bg-blue-600"
+                : "bg-gray-200 text-gray-400 cursor-not-allowed"
             }`}
+            aria-label={currentQuestionIndex === (resource?.quizzes.length || 0) - 1 ? "Finalizar quiz" : "Siguiente pregunta"}
           >
-            {currentQuestionIndex === (resource?.quizzes.length || 0) - 1
-              ? "Finalizar"
-              : "Siguiente"}
+            {currentQuestionIndex === (resource?.quizzes.length || 0) - 1 ? "Finalizar" : <FiChevronRight size={24} />}
           </button>
         </div>
       </div>
@@ -325,47 +340,33 @@ export default function ResourceView() {
 
   const renderQuizSummary = () => {
     return (
-      <div className="quiz-summary bg-white p-4 rounded-xl shadow-lg border border-gray-300 w-full lg:w-4/5 xl:w-3/4 mx-auto text-center my-6">
-        <h3 className="text-xl font-bold mb-4 text-gray-900">
+      <div className="quiz-summary bg-white p-6 rounded-xl shadow-lg border border-gray-200 w-full mx-auto my-6">
+        <h3 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Quiz Finalizado
         </h3>
-        <div className="flex flex-col space-y-3">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-              <FaQuestionCircle className="text-gray-500 text-2xl" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-medium text-gray-700">Preguntas Totales</span>
-              <span className="text-base text-gray-600">{resource?.quizzes.length}</span>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+            <FaQuestionCircle className="text-4xl mb-2 text-gray-600" />
+            <span className="text-lg font-medium text-gray-700">Preguntas Totales</span>
+            <span className="text-2xl font-bold text-gray-800">{resource?.quizzes.length}</span>
           </div>
-
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-              <FaCheckCircle className="text-green-500 text-2xl" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-medium text-gray-700">Respuestas Correctas</span>
-              <span className="text-base text-gray-600">{correctAnswers}</span>
-            </div>
+          <div className="flex flex-col items-center p-4 bg-green-50 rounded-lg">
+            <FaCheckCircle className="text-4xl mb-2 text-green-500" />
+            <span className="text-lg font-medium text-gray-700">Respuestas Correctas</span>
+            <span className="text-2xl font-bold text-green-600">{correctAnswers}</span>
           </div>
-  
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-              <FaTimesCircle className="text-red-500 text-2xl" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-medium text-gray-700">Respuestas Incorrectas</span>
-              <span className="text-base text-gray-600">{incorrectAnswers}</span>
-            </div>
+          <div className="flex flex-col items-center p-4 bg-red-50 rounded-lg">
+            <FaTimesCircle className="text-4xl mb-2 text-red-500" />
+            <span className="text-lg font-medium text-gray-700">Respuestas Incorrectas</span>
+            <span className="text-2xl font-bold text-red-600">{incorrectAnswers}</span>
           </div>
-          <button
-            onClick={handleRetakeQuiz}
-            className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-bold py-2 px-4 rounded-lg hover:from-purple-600 hover:to-indigo-600 transition-all"
-          >
-            Volver a Intentar
-          </button>
         </div>
+        <button
+          onClick={handleRetakeQuiz}
+          className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200"
+        >
+          Volver a Intentar
+        </button>
       </div>
     );
   };  
@@ -496,6 +497,138 @@ export default function ResourceView() {
     doc.save(`Certificado_${courseTitle}.pdf`);
   };
 
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    if (userComment.trim() !== "") {
+      setComments([...comments, { user: username || "Usuario", comment: userComment, avatar: null }]);
+      setUserComment("");
+    }
+  };
+
+  const handleRatingSubmit = (e) => {
+    e.preventDefault();
+    if (userRating > 0) {
+      console.log(`Rating: ${userRating}, Comment: ${ratingComment}`);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Gracias por tu calificación!',
+        text: 'Tu opinión es muy importante para nosotros.',
+      });
+      setUserRating(0);
+      setRatingComment("");
+    }
+  };
+
+  const renderRightSideContent = () => {
+    return (
+      <div className="space-y-4">
+        <div className="flex space-x-4">
+          <div className="flex-1 bg-white p-4 rounded-lg shadow-md ring-1 ring-gray-200 cursor-pointer hover:bg-gray-50 transition-colors duration-200" onClick={() => setRightSideContent("comments")}>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-gray-800 font-bungee">
+                {t('announcement.comingSoon')}
+              </h3>
+              <FaComment className="text-2xl text-blue-500" />
+            </div>
+            <p className="text-sm text-gray-700">
+              {t('announcement.descriptionSoon')}
+            </p>
+          </div>
+          <div className="flex-1 bg-white p-4 rounded-lg shadow-md ring-1 ring-gray-200 cursor-pointer hover:bg-gray-50 transition-colors duration-200" onClick={() => setRightSideContent("ratings")}>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-gray-800 font-bungee">
+                {t('announcement.comingSoonNotes')}
+              </h3>
+              <FaStar className="text-2xl text-yellow-400" />
+            </div>
+            <p className="text-sm text-gray-700">
+              {t('announcement.descriptionNotes')}
+            </p>
+          </div>
+        </div>
+        {rightSideContent === "comments" && (
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <h3 className="text-lg font-semibold mb-4">Comentarios</h3>
+            <div className="space-y-4 max-h-60 overflow-y-auto mb-4">
+              {comments.map((comment, index) => (
+                <div key={index} className="flex items-start space-x-3 pb-3 border-b border-gray-200">
+                  <div className="flex-shrink-0">
+                    {comment.avatar ? (
+                      <img src={comment.avatar} alt={comment.user} className="w-10 h-10 rounded-full" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+                        <FaUser className="text-gray-600" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-grow">
+                    <p className="font-medium text-gray-900">{comment.user}</p>
+                    <p className="text-sm text-gray-600">{comment.comment}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <form onSubmit={handleCommentSubmit} className="mt-4">
+              <textarea
+                value={userComment}
+                onChange={(e) => setUserComment(e.target.value)}
+                placeholder="Escribe tu comentario..."
+                className="w-full p-2 border rounded-md resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                rows="3"
+              ></textarea>
+              <button
+                type="submit"
+                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center justify-center w-full"
+              >
+                <FiSend className="mr-2" /> Enviar comentario
+              </button>
+            </form>
+          </div>
+        )}
+        {rightSideContent === "ratings" && (
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <h3 className="text-lg font-semibold mb-4">Calificaciones del Curso</h3>
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <FaStar key={star} className="text-yellow-400 mr-1" />
+                ))}
+                <span className="ml-2 text-sm text-gray-600">(25 calificaciones)</span>
+              </div>
+              <p className="text-sm text-gray-600">Calificación promedio: 4.8/5</p>
+            </div>
+            <form onSubmit={handleRatingSubmit} className="mt-4">
+              <h4 className="font-medium mb-2">Califica este curso:</h4>
+              <div className="flex mb-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <FaStar
+                    key={star}
+                    className={`cursor-pointer text-2xl ${star <= userRating ? 'text-yellow-400' : 'text-gray-300'}`}
+                    onClick={() => setUserRating(star)}
+                  />
+                ))}
+              </div>
+              <textarea
+                value={ratingComment}
+                onChange={(e) => setRatingComment(e.target.value)}
+                placeholder="¿Por qué diste esta calificación? (Opcional)"
+                className="w-full p-2 border rounded-md resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                rows="3"
+              ></textarea>
+              <button
+                type="submit"
+                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center justify-center w-full"
+                disabled={userRating === 0}
+              >
+                <FiSend className="mr-2" /> Enviar calificación
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   if (error) return <div className="p-4 text-red-500">{error}</div>;
   if (!resource) return <div>Cargando...</div>;
 
@@ -580,60 +713,34 @@ export default function ResourceView() {
               <FiChevronRight size={20} />
             </button>
           </div>
-          <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
-            <div className="mb-4">
-              {isQuizCompleted
-                ? renderQuizSummary()
-                : resource?.quizzes && resource.quizzes.length > 0
-                ? renderQuiz()
-                : renderContent(resource?.files)}
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="w-full md:w-2/3 bg-white rounded-lg shadow-lg p-4 mb-4">
+              <div className="mb-4">
+                {isQuizCompleted
+                  ? renderQuizSummary()
+                  : resource?.quizzes && resource.quizzes.length > 0
+                  ? renderQuiz()
+                  : renderContent(resource?.files)}
+              </div>
+              <h1 className="text-2xl font-bold mb-3 mt-4 font-bungee">{resource.title}</h1>
+              <div className="prose max-w-none text-sm">
+                <p>{resource.description}</p>
+              </div>
             </div>
-            <h1 className="text-2xl font-bold mb-3 mt-4 font-bungee">{resource.title}</h1>
-            <div className="prose max-w-none text-sm">
-              <p>{resource.description}</p>
+            <div className="w-full md:w-1/3">
+              {renderRightSideContent()}
             </div>
           </div>
-          {currentResourceIndex === resources.length - 1 && (
-            <div className="text-center mb-4">
+          {currentResourceIndex === resources.length - 1 && isContentCompleted && (
+            <div className="fixed bottom-8 right-8 z-50">
               <button
                 onClick={handleFinishCourse}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-base font-semibold"
+                className="px-6 py-3 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
               >
                 {t('navigation.finish')}
               </button>
             </div>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <article className="rounded-lg bg-white p-4 ring-1 ring-gray-200 shadow-md flex flex-col items-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-indigo-600 text-white rounded-full border-4 border-indigo-700 mb-3">
-                <span className="text-2xl">📅</span>
-              </div>
-              <div className="text-center">
-                <h3 className="text-lg font-semibold text-gray-900 mb-1 font-bungee">
-                  <a
-                    href="#"
-                    className="hover:text-indigo-700 transition-colors duration-300"
-                  >
-                    {t('announcement.comingSoon')}
-                  </a>
-                </h3>
-                <p className="text-sm text-gray-700">
-                  {t('announcement.stayTuned')}
-                </p>
-              </div>
-            </article>
-            <div className="bg-white p-4 rounded-lg shadow-md ring-1 ring-gray-200 flex flex-col items-center justify-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-indigo-600 text-white rounded-full border-4 border-indigo-700 mb-3">
-                <span className="text-2xl">📅</span>
-              </div>
-              <div className="text-lg font-semibold text-gray-800 mb-1 font-bungee">
-                {t('announcement.comingSoonNotes')}
-              </div>
-              <p className="text-sm text-gray-700 text-center">
-                {t('announcement.stayTuned')}
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

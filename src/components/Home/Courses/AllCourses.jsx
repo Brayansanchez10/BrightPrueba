@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 import HoverCard from "../Cards/HoverCard";
 import NavigationBar from "../NavigationBar";
 import { useCoursesContext } from "../../../context/courses/courses.context";
-import { useUserContext } from "../../../context/user/user.context";
-import { useResourceContext } from '../../../context/courses/resource.contex';
-import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from "react-i18next";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdPlayCircleOutline } from "react-icons/md";
@@ -13,7 +10,7 @@ import { FaRegChartBar, FaSearch } from "react-icons/fa";
 import '../../../css/Style.css';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
-import Footer from "../../footer.jsx";
+import Footer from "../../Footer.jsx";
 
 const AllCourses = () => {
   const { t } = useTranslation("global");
@@ -30,38 +27,14 @@ const AllCourses = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [resources, setResources] = useState([]);
-  const { getResource } = useResourceContext();
-  const [resourcesCount, setResourcesCount] = useState({});
-  const { user } = useAuth();
 
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        if (user && user.data) {
-          setUserCourses(user.data.courses || []);
-          setFavorites(user.data.favorites || []);
-          
-          // Llama a la función getResource para obtener los recursos de cada curso
-          const counts = {};
-          await Promise.all(courses.map(async (course) => {
-            const resourceData = await getResource(course.id);
-            counts[course.id] = resourceData.length; // Guardar el conteo de recursos
-          }));
-          setResourcesCount(counts); // Establecer el estado de conteo de recursos
-        }
-      };
-    
-      fetchData();
-    }, [user, courses]);
-
-    useEffect(() => {
-      localStorage.setItem('favorites', JSON.stringify(favorites));
-    }, [favorites]);
-
-    useEffect(() => {
-      localStorage.setItem('userCourses', JSON.stringify(userCourses));
-    }, [userCourses]);
+  useEffect(() => {
+    localStorage.setItem('userCourses', JSON.stringify(userCourses));
+  }, [userCourses]);
 
   const handleCardClick = (course) => {
     setSelectedCourse(course);
@@ -101,7 +74,6 @@ const AllCourses = () => {
     course.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
   const renderCourseCard = (course) => (
     <HoverCard
       key={course.id}
@@ -111,7 +83,7 @@ const AllCourses = () => {
       creatorName={course.instructor || "Instructor Desconocido"}
       rating={course.rating || 4}
       duration="6 horas"
-      lessons={`${resourcesCount[course.id] || 0} lecciones`} // Usar el conteo de recursos
+      lessons="12 lecciones"
       onClick={() => handleCardClick(course)}
       onFavoriteToggle={() => handleFavoriteToggle(course.id)}
       isFavorite={favorites.includes(course.id)}
@@ -228,7 +200,7 @@ const AllCourses = () => {
                 </div>
                 <div className="flex items-center mt-1">
                   <MdPlayCircleOutline className="mr-1" />
-                  <span>{resourcesCount[selectedCourse.id] || 0} {t('course_user.resources')}</span>
+                  <span>12 lecciones</span>
                 </div>
                 <div className="flex items-center mt-1">
                   <FaRegChartBar className="mr-1" />

@@ -30,8 +30,6 @@ function NavigationBar() {
   const location = useLocation();
 
   const menuRef = useRef(null);
-
-  // Estado para controlar la dirección del scroll y visibilidad del navbar
   const [scrollDirection, setScrollDirection] = useState("up");
 
   useEffect(() => {
@@ -95,8 +93,6 @@ function NavigationBar() {
       </React.Fragment>
     ));
   };
-
-  // Efecto para manejar el scroll y detectar la dirección
   useEffect(() => {
     let lastScrollY = window.scrollY;
     

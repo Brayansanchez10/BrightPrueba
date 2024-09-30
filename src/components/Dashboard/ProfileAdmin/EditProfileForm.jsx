@@ -40,8 +40,8 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   }, [getUserById, user]);
 
   const validateName = (name) => {
-    if (name.length < 4) {
-      return t('userProfileSettings.name_invalid');
+    if (name.length < 5 || name.length > 30) {
+      return t('userProfileSettings.name_length_invalid');
     }
     return "";
   };
@@ -50,6 +50,19 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return t('userProfileSettings.invalid_email');
+    }
+    if (email.length > 30) {
+      return t('userProfileSettings.email_too_long');
+    }
+    return "";
+  };
+
+  const validateImage = (file) => {
+    if (file.size > 5 * 1024 * 1024) {
+      return t('userProfileSettings.image_too_large');
+    }
+    if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+      return t('userProfileSettings.invalid_image_format');
     }
     return "";
   };
@@ -128,9 +141,21 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   const handleImageChange = (e) => {
     const imageFile = e.target.files[0];
     if (imageFile) {
-      setProfileImage(imageFile);
-      setPreviewProfileImage(URL.createObjectURL(imageFile));
-      setDeleteProfileImage(false);
+      const imageError = validateImage(imageFile);
+      if (imageError) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          image: imageError,
+        }));
+      } else {
+        setProfileImage(imageFile);
+        setPreviewProfileImage(URL.createObjectURL(imageFile));
+        setDeleteProfileImage(false);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          image: "",
+        }));
+      }
     }
   };
 
@@ -211,6 +236,9 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
                 className="w-full border text-sm border-gray-300 rounded-md p-2 hover:bg-gray-100"
                 onChange={handleImageChange}
               />
+              {errors.image && (
+                <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+              )}
             </div>
           </div>
           <form onSubmit={handleSubmit}>
