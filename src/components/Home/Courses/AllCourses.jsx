@@ -1,103 +1,221 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import HoverCard from "../Cards/HoverCard";
-import NavigationBar from "../NavigationBar";
-import { useCoursesContext } from "../../../context/courses/courses.context";
-import { useTranslation } from "react-i18next";
-import { AiOutlineClockCircle } from "react-icons/ai";
-import { MdPlayCircleOutline } from "react-icons/md";
-import { FaRegChartBar, FaSearch } from "react-icons/fa";
-import '../../../css/Style.css';
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
-import Footer from "../../Footer.jsx";
+import React, { useState, useEffect, useRef } from "react"
+import { Link } from "react-router-dom"
+import Slider from "react-slick"
+import HoverCard from "../Cards/HoverCard"
+import NavigationBar from "../NavigationBar"
+import { useCoursesContext } from "../../../context/courses/courses.context"
+import { useUserContext } from "../../../context/user/user.context"
+import { useAuth } from "../../../context/auth.context"
+import { useTranslation } from "react-i18next"
+import { AiOutlineClockCircle } from "react-icons/ai"
+import { MdPlayCircleOutline } from "react-icons/md"
+import { FaRegChartBar, FaSearch } from "react-icons/fa"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import '../../../css/Style.css'
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
+import Footer from "../../footer.jsx"
 
-const AllCourses = () => {
-  const { t } = useTranslation("global");
-  const { courses } = useCoursesContext();
+export default function AllCourses() {
+  const { t } = useTranslation("global")
+  const { courses } = useCoursesContext()
+  const { user } = useAuth()
+  const { registerToCourse, getUserCourses } = useUserContext()
   const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem('favorites');
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [userCourses, setUserCourses] = useState(() => {
-    const saved = localStorage.getItem('userCourses');
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+    const saved = localStorage.getItem('favorites')
+    return saved ? JSON.parse(saved) : []
+  })
+  const [userCourses, setUserCourses] = useState([])
+  const [selectedCourse, setSelectedCourse] = useState(null)
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [currentSlide, setCurrentSlide] = useState({})
+
+  const sliderRefs = useRef({})
 
   useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-  }, [favorites]);
+    localStorage.setItem('favorites', JSON.stringify(favorites))
+  }, [favorites])
 
   useEffect(() => {
-    localStorage.setItem('userCourses', JSON.stringify(userCourses));
-  }, [userCourses]);
+    const fetchUserCourses = async () => {
+      if (user && user.data && user.data.id) {
+        try {
+          const courses = await getUserCourses(user.data.id)
+          setUserCourses(courses)
+        } catch (error) {
+          console.error("Error fetching user courses:", error)
+          setError("No se pudieron cargar tus cursos. Por favor, intenta de nuevo más tarde.")
+        }
+      }
+    }
+    fetchUserCourses()
+  }, [user, getUserCourses])
 
   const handleCardClick = (course) => {
-    setSelectedCourse(course);
-    setIsConfirmModalOpen(true);
-  };
+    setSelectedCourse(course)
+    setIsConfirmModalOpen(true)
+  }
 
   const handleFavoriteToggle = (courseId) => {
     setFavorites(prevFavorites => {
       if (prevFavorites.includes(courseId)) {
-        return prevFavorites.filter(id => id !== courseId);
+        return prevFavorites.filter(id => id !== courseId)
       } else {
-        return [...prevFavorites, courseId];
+        return [...prevFavorites, courseId]
       }
-    });
-  };
+    })
+  }
 
   const closeConfirmModal = () => {
-    setIsConfirmModalOpen(false);
-  };
+    setIsConfirmModalOpen(false)
+  }
 
-  const handleRegister = () => {
-    if (selectedCourse && !userCourses.includes(selectedCourse.id)) {
-      setUserCourses(prevUserCourses => [...prevUserCourses, selectedCourse.id]);
-      setIsConfirmModalOpen(false);
-      setIsSuccessModalOpen(true);
+  const handleRegister = async () => {
+    if (selectedCourse && !userCourses.some(course => course.id === selectedCourse.id)) {
+      setIsLoading(true)
+      setError(null)
+      try {
+        await registerToCourse(user.data.id, selectedCourse.id)
+        const updatedCourses = await getUserCourses(user.data.id)
+        setUserCourses(updatedCourses)
+        setIsConfirmModalOpen(false)
+        setIsSuccessModalOpen(true)
+      } catch (error) {
+        console.error("Error al inscribir al usuario en el curso:", error)
+        setError("Hubo un error al inscribirte en el curso. Por favor, intenta de nuevo.")
+      } finally {
+        setIsLoading(false)
+      }
     } else {
-      alert("Ya estás inscrito en este curso.");
+      setError("Ya estás inscrito en este curso.")
     }
-  };
+  }
 
   const closeSuccessModal = () => {
-    setIsSuccessModalOpen(false);
-  };
+    setIsSuccessModalOpen(false)
+  }
 
   const filteredCourses = courses.filter(course => 
     course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     course.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  )
 
   const renderCourseCard = (course) => (
-    <HoverCard
-      key={course.id}
-      title={course.title}
-      description={course.description}
-      ruta={course.image}
-      creatorName={course.instructor || "Instructor Desconocido"}
-      rating={course.rating || 4}
-      duration="6 horas"
-      lessons="12 lecciones"
-      onClick={() => handleCardClick(course)}
-      onFavoriteToggle={() => handleFavoriteToggle(course.id)}
-      isFavorite={favorites.includes(course.id)}
-    />
-  );
+    <div key={course.id} className="px-2">
+      <HoverCard
+        title={course.title}
+        description={course.description}
+        ruta={course.image}
+        creatorName={course.instructor || "Daniel Gomez"}
+        rating={course.rating || 4}
+        duration="6 horas"
+        lessons="12 lecciones"
+        onClick={() => handleCardClick(course)}
+        onFavoriteToggle={() => handleFavoriteToggle(course.id)}
+        isFavorite={favorites.includes(course.id)}
+      />
+    </div>
+  )
 
-  const favoriteCourses = filteredCourses.filter(course => favorites.includes(course.id));
+  const favoriteCourses = filteredCourses.filter(course => favorites.includes(course.id))
   const categorizedCourses = filteredCourses.reduce((acc, course) => {
     if (!acc[course.category]) {
-      acc[course.category] = [];
+      acc[course.category] = []
     }
-    acc[course.category].push(course);
-    return acc;
-  }, {});
+    acc[course.category].push(course)
+    return acc
+  }, {})
+
+  const sliderSettings = (category, coursesCount) => ({
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: Math.min(4, coursesCount),
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: Math.min(3, coursesCount),
+          slidesToScroll: 1,
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: Math.min(2, coursesCount),
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ],
+    arrows: false,
+    beforeChange: (oldIndex, newIndex) => {
+      setCurrentSlide(prev => ({ ...prev, [category]: newIndex + 1 }))
+    }
+  })
+
+  const handlePrev = (category) => {
+    if (sliderRefs.current[category]) {
+      sliderRefs.current[category].slickPrev()
+    }
+  }
+
+  const handleNext = (category) => {
+    if (sliderRefs.current[category]) {
+      sliderRefs.current[category].slickNext()
+    }
+  }
+
+  const renderSlider = (category, courses) => {
+    const settings = sliderSettings(category, courses.length)
+    const totalSlides = courses.length
+    const maxSlide = Math.max(1, totalSlides - settings.slidesToShow + 1)
+
+    return (
+      <div className="mt-6 mx-auto max-w-7xl px-4">
+        <div className="h-[340px] mb-4 relative"> 
+          <Slider 
+            ref={el => sliderRefs.current[category] = el} 
+            {...settings}
+          >
+            {courses.map(renderCourseCard)}
+          </Slider>
+        </div>
+        <div className="flex items-center mt-4 text-[#CFCFCF]">
+          <button 
+            onClick={(e) => { e.preventDefault(); handlePrev(category); }} 
+            className={`flex items-center mr-4 font-bold ${currentSlide[category] <= 1 ? 'opacity-50 cursor-not-allowed' : 'hover:text-[#B99CEA]'}`}
+            disabled={currentSlide[category] <= 1}
+          >
+            <ChevronLeft className="w-5 h-5 mr-1" />
+            <span>PREV</span>
+          </button>
+          <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
+            <span className="text-white font-bold">{currentSlide[category] || 1}</span>
+          </div>
+          <button 
+            onClick={(e) => { e.preventDefault(); handleNext(category); }} 
+            className={`flex items-center ml-4 font-bold ${currentSlide[category] >= maxSlide ? 'opacity-50 cursor-not-allowed' : 'hover:text-[#B99CEA]'}`}
+            disabled={currentSlide[category] >= maxSlide}
+          >
+            <span>NEXT</span>
+            <ChevronRight className="w-5 h-5 ml-1" />
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen flex flex-col mt-16 bg-gray-100">
@@ -128,10 +246,9 @@ const AllCourses = () => {
           {t('courseComponent.favorites')}
         </h2>
         {favoriteCourses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
-            {favoriteCourses.map(renderCourseCard)}
-          </div>
-        ) : (
+          renderSlider('favorites', favoriteCourses)
+        )
+        : (
           <div className="flex justify-center items-center mt-4">
             <p className="text-center text-gray-500">
               {t("courseComponent.desFavorites")}
@@ -140,17 +257,15 @@ const AllCourses = () => {
         )}
       </div>
       {Object.entries(categorizedCourses).map(([category, coursesInCategory]) => (
-        <div key={category}>
-          <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60 mt-14">
+        <div key={category} className="mt-14">
+          <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60">
             <Link to={`/CourseCategory/${encodeURIComponent(category)}`} className="hover:text-blue-600 transition-colors duration-200">
               <h2 className="text-[20px] font-bold text-gray-800 font-bungee">
                 {category}
               </h2>
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center mb-16">
-            {coursesInCategory.map(renderCourseCard)}
-          </div>
+          {renderSlider(category, coursesInCategory)}
         </div>
       ))}
 
@@ -209,12 +324,22 @@ const AllCourses = () => {
               </div>
               <button
                 onClick={handleRegister}
-                className={`bg-[#783CDA] text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${userCourses.includes(selectedCourse.id) ? "opacity-50 cursor-not-allowed" : ""}`}
-                disabled={userCourses.includes(selectedCourse.id)}
+                className={`bg-[#783CDA] text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${
+                  userCourses.some(course => course.id === selectedCourse.id) || isLoading
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                disabled={userCourses.some(course => course.id === selectedCourse.id) || isLoading}
               >
-                {userCourses.includes(selectedCourse.id) ? "YA REGISTRADO!" : "INSCRÍBETE!"}
+                {isLoading ?
+                  "Inscribiendo..." :
+                  userCourses.some(course => course.id === selectedCourse.id) ?
+                    "YA REGISTRADO!" :
+                    "INSCRÍBETE!"
+                }
               </button>
             </div>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           </div>
         </div>
       )}
@@ -236,10 +361,9 @@ const AllCourses = () => {
           </div>
         </div>
       )}
-
-      <Footer />
-    </div>
-  );
-};
-
-export default AllCourses;
+      <div className="mt-20">
+      <Footer />   
+      </div>
+      </div>
+  )
+}
