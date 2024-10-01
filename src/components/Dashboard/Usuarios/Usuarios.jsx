@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, Modal, Form } from "antd";
+import { Button, Form } from "antd";
+import { CaretUpOutlined, CaretDownOutlined, ReloadOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import {
-  ReloadOutlined,
-  CheckOutlined,
-  InfoCircleOutlined,
-  CaretUpOutlined,
-  CaretDownOutlined,
-} from "@ant-design/icons";
-import { FaChevronLeft, FaChevronRight, FaCircle, FaSearch } from "react-icons/fa";
+  FaChevronLeft,
+  FaChevronRight,
+  FaCircle,
+  FaSearch,
+} from "react-icons/fa";
 import LeftBar from "../LeftBar";
 import Navbar from "../NavBar";
 import DetailsUserModal from "./UserDetailsModal";
@@ -35,7 +34,7 @@ const DataTable = () => {
     direction: "ascending",
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(12);
+  const [itemsPerPage, setItemsPerPage] = useState(0);
   const [totalItems, setTotalItems] = useState(0); // Agregar estado para totalItems
   const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
 
@@ -48,6 +47,26 @@ const DataTable = () => {
       setUpdatedDataFlag(false);
     }
   }, [usersData, updatedDataFlag]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 600) {
+        setItemsPerPage(6);
+      } else if (width < 1024) {
+        setItemsPerPage(10);
+      } else {
+        setItemsPerPage(12);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial call to set the correct itemsPerPage
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [updatedDataFlag]);
 
   useEffect(() => {
     if (selectedUserId) {
@@ -198,13 +217,13 @@ const DataTable = () => {
                   <thead>
                     <tr>
                       <th
-                        className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                         onClick={() => orderBy("id")}
                       >
                         {t("datatable.ID")}{" "}
                       </th>
                       <th
-                        className="text-lg px-8 py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                         onClick={() => orderBy("role")}
                       >
                         {t("datatable.Role")}{" "}
@@ -216,7 +235,7 @@ const DataTable = () => {
                           ))}
                       </th>
                       <th
-                        className="text-lg px-6 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                         onClick={() => orderBy("username")}
                       >
                         {t("datatable.Name")}{" "}
@@ -228,18 +247,18 @@ const DataTable = () => {
                           ))}
                       </th>
                       <th
-                        className="text-lg px-10 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                         onClick={() => orderBy("email")}
                       >
                         {t("datatable.Email")}{" "}
                       </th>
                       <th
-                        className="text-lg px-10 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                         onClick={() => orderBy("state")}
                       >
                         {t("datatable.Status")}{" "}
                       </th>
-                      <th className="px-40 py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("datatable.Actions")}
                       </th>
                     </tr>
@@ -276,33 +295,38 @@ const DataTable = () => {
                             : t("datatable.Inactive")}
                         </td>
                         <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
-                          <button
+                          <Button
                             onClick={() => handleActivateAccount(item.id)}
                             className={`${
                               item.state
                                 ? "bg-red-500 hover:bg-red-700"
                                 : "bg-green-500 hover:bg-green-700"
-                            } text-white font-bold py-1.5 px-4 rounded-3xl flex-1 min-w-[120px] shadow-md shadow-gray-400`}
+                            } text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400`}
+                            style={{ minWidth: "120px" }}
                           >
                             {item.state
                               ? t("datatable.Desactivate")
                               : t("datatable.Activate")}
-                          </button>
-                          <button
+                          </Button>
+
+                          <Button
                             onClick={() => handleUpdateButtonClick(item)}
-                            className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 flex-1 min-w-[120px] shadow-md shadow-gray-400"
+                            className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 shadow-md shadow-gray-400"
+                            style={{ minWidth: "50px" }}
+                            icon={<ReloadOutlined />}
                           >
-                            {t("datatable.Update")}
-                          </button>
-                          <button
+                          </Button>
+
+                          <Button
                             onClick={() => {
                               setSelectedUserId(item.id);
                               setShowDetailsModal(true);
                             }}
-                            className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 flex-1 min-w-[120px] shadow-md shadow-gray-400"
+                            className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 shadow-md shadow-gray-400"
+                            style={{ minWidth: "50px" }}
+                            icon={<InfoCircleOutlined />}
                           >
-                            {t("datatable.Details")}
-                          </button>
+                          </Button>
                         </td>
                       </tr>
                     ))}

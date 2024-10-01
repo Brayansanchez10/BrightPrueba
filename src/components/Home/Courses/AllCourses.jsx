@@ -4,64 +4,53 @@ import HoverCard from "../Cards/HoverCard";
 import NavigationBar from "../NavigationBar";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useUserContext } from "../../../context/user/user.context";
-import { useResourceContext } from '../../../context/courses/resource.contex';
 import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from "react-i18next";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdPlayCircleOutline } from "react-icons/md";
 import { FaRegChartBar, FaSearch } from "react-icons/fa";
-import '../../../css/Style.css';
-import "slick-carousel/slick/slick.css"; 
+import "../../../css/Style.css";
+import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Footer from "../../footer.jsx";
 
 const AllCourses = () => {
   const { t } = useTranslation("global");
   const { courses } = useCoursesContext();
+  const { user } = useAuth();
+  const { registerToCourse, getUserCourses } = useUserContext();
   const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem('favorites');
+    const saved = localStorage.getItem("favorites");
     return saved ? JSON.parse(saved) : [];
   });
-  const [userCourses, setUserCourses] = useState(() => {
-    const saved = localStorage.getItem('userCourses');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [userCourses, setUserCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [resources, setResources] = useState([]);
-  const { getResource } = useResourceContext();
-  const [resourcesCount, setResourcesCount] = useState({});
-  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        if (user && user.data) {
-          setUserCourses(user.data.courses || []);
-          setFavorites(user.data.favorites || []);
-          
-          // Llama a la función getResource para obtener los recursos de cada curso
-          const counts = {};
-          await Promise.all(courses.map(async (course) => {
-            const resourceData = await getResource(course.id);
-            counts[course.id] = resourceData.length; // Guardar el conteo de recursos
-          }));
-          setResourcesCount(counts); // Establecer el estado de conteo de recursos
+  useEffect(() => {
+    const fetchUserCourses = async () => {
+      if (user && user.data && user.data.id) {
+        try {
+          const courses = await getUserCourses(user.data.id);
+          setUserCourses(courses);
+        } catch (error) {
+          console.error("Error fetching user courses:", error);
+          setError(
+            "No se pudieron cargar tus cursos. Por favor, intenta de nuevo más tarde."
+          );
         }
-      };
-    
-      fetchData();
-    }, [user, courses]);
-
-    useEffect(() => {
-      localStorage.setItem('favorites', JSON.stringify(favorites));
-    }, [favorites]);
-
-    useEffect(() => {
-      localStorage.setItem('userCourses', JSON.stringify(userCourses));
-    }, [userCourses]);
+      }
+    };
+    fetchUserCourses();
+  }, [user, getUserCourses]);
 
   const handleCardClick = (course) => {
     setSelectedCourse(course);
@@ -69,9 +58,9 @@ const AllCourses = () => {
   };
 
   const handleFavoriteToggle = (courseId) => {
-    setFavorites(prevFavorites => {
+    setFavorites((prevFavorites) => {
       if (prevFavorites.includes(courseId)) {
-        return prevFavorites.filter(id => id !== courseId);
+        return prevFavorites.filter((id) => id !== courseId);
       } else {
         return [...prevFavorites, courseId];
       }
@@ -82,13 +71,29 @@ const AllCourses = () => {
     setIsConfirmModalOpen(false);
   };
 
-  const handleRegister = () => {
-    if (selectedCourse && !userCourses.includes(selectedCourse.id)) {
-      setUserCourses(prevUserCourses => [...prevUserCourses, selectedCourse.id]);
-      setIsConfirmModalOpen(false);
-      setIsSuccessModalOpen(true);
+  const handleRegister = async () => {
+    if (
+      selectedCourse &&
+      !userCourses.some((course) => course.id === selectedCourse.id)
+    ) {
+      setIsLoading(true);
+      setError(null);
+      try {
+        await registerToCourse(user.data.id, selectedCourse.id);
+        const updatedCourses = await getUserCourses(user.data.id);
+        setUserCourses(updatedCourses);
+        setIsConfirmModalOpen(false);
+        setIsSuccessModalOpen(true);
+      } catch (error) {
+        console.error("Error al inscribir al usuario en el curso:", error);
+        setError(
+          "Hubo un error al inscribirte en el curso. Por favor, intenta de nuevo."
+        );
+      } finally {
+        setIsLoading(false);
+      }
     } else {
-      alert("Ya estás inscrito en este curso.");
+      setError("Ya estás inscrito en este curso.");
     }
   };
 
@@ -96,11 +101,11 @@ const AllCourses = () => {
     setIsSuccessModalOpen(false);
   };
 
-  const filteredCourses = courses.filter(course => 
-    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.category.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCourses = courses.filter(
+    (course) =>
+      course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
 
   const renderCourseCard = (course) => (
     <HoverCard
@@ -111,14 +116,16 @@ const AllCourses = () => {
       creatorName={course.instructor || "Instructor Desconocido"}
       rating={course.rating || 4}
       duration="6 horas"
-      lessons={`${resourcesCount[course.id] || 0} lecciones`} // Usar el conteo de recursos
+      lessons="12 lecciones"
       onClick={() => handleCardClick(course)}
       onFavoriteToggle={() => handleFavoriteToggle(course.id)}
       isFavorite={favorites.includes(course.id)}
     />
   );
 
-  const favoriteCourses = filteredCourses.filter(course => favorites.includes(course.id));
+  const favoriteCourses = filteredCourses.filter((course) =>
+    favorites.includes(course.id)
+  );
   const categorizedCourses = filteredCourses.reduce((acc, course) => {
     if (!acc[course.category]) {
       acc[course.category] = [];
@@ -128,13 +135,13 @@ const AllCourses = () => {
   }, {});
 
   return (
-    <div className="min-h-screen flex flex-col mt-16 bg-gray-100">
+    <div className="min-h-screen flex flex-col pt-16 bg-gray-100">
       <NavigationBar />
 
       <div className="flex flex-col sm:flex-row justify-between mt-6 mx-6">
         <div className="w-full sm:w-auto">
           <h1 className="text-4xl font-bold text-black text-center sm:text-left font-bungee">
-            {t('courseComponent.title')}
+            {t("courseComponent.title")}
           </h1>
         </div>
         <div className="w-full md:w-auto">
@@ -143,7 +150,7 @@ const AllCourses = () => {
             <input
               type="search"
               className="outline-none w-full md:w-[280px] lg:w-[360px] xl:w-[420px]"
-              placeholder={t('coursesComponent.search_placeholder')}
+              placeholder={t("coursesComponent.search_placeholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -151,43 +158,64 @@ const AllCourses = () => {
         </div>
       </div>
 
-      <div className="mt-8">
-        <h2 className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60">
-          {t('courseComponent.favorites')}
-        </h2>
-        {favoriteCourses.length > 0 ? (
+      {favoriteCourses.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60">
+            {t("courseComponent.favorites")}
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
             {favoriteCourses.map(renderCourseCard)}
           </div>
-        ) : (
-          <div className="flex justify-center items-center mt-4">
-            <p className="text-center text-gray-500">
-              {t("courseComponent.desFavorites")}
+        </div>
+      )}
+
+      {Object.entries(categorizedCourses).length > 0 ? (
+        Object.entries(categorizedCourses).map(
+          ([category, coursesInCategory]) => (
+            <div key={category}>
+              <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60 mt-14">
+                <Link
+                  to={`/CourseCategory/${encodeURIComponent(category)}`}
+                  className="hover:text-blue-600 transition-colors duration-200"
+                >
+                  <h2 className="text-[20px] font-bold text-gray-800 font-bungee">
+                    {category}
+                  </h2>
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center mb-16">
+                {coursesInCategory.map(renderCourseCard)}
+              </div>
+            </div>
+          )
+        )
+      ) : (
+        <div className="flex justify-center items-center mt-10 mb-16 px-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full">
+            <img
+              className="h-20 mb-4 mx-auto sm:h-24 md:h-36 lg:h-48"
+              src={Logo}
+              alt="Logo"
+            />
+            <h2 className="text-xl font-bold mb-4 text-center text-gray-800 sm:text-2xl md:text-3xl lg:text-4xl">
+              {t("courseComponent.no_courses_available")}
+            </h2>
+            <p className="text-center text-gray-600 text-sm sm:text-base md:text-lg lg:text-xl">
+              {t("courseComponent.check_back_later")}
             </p>
           </div>
-        )}
-      </div>
-      {Object.entries(categorizedCourses).map(([category, coursesInCategory]) => (
-        <div key={category}>
-          <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60 mt-14">
-            <Link to={`/CourseCategory/${encodeURIComponent(category)}`} className="hover:text-blue-600 transition-colors duration-200">
-              <h2 className="text-[20px] font-bold text-gray-800 font-bungee">
-                {category}
-              </h2>
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center mb-16">
-            {coursesInCategory.map(renderCourseCard)}
-          </div>
         </div>
-      ))}
+      )}
 
       {isConfirmModalOpen && selectedCourse && (
         <div
           className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center px-4"
           onClick={closeConfirmModal}
         >
-          <div className="bg-white rounded-lg shadow-lg w-[300px] p-4 relative" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="bg-white rounded-lg shadow-lg w-[300px] p-4 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               onClick={closeConfirmModal}
               className="absolute top-2 right-2 text-black hover:text-gray-600"
@@ -213,7 +241,11 @@ const AllCourses = () => {
               {selectedCourse.description}
             </p>
             <div className="mb-4 text-[14px] mt-3">
-              {["Item prueba numero 1", "Item prueba numero 2", "Item prueba numero 3"].map((item, index) => (
+              {[
+                "Item prueba numero 1",
+                "Item prueba numero 2",
+                "Item prueba numero 3",
+              ].map((item, index) => (
                 <div key={index} className="flex items-center mb-1">
                   <span className="text-[#939599] mr-2">✓</span>
                   <span className="text-[#939599]">{item}</span>
@@ -228,7 +260,7 @@ const AllCourses = () => {
                 </div>
                 <div className="flex items-center mt-1">
                   <MdPlayCircleOutline className="mr-1" />
-                  <span>{resourcesCount[selectedCourse.id] || 0} {t('course_user.resources')}</span>
+                  <span>12 lecciones</span>
                 </div>
                 <div className="flex items-center mt-1">
                   <FaRegChartBar className="mr-1" />
@@ -237,12 +269,29 @@ const AllCourses = () => {
               </div>
               <button
                 onClick={handleRegister}
-                className={`bg-[#783CDA] text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${userCourses.includes(selectedCourse.id) ? "opacity-50 cursor-not-allowed" : ""}`}
-                disabled={userCourses.includes(selectedCourse.id)}
+                className={`bg-[#783CDA] text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${
+                  userCourses.some(
+                    (course) => course.id === selectedCourse.id
+                  ) || isLoading
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                disabled={
+                  userCourses.some(
+                    (course) => course.id === selectedCourse.id
+                  ) || isLoading
+                }
               >
-                {userCourses.includes(selectedCourse.id) ? "YA REGISTRADO!" : "INSCRÍBETE!"}
+                {isLoading
+                  ? "Inscribiendo..."
+                  : userCourses.some(
+                      (course) => course.id === selectedCourse.id
+                    )
+                  ? "YA REGISTRADO!"
+                  : "INSCRÍBETE!"}
               </button>
             </div>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           </div>
         </div>
       )}
@@ -252,7 +301,10 @@ const AllCourses = () => {
           className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center px-4"
           onClick={closeSuccessModal}
         >
-          <div className="bg-white rounded-lg shadow-lg w-[300px] p-4 relative" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="bg-white rounded-lg shadow-lg w-[300px] p-4 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               onClick={closeSuccessModal}
               className="absolute top-2 right-2 text-black hover:text-gray-600"
@@ -260,7 +312,9 @@ const AllCourses = () => {
               X
             </button>
             <h2 className="text-center font-bold text-lg mb-4">¡Éxito!</h2>
-            <p className="text-center">Te has registrado en el curso exitosamente.</p>
+            <p className="text-center">
+              Te has registrado en el curso exitosamente.
+            </p>
           </div>
         </div>
       )}

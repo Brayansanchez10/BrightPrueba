@@ -55,6 +55,10 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
                 <strong className="text-black font-bold text-xl">{t('courseDetails.description')}</strong>
                 <p className="text-black text-lg">{course.description}</p>
               </div>
+              <div className="mb-5">
+                <strong className="text-black font-bold text-xl">{t('courseDetails.userCount')}</strong>
+                <p className="text-black text-lg">{course.enrolledCount}</p>
+              </div>
               <div className="flex justify-center">
                 {course.image && (
                   <img

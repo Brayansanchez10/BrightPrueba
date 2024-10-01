@@ -32,7 +32,7 @@ const DataTablete = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [contentFile, setContentFile] = useState(null);
-  const [itemsPerPage] = useState(12);
+  const [itemsPerPage, setItemsPerPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0); // Agregar estado para totalItems
   const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
@@ -207,6 +207,26 @@ const DataTablete = () => {
       course.description.toLowerCase().includes(searchValue.toLowerCase())
   );
 
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 600) {
+        setItemsPerPage(6);
+      } else if (width < 1024) {
+        setItemsPerPage(10);
+      } else {
+        setItemsPerPage(12);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial call to set the correct itemsPerPage
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [dataFlag]);
+
   return (
     <div className="bg-gray-200 overflow-hidden min-h-screen">
       <div className="flex h-full">
@@ -249,19 +269,22 @@ const DataTablete = () => {
                 <table className="min-w-full overflow-x-auto">
                   <thead>
                     <tr>
-                      <th className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("courses.id")}
                       </th>
-                      <th className="text-lg px-8 py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("courses.category")}
                       </th>
-                      <th className="text-lg px-6 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("courses.name")}
                       </th>
-                      <th className="text-lg px-10 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("courses.description")}
                       </th>
-                      <th className="px-40 py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                        {t("courses.userCount")}
+                      </th>
+                      <th className="py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("courses.actions")}
                       </th>
                     </tr>
@@ -287,6 +310,9 @@ const DataTablete = () => {
                             {course.description}
                           </td>
                           <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                            {course.enrolledCount}
+                          </td>
+                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                             <div className="flex justify-center space-x-2">
                               <Button
                                 className="bg-green-500 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
@@ -298,23 +324,27 @@ const DataTablete = () => {
                                 {t("courses.ButtonUpContent")}
                               </Button>
                               <Button
-                                className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-lg ml-2 shadow-md shadow-gray-400"
+                                className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
                                 icon={<ReloadOutlined />}
+                                style={{ minWidth: "40px" }}
                                 onClick={() => handleUpdateButtonClick(course)}
                               />
                               <Button
-                                className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-lg ml-2 shadow-md shadow-gray-400"
+                                className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
                                 icon={<InfoCircleOutlined />}
+                                style={{ minWidth: "40px" }}
                                 onClick={() => handleDetailsButtonClick(course)}
                               />
                               <Button
-                                className="bg-orange-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-lg ml-2 shadow-md shadow-gray-400"
+                                className="bg-orange-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
                                 icon={<BellOutlined />}
+                                style={{ minWidth: "40px" }}
                                 onClick={() => handleNotifyButtonClick(course)}
                               />
                               <Button
-                                className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-lg ml-2 shadow-md shadow-gray-400"
+                                className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
                                 icon={<DeleteOutlined />}
+                                style={{ minWidth: "40px" }}
                                 onClick={() => handleDeleteButtonClick(course)}
                               />
                             </div>

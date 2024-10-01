@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, Form } from "antd";
+import { Button, Form } from "antd";
 import {
   ReloadOutlined,
   InfoCircleOutlined,
@@ -15,9 +15,6 @@ import UpdateCategoryModal from "./UpdateCategoryModal";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import {
-  FaArrowAltCircleLeft,
-  FaArrowCircleLeft,
-  FaArrowLeft,
   FaChevronLeft,
   FaChevronRight,
   FaSearch,
@@ -35,7 +32,7 @@ const DataTablete = () => {
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(12);
+  const [itemsPerPage, setItemsPerPage] = useState(0);
   const [totalItems, setTotalItems] = useState(0); // Agregar estado para totalItems
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
@@ -63,6 +60,26 @@ const DataTablete = () => {
     setTotalItems(filteredCategory.length); // Actualizamos totalItems
     setTotalPages(Math.ceil(filteredCategory.length / itemsPerPage));
   }, [categories, searchValue, itemsPerPage]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 600) {
+        setItemsPerPage(6);
+      } else if (width < 1024) {
+        setItemsPerPage(10);
+      } else {
+        setItemsPerPage(12);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial call to set the correct itemsPerPage
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [dataFlag]);
 
   const handleCreateCategory = async (category) => {
     try {
@@ -261,16 +278,16 @@ const DataTablete = () => {
                 <table className="min-w-full overflow-x-auto">
                   <thead>
                     <tr>
-                      <th className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("categories.id")}
                       </th>
-                      <th className="text-lg px-8 py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("categories.name")}
                       </th>
-                      <th className="text-lg px-6 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("categories.description")}
                       </th>
-                      <th className="px-40 py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("categories.actions")}
                       </th>
                     </tr>
@@ -295,22 +312,25 @@ const DataTablete = () => {
                           <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                             <div className="flex justify-center space-x-4">
                               <Button
-                                className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
+                                className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
                                 icon={<ReloadOutlined />}
+                                style={{ minWidth: "50px" }}
                                 onClick={() =>
                                   handleUpdateButtonClick(category)
                                 }
                               />
                               <Button
-                                className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 min-w-[120px] shadow-md shadow-gray-400"
+                                className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 shadow-md shadow-gray-400"
                                 icon={<InfoCircleOutlined />}
+                                style={{ minWidth: "50px" }}
                                 onClick={() =>
                                   handleDetailsButtonClick(category)
                                 }
                               />
                               <Button
-                                className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 min-w-[120px] shadow-md shadow-gray-400"
+                                className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 shadow-md shadow-gray-400"
                                 icon={<DeleteOutlined />}
+                                style={{ minWidth: "50px" }}
                                 onClick={() =>
                                   handleDeleteButtonClick(category)
                                 }
