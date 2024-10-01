@@ -60,7 +60,7 @@ const HomePage = () => {
     return (
         <div className=''>
             <NavigationBar/>
-            <div className="flex flex-col bg-slate-300">
+            <div className="flex flex-col bg-slate-300 mt-5">
                 <div className='mt-4 p-0'>
                     <div className='md:pb-5  sm:pb-0 lg:pb-20'>
                         <QuoteCarousel phrases={phrases} />
@@ -143,7 +143,7 @@ const HomePage = () => {
                                 </div>
                             </div>
                             <div className='pt-10 flex justify-center'>
-                                <a href="/AllCourses"><button className='bg-purple-800 text-white text-xl rounded-3xl h-14 w-48 hover:bg-purple-600 transition-all duration-500'>Go to courses</button></a>
+                                <a href="/AllCourses"><button className='bg-purple-800 text-white text-xl rounded-3xl h-14 w-48 hover:bg-purple-600 transition-all duration-500 '>Go to courses</button></a>
                             </div>
                         </div>
                     </div>

@@ -80,7 +80,7 @@ const DataTable = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Initial call to set the correct itemsPerPage
+    handleResize(); 
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -98,7 +98,6 @@ const DataTable = () => {
   }, [itemsPerPage]);
 
   useEffect(() => {
-    // Actualiza el total de ítems filtrados
     setTotalItems(filteredRoles.length);
   }, [filteredRoles]);
 

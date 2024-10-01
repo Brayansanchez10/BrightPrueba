@@ -135,8 +135,8 @@
     "userProfileSettings": {
         "edit_profile": "Editar Perfil",
         "name": "Nombre",
-        "invalid_email": "Email Invalido",
-        "name_invalid": "El nombre debe tener almenos 4 caracteres",
+        "invalid_email": "Email Inválido",
+        "name_invalid": "El nombre debe tener al menos 4 caracteres",
         "email": "Correo Electrónico",
         "profile_image": "Imagen de Perfil",
         "save": "Guardar",
@@ -150,8 +150,12 @@
         "confirm_image_deletion": "¿Estás seguro de que quieres eliminar esta imagen?",
         "yes_delete_it": "Sí, ¡eliminarla!",
         "image_deleted_successfully": "¡Imagen eliminada exitosamente!",
-        "failed_to_delete_image": "No se pudo eliminar la imagen."
-    },
+        "failed_to_delete_image": "No se pudo eliminar la imagen.",
+        "name_length_invalid": "El nombre debe tener entre 5 y 30 caracteres",
+        "email_too_long": "El correo electrónico no debe exceder los 30 caracteres",
+        "image_too_large": "El tamaño de la imagen no debe exceder los 5MB",
+        "invalid_image_format": "Formato de imagen inválido. Por favor, use JPEG o PNG"
+        },
     "navigationBar": {
         "home": "INICIO",
         "courses": "CURSOS",
@@ -302,6 +306,13 @@
         "roleRequired": "Por favor seleccione un rol",
         "stateRequired": "Por favor seleccione un estado"
     },
+    "validations": {
+        "name": "Nombre de usuario",
+        "usernameRequired": "El nombre de usuario es obligatorio",
+        "usernameMinLength": "El nombre de usuario debe tener al menos 5 caracteres",
+        "usernameMaxLength": "El nombre de usuario no puede exceder los 30 caracteres",
+        "maxEmail": "El email no puede exceder los 30 caracteres"
+    },
     "roles": {
         "title": "Gestión de Roles",
         "createRole": "Crear Rol",
@@ -334,8 +345,8 @@
         "roleCreated": "Rol creado exitosamente",
         "createButton": "Crear",
         "closeButton": "Cerrar",
-        "maxRole": "El rol debe tener al menos 15 caracteres",
-        "mixRole": "El rol debe tener como minimo 3"
+        "maxRole": "El rol debe tener al menos 10 caracteres",
+        "mixRole": "El rol debe tener como minimo 4 caracteres"
     },
     "courses": {
         "title": "Cursos",
@@ -405,12 +416,13 @@
         "image": "Imagen",
         "createButton": "Crear",
         "closeButton": "Cerrar",
-        "nameTooShort": "El nombre debe tener al menos 2 caracteres.",
-        "descriptionTooShort": "La descripción debe tener al menos 6 caracteres.",
-        "invalidImageFile": "Por favor selecciona un archivo de imagen válido.",
+        "nameTooShort": "El nombre del curso debe tener al menos 3 caracteres.",
+        "descriptionTooShort": "La descripción debe tener al menos 30 caracteres.",
+        "invalidImageFile": "Por favor, seleccione un archivo de imagen válido.",
         "allFieldsRequired": "Todos los campos son obligatorios.",
-        "createSuccess": "Curso creado con éxito!",
-        "createFailure": "Error al crear el curso. Por favor, inténtalo de nuevo."
+        "createSuccess": "¡Curso creado con éxito!",
+        "createFailure": "No se pudo crear el curso. Por favor, inténtelo de nuevo.",
+        "nameInvalidLength": "El nombre del curso debe tener minimo 3 caracteres y maximo 30"
     },
     "assignContentModal": {
         "title": "Agregar Contenido A",
@@ -490,7 +502,10 @@
         "createButton": "Crear",
         "createSuccess": "¡Categoría creada exitosamente!",
         "createFailure": "No se pudo crear la categoría. Por favor, intenta de nuevo.",
-        "invalidImageFile": "Por favor, sube un archivo de imagen válido."
+        "invalidImageFile": "Por favor, sube un archivo de imagen válido.",
+        "nameRequired": "Por favor, ingresa el nombre de la categoria",
+        "descriptionRequired": "Por favor, ingresa la descripcion",
+        "nameTooLong": "El nombre de la categoría debe tener un máximo de 20 caracteres"
     },
     "deleteCategory": {
         "confirmDeletion": "Confirmar Eliminación",
@@ -510,11 +525,16 @@
         "title": "Actualizar Categoría",
         "nameLabel": "Nombre",
         "namePlaceholder": "¡Por favor ingrese el nombre de la categoría!",
+        "nameShort": "El nombre de la categoría debe tener al menos 3 caracteres.",
+        "nameLong": "El nombre de la categoría debe llevar máximo 20 caracteres.",
         "descriptionLabel": "Descripción",
         "descriptionPlaceholder": "¡Por favor ingrese la descripción de la categoría!",
+        "descriptionShort": "La descripción debe tener al menos 30 caracteres.",
+        "descriptionLong": "La descripción debe llevar máximo 150 caracteres.",
         "imagePreview": "Vista Previa de la Imagen",
         "updateButton": "Actualizar",
-        "cancelButton": "Cancelar"
+        "cancelButton": "Cancelar",
+        "imageRequired": "¡Por favor seleccione una imagen!"
     },
     "deleteAccountConfirmation": {
         "title": "Eliminar Cuenta",
@@ -628,10 +648,12 @@
         "description": "Descripción del Recurso",
         "publishedOn": "Publicado el"
       },
-      "announcement": {
-        "comingSoon": "Aportes Proximamente",
-        "comingSoonNotes": "Notas Proximamente",
-        "stayTuned": "Mantente atento a nuestras próximas actualizaciones y eventos."
+    "announcement": {
+        "comingSoon": "Aportes de los usuarios",
+        "comingSoonNotes": "Notas y valoraciones",
+        "stayTuned": "Mantente atento a nuestras próximas actualizaciones y eventos.",
+        "descriptionSoon":"Descubre las opiniones de otros usuarios y comparte tu experiencia interactuando con el curso.",
+        "descriptionNotes": "Revisa las notas y valoraciones para conocer la calidad del curso según otros estudiantes."
       },
     "months": {
         "january": "Enero",

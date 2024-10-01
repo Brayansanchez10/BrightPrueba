@@ -24,7 +24,7 @@ const DetailsUserModal = ({ visible, onCancel, user }) => {
           <img 
             src={zorroImage} 
             alt="Zorro"
-            className="absolute w-[146px] h-[155px] top-0 left-1/2 transform -translate-x-1/2" 
+            className="absolute w-[146px] h-[155px] top-0 left-1/2 transform -translate-x-1/2 mt-5" 
           />
           <button
             className="absolute top-2 right-5 bg-transparent text-white text-3xl font-bold cursor-pointer"
@@ -34,7 +34,7 @@ const DetailsUserModal = ({ visible, onCancel, user }) => {
           </button>
         </div>
         <div className="px-5 py-6">
-          <h1 className="text-center text-[#350B48] text-3xl font-extrabold mt-14 mb-5 overflow-hidden text-ellipsis whitespace-nowrap">
+          <h1 className="text-center text-[#350B48] text-3xl font-extrabold mt-12 mb-5 overflow-hidden text-ellipsis whitespace-nowrap font-bungee">
             {t('userDetails.title')}
           </h1>
           {user && (

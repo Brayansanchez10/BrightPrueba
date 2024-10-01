@@ -29,6 +29,33 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
     validateField(name, value);
   };
 
+  const validateField = (name, value) => {
+    switch (name) {
+      case "name":
+        if (!value) {
+          setErrorMessage((prev) => ({ ...prev, name: t("createCategoryForm.nameRequired") }));
+        } else if (value.length < 3) { 
+          setErrorMessage((prev) => ({ ...prev, name: t("createCategoryForm.nameTooShort") }));
+        } else if (value.length > 20) { 
+          setErrorMessage((prev) => ({ ...prev, name: t("createCategoryForm.nameTooLong") }));
+        } else {
+          setErrorMessage((prev) => ({ ...prev, name: "" }));
+        }
+        break;
+      case "description":
+        if (!value) {
+          setErrorMessage((prev) => ({ ...prev, description: t("createCategoryForm.descriptionRequired") }));
+        } else if (value.length < 30) {
+          setErrorMessage((prev) => ({ ...prev, description: t("createCategoryForm.descriptionTooShort") }));
+        } else {
+          setErrorMessage((prev) => ({ ...prev, description: "" }));
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
@@ -54,8 +81,10 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
       image: "",
     };
 
-    if (!category.name || category.name.length < 8) {
-      errors.name = t("createCategoryForm.nameTooShort");
+    if (!category.name || category.name.length < 3 || category.name.length > 20) {
+      errors.name = category.name.length < 3
+        ? t("createCategoryForm.nameTooShort")
+        : t("createCategoryForm.nameTooLong");
     }
     if (!category.description || category.description.length < 30) {
       errors.description = t("createCategoryForm.descriptionTooShort");
@@ -118,7 +147,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
         className="p-5 text-center"
         onSubmit={handleSubmit}
       >
-        <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4">
+        <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4 font-bungee">
           {t("createCategoryForm.title")}
         </h1>
         <div className="text-left">
@@ -147,7 +176,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
             value={category.description}
             onChange={handleChange}
             maxLength={MAX_DESCRIPTION_LENGTH}
-            style={{ minHeight: "100px" }}
+            style={{ minHeight: "60px" }} 
             required
           />
           <div className="text-gray-300 text-right">

@@ -20,7 +20,7 @@ const HoverCard = ({ title, description, ruta, creatorName, rating, duration, le
 
   return (
     <div
-      className="group cursor-pointer rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.3)] transform transition-transform duration-500 hover:scale-105 mb-4"
+      className="group cursor-pointer rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 mb-4"
       onClick={onClick}
       style={{
         width: "250px", 
@@ -42,7 +42,7 @@ const HoverCard = ({ title, description, ruta, creatorName, rating, duration, le
           src={ruta}
           alt="Image Course Preview"
           className={`w-full h-full ${imageLoaded ? "" : "hidden"}`}
-          style={{ objectFit: "fill", width: "100%", height: "100%" }} 
+          style={{ objectFit: "cover", width: "100%", height: "100%" }} 
         />
 
         <div
@@ -63,7 +63,7 @@ const HoverCard = ({ title, description, ruta, creatorName, rating, duration, le
             style={{ fontSize: "16px" }}
           />
         </div>
-        <p className="text-gray-700 text-xs mt-1 truncate">Daniel Gomez</p>
+        <p className="text-gray-700 text-xs mt-1 truncate">{creatorName}</p>
         <div className="flex items-center mt-1 mb-1">
           {[...Array(5)].map((_, index) => (
             <svg

@@ -35,8 +35,10 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
         </div>
         {course ? (
           <div className="px-5 py-6">
-            <h1 className="text-center text-[#350B48] text-3xl font-extrabold mt-14 mb-5 overflow-hidden text-ellipsis whitespace-nowrap">
-              {t('courseDetails.courseTitle')} <span className="font-extrabold uppercase">{course?.title.toUpperCase()}</span>
+            <h1 className="text-center text-[#350B48] text-2xl font-extrabold mt-4 mb-5 overflow-hidden text-ellipsis whitespace-nowrap font-bungee">
+              {t('courseDetails.courseTitle')}
+              <br />
+              <span className="font-extrabold uppercase">{course?.title.toUpperCase()}</span>
             </h1>
             <div>
               <div className="mb-5">

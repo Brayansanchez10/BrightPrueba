@@ -57,7 +57,7 @@ const DataTablete = () => {
         category.description.toLowerCase().includes(searchValue.toLowerCase())
     );
 
-    setTotalItems(filteredCategory.length); // Actualizamos totalItems
+    setTotalItems(filteredCategory.length); 
     setTotalPages(Math.ceil(filteredCategory.length / itemsPerPage));
   }, [categories, searchValue, itemsPerPage]);
 
@@ -90,7 +90,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-      setDataFlag((prevFlag) => !prevFlag); // Cambiamos el flag
+      setDataFlag((prevFlag) => !prevFlag); 
     } catch (error) {
       Swal.fire({
         title: t("categories.createError"),
@@ -112,7 +112,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-      setDataFlag((prevFlag) => !prevFlag); // Cambiamos el flag
+      setDataFlag((prevFlag) => !prevFlag); 
     } catch (error) {
       Swal.fire({
         title: t("categories.updateError"),
@@ -134,7 +134,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-      setDataFlag((prevFlag) => !prevFlag); // Cambiamos el flag
+      setDataFlag((prevFlag) => !prevFlag);
     } catch (error) {
       Swal.fire({
         title: t("categories.deleteError"),

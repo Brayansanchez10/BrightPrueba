@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import Slider from "react-slick";
 import HoverCard from "../Cards/HoverCard";
 import NavigationBar from "../NavigationBar";
 import { useCoursesContext } from "../../../context/courses/courses.context";
@@ -9,12 +10,13 @@ import { useTranslation } from "react-i18next";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdPlayCircleOutline } from "react-icons/md";
 import { FaRegChartBar, FaSearch } from "react-icons/fa";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import "../../../css/Style.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Footer from "../../footer.jsx";
 
-const AllCourses = () => {
+export default function AllCourses() {
   const { t } = useTranslation("global");
   const { courses } = useCoursesContext();
   const { user } = useAuth();
@@ -30,6 +32,9 @@ const AllCourses = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState({});
+
+  const sliderRefs = useRef({});
 
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
@@ -134,6 +139,109 @@ const AllCourses = () => {
     return acc;
   }, {});
 
+  const sliderSettings = (category, coursesCount) => ({
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: Math.min(4, coursesCount),
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: Math.min(3, coursesCount),
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: Math.min(2, coursesCount),
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+    arrows: false,
+    beforeChange: (oldIndex, newIndex) => {
+      setCurrentSlide((prev) => ({ ...prev, [category]: newIndex + 1 }));
+    },
+  });
+
+  const handlePrev = (category) => {
+    if (sliderRefs.current[category]) {
+      sliderRefs.current[category].slickPrev();
+    }
+  };
+
+  const handleNext = (category) => {
+    if (sliderRefs.current[category]) {
+      sliderRefs.current[category].slickNext();
+    }
+  };
+
+  const renderSlider = (category, courses) => {
+    const settings = sliderSettings(category, courses.length);
+    const totalSlides = courses.length;
+    const maxSlide = Math.max(1, totalSlides - settings.slidesToShow + 1);
+
+    return (
+      <div className="mt-6 mx-auto max-w-7xl px-4">
+        <div className="h-[340px] mb-4 relative">
+          <Slider
+            ref={(el) => (sliderRefs.current[category] = el)}
+            {...settings}
+          >
+            {courses.map(renderCourseCard)}
+          </Slider>
+        </div>
+        <div className="flex items-center mt-4 text-[#CFCFCF]">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handlePrev(category);
+            }}
+            className={`flex items-center mr-4 font-bold ${
+              currentSlide[category] <= 1
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:text-[#B99CEA]"
+            }`}
+            disabled={currentSlide[category] <= 1}
+          >
+            <ChevronLeft className="w-5 h-5 mr-1" />
+            <span>PREV</span>
+          </button>
+          <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
+            <span className="text-white font-bold">
+              {currentSlide[category] || 1}
+            </span>
+          </div>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleNext(category);
+            }}
+            className={`flex items-center ml-4 font-bold ${
+              currentSlide[category] >= maxSlide
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:text-[#B99CEA]"
+            }`}
+            disabled={currentSlide[category] >= maxSlide}
+          >
+            <span>NEXT</span>
+            <ChevronRight className="w-5 h-5 ml-1" />
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen flex flex-col pt-16 bg-gray-100">
       <NavigationBar />
@@ -163,9 +271,7 @@ const AllCourses = () => {
           <h2 className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60">
             {t("courseComponent.favorites")}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center">
-            {favoriteCourses.map(renderCourseCard)}
-          </div>
+          {renderSlider("favorites", favoriteCourses)}
         </div>
       )}
 
@@ -183,9 +289,7 @@ const AllCourses = () => {
                   </h2>
                 </Link>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center mb-16">
-                {coursesInCategory.map(renderCourseCard)}
-              </div>
+              {renderSlider(category, coursesInCategory)}
             </div>
           )
         )
@@ -318,10 +422,9 @@ const AllCourses = () => {
           </div>
         </div>
       )}
-
-      <Footer />
+      <div className="mt-20">
+        <Footer />
+      </div>
     </div>
   );
-};
-
-export default AllCourses;
+}

@@ -1,53 +1,68 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Form, Input, Select } from "antd";
 import { useRoleContext } from '../../../context/user/role.context';
+import { useUserContext } from "../../../context/user/user.context"; 
 import Swal from "sweetalert2";
 import { useTranslation } from 'react-i18next';
+import zorroImage from "../../../assets/img/imagen1.png"; 
 import "../css/Custom.css";
 
-  const { Option } = Select;
+const { Option } = Select;
 
-  const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
-    const { rolesData } = useRoleContext();
-    const [form] = Form.useForm();
-    const { t } = useTranslation("global");
+const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
+  const { rolesData } = useRoleContext();
+  const { checkIfUserExists } = useUserContext();
+  const [form] = Form.useForm();
+  const { t } = useTranslation("global");
+  const [shake, setShake] = useState(false);
 
-    useEffect(() => {
-      if (visible) {
-        form.setFieldsValue(user);
-      }
-    }, [visible, user, form]);
+  useEffect(() => {
+    if (visible) {
+      form.setFieldsValue(user);
+    }
+  }, [visible, user, form]);
 
-    const handleFormSubmit = async () => {
-      try {
-        const values = await form.validateFields();
-        onUpdate(values);
-        onCancel(); 
-
+  const handleFormSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      const { username, email } = values;
+      if (checkIfUserExists(username, email)) {
         Swal.fire({
-          icon: 'success',
-          title: t('UpdateUserModal.userUpdatedSuccess'),
-          showConfirmButton: false,
-          timer: 1000,
+          icon: "error",
+          title: t("UpdateUserModal.userExists"),
+          confirmButtonText: "OK",
         });
-      } catch (error) {
-        console.error("Failed to update user:", error);
+        return;
       }
-    };
+
+      onUpdate(values);
+      Swal.fire({
+        icon: 'success',
+        title: t('UpdateUserModal.userUpdatedSuccess'),
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      onCancel();
+    } catch (error) {
+      setShake(true);
+      setTimeout(() => setShake(false), 500); 
+      console.error("Failed to update user:", error);
+    }
+  };
 
   return (
     <Modal
+      className={`custom w-[544px] h-[600px] rounded-2xl bg-white flex flex-col justify-between ${shake ? "shake" : ""}`} 
       visible={visible}
       footer={null}
       closable={false}
-      className="custom w-[544px] rounded-2xl bg-white flex flex-col"
       centered
       onCancel={onCancel}
     >
       <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
         <img
-          src="/src/assets/img/imagen1.png"
-          alt="Imagen de la cabecera"
+          src={zorroImage}
+          alt="Zorro"
           className="w-[189.69px] h-[148px] object-contain mt-8"
         />
         <button
@@ -61,12 +76,11 @@ import "../css/Custom.css";
 
       <Form
         onFinish={handleFormSubmit}
-        className="px-5 py-6 bg-white shadow-md rounded-2xl"
+        className="px-5 py-6"
         form={form}
         layout="vertical"
-        initialValues={user}
       >
-        <h1 className="text-center text-[#350b48] text-3xl font-extrabold mt-1 mb-5">
+        <h1 className="text-center text-[#350b48] text-3xl font-extrabold mt-1 mb-5 font-bungee">
           {t('UpdateUserModal.updateUserTitle')}
         </h1>
 
@@ -74,18 +88,26 @@ import "../css/Custom.css";
           className="mb-4"
           name="username"
           label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.username')}</span>}
-          rules={[{ required: true, message: t('UpdateUserModal.usernameRequired') }]}
+          rules={[
+            { required: true, message: t("validations.usernameRequired") },
+            { min: 5, message: t("validations.usernameMinLength") },
+            { max: 30, message: t("validations.usernameMaxLength") }
+          ]}
         >
-          <Input className="w-full h-[34px] text-base font-normal rounded-xl bg-white shadow-md px-3 border-none" />
+          <Input className="w-full h-[34px] text-base font-normal rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
 
         <Form.Item
           className="mb-4"
           name="email"
           label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.email')}</span>}
-          rules={[{ required: true, message: t('UpdateUserModal.emailRequired') }]}
+          rules={[
+            { required: true, message: t("CreateUserModal.emailRequired") },
+            { type: "email", message: t("CreateUserModal.emailInvalid") },
+            { max: 30, message: t("validations.maxEmail") }
+          ]}
         >
-          <Input className="w-full h-[34px] text-base font-normal rounded-xl bg-white shadow-md px-3 border-none" />
+          <Input className="w-full h-[34px] text-base font-normal rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
 
         <Form.Item
@@ -128,4 +150,4 @@ import "../css/Custom.css";
   );
 };
 
-  export default UpdateUserModal;
+export default UpdateUserModal;
