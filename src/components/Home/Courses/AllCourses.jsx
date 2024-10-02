@@ -16,7 +16,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Logo from "../../../assets/img/hola.png";
 import Footer from "../../footer.jsx";
-import Logo from "../../../assets/img/hola.png";
 
 export default function AllCourses() {
   const { t } = useTranslation("global");
@@ -312,7 +311,7 @@ export default function AllCourses() {
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full">
             <img
               className="h-20 mb-4 mx-auto sm:h-24 md:h-36 lg:h-48"
-              src="/placeholder.svg?height=48&width=48"
+              src={Logo}
               alt="Logo"
             />
             <h2 className="text-xl font-bold mb-4 text-center text-gray-800 sm:text-2xl md:text-3xl lg:text-4xl">
