@@ -168,7 +168,7 @@ const LeftBar = ({ onVisibilityChange }) => {
         </Link>
       </div>
 
-      <div className="mt-auto w-[90%] font-bungee tracking-wide">
+      <div className="mt-auto w-auto sm:w-[90%] font-bungee tracking-wide">
         <button onClick={handleLogout} className="flex rounded-xl my-4 py-2 px-4 md:px-6 shadow-lg hover:shadow-gray-500 hover:bg-white hover:text-red-600 w-full text-center transition duration-500">
           <FaSignOutAlt size="20px" className="text-red-600 mr-2 h-5 transition duration-300" />{t('leftBarComponent.sign_off')}
         </button>

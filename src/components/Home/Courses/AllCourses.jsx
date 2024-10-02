@@ -14,6 +14,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import "../../../css/Style.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Logo from "../../../assets/img/hola.png";
 import Footer from "../../footer.jsx";
 
 export default function AllCourses() {
