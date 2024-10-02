@@ -40,7 +40,7 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
               <br />
               <span className="font-extrabold uppercase">{course?.title.toUpperCase()}</span>
             </h1>
-            <div>
+            <div className="grid grid-cols-2 gap-4">
               <div className="mb-5">
                 <strong className="text-black font-bold text-xl">{t('courseDetails.id')}</strong>
                 <p className="text-black text-lg">{course.id}</p>
@@ -61,15 +61,15 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
                 <strong className="text-black font-bold text-xl">{t('courseDetails.userCount')}</strong>
                 <p className="text-black text-lg">{course.enrolledCount}</p>
               </div>
-              <div className="flex justify-center">
-                {course.image && (
-                  <img
-                    className="max-w-full rounded-lg"
-                    src={course.image}
-                    alt={t('courseDetails.imagePreview')}
-                  />
-                )}
-              </div>
+            </div>
+            <div className="flex justify-center mt-4">
+              {course.image && (
+                <img
+                  className="max-w-full rounded-lg"
+                  src={course.image}
+                  alt={t('courseDetails.imagePreview')}
+                />
+              )}
             </div>
           </div>
         ) : (

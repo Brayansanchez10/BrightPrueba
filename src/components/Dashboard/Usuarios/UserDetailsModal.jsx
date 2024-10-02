@@ -7,10 +7,9 @@ import "../css/Custom.css";
 const DetailsUserModal = ({ visible, onCancel, user }) => {
   const { t } = useTranslation("global");
 
-
   return (
     <Modal 
-      className="custom w-[543px] h-[700px] bg-white rounded-3xl"
+      className="custom w-[543px] bg-white rounded-3xl"
       centered
       visible={visible}
       onCancel={onCancel}
@@ -38,7 +37,7 @@ const DetailsUserModal = ({ visible, onCancel, user }) => {
             {t('userDetails.title')}
           </h1>
           {user && (
-            <div>
+            <div className="grid grid-cols-2 gap-4">
               <p className="mb-5">
                 <strong className="font-bold text-xl text-black">{t('userDetails.id')}:</strong>
                 <br />
@@ -67,14 +66,9 @@ const DetailsUserModal = ({ visible, onCancel, user }) => {
             </div>
           )}
         </div>
-        <div className="px-5 py-4">
-          <div className="flex justify-center">
-          </div>
-        </div>
       </div>
     </Modal>
   );
 };
 
 export default DetailsUserModal;
-

@@ -258,13 +258,13 @@ const DataTablete = () => {
                 type="primary"
                 style={{ backgroundColor: "#4c1d95" }}
                 onClick={handleCreateCourseClick}
-                className="text-center font-medium text-base ml-[72px]"
+                className="ml-16 mt-6 rounded-t-lg rounded-b-none"
                 disabled={dataFlag}
               >
                 <b>{t("courses.createCourse")}</b>
               </Button>
             </div>
-            <div className="mt-6 flex justify-center">
+            <div className="flex justify-center">
               <div className="overflow-auto w-full px-6 mx-12 py-6 bg-white rounded-t-xl rounded-b-xl shadow-lg shadow-purple-300">
                 <table className="min-w-full overflow-x-auto">
                   <thead>
