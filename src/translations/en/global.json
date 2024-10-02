@@ -685,11 +685,11 @@
         "publishedOn": "Published on"
       },
       "announcement": {
-        "comingSoon": "User contributions",
-        "comingSoonNotes": "Ratings and reviews",
+        "comingSoon": "Course User Comments",
+        "comingSoonNotes": "Course Ratings and Reviews",
         "stayTuned": "Stay tuned for our upcoming updates and events.",
-        "descriptionSoon": "Discover feedback from other users and share your experience by engaging with the course.",
-        "descriptionNotes": "Check out the ratings and reviews to learn about the course quality from other students."
+        "descriptionSoon": "Discover the opinions of other users and share your experience by engaging with the course.",
+        "descriptionNotes": "Check out other students' ratings to get a better idea of the course's quality."
       },
     "months": {
         "january": "January",

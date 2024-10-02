@@ -37,7 +37,7 @@ const DetailsModal = ({ visible, onClose, selectedRole }) => {
             {t("roles.permissions")}
           </h1>
           {selectedRole && (
-            <div>
+            <div className="grid grid-cols-2 gap-4">
               <p className="mb-5">
                 <strong className="font-bold text-xl text-black">
                   {t("roles.role")} ID:
@@ -56,7 +56,7 @@ const DetailsModal = ({ visible, onClose, selectedRole }) => {
                   {selectedRole.nombre}
                 </span>
               </p>
-              <p className="mb-5">
+              <div className="col-span-2">
                 <strong className="font-bold text-xl text-black">
                   {t("roles.permissions")}:
                 </strong>
@@ -70,7 +70,7 @@ const DetailsModal = ({ visible, onClose, selectedRole }) => {
                       </li>
                     ))}
                 </span>
-              </p>
+              </div>
             </div>
           )}
         </div>

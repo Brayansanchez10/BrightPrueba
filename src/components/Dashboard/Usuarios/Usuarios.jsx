@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form } from "antd";
-import { CaretUpOutlined, CaretDownOutlined, ReloadOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import {
+  CaretUpOutlined,
+  CaretDownOutlined,
+  ReloadOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import {
   FaChevronLeft,
   FaChevronRight,
   FaCircle,
   FaSearch,
+  FaUserCheck,
+  FaUserTimes,
 } from "react-icons/fa";
 import LeftBar from "../LeftBar";
 import Navbar from "../NavBar";
@@ -206,12 +213,12 @@ const DataTable = () => {
                 type="primary"
                 style={{ backgroundColor: "#4c1d95" }}
                 onClick={() => setShowCreateModal(true)}
-                className="text-center font-medium text-base ml-[72px]"
+                className="ml-16 mt-6 rounded-t-lg rounded-b-none"
               >
                 <b>{t("datatable.CreateUser")}</b>
               </Button>
             </div>
-            <div className="mt-6 flex justify-center">
+            <div className="flex justify-center">
               <div className="overflow-auto w-full px-6 mx-12 py-6 bg-white rounded-t-xl rounded-b-xl shadow-lg shadow-purple-300">
                 <table className="min-w-full overflow-x-auto">
                   <thead>
@@ -304,9 +311,17 @@ const DataTable = () => {
                             } text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400`}
                             style={{ minWidth: "120px" }}
                           >
-                            {item.state
-                              ? t("datatable.Desactivate")
-                              : t("datatable.Activate")}
+                            {item.state ? (
+                              <>
+                                <FaUserTimes size="16px" className="inline-block mr-1.5 -mt-1" />
+                                {t("datatable.Desactivate")}
+                              </>
+                            ) : (
+                              <>
+                                <FaUserCheck size="16px" className="inline-block mr-1.5 -mt-1" />
+                                {t("datatable.Activate")}
+                              </>
+                            )}
                           </Button>
 
                           <Button
@@ -314,8 +329,7 @@ const DataTable = () => {
                             className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 shadow-md shadow-gray-400"
                             style={{ minWidth: "50px" }}
                             icon={<ReloadOutlined />}
-                          >
-                          </Button>
+                          ></Button>
 
                           <Button
                             onClick={() => {
@@ -325,8 +339,7 @@ const DataTable = () => {
                             className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 shadow-md shadow-gray-400"
                             style={{ minWidth: "50px" }}
                             icon={<InfoCircleOutlined />}
-                          >
-                          </Button>
+                          ></Button>
                         </td>
                       </tr>
                     ))}

@@ -14,6 +14,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import "../../../css/Style.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Logo from "../../../assets/img/hola.png";
 import Footer from "../../footer.jsx";
 import Logo from "../../../assets/img/hola.png";
 
@@ -114,19 +115,21 @@ export default function AllCourses() {
   );
 
   const renderCourseCard = (course) => (
-    <HoverCard
-      key={course.id}
-      title={course.title}
-      description={course.description}
-      ruta={course.image}
-      creatorName={course.instructor || "Instructor Desconocido"}
-      rating={course.rating || 4}
-      duration="6 horas"
-      lessons="12 lecciones"
-      onClick={() => handleCardClick(course)}
-      onFavoriteToggle={() => handleFavoriteToggle(course.id)}
-      isFavorite={favorites.includes(course.id)}
-    />
+    <div className="px-2">
+      <HoverCard
+        key={course.id}
+        title={course.title}
+        description={course.description}
+        ruta={course.image}
+        creatorName={course.instructor || "Daniel Gomez"}
+        rating={course.rating || 4}
+        duration="6 horas"
+        lessons="12 lecciones"
+        onClick={() => handleCardClick(course)}
+        onFavoriteToggle={() => handleFavoriteToggle(course.id)}
+        isFavorite={favorites.includes(course.id)}
+      />
+    </div>
   );
 
   const favoriteCourses = filteredCourses.filter((course) =>
@@ -144,20 +147,20 @@ export default function AllCourses() {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: Math.min(4, coursesCount),
+    slidesToShow: 4,
     slidesToScroll: 1,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: Math.min(3, coursesCount),
+          slidesToShow: 3,
           slidesToScroll: 1,
         },
       },
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: Math.min(2, coursesCount),
+          slidesToShow: 2,
           slidesToScroll: 1,
         },
       },
@@ -190,7 +193,7 @@ export default function AllCourses() {
   const renderSlider = (category, courses) => {
     const settings = sliderSettings(category, courses.length);
     const totalSlides = courses.length;
-    const maxSlide = Math.max(1, totalSlides - settings.slidesToShow + 1);
+    const maxSlide = Math.max(1, totalSlides - 3);
 
     return (
       <div className="mt-6 mx-auto max-w-7xl px-4">
@@ -200,45 +203,55 @@ export default function AllCourses() {
             {...settings}
           >
             {courses.map(renderCourseCard)}
+            {courses.length < 4 &&
+              Array(4 - courses.length)
+                .fill(null)
+                .map((_, index) => (
+                  <div key={`empty-${index}`} className="px-2">
+                    <div className="w-full h-full"></div>
+                  </div>
+                ))}
           </Slider>
         </div>
-        <div className="flex items-center mt-4 text-[#CFCFCF]">
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              handlePrev(category);
-            }}
-            className={`flex items-center mr-4 font-bold ${
-              currentSlide[category] <= 1
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:text-[#B99CEA]"
-            }`}
-            disabled={currentSlide[category] <= 1}
-          >
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            <span>PREV</span>
-          </button>
-          <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
-            <span className="text-white font-bold">
-              {currentSlide[category] || 1}
-            </span>
+        {courses.length > 4 && (
+          <div className="flex justify-center sm:justify-start items-center mt-4 text-[#CFCFCF]">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                handlePrev(category);
+              }}
+              className={`flex items-center mr-4 font-bold ${
+                currentSlide[category] <= 1
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:text-[#B99CEA]"
+              }`}
+              disabled={currentSlide[category] <= 1}
+            >
+              <ChevronLeft className="w-5 h-5 mr-1" />
+              <span>PREV</span>
+            </button>
+            <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
+              <span className="text-white font-bold">
+                {currentSlide[category] || 1}
+              </span>
+            </div>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                handleNext(category);
+              }}
+              className={`flex items-center ml-4 font-bold ${
+                currentSlide[category] >= maxSlide
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:text-[#B99CEA]"
+              }`}
+              disabled={currentSlide[category] >= maxSlide}
+            >
+              <span>NEXT</span>
+              <ChevronRight className="w-5 h-5 ml-1" />
+            </button>
           </div>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleNext(category);
-            }}
-            className={`flex items-center ml-4 font-bold ${
-              currentSlide[category] >= maxSlide
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:text-[#B99CEA]"
-            }`}
-            disabled={currentSlide[category] >= maxSlide}
-          >
-            <span>NEXT</span>
-            <ChevronRight className="w-5 h-5 ml-1" />
-          </button>
-        </div>
+        )}
       </div>
     );
   };
@@ -299,7 +312,7 @@ export default function AllCourses() {
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full">
             <img
               className="h-20 mb-4 mx-auto sm:h-24 md:h-36 lg:h-48"
-              src={Logo}
+              src="/placeholder.svg?height=48&width=48"
               alt="Logo"
             />
             <h2 className="text-xl font-bold mb-4 text-center text-gray-800 sm:text-2xl md:text-3xl lg:text-4xl">
