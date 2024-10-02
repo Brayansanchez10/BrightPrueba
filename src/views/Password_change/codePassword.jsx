@@ -7,6 +7,8 @@ import { resetPasswordVerify } from '../../api/auth';
 import Swal from 'sweetalert2';
 import logo from '../../assets/img/hola.png';
 import { useTranslation } from 'react-i18next';
+import LoginFond from "../../assets/img/Login.png"
+import "../../css/animations.css";
 
 const ResetPasswordVerifyForm = () => {
     const navigate = useNavigate();
@@ -70,7 +72,9 @@ const ResetPasswordVerifyForm = () => {
     };
 
     return (
-        <div className="bg-gradient-to-r from-purple-500 to-emerald-400 min-h-screen flex justify-center items-center">
+        <div className="min-h-screen flex justify-center items-center bg-cover bg-center"
+            style={{ backgroundImage: `url(${LoginFond})` }}
+        >
             <div className="bg-white rounded-xl shadow-xl shadow-zinc-950 py-10 px-6 mx-4 max-w-md w-full">
                 <h1 className="text-2xl mx-auto text-center font-black bg-gradient-to-r from-emerald-400 to-purple-800 bg-clip-text text-transparent mb-3 pt-4">
                 {t('reset_password_verify.sent_code')}
@@ -100,13 +104,13 @@ const ResetPasswordVerifyForm = () => {
                     </div>
                     <button
                     type="submit"
-                    className="py-3 font-medium text-white rounded-lg w-3/4 mx-auto flex justify-center items-center bg-purple-800"
+                    className="py-3 font-medium text-white rounded-lg w-3/4 mx-auto flex justify-center items-center bt1"
                     >
                     <span>{t('reset_password_verify.confirm_code')}</span>
                     </button>
                     <p className="text-center text-slate-400 font-medium">
                     {t('reset_password_verify.not_received')}{' '}
-                    <Link to="/reset" className="text-purple-800 px-2 rounded-lg ">
+                    <Link to="/reset" className="text-purple-800 px-2 rounded-lg hover:text-pink-500 transition-all duration-700">
                         {t('reset_password_verify.request_new')}
                     </Link>
                     </p>

@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import imagen from "../assets/img/torch.png";
+import LoginFond from "../assets/img/Login.png"
+import "../css/animations.css";
 
 const LoginForm = () => {
   const [error, setError] = useState(null);
@@ -94,7 +96,9 @@ const LoginForm = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-emerald-400">
+    <div className="flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${LoginFond})` }}
+    >
       <div className="flex w-full max-w-7xl sm:rounded-none sm:m-0 md:rounded-3xl shadow-xl shadow-slate-800 md:m-4">
         
         <div className="w-3/4 h-full justify-center items-center hidden md:block">
@@ -165,7 +169,7 @@ const LoginForm = () => {
               <div className="text-end mt-2 mb-2">
                 <Link
                   to="/reset"
-                  className="text-gray-600 hover:text-blue-400 font-bold text-lg"
+                  className="text-gray-600 hover:text-blue-400 font-bold text-lg transition-all duration-700"
                   style={{ textDecoration: "none" }}
                 >
                   {t("login.forgot_password")}
@@ -174,7 +178,7 @@ const LoginForm = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="w-56 py-2 cursor-pointer bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-xl font-bold text-xl"
+                  className="w-56 py-2 cursor-pointer text-white rounded-xl font-bold text-xl bt1"
                   disabled={!formik.isValid || loading || isSubmitting}
                 >
                   {loading ? t("login.loading") : t("login.login")}
@@ -184,7 +188,7 @@ const LoginForm = () => {
             <div className="mb-5 mt-5 text-lg text-center font-semibold">
               <Link
                 to="/register"
-                className="text-xl text-black hover:text-purple-600 font-semibold"
+                className="text-xl text-black hover:text-purple-600 font-semibold transition-all duration-700"
               >
                 {t("login.register")}
               </Link>
