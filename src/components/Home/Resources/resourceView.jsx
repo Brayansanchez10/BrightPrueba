@@ -737,7 +737,7 @@ export default function ResourceView() {
             <div className="fixed bottom-8 right-8 z-50">
               <button
                 onClick={handleFinishCourse}
-                className="px-4 sm:px-6 py-2 sm:py-3 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors text-base sm:text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                className="px-4 sm:px-6 py-2 sm:py-3 bg-green-500 text-white rounded-full hover:bg-green-600 text-base sm:text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
               >
                 {t('navigation.finish')}
               </button>

@@ -649,11 +649,11 @@
         "publishedOn": "Publicado el"
       },
     "announcement": {
-        "comingSoon": "Aportes de los usuarios",
+        "comingSoon": "Comentarios de los usuarios",
         "comingSoonNotes": "Notas y valoraciones",
         "stayTuned": "Mantente atento a nuestras próximas actualizaciones y eventos.",
         "descriptionSoon":"Descubre las opiniones de otros usuarios y comparte tu experiencia interactuando con el curso.",
-        "descriptionNotes": "Revisa las notas y valoraciones para conocer la calidad del curso según otros estudiantes."
+         "descriptionNotes": "Consulta las valoraciones de otros estudiantes para tener una mejor idea sobre la calidad del curso."
       },
     "months": {
         "january": "Enero",
