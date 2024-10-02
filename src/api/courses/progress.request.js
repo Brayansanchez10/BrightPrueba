@@ -4,7 +4,7 @@ const api = 'http://localhost:3068/PE/progress';
 
 // Función para obtener el progreso de un curso para un usuario específico
 export const getCourseProgress = (userId, courseId) => {
-  return axios.get(`${api}/${userId}/${courseId}`, {
+  return axios.get(`${api}/getProgress/${userId}/${courseId}`, {
     withCredentials: true,
   });
 };
@@ -15,7 +15,7 @@ export const updateCourseProgress = (userId, courseId, progress) => {
   console.log("courseID: " + courseId);
   console.log("progress: " + progress);
 
-  return axios.post(`${api}`, {
+  return axios.post(`${api}/updateProgress`, {
     userId,
     courseId,
     progress,
