@@ -6,6 +6,7 @@ import {
   DeleteOutlined,
   FileAddOutlined,
   BellOutlined,
+  QrcodeOutlined
 } from "@ant-design/icons";
 import LeftBar from "../../Dashboard/LeftBar";
 import { useUserContext } from "../../../context/user/user.context";
@@ -20,6 +21,7 @@ import NotifyCourseModal from "./NotifyCourseModal";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
+import CreateSubCategoryForm from "../SubCategories/CreateSubCategoryForm";
 
 const DataTablete = () => {
   const { t } = useTranslation("global");
@@ -45,6 +47,7 @@ const DataTablete = () => {
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [dataFlag, setDataFlag] = useState(false);
+  const [subCategoryForm, setSubCategoryForm] = useState(false); 
 
   useEffect(() => {
     getUsers();
@@ -162,6 +165,12 @@ const DataTablete = () => {
   const handleNotifyButtonClick = (course) => {
     setSelectedCourse(course); // Asegúrate de guardar todo el curso, no solo el ID
     setIsNotifyModalVisible(true);
+  };
+
+  const handleSubCategoryButtonClick = (course) => { // Abrir Modal para subCategorias
+    setSelectedCourse(course);
+    setSelectedCourseId(course.id);
+    setSubCategoryForm(true);
   };
 
   const handleSendNotification = async (recipients) => {
@@ -314,6 +323,14 @@ const DataTablete = () => {
                           </td>
                           <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                             <div className="flex justify-center space-x-2">
+                              <Button className="bg-purple-800 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
+                                  onClick={() =>
+                                    handleSubCategoryButtonClick(course)
+                                  }
+                                  icon={<QrcodeOutlined />}
+                                >
+                                  {t("subCategory.ButtonCreate")}
+                              </Button>
                               <Button
                                 className="bg-green-500 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
                                 onClick={() =>
@@ -416,6 +433,12 @@ const DataTablete = () => {
             onCreate={handleCreateResource}
             resourceFile={resourceFile}
             onFileChange={(e) => setResourceFile(e.target.files[0])}
+          />
+
+          <CreateSubCategoryForm
+            isVisible={subCategoryForm}
+            onCancel={() => setSubCategoryForm(false)}
+            courseId={selectedCourseId}
           />
 
           <DeleteConfirmationModal

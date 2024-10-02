@@ -702,5 +702,24 @@
         "october": "Octubre",
         "november": "Noviembre",
         "december": "Diciembre"
+    },
+    "subCategory": {
+        "AlertSuccess": "Sección creada exitosamente",
+        "AlertError": "Error al crear la sección",
+        "AlertSuccessDelete": "Sección eliminada exitosamente",
+        "AlertErrorDelete": "Error al eliminar la sección",
+        "ModalTitle": "Secciones",
+        "FormTitle": "Crear nueva sección",
+        "title": "Título de la Sección",
+        "description": "Descripción de la Sección",
+        "ButtonCreate": "Crear sección",
+        "ButtonUpdate": "Actualizar sección",
+        "ButtonCancel": "Cancelar",
+        "SelectSection": "Seleccione una sección",
+        "UpdateTitle": "Titulo",
+        "UpdateDescription": "Descripción",
+        "UpdateAlert": "Sección actualizada exitosamente",
+        "UpdateAlertError": "Error al actualizar sección",
+        "ModalUpdateTitle": "Actualiza tu sección"
     }
 }

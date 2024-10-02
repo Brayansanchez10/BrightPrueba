@@ -6,23 +6,26 @@ import {
   getResource,
   deleteResource,
 } from "../../../api/courses/resource.request";
-import UpdateResourceForm from "./UpdateResourceForm"; 
+import UpdateResourceForm from "./UpdateResourceForm";
 import { EditOutlined, DeleteFilled, FilePdfOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
-import Swal from "sweetalert2"; 
+import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
-import "../css/Custom.css"
-import image from "../../../assets/img/Zorro.png"
-import image2 from "../../../assets/img/hola1.png"
+import "../css/Custom.css";
+import image from "../../../assets/img/Zorro.png";
+import image2 from "../../../assets/img/hola1.png";
+import { getSubCategoryCourseId } from "../../../api/courses/subCategory.requst.js";
 
 const { Text } = Typography;
 
 const { Panel } = Collapse;
 
 const ALLOWED_FILE_TYPES = [".mov", ".docx", ".pdf", ".jpg", ".png"];
-const YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
+const YOUTUBE_URL_REGEX =
+  /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
 const VIMEO_URL_REGEX = /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)$/i;
-const GOOGLE_DRIVE_URL_REGEX = /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
+const GOOGLE_DRIVE_URL_REGEX =
+  /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
 
 const CreateResourceModal = ({
   isVisible,
@@ -43,7 +46,9 @@ const CreateResourceModal = ({
   const [quizzes, setQuizzes] = useState([]); // Estado para quizzes
   const [errors, setErrors] = useState({});
   const { t } = useTranslation("global");
-  const [activeTab, setActiveTab] = useState('crear');
+  const [activeTab, setActiveTab] = useState("crear");
+  const [subCategory, setSubCategory] = useState([]);
+  const [subcategoryId, setSubcategoryId] = useState("");
   const MAX_DESCRIPTION_LENGTH = 500;
 
   const validateFields = () => {
@@ -110,8 +115,10 @@ const CreateResourceModal = ({
   useEffect(() => {
     if (isVisible && courseId) {
       fetchResources(courseId);
+      fetchSubCategories(courseId);
     } else {
       setResources([]); // Limpiar los recursos al cerrar la modal
+      setSubCategory([]);
     }
   }, [isVisible, courseId]);
 
@@ -120,6 +127,17 @@ const CreateResourceModal = ({
       resetState();
     }
   }, [visible]);
+
+  // Función para obtener los subCategories por CourseId
+  const fetchSubCategories = async (courseId) => {
+    try {
+      const response = await getSubCategoryCourseId(courseId);
+      console.log("SubCategory data:", response.data);
+      setSubCategory(response.data);
+    } catch (error) {
+      console.error("Error al obtener los Sub Categories By CourseId", error);
+    }
+  };
 
   const resetState = () => {
     setTitle("");
@@ -186,7 +204,7 @@ const CreateResourceModal = ({
   // Añadir una nueva opción
   const addOption = (quizIndex) => {
     const updatedQuizzes = [...quizzes];
-    
+
     // Verificar si el número de opciones es menor a 6
     if (updatedQuizzes[quizIndex].options.length < 6) {
       updatedQuizzes[quizIndex].options.push(""); // Añadir una opción vacía
@@ -263,6 +281,7 @@ const CreateResourceModal = ({
     const resourceData = {
       courseId,
       title,
+      subcategoryId,
       description,
       link: selection === "link" ? link : null,
       file: selection === "file" ? selectedFile : null,
@@ -287,7 +306,7 @@ const CreateResourceModal = ({
 
       // Resetear campos del formulario
       resetState();
-    } catch (err) {
+    } catch (error) {
       console.error("Error al crear el recurso:", err);
       Swal.fire({
         icon: "error",
@@ -357,378 +376,462 @@ const CreateResourceModal = ({
     onCancel();
   };
 
-  
-    
-  
-   // Función para cambiar la pestaña activa
+  // Función para cambiar la pestaña activa
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
   return (
     <Modal
-    title=""
-    visible={isVisible}
-    onCancel={onCancel}
-    footer={null}
-    width={1200}
-    bodyStyle={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "75vh",
-    }}
-  >
-    <div className="mb-4 sm:block md:hidden lg:hidden  absolute top-0 left-0">
+      title=""
+      visible={isVisible}
+      onCancel={onCancel}
+      footer={null}
+      width={1200}
+      bodyStyle={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "75vh",
+      }}
+    >
+      <div className="mb-4 sm:block md:hidden lg:hidden  absolute top-0 left-0">
         <button
-          onClick={() => handleTabChange('crear')}
-          className={`px-6 py-2 rounded-ss-md ${activeTab === 'recursos' ? 'bg-gray-100 text-black' : 'bg-purple-800 text-white'}`}
+          onClick={() => handleTabChange("crear")}
+          className={`px-6 py-2 rounded-ss-md ${
+            activeTab === "recursos"
+              ? "bg-gray-100 text-black"
+              : "bg-purple-800 text-white"
+          }`}
         >
           Recursos
         </button>
         <button
-          onClick={() => handleTabChange('recursos')}
-          className={`px-6 py-2 ${activeTab === 'crear' ? 'bg-gray-100 text-black' : 'bg-purple-800 text-white'}`}
+          onClick={() => handleTabChange("recursos")}
+          className={`px-6 py-2 ${
+            activeTab === "crear"
+              ? "bg-gray-100 text-black"
+              : "bg-purple-800 text-white"
+          }`}
         >
           Crear
         </button>
-    </div>
-    <div className="custom flex justify-center items-center h-full w-full">
-      <div className="flex gap-8 h-full w-full">
-        {/* Panel de recursos a la izquierda */}
-        <div
-          className={`w-full rounded-lg shadow-lg overflow-y-auto overflow-auto scrollbar-hide mt-6 ${activeTab === 'crear' ? 'block' : 'hidden'} sm:w-1/2 sm:block`}
-          style={{ maxHeight: "700px" }}
-        >
-          <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
-            <img
-              src={image}
-              alt="Imagen de la cabecera"
-              className="w-[189.69px] h-[148px] object-contain mt-8"
-            />
-          </div>
-          <h3 className="text-xl font-bold mt-6 text-center text-purple-900">{t("CreateResource.TitleResources")}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 p-4">
-            {resources.length > 0 ? (
-              <Collapse accordion>
-                {resources.map((resource) => (
-                  <Panel
-                    header={
-                      <div className="flex flex-col lg:flex-row justify-between items-center">
-                        {resource.title}
-                        <div className="flex flex-col lg:flex-row lg:ml-auto space-y-2 lg:space-y-0 lg:space-x-2">
-                          <Button
-                            icon={<EditOutlined />}
-                            onClick={() => openEditModal(resource)}
-                            className="bg-yellow-500 text-white hover:bg-yellow-600"
-                          >
-                            <span className="hidden lg:inline">{t("CreateResource.Edit")}</span>
-                          </Button>
-                          <Button
-                            icon={<DeleteFilled />}
-                            onClick={() => {
-                              Swal.fire({
-                                title: t("CreateResource.AlertDeleteTitle"),
-                                text: t("CreateResource.AlertDeleteText"),
-                                icon: "warning",
-                                showCancelButton: true,
-                                confirmButtonColor: "#28a745",
-                                cancelButtonColor: "#d35",
-                                confirmButtonText: t("CreateResource.AlertDeleteConfir"),
-                                reverseButtons: true,
-                              }).then((result) => {
-                                if (result.isConfirmed) {
-                                  handleRemoveResource(resource);
-                                  Swal.fire({
-                                    title: t("CreateResource.AlerteSuccesyDelete"),
-                                    text: t("CreateResource.DeleteResource"),
-                                    icon: "success",
-                                  });
-                                }
-                              });
-                            }}
-                            className="bg-red-700 text-white hover:bg-red-600"
-                          >
-                            <span className="hidden lg:inline">{t("CreateResource.Delete")}</span>
-                          </Button>
-                        </div>
-                      </div>
-                    }
-                    key={resource.id}
-                  >
-                    <Card>
-                      <div className="flex justify-between items-center">
-                        {resource.files &&
-                        (isVideoLink(resource.files) ||
-                          resource.files.endsWith(".pdf") ||
-                          /\.(jpg|jpeg|png)$/i.test(resource.files)) ? (
-                          <>
-                            <div className="w-1/2">
-                              {isVideoLink(resource.files) ? (
-                                <iframe
-                                  src={getEmbedUrl(resource.files)}
-                                  frameBorder="0"
-                                  style={{ width: "250px", height: "250px" }}
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                  allowFullScreen
-                                />
-                              ) : resource.files.endsWith(".pdf") ? (
-                                <div className="text-center">
-                                  <div className="flex items-center justify-center mb-4">
-                                    <FilePdfOutlined className="text-red-600 text-6xl" />
-                                  </div>
-                                  <a
-                                    href={resource.files}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-500 hover:underline text-lg"
-                                    download
-                                  >
-                                    {t("CreateResource.DowloadPDF")}
-                                  </a>
-                                </div>
-                              ) : (
-                                <div className="flex justify-center">
-                                  <img
-                                    src={resource.files}
-                                    alt={`Content ${resource.title}`}
-                                    className="max-w-full h-auto"
-                                  />
-                                </div>
-                              )}
-                            </div>
-                            <div className="w-1/2 pl-10">
-                              <p>{resource.description}</p>
-                              {resource.file && (
-                                <p>{t("UpdateResource.Files")}: {resource.file.name}</p>
-                              )}
-                            </div>
-                          </>
-                        ) : resource.quizzes &&
-                          resource.quizzes.length > 0 ? (
-                          <div className="w-full">
-                            <h4 className="text-md font-bold mb-4">
-                              {t("CreateResource.QuizzTitleModal")}
-                            </h4>
-                            {resource.quizzes.map((quiz, index) => (
-                              <div
-                                key={index}
-                                className="mb-6 p-4 border border-gray-300 rounded-md shadow-sm"
-                              >
-                                <div className="mb-2">
-                                  <label className="block text-sm font-semibold text-gray-700">
-                                    {t("UpdateResource.Question")}:
-                                  </label>
-                                  <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
-                                    {quiz.question}
-                                  </p>
-                                </div>
-                                <div className="mb-2">
-                                  <label className="block text-sm font-semibold text-gray-700">
-                                    {t("UpdateResource.labelOption")}:
-                                  </label>
-                                  {quiz.options.map((option, optIndex) => (
-                                    <div
-                                      key={optIndex}
-                                      className="flex items-center mb-1"
-                                    >
-                                      <span className="mr-2 text-gray-600">
-                                        {String.fromCharCode(65 + optIndex)})
-                                      </span>
-                                      <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
-                                        {option}
-                                      </p>
-                                    </div>
-                                  ))}
-                                </div>
-                                <div>
-                                  <label className="block text-sm font-semibold text-gray-700">
-                                    {t("UpdateResource.CorrectAnswer")}:
-                                  </label>
-                                  <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
-                                    {quiz.correctAnswer}
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <p>{t("UpdateResource.labelOption")}: {resource.description}</p>
-                        )}
-                      </div>
-                    </Card>
-                  </Panel>
-                ))}
-              </Collapse>
-            ) : (
-              <p>{t("CreateResource.NoResources")}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Formulario de creación a la derecha */}
-        <div
-          className={`w-full rounded-lg shadow-lg overflow-y-auto bg-white mt-6 ${activeTab === 'recursos' ? 'block' : 'hidden'} sm:w-1/2 sm:block`}
-          style={{ maxHeight: "700px" }}
-        >
-          <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl items-center flex justify-between">
-            <h3 className="text-2xl font-bold text-white ml-2">
-              {t("CreateResource.FormCreate")}
+      </div>
+      <div className="custom flex justify-center items-center h-full w-full">
+        <div className="flex gap-8 h-full w-full">
+          {/* Panel de recursos a la izquierda */}
+          <div
+            className={`w-full rounded-lg shadow-lg overflow-y-auto overflow-auto scrollbar-hide mt-6 ${
+              activeTab === "crear" ? "block" : "hidden"
+            } sm:w-1/2 sm:block`}
+            style={{ maxHeight: "700px" }}
+          >
+            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
+              <img
+                src={image}
+                alt="Imagen de la cabecera"
+                className="w-[189.69px] h-[148px] object-contain mt-8"
+              />
+            </div>
+            <h3 className="text-xl font-bold mt-6 text-center text-purple-900">
+              {t("CreateResource.TitleResources")}
             </h3>
-            <img
-              src={image2}
-              alt="Imagen de la cabecera"
-              className="w-[80x] h-[80px] object-contain mr-2"
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 p-4">
+              {subCategory.length > 0 ? (
+                subCategory.map((subcategory) => {
+                  // Filtrar los recursos por subcategoryId
+                  const filteredResources = resources.filter(
+                    (resource) => resource.subcategoryId === subcategory.id
+                  );
+
+                  return (
+                    <div key={subcategory.id} className="mb-6">
+                      <h2 className="text-xl font-bold mb-4">
+                        {subcategory.title}
+                      </h2>
+
+                      {filteredResources.length > 0 ? (
+                        <Collapse accordion>
+                          {filteredResources.map((resource) => (
+                            <Panel
+                              header={
+                                <div className="flex flex-col lg:flex-row justify-between items-center">
+                                  {resource.title}
+                                  <div className="flex flex-col lg:flex-row lg:ml-auto space-y-2 lg:space-y-0 lg:space-x-2">
+                                    <Button
+                                      icon={<EditOutlined />}
+                                      onClick={() => openEditModal(resource)}
+                                      className="bg-yellow-500 text-white hover:bg-yellow-600"
+                                    >
+                                    </Button>
+                                    <Button
+                                      icon={<DeleteFilled />}
+                                      onClick={() => {
+                                        Swal.fire({
+                                          title: t(
+                                            "CreateResource.AlertDeleteTitle"
+                                          ),
+                                          text: t(
+                                            "CreateResource.AlertDeleteText"
+                                          ),
+                                          icon: "warning",
+                                          showCancelButton: true,
+                                          confirmButtonColor: "#28a745",
+                                          cancelButtonColor: "#d35",
+                                          confirmButtonText: t(
+                                            "CreateResource.AlertDeleteConfir"
+                                          ),
+                                          reverseButtons: true,
+                                        }).then((result) => {
+                                          if (result.isConfirmed) {
+                                            handleRemoveResource(resource);
+                                            Swal.fire({
+                                              title: t(
+                                                "CreateResource.AlerteSuccesyDelete"
+                                              ),
+                                              text: t(
+                                                "CreateResource.DeleteResource"
+                                              ),
+                                              icon: "success",
+                                            });
+                                          }
+                                        });
+                                      }}
+                                      className="bg-red-700 text-white hover:bg-red-600"
+                                    >
+                                    </Button>
+                                  </div>
+                                </div>
+                              }
+                              key={resource.id}
+                            >
+                              <Card>
+                                <div className="flex justify-between items-center">
+                                  {resource.files &&
+                                  (isVideoLink(resource.files) ||
+                                    resource.files.endsWith(".pdf") ||
+                                    /\.(jpg|jpeg|png)$/i.test(
+                                      resource.files
+                                    )) ? (
+                                    <>
+                                      <div className="w-1/2">
+                                        {isVideoLink(resource.files) ? (
+                                          <iframe
+                                            src={getEmbedUrl(resource.files)}
+                                            frameBorder="0"
+                                            style={{
+                                              width: "250px",
+                                              height: "250px",
+                                            }}
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                          />
+                                        ) : resource.files.endsWith(".pdf") ? (
+                                          <div className="text-center">
+                                            <div className="flex items-center justify-center mb-4">
+                                              <FilePdfOutlined className="text-red-600 text-6xl" />
+                                            </div>
+                                            <a
+                                              href={resource.files}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              className="text-blue-500 hover:underline text-lg"
+                                              download
+                                            >
+                                              {t("CreateResource.DowloadPDF")}
+                                            </a>
+                                          </div>
+                                        ) : (
+                                          <div className="flex justify-center">
+                                            <img
+                                              src={resource.files}
+                                              alt={`Content ${resource.title}`}
+                                              className="max-w-full h-auto"
+                                            />
+                                          </div>
+                                        )}
+                                      </div>
+                                      <div className="w-1/2 pl-10">
+                                        <p>{resource.description}</p>
+                                        {resource.file && (
+                                          <p>
+                                            {t("UpdateResource.Files")}:{" "}
+                                            {resource.file.name}
+                                          </p>
+                                        )}
+                                      </div>
+                                    </>
+                                  ) : resource.quizzes &&
+                                    resource.quizzes.length > 0 ? (
+                                    <div className="w-full">
+                                      <h4 className="text-md font-bold mb-4">
+                                        {t("CreateResource.QuizzTitleModal")}
+                                      </h4>
+                                      {resource.quizzes.map((quiz, index) => (
+                                        <div
+                                          key={index}
+                                          className="mb-6 p-4 border border-gray-300 rounded-md shadow-sm"
+                                        >
+                                          <div className="mb-2">
+                                            <label className="block text-sm font-semibold text-gray-700">
+                                              {t("UpdateResource.Question")}:
+                                            </label>
+                                            <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
+                                              {quiz.question}
+                                            </p>
+                                          </div>
+                                          <div className="mb-2">
+                                            <label className="block text-sm font-semibold text-gray-700">
+                                              {t("UpdateResource.labelOption")}:
+                                            </label>
+                                            {quiz.options.map(
+                                              (option, optIndex) => (
+                                                <div
+                                                  key={optIndex}
+                                                  className="flex items-center mb-1"
+                                                >
+                                                  <span className="mr-2 text-gray-600">
+                                                    {String.fromCharCode(
+                                                      65 + optIndex
+                                                    )}
+                                                    )
+                                                  </span>
+                                                  <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
+                                                    {option}
+                                                  </p>
+                                                </div>
+                                              )
+                                            )}
+                                          </div>
+                                          <div>
+                                            <label className="block text-sm font-semibold text-gray-700">
+                                              {t(
+                                                "UpdateResource.CorrectAnswer"
+                                              )}
+                                              :
+                                            </label>
+                                            <p className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 bg-gray-100">
+                                              {quiz.correctAnswer}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <p>
+                                      {t("UpdateResource.labelOption")}:{" "}
+                                      {resource.description}
+                                    </p>
+                                  )}
+                                </div>
+                              </Card>
+                            </Panel>
+                          ))}
+                        </Collapse>
+                      ) : (
+                        <p>{t("CreateResource.NoResources")}</p>
+                      )}
+                    </div>
+                  );
+                })
+              ) : (
+                <p>{t("CreateResource.NoResources")}</p>
+              )}
+            </div>
           </div>
-          
-          <form onSubmit={handleSubmit} className="space-y-6 px-4 py-2">
-            <div>
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-gray-700"
-              >
-                {t("UpdateResource.Title")}
-              </label>
-              <input
-                type="text"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
-                  errors.title ? "border-red-500" : "border-gray-300"
-                } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
-                required
+
+          {/* Formulario de creación a la derecha */}
+          <div
+            className={`w-full rounded-lg shadow-lg overflow-y-auto bg-white mt-6 ${
+              activeTab === "recursos" ? "block" : "hidden"
+            } sm:w-1/2 sm:block`}
+            style={{ maxHeight: "700px" }}
+          >
+            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl items-center flex justify-between">
+              <h3 className="text-2xl font-bold text-white ml-2">
+                {t("CreateResource.FormCreate")}
+              </h3>
+              <img
+                src={image2}
+                alt="Imagen de la cabecera"
+                className="w-[80x] h-[80px] object-contain mr-2"
               />
-              {errors.title && (
-                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
-              )}
             </div>
 
-            <div>
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700"
-              >
-                {t("UpdateResource.Description")}
-              </label>
-              <textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                maxLength={MAX_DESCRIPTION_LENGTH}
-                className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
-                  errors.description ? "border-red-500" : "border-gray-300"
-                } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
-                required
-              />
-              <div className="text-gray-600 text-right mt-1">
-                {description.length}/{MAX_DESCRIPTION_LENGTH}
-              </div>
-              {errors.description && (
-                <p className="text-red-500 text-sm mt-0">
-                  {errors.description}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="type"
-                className="block text-sm font-medium text-gray-700"
-              >
-                {t("CreateResource.TipeResource")}
-              </label>
-              <select
-                id="type"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-              >
-                <option value="file">{t("UpdateResource.Files")}</option>
-                <option value="quiz">{t("CreateResource.QuizzTitleModal")}</option>
-              </select>
-            </div>
-
-            {type === "file" && (
-              <div className="space-y-4">
-                <div className="flex space-x-4">
-                  <button
-                    type="button"
-                    onClick={() => setSelection("file")}
-                    className={`flex-1 px-4 py-2 rounded-lg focus:outline-none ${
-                      selection === "file"
-                        ? "bg-blue-500 text-white hover:bg-blue-600"
-                        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-                    }`}
+            <form onSubmit={handleSubmit} className="space-y-6 px-4 py-2">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2 md:col-span-1">
+                  <label
+                    htmlFor="title"
+                    className="block text-sm font-medium text-gray-700"
                   >
-                    {t("CreateResource.UpFile")}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSelection("link")}
-                    className={`flex-1 px-4 py-2 rounded-lg focus:outline-none ${
-                      selection === "link"
-                        ? "bg-blue-500 text-white hover:bg-blue-600"
-                        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-                    }`}
-                  >
-                    {t("UpdateResource.LinkVideo")}
-                  </button>
-                </div>
-
-                <div className="min-h-[100px]">
-                  {selection === "file" && (
-                    <div>
-                      <label
-                        htmlFor="file"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        {t("UpdateResource.Files")}
-                      </label>
-                      <input
-                        type="file"
-                        id="file"
-                        onChange={handleFileChange}
-                        className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm file:bg-blue-100 file:border-none file:py-2 file:px-4 file:text-blue-700"
-                      />
-                    </div>
-                  )}
-
-                  {selection === "link" && (
-                    <div>
-                      <label
-                        htmlFor="link"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        {t("CreateResource.VideoLink")}
-                      </label>
-                      <input
-                        type="text"
-                        id="link"
-                        value={link}
-                        onChange={handleLinkChange}
-                        placeholder={t("UpdateResource.AddLink")}
-                        className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                      />
-                    </div>
+                    {t("UpdateResource.Title")}
+                  </label>
+                  <input
+                    type="text"
+                    id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
+                      errors.title ? "border-red-500" : "border-gray-300"
+                    } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
+                    required
+                  />
+                  {errors.title && (
+                    <p className="text-red-500 text-sm mt-1">{errors.title}</p>
                   )}
                 </div>
-              </div>
-            )}
 
-            {type === "quiz" && (
+                <div className="col-span-2 md:col-span-1">
+                  <label
+                    htmlFor="subcategoryId"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    {t("subCategory.SelectSection")}
+                  </label>
+                  <select
+                    id="subcategoryId"
+                    value={subcategoryId}
+                    onChange={(e) => setSubcategoryId(e.target.value)}
+                    className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    required
+                  >
+                    <option value="">{t("subCategory.SelectSection")}</option>
+                    {subCategory.map((subcategory) => (
+                      <option key={subcategory.id} value={subcategory.id}>
+                        {subcategory.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t("CreateResource.QuizzTitleModal")}
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  {t("UpdateResource.Description")}
                 </label>
-                {quizzes.map((quiz, index) => (
-                  <div
-                    key={index}
-                    className="mb-6 p-4 border border-gray-300 rounded-lg shadow-sm"
-                  >
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">
+                <textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  maxLength={MAX_DESCRIPTION_LENGTH}
+                  className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
+                    errors.description ? "border-red-500" : "border-gray-300"
+                  } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
+                  required
+                />
+                {errors.description && (
+                  <p className="text-red-500 text-sm mt-0">
+                    {errors.description}
+                  </p>
+                )}
+                <div className="text-gray-600 text-right mt-1">
+                  {description.length}/{MAX_DESCRIPTION_LENGTH}
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="type"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  {t("CreateResource.TipeResource")}
+                </label>
+                <select
+                  id="type"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                  <option value="file">{t("UpdateResource.Files")}</option>
+                  <option value="quiz">
+                    {t("CreateResource.QuizzTitleModal")}
+                  </option>
+                </select>
+              </div>
+
+              {type === "file" && (
+                <div className="space-y-4">
+                  <div className="flex space-x-4">
+                    <button
+                      type="button"
+                      onClick={() => setSelection("file")}
+                      className={`flex-1 px-4 py-2 rounded-lg focus:outline-none ${
+                        selection === "file"
+                          ? "bg-blue-500 text-white hover:bg-blue-600"
+                          : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                      }`}
+                    >
+                      {t("CreateResource.UpFile")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelection("link")}
+                      className={`flex-1 px-4 py-2 rounded-lg focus:outline-none ${
+                        selection === "link"
+                          ? "bg-blue-500 text-white hover:bg-blue-600"
+                          : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                      }`}
+                    >
+                      {t("UpdateResource.LinkVideo")}
+                    </button>
+                  </div>
+
+                  <div className="min-h-[100px]">
+                    {selection === "file" && (
+                      <div>
+                        <label
+                          htmlFor="file"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          {t("UpdateResource.Files")}
+                        </label>
+                        <input
+                          type="file"
+                          id="file"
+                          onChange={handleFileChange}
+                          className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm file:bg-blue-100 file:border-none file:py-2 file:px-4 file:text-blue-700"
+                        />
+                      </div>
+                    )}
+
+                    {selection === "link" && (
+                      <div>
+                        <label
+                          htmlFor="link"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          {t("CreateResource.VideoLink")}
+                        </label>
+                        <input
+                          type="text"
+                          id="link"
+                          value={link}
+                          onChange={handleLinkChange}
+                          placeholder={t("UpdateResource.AddLink")}
+                          className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {type === "quiz" && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t("CreateResource.QuizzTitleModal")}
+                  </label>
+                  {quizzes.map((quiz, index) => (
+                    <div
+                      key={index}
+                      className="mb-6 p-4 border border-gray-300 rounded-lg shadow-sm"
+                    >
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">
                           {t("UpdateResource.Question")}
                         </label>
                         <input
@@ -759,7 +862,9 @@ const CreateResourceModal = ({
                             name={`options[${optIndex}]`}
                             value={option}
                             onChange={(e) => handleQuizChange(index, e)}
-                            placeholder={t("UpdateResource.OptionIndex", { optIndex: optIndex + 1 })}    
+                            placeholder={t("UpdateResource.OptionIndex", {
+                              optIndex: optIndex + 1,
+                            })}
                             className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
                               errors[index]?.options?.[optIndex]
                                 ? "border-red-500"
@@ -802,7 +907,9 @@ const CreateResourceModal = ({
                             : "border-gray-300"
                         } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
                       >
-                        <option value="">{t("UpdateResource.SelectOption")}</option>
+                        <option value="">
+                          {t("UpdateResource.SelectOption")}
+                        </option>
                         {quiz.options.map((option, optIndex) => (
                           <option key={optIndex} value={option}>
                             {`${String.fromCharCode(65 + optIndex)}) ${option}`}
@@ -861,7 +968,7 @@ const CreateResourceModal = ({
           isVisible={isEditModalVisible}
           onCancel={closeEditModal}
           resourceData={selectedResource}
-          onUpdate={() => fetchResources(courseId)} 
+          onUpdate={() => fetchResources(courseId)}
         />
       )}
     </Modal>

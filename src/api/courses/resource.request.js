@@ -24,6 +24,7 @@ export const createResource = async (resourceData) => {
         const formData = new FormData();
         if (resourceData.courseId) formData.append('courseId', resourceData.courseId);
         if (resourceData.title) formData.append('title', resourceData.title);
+        if (resourceData.subcategoryId) formData.append('subcategoryId', resourceData.subcategoryId);
         if (resourceData.description) formData.append('description', resourceData.description);
         if (resourceData.file) formData.append('file', resourceData.file);
         if (resourceData.link) formData.append('link', resourceData.link);
@@ -55,6 +56,7 @@ export const updateResource = async (id, resourceData) => {
     try {
         const formData = new FormData();
         if (resourceData.title) formData.append('title', resourceData.title);
+        if (resourceData.subcategoryId) formData.append('subcategoryId', resourceData.subcategoryId);
         if (resourceData.description) formData.append('description', resourceData.description);
         if (resourceData.file) formData.append('file', resourceData.file);
         if (resourceData.link) formData.append('link', resourceData.link);

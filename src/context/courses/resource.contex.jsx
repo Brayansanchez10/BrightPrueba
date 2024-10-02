@@ -68,11 +68,12 @@ export const ResourceProvider = ({ children }) => {
     };
 
     // Función para crear un recurso
-    const createResource = async ({ courseId, title, description, file, link, quizzes }) => {
+    const createResource = async ({ courseId, title, subcategoryId, description, file, link, quizzes }) => {
         try {
             const newResource = {
                 courseId, 
                 title,
+                subcategoryId,
                 description,
                 file,
                 link,
@@ -90,10 +91,11 @@ export const ResourceProvider = ({ children }) => {
     };
 
     // Función para actualizar un recurso
-    const updateResource = async (id, { title, description, file, link, quizzes }) => {
+    const updateResource = async (id, { title, subcategoryId, description, file, link, quizzes }) => {
         try {
             const resourceData = {
                 title,
+                subcategoryId,
                 description,
                 file,
                 link,
@@ -103,7 +105,7 @@ export const ResourceProvider = ({ children }) => {
             const res = await updateResourceApi(id, resourceData);
             setResources(prevResources =>
                 prevResources.map(resource =>
-                    resource._id === id ? res.data : resource
+                    resource.id === id ? res.data : resource
                 )
             );
             return res.data;
@@ -118,7 +120,7 @@ export const ResourceProvider = ({ children }) => {
         try {
             await deleteResourceApi(id);
             setResources(prevResources =>
-                prevResources.filter(resource => resource._id !== id)
+                prevResources.filter(resource => resource.id !== id)
             );
         } catch (error) {
             console.error("Error al eliminar recurso:", error);

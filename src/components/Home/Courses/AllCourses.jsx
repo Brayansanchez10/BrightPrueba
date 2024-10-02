@@ -15,6 +15,7 @@ import "../../../css/Style.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Footer from "../../footer.jsx";
+import Logo from "../../../assets/img/hola.png";
 
 export default function AllCourses() {
   const { t } = useTranslation("global");
