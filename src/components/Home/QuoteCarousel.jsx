@@ -13,6 +13,7 @@ function QuoteCarousel({ phrases }) {
         autoplay: true,
         autoplaySpeed: 5000,
         arrows: false,
+        pauseOnHover: false,
     };
 
     return (

@@ -15,22 +15,28 @@ function Carousel() {
   ];
 
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+  const [fade, setFade] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentPhraseIndex((prevIndex) =>
-        prevIndex === phrases.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 3000); // Cambia la frase cada 3 segundos
+      setFade(false);
+      setTimeout(() => {
+        setCurrentPhraseIndex((prevIndex) =>
+          prevIndex === phrases.length - 1 ? 0 : prevIndex + 1
+        );
+        setFade(true);  // Restaura la opacidad
+      }, 600);  // Tiempo de la animación de desvanecimiento
+    }, 4500);  // Cambia de frase cada x segundos
 
     return () => clearInterval(interval);
-  }, []);
+  }, [phrases.length]);
+
 
   return (
     <div className="relative">
       {/* Pestañas de redes sociales */}
       <div className="absolute top-2 left-0 xl:left-[-20px]">
-        <a href="https://www.facebook.com/disruptive.devops?checkpoint_src=any" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.facebook.com/MesaDavisEnterprises/" target="_blank" rel="noopener noreferrer">
           <div className="flex bg-blue-600 p-2 rounded-br-lg group">
             <FaFacebookF className="flex text-white text-xl" />
             <p className="text-white font-semibold hidden group-hover:block">Facebook</p>
@@ -38,7 +44,7 @@ function Carousel() {
         </a>
       </div>
       <div className="absolute top-[50px] left-0 xl:left-[-20px]">
-        <a href="https://x.com/DisruptiveITDev" target="_blank" rel="noopener noreferrer">
+        <a href="https://x.com/MesaDavisEnt" target="_blank" rel="noopener noreferrer">
           <div className="flex bg-blue-400 p-2 rounded-br-lg group">
             <FaTwitter className="text-white text-xl" />
             <p className="text-white font-semibold hidden group-hover:block">Twitter</p>
@@ -46,7 +52,7 @@ function Carousel() {
         </a>
       </div>
       <div className="absolute top-[92px] left-0 xl:left-[-20px]">
-        <a href="https://www.instagram.com/disruptive.info/" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.instagram.com/mesadoko" target="_blank" rel="noopener noreferrer">
           <div className="flex bg-pink-500 p-2 rounded-br-lg group">
             <FaInstagram className="text-white text-xl" />
             <p className="text-white font-semibold hidden group-hover:block">Instagram</p>
@@ -63,16 +69,16 @@ function Carousel() {
             alt="Logo"
           />
           <div className="h-48 lg:h-56 block items-center justify-center">
-            <p className="text-xl sm:text-2xl lg:text-3xl italic text-center">
+            <p className={`text-xl sm:text-xl lg:text-2xl italic text-center font-bungee transition-opacity duration-500 ease-in-out ${fade ? 'opacity-100' : 'opacity-0'}`}>
               "{phrases[currentPhraseIndex].text}"
             </p>
             <br />
-            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-black">
+            <p className={`text-lg sm:text-xl lg:text-2xl text-gray-300 font-satisfy font-semibold transition-opacity duration-500 ease-in-out ${fade ? 'opacity-100' : 'opacity-0'}`}>
               - {phrases[currentPhraseIndex].author}
             </p>
           </div>
 
-          <div className="text-lg mt-8 sm:text-sm text-gray-300 text-opacity-90 sm:mt-16 lg:mt-8 font-bold mb-16">
+          <div className="text-lg mt-16 sm:text-sm text-gray-300 text-opacity-90 sm:mt-28 lg:mt-16 font-bold mb-16 sm:mb-20 lg:mb-8">
             {t("footer.description")}
             <p className="text-sm">{t("footer.copy_right")}</p>
           </div>

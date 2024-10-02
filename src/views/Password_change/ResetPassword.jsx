@@ -6,6 +6,8 @@ import * as yup from "yup";
 import { resetPasswordRequest } from "../../api/auth";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import LoginFond from "../../assets/img/Login.png"
+import "../../css/animations.css";
 
 const ResetPasswordForm = () => {
   const navigate = useNavigate();
@@ -51,7 +53,9 @@ const ResetPasswordForm = () => {
   });
 
   return (
-    <div className="bg-gradient-to-r from-purple-500 to-emerald-400 min-h-screen flex justify-center">
+    <div className=" min-h-screen flex justify-center bg-cover bg-center"
+      style={{ backgroundImage: `url(${LoginFond})` }}
+    >
       <div className="flex justify-center items-center">
         <div className="bg-white rounded-xl shadow-xl shadow-zinc-950 px-10 py-6 mx-4 max-w-lg">
           <h1 className="text-2xl mx-auto text-center font-black bg-gradient-to-r from-emerald-400 to-purple-800 bg-clip-text text-transparent mb-3 pt-4">
@@ -85,7 +89,7 @@ const ResetPasswordForm = () => {
               <div className="flex items-center justify-center">
                 <button
                   type="submit"
-                  className={`py-3 font-medium text-white rounded-lg w-3/4 bg-purple-800 inline-flex space-x-4 items-center justify-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`py-3 font-medium text-white rounded-lg w-3/4 bt1 inline-flex space-x-4 items-center justify-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                   disabled={isSubmitting}
                 >
                   <svg
@@ -110,7 +114,7 @@ const ResetPasswordForm = () => {
                 {t("reset_password.not_registered_yet")}{" "}
                 <Link
                   to="/register"
-                  className="text-purple-800 font-medium inline-flex space-x-1 items-center"
+                  className="text-purple-800 font-medium inline-flex space-x-1 items-center hover:text-blue-400 transition-all duration-700"
                 >
                   <span>{t("reset_password.register_now")}</span>
                 </Link>

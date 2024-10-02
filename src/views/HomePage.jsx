@@ -15,6 +15,7 @@ import Cooking from '../assets/img/Courses_home/cooking.jpg';
 import Sport from '../assets/img/Courses_home/sport.jpg';
 import Ecology from '../assets/img/Courses_home/ecology.jpg';
 import Disruptive from '../assets/img/Courses_home/Disruptive.jpg';
+import "../css/animations.css";
 
 const HomePage = () => {
     const { t } = useTranslation("global");
@@ -69,27 +70,27 @@ const HomePage = () => {
                     <div className='md:pb-5  sm:pb-0 lg:pb-20'>
                         <div className='flex flex-col lg:flex-row gap-10 mx-5 md:mx-10 lg:mx-20 my-10'>
                             <div className='w-full lg:w-1/3 mx-auto p-6'>
-                                <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee pt-10'>Welcome to <span className='text-purple-900'>BRIGMIND</span></h2>
-                                <p className='text-base md:text-xl lg:text-2xl text-justify pt-5'>¡Bienvenido a BRIGMIND Somos una plataforma educativa que lleva el conocimiento tecnológico a todos, sin importar la ubicación o los recursos. Ofrecemos cursos accesibles en programación, inteligencia artificial y más, desde cualquier dispositivo, con talleres presenciales y programas de mentoría. Únete a nuestra comunidad y transforma tu futuro con el poder de la educación.</p>
+                                <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee pt-10'>{t('home.welcome')}<span className='text-purple-900'>bringmind</span></h2>
+                                <p className='text-base md:text-xl lg:text-2xl text-justify pt-5'>{t('home.welcome_message')}</p>
                             </div>
                             <div className='bg-purple-900 rounded-t-full rounded-b-3xl w-1/3 items-center hidden lg:flex mx-auto'>
                                 <img src={logo} alt="Aquí hay una imagen" className='py-20 mx-auto' />
                             </div>
                             <div className='w-full lg:w-1/3 pt-6'>
-                                <h2 className='text-center text-4xl md:text-5xl lg:text-5xl text-purple-900 font-bungee pt-10'>our mission</h2>
-                                <p className='text-base md:text-xl lg:text-2xl text-justify pt-5 pb-10'>Nuestra misión es democratizar la educación tecnológica, brindando acceso inclusivo y práctico a niños, jóvenes y adultos en zonas rurales y de bajos recursos. En Didáctica, capacitamos a las personas con habilidades digitales para su desarrollo personal y profesional.</p>
+                                <h2 className='text-center text-4xl md:text-5xl lg:text-5xl text-purple-900 font-bungee pt-10'>{t('home.mission')}</h2>
+                                <p className='text-base md:text-xl lg:text-2xl text-justify pt-5 pb-10'>{t('home.mission_message')}</p>
                                 <div className='flex flex-col md:flex-row gap-5 mx-4'>
                                     <div className='w-full md:w-1/3 text-center'>
                                         <h2 className='font-bungee text-2xl md:text-3xl text-purple-900'>10+</h2>
-                                        <p className='text-lg md:text-2xl'>Year<br/>Experience</p>
+                                        <p className='text-lg md:text-2xl'>{t('home.experience_y')}<br/>{t('home.experience')}</p>
                                     </div>
                                     <div className='w-full md:w-1/3 text-center'>
                                         <h2 className='font-bungee text-2xl md:text-3xl text-purple-900'>29+</h2>
-                                        <p className='text-lg md:text-2xl'>Total<br/>Course</p>
+                                        <p className='text-lg md:text-2xl'>{t('home.total')}<br/>{t('home.course')}</p>
                                     </div>
                                     <div className='w-full md:w-1/3 text-center'>
                                         <h2 className='font-bungee text-2xl md:text-3xl text-purple-900'>50k+</h2>
-                                        <p className='text-lg md:text-2xl'>Student<br/>Active</p>
+                                        <p className='text-lg md:text-2xl'>{t('home.student')}<br/>{t('home.active')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +99,7 @@ const HomePage = () => {
                     
                     <div className='md:pb-5  sm:pb-0 lg:pb-20'>
                         <div className='my-10 p-6'>
-                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee'><span className='text-purple-900'>bringmind</span> offers knowledge like</h2>
+                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee'><span className='text-purple-900'>bringmind </span>{t('home.offert')}</h2>
                             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pt-20 mx-5 md:mx-10 lg:mx-20'>
                                 <div className='border border-black bg-white rounded-3xl'>
                                     <div className='my-10 lg:my-24 text-center'>
@@ -107,8 +108,8 @@ const HomePage = () => {
                                             size={100}
                                             
                                         />
-                                        <h3 className='text-xl lg:text-2xl pt-3'>Quality information</h3>
-                                        <p className='pt-6 text-base lg:text-lg'>Cursos de alta calidad, creados por expertos, con contenido práctico y relevante.</p>
+                                        <h3 className='text-xl lg:text-2xl pt-3'>{t('home.quality')}</h3>
+                                        <p className='pt-6 text-base lg:text-lg'>{t('home.quality_message')}</p>
                                     </div>
                                 </div>
                                 <div className='border border-black bg-white rounded-3xl'>
@@ -117,8 +118,8 @@ const HomePage = () => {
                                             className='text-white bg-[#00D8A1] mx-auto rounded-3xl p-4'
                                             size={100}
                                         />
-                                        <h3 className='text-xl lg:text-2xl pt-3'>Online course</h3>
-                                        <p className='pt-6 text-base lg:text-lg'>Aprende desde cualquier lugar y dispositivo, con opción de estudio sin conexión.</p>
+                                        <h3 className='text-xl lg:text-2xl pt-3'>{t('home.online')}</h3>
+                                        <p className='pt-6 text-base lg:text-lg'>{t('home.online_message')}</p>
                                     </div>
                                 </div>
                                 <div className='border border-black bg-white rounded-3xl'>
@@ -127,8 +128,8 @@ const HomePage = () => {
                                             className='text-white bg-purple-800 mx-auto rounded-3xl p-4'
                                             size={100}
                                         />
-                                        <h3 className='text-xl lg:text-2xl pt-3'>Certificate course</h3>
-                                        <p className='pt-6 text-base lg:text-lg'>Recibe un certificado al completar cada curso para destacar tus habilidades.</p>
+                                        <h3 className='text-xl lg:text-2xl pt-3'>{t('home.certificate')}</h3>
+                                        <p className='pt-6 text-base lg:text-lg'>{t('home.certificate_message')}</p>
                                     </div>
                                 </div>
                                 <div className='border border-black bg-white rounded-3xl'>
@@ -137,27 +138,27 @@ const HomePage = () => {
                                             className='text-white bg-[#00D8A1] mx-auto rounded-3xl p-4'
                                             size={100}
                                         />
-                                        <h3 className='text-xl lg:text-2xl pt-3'>Diversity of courses</h3>
-                                        <p className='pt-6 text-base lg:text-lg'>Ofrecemos cursos en áreas como programación e inteligencia artificial para todos los niveles.</p>
+                                        <h3 className='text-xl lg:text-2xl pt-3'>{t('home.diversity')}</h3>
+                                        <p className='pt-6 text-base lg:text-lg'>{t('home.diversity_message')}</p>
                                     </div>
                                 </div>
                             </div>
                             <div className='pt-10 flex justify-center'>
-                                <a href="/AllCourses"><button className='bg-purple-800 text-white text-xl rounded-3xl h-14 w-48 hover:bg-purple-600 transition-all duration-500 '>Go to courses</button></a>
+                                <a href="/AllCourses"><button className='bg-purple-800 text-white text-xl rounded-3xl h-14 w-48 hover:bg-purple-600 transition-all duration-500 bt2'>{t('home.go_courses')}</button></a>
                             </div>
                         </div>
                     </div>
 
                     <div className='md:pb-5  sm:pb-0 lg:pb-20'>
                         <div className='my-10 p-6'>
-                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee'>Our Featured Course at <span className='text-purple-900'>bringmmind</span></h2>
+                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee'>{t('home.feature')} <span className='text-purple-900'>bringmmind</span></h2>
                             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-10 mx-3 md:mx-10 lg:mx-20'>
                                 <div>
                                     <div className='text-center rounded-3xl p-4 sm:p-6 md:p-8'>
                                         <img src={JSImage} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full rounded-3xl'/>
                                     </div>
                                     <div className='text-center'>
-                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>JS Courses</p>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>{t('home.js')}</p>
                                     </div>
                                 </div>
                                 <div>
@@ -165,7 +166,7 @@ const HomePage = () => {
                                         <img src={PHPImage} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full rounded-3xl'/>
                                     </div>
                                     <div className='text-center'>
-                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>PHP Courses</p>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>{t('home.php')}</p>
                                     </div>
                                 </div>
                                 <div>
@@ -173,7 +174,7 @@ const HomePage = () => {
                                         <img src={MusicImage} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full rounded-3xl'/>
                                     </div>
                                     <div className='text-center'>
-                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>Music Courses</p>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>{t('home.music')}</p>
                                     </div>
                                 </div>
                                 <div>
@@ -181,7 +182,7 @@ const HomePage = () => {
                                         <img src={ArtImage} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full rounded-3xl'/>
                                     </div>
                                     <div className='text-center'>
-                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>Art Courses</p>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>{t('home.art')}</p>
                                     </div>
                                 </div>
                                 <div>
@@ -189,7 +190,7 @@ const HomePage = () => {
                                         <img src={ExerciseImage} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full rounded-3xl'/>
                                     </div>
                                     <div className='text-center'>
-                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>Exercise Courses</p>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>{t('home.exercise')}</p>
                                     </div>
                                 </div>
                                 <div>
@@ -197,7 +198,7 @@ const HomePage = () => {
                                         <img src={Cooking} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full rounded-3xl'/>
                                     </div>
                                     <div className='text-center'>
-                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>Cooking Courses</p>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>{t('home.cooking')}</p>
                                     </div>
                                 </div>
                                 <div>
@@ -205,7 +206,7 @@ const HomePage = () => {
                                         <img src={Sport} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full rounded-3xl'/>
                                     </div>
                                     <div className='text-center'>
-                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>Sport Courses</p>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>{t('home.sport')}</p>
                                     </div>
                                 </div>
                                 <div>
@@ -213,7 +214,7 @@ const HomePage = () => {
                                         <img src={Ecology} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full rounded-3xl'/>
                                     </div>
                                     <div className='text-center'>
-                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>Ecology Courses</p>
+                                        <p className='text-purple-900 text-xl sm:text-2xl font-bungee'>{t('home.ecology')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -222,7 +223,7 @@ const HomePage = () => {
 
                     <div className='md:pb-5  sm:pb-0 lg:pb-20'>
                         <div className='my-10 p-6'>
-                            <h2 className='text-center text-3xl md:text-4xl lg:text-5xl font-bungee'>Our Testimonial at <span className='text-purple-900'>bringmind</span></h2>
+                            <h2 className='text-center text-3xl md:text-4xl lg:text-5xl font-bungee'>{t('home.testimonial')} <span className='text-purple-900'>bringmind</span></h2>
                             <div className='md:mx-16 lg:mx-12 pt-10'>
                                 <Testimonials profiles={profiles} />
                             </div>
@@ -231,10 +232,10 @@ const HomePage = () => {
 
                     <div className='md:pb-5  sm:pb-0 lg:pb-10'>
                         <div className='my-10 p-6'>
-                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee text-purple-900'>Partners</h2>
+                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee text-purple-900'>{t('home.partners')}</h2>
                             <div className='flex justify-center mt-6'>
                                 <div className='w-full sm:w-2/3 md:w-1/2 lg:w-1/3'>
-                                    <p className='text-xl text-center pb-5'>This company is characterized by its effort and dedication, contributing a lot to society.</p>
+                                    <p className='text-xl text-center pb-5'>{t('home.partners_message')}</p>
                                     <div className='p-6 rounded-3xl'>
                                         <img src={Disruptive} alt="" className='mt-4 mx-auto rounded-3xl' />
                                     </div>

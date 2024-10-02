@@ -119,7 +119,41 @@
         "einstein_idea": "The mind that opens to a new idea never returns to its original size.",
         "davis": "The road to success and the road to failure are almost exactly the same.",
         "einstein_knowledge": "The only source of knowledge is experience."
-        }
+        },
+        "bringmind": "bringmind",
+        "welcome": "Welcome to ",
+        "welcome_message": "Welcome to BRIGMIND! We are an educational platform that brings technological knowledge to everyone, regardless of location or resources. We offer accessible courses in programming, artificial intelligence, and more, from any device, with in-person workshops and mentoring programs. Join our community and transform your future with the power of education.",
+        "mission": "our mission",
+        "mission_message": "Our mission is to democratize technological education, providing inclusive and practical access to children, youth, and adults in rural and low-resource areas. At Didáctica, we empower individuals with digital skills for their personal and professional development.",
+        "experience_y": "Year",
+        "experience": "Experience",
+        "total": "Total",
+        "course": "Course",
+        "student": "Student",
+        "active": "Active",
+        "offert": "offers knowledge like",
+        "quality": "Quality information",
+        "quality_message": "High-quality courses created by experts, with practical and relevant content.",
+        "online": "Online course",
+        "online_message": "Learn from anywhere and any device, with offline study options.",
+        "certificate": "Certificate course",
+        "certificate_message": "Receive a certificate upon completing each course to showcase your skills.",
+        "diversity": "Diversity of courses",
+        "diversity_message": "We offer courses in areas such as programming and artificial intelligence for all levels.",
+        "go_courses": "Go to courses",
+        "feature": "Our Featured Course at ",
+        "js": "JS Courses",
+        "php": "PHP Courses",
+        "music": "Music Courses",
+        "art": "Art Courses",
+        "exercise": "Exercise Courses",
+        "cooking": "Cooking Courses",
+        "sport": "Sport Courses",
+        "ecology": "Ecology Courses",
+        "testimonial": "Our Testimonial at ",
+        "partners": "Partners",
+        "partners_message": "This company is characterized by its effort and dedication, contributing a lot to society."
+
     },
     "settingsBar": {
         "account_settings": "Account Settings",
@@ -554,7 +588,9 @@
         "blog": "Informative blog",
         "yourCourses": "Your courses",
         "events": "Events",
-        "Contact": "Contact us"
+        "Contact": "Contact us",
+        "description": "Mesadoko © developed by Disruptive IT",
+        "copy_right": "Copyright 2024"
     },
     "UpdateResource": {
        "ValidateTitle": "The title must be at least 3 characters long.",

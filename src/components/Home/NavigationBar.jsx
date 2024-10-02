@@ -79,7 +79,7 @@ function NavigationBar() {
   const getActiveClass = (path) => {
     return location.pathname === path
       ? "text-[#00D8A1] border-b-4 border-[#00D8A1]"
-      : "text-white hover:text-[#00D8A1]";
+      : "text-white hover:text-[#00D8A1] transition-all duration-700";
   };
 
   const formatUsername = (name) => {

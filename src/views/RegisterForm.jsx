@@ -9,6 +9,8 @@ import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import imagen from "../assets/img/book.png";
+import LoginFond from "../assets/img/Login.png"
+import "../css/animations.css";
 
 function RegisterForm() {
   const [error, setError] = useState(null);
@@ -110,7 +112,9 @@ function RegisterForm() {
   });
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-emerald-400">
+    <div className="flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${LoginFond})` }}
+    >
       <div className="flex w-full max-w-7xl sm:rounded-none md:rounded-3xl shadow-xl shadow-slate-800">
 
         <div className="w-3/4 h-full justify-center items-center hidden md:block">
@@ -251,7 +255,7 @@ function RegisterForm() {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="w-48 py-2 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-xl font-bold text-xl mt-2"
+                  className="w-48 py-2 text-white rounded-xl font-bold text-xl mt-2 bt1"
                   disabled={
                     !formik.isValid ||
                     formik.values.password !== formik.values.confirmPassword ||
@@ -270,7 +274,7 @@ function RegisterForm() {
             <div className="mt-3 text-base text-center font-semibold">
               {t("register.already_registered")}
               <Link to="/">
-                <button className="text-xl text-pink-500 hover:text-purple-600 font-semibold">
+                <button className="text-xl text-pink-500 hover:text-purple-600 font-semibold transition-all duration-700">
                   {t("register.login")}
                 </button>
               </Link>
