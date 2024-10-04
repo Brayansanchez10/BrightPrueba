@@ -43,7 +43,7 @@ function Carousel() {
           </div>
         </a>
       </div>
-      <div className="absolute top-[50px] left-0 xl:left-[-20px]">
+      <div className="absolute top-[54px] left-0 xl:left-[-20px]">
         <a href="https://x.com/MesaDavisEnt" target="_blank" rel="noopener noreferrer">
           <div className="flex bg-blue-400 p-2 rounded-br-lg group">
             <FaTwitter className="text-white text-xl" />
@@ -51,7 +51,7 @@ function Carousel() {
           </div>
         </a>
       </div>
-      <div className="absolute top-[92px] left-0 xl:left-[-20px]">
+      <div className="absolute top-[100px] left-0 xl:left-[-20px]">
         <a href="https://www.instagram.com/mesadoko" target="_blank" rel="noopener noreferrer">
           <div className="flex bg-pink-500 p-2 rounded-br-lg group">
             <FaInstagram className="text-white text-xl" />

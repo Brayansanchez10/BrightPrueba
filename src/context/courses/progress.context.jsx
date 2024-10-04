@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { useState, createContext, useContext } from "react";
 import {
   getCourseProgress as getCourseProgressApi,
   updateCourseProgress as updateCourseProgressApi,
@@ -19,52 +19,41 @@ export const useCourseProgressContext = () => {
 };
 
 // Proveedor del Context
-export const CourseProgressProvider = ({ userId, children }) => {
+export const CourseProgressProvider = ({ children }) => {
   const [courseProgressData, setCourseProgressData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const getCourseProgress = async (courseId) => {
-    if (!userId) {
-      setError("Usuario no válido");
-      return;
-    }
-
+  const getCourseProgress = async (userId, courseId) => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null); // Resetear error antes de la solicitud
-      const res = await getCourseProgressApi(userId, courseId);
-      setCourseProgressData((prevData) => ({
-        ...prevData,
-        [courseId]: res.data.progress,
-      }));
-    } catch (error) {
-      console.log("Error al obtener el progreso del curso:", error);
-      setError("Error al obtener el progreso del curso");
+        const res = await getCourseProgressApi(userId, courseId);
+        setCourseProgressData(res.progress);
+        console.log("Id curso", courseId,"Progreso", res.progress);
+        return res.progress;
+    } catch (err) {
+        console.error("Error al obtener progreso:", err);
+        setError(err);
+        return null;
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 
-  const updateCourseProgress = async (courseId, newProgress) => {
-    if (!userId) {
-      setError("Usuario no válido");
-      return;
-    }
-
+  const updateCourseProgress = async (userId, courseId, progress) => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null); // Resetear error antes de la solicitud
-      await updateCourseProgressApi(userId, courseId, newProgress);
-      setCourseProgressData((prevData) => ({
-        ...prevData,
-        [courseId]: newProgress,
-      }));
-    } catch (error) {
-      console.log("Error al actualizar el progreso del curso:", error);
-      setError("Error al actualizar el progreso del curso");
+        const res = await updateCourseProgressApi(userId, courseId, progress);
+        setCourseProgressData(res.progress);
+        return res.progress;
+    } catch (err) {
+        console.error("Error updating course progress:", err);
+        setError(err);
+        return null;
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 

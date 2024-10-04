@@ -94,7 +94,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
             { max: 30, message: t("validations.usernameMaxLength") }
           ]}
         >
-          <Input className="w-full h-[34px] text-base font-normal rounded-xl bg-white shadow-md px-3" />
+          <Input maxLength={30} className="w-full h-[34px] text-base font-normal rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
 
         <Form.Item
@@ -104,10 +104,10 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
           rules={[
             { required: true, message: t("CreateUserModal.emailRequired") },
             { type: "email", message: t("CreateUserModal.emailInvalid") },
-            { max: 30, message: t("validations.maxEmail") }
+            { max: 80, message: t("validations.maxEmail") }
           ]}
         >
-          <Input className="w-full h-[34px] text-base font-normal rounded-xl bg-white shadow-md px-3" />
+          <Input maxLength={80} className="w-full h-[34px] text-base font-normal rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
 
         <Form.Item

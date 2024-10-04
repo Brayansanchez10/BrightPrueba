@@ -11,7 +11,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-t from-blue-200 via-blue-400 to-blue-600 ">
+    <div className="flex h-screen">
       <LeftBar onVisibilityChange={handleLeftBarVisibilityChange} />
       <div className="flex  overflow-auto ">
         <div className={`w-full  transition-all duration-300 ${isLeftBarVisible ? 'ml-56' : ''}`}>

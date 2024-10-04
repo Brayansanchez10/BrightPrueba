@@ -220,15 +220,17 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
                   className="w-20 h-20 rounded-full shadow-lg"
                 />
               )}
-              <button
-                type="button"
-                className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
-                onClick={handleDeleteImage}
-              >
-                <Trash2 size={16} />
-              </button>
+              {previewProfileImage && (
+                <button
+                  type="button"
+                  className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
+                  onClick={handleDeleteImage}
+                >
+                  <Trash2 size={16} />
+                </button>
+              )}
             </div>
-            <div className="ml-4 flex-grow">
+            <div className={`${!previewProfileImage ? 'flex-grow' : 'ml-4'}`}>
               <input
                 type="file"
                 id="profileImage"

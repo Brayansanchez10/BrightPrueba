@@ -4,6 +4,7 @@ import { useResourceContext } from "../../../context/courses/resource.contex";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useAuth } from "../../../context/auth.context";
 import { useUserContext } from "../../../context/user/user.context";
+import { useCourseProgressContext } from "../../../context/courses/progress.context";
 import NavigationBar from "../NavigationBar";
 import { FiMenu, FiX, FiChevronLeft, FiChevronRight, FiSend } from "react-icons/fi";
 import { FaCheckCircle, FaTimesCircle, FaQuestionCircle, FaStar, FaComment, FaUser } from 'react-icons/fa';
@@ -18,6 +19,8 @@ import { useTranslation } from 'react-i18next';
 export default function ResourceView() {
   const { t } = useTranslation("global");
   const { user } = useAuth();
+  const { getCourseProgress, updateCourseProgress } = useCourseProgressContext();
+  const [currentProgress, setCurrentProgress] = useState(0); // Valor inicial del progreso
   const { getUserById } = useUserContext();
   const [username, setUsername] = useState("");
   const { id } = useParams();
@@ -35,7 +38,6 @@ export default function ResourceView() {
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [currentResourceIndex, setCurrentResourceIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [course, setCourse] = useState(null);
   const [isContentCompleted, setIsContentCompleted] = useState(false);
   const [rightSideContent, setRightSideContent] = useState("default");
@@ -83,7 +85,7 @@ export default function ResourceView() {
     };
 
     fetchResources();
-  }, [courseId, getResource]);
+  }, [courseId]);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -99,6 +101,16 @@ export default function ResourceView() {
 
     fetchCourse();
   }, [courseId, getCourse]);
+
+  useEffect(() => {
+    // Supongamos que el progreso se obtiene de la API o del contexto
+    const fetchProgress = async () => {
+      const progress = await getCourseProgress(user.data.id, courseId);
+      setCurrentProgress(progress); // Establece el progreso en el estado
+    };
+    
+    fetchProgress();
+  }, [user, courseId]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -120,7 +132,6 @@ export default function ResourceView() {
     if (resources.length > 0 && resource) {
       const index = resources.findIndex((r) => r.id === resource.id);
       setCurrentResourceIndex(index);
-      updateProgress(index, resources.length);
     }
   }, [resources, resource]);
 
@@ -369,24 +380,53 @@ export default function ResourceView() {
     );
   };  
 
-  const updateProgress = (index, total) => {
-    if (total > 0) {
-      setProgress(((index + 1) / total) * 100);
+  // Función para calcular el progreso basado en el recurso actual
+  const calculateProgress = (currentIndex, totalResources) => {
+    if (currentIndex === totalResources - 1) {
+      return 100;
     }
+    return Math.round(((currentIndex + 1) / totalResources) * 100);
   };
 
-  const handlePrevious = () => {
+  // Función para manejar el clic en el recurso anterior
+  const handlePrevious = async () => {
     if (currentResourceIndex > 0) {
       const previousResource = resources[currentResourceIndex - 1];
+      setCurrentResourceIndex(currentResourceIndex - 1);
+
+      // Calcula el progreso y lo actualiza
+      const newProgress = calculateProgress(currentResourceIndex - 1, resources.length);
+      await updateCourseProgress(user.data.id, courseId, newProgress);
+
       handleResourceClick(previousResource.id, previousResource.courseId);
     }
   };
 
-  const handleNext = () => {
+  // Función para manejar el clic en el recurso siguiente
+  const handleNext = async () => {
     if (currentResourceIndex < resources.length - 1) {
       const nextResource = resources[currentResourceIndex + 1];
+      setCurrentResourceIndex(currentResourceIndex + 1);
+      
+      // Calcula el progreso y lo actualiza
+      const newProgress = calculateProgress(currentResourceIndex + 1, resources.length);
+      await updateCourseProgress(user.data.id, courseId, newProgress);
+
       handleResourceClick(nextResource.id, nextResource.courseId);
     }
+  };
+
+  const handleFinishCourse = async () => {
+    // Progreso al 100% al finalizar el curso
+    await updateCourseProgress(user.data.id, courseId, 100);
+    generatePremiumCertificatePDF(
+      username,
+      course.title,
+      zorro,
+      derechaabajo,
+      izquierdaarriba
+    );
+    navigate(`/course/${courseId}`);
   };
 
   const handleResourceClick = (resourceId, courseId) => {
@@ -397,17 +437,6 @@ export default function ResourceView() {
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleFinishCourse = () => {
-    generatePremiumCertificatePDF(
-      username,
-      course.title,
-      zorro,
-      derechaabajo,
-      izquierdaarriba
-    );
-    navigate(`/course/${courseId}`);
   };
 
   const generatePremiumCertificatePDF = (
@@ -690,12 +719,12 @@ export default function ResourceView() {
           <div className="mb-4">
             <div className="flex items-center justify-between mb-1">
               <span className="text-sm sm:text-base font-medium text-gray-700 font-bungee">Progreso del curso</span>
-              <span className="text-sm sm:text-base font-medium text-gray-700 font-bungee">{Math.round(progress)}%</span>
+              <span className="text-sm sm:text-base font-medium text-gray-700 font-bungee">{currentProgress}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-in-out"
-                style={{ width: `${progress}%` }}
+                style={{ width: `${currentProgress}%` }}
               ></div>
             </div>
           </div>

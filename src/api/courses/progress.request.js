@@ -3,26 +3,38 @@ import axios from 'axios';
 const api = 'http://localhost:3068/PE/progress';
 
 // Función para obtener el progreso de un curso para un usuario específico
-export const getCourseProgress = (userId, courseId) => {
-  return axios.get(`${api}/getProgress/${userId}/${courseId}`, {
-    withCredentials: true,
-  });
+export const getCourseProgress = async (userId, courseId) => {
+  try {
+    const response = await axios.get(`${api}/getProgress/${userId}/${courseId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching course progress:", error);
+    throw error; // o maneja el error como prefieras
+  }
 };
 
 // Función para actualizar el progreso de un curso para un usuario específico
-export const updateCourseProgress = (userId, courseId, progress) => {
+export const updateCourseProgress = async (userId, courseId, progress) => {
   console.log("userID: " + userId);
   console.log("courseID: " + courseId);
   console.log("progress: " + progress);
 
-  return axios.post(`${api}/updateProgress`, {
-    userId,
-    courseId,
-    progress,
-  }, {
-    withCredentials: true,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const response = await axios.post(`${api}/updateProgress`, {
+      userId,
+      courseId,
+      progress,
+    }, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating course progress:", error);
+    throw error;
+  }
 };

@@ -206,6 +206,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
           name="name"
           value={course.name}
           onChange={handleChange}
+          maxLength={30}
         />
         {errorMessage.name && (
           <p className="text-red-500 text-sm mb-4">{errorMessage.name}</p>
@@ -235,11 +236,13 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
             : "Course Description:"}
         </label>
         <textarea
-          className="w-full h-[60px] rounded-xl bg-white shadow-md px-3 mb-4"
+          className="w-full h-[60px] rounded-xl bg-white shadow-md px-3"
           name="description"
           value={course.description}
           onChange={handleChange}
+          maxLength={150}
         />
+        <div className="text-gray-500 text-sm mb-4">{`${course.description.length}/150`}</div>
         {errorMessage.description && (
           <p className="text-red-500 text-sm mb-4">
             {errorMessage.description}

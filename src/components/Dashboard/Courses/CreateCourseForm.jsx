@@ -18,6 +18,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
     const { user } = useAuth();
     const [username, setUsername] = useState('');
     const { t } = useTranslation("global");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const MAX_DESCRIPTION_LENGTH = 150;
     const MIN_COURSE_NAME_LENGTH = 3;
@@ -95,6 +96,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true); // Deshabilitar el botón
 
         const errors = {
             name: "",
@@ -149,6 +151,8 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
                 title: t("createCourseForm.createFailure"),
                 timer: 3000,
                 showConfirmButton: true,
+            }).then(() => {
+                setIsSubmitting(false); // Habilitar el botón nuevamente si hay un error
             });
         }
     };
@@ -211,6 +215,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
                         name="name"
                         value={course.name}
                         onChange={handleChange}
+                        maxLength={30}
                         required
                     />
                     {errorMessage.name && (
@@ -276,6 +281,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
                 </div>
                 <button
                     type="submit"
+                    disabled={isSubmitting} // Desactivar el botón si está en proceso
                     className="w-full py-2 bg-[#18116A] text-white font-bold rounded-lg shadow-md hover:bg-blue-500 transition duration-200"
                 >
                     {t("createCourseForm.createButton")}

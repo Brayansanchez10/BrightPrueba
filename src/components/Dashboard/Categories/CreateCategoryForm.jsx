@@ -7,6 +7,7 @@ import holaImage from "../../../assets/img/hola.png";
 const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
   const { t } = useTranslation("global");
   const { createCategory } = useCategoryContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [category, setCategory] = useState({
     name: "",
@@ -74,6 +75,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true); // Deshabilitar el botón
 
     const errors = {
       name: "",
@@ -105,7 +107,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
     } catch (error) {
       console.error(error);
       message.error(t("createCategoryForm.createFailure"));
-      onClose();
+      setIsSubmitting(false); // Habilitar el botón nuevamente si hay un error
     }
   };
 
@@ -160,6 +162,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
             name="name"
             value={category.name}
             onChange={handleChange}
+            maxLength={20}
             required
           />
           {errorMessage.name && (
@@ -215,6 +218,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
         <div className="flex justify-center space-x-4 mt-6">
           <button
             type="submit"
+            disabled={isSubmitting} // Desactivar el botón si está en proceso
             className="bg-[#18116A] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#140e5b] transition-all duration-300"
           >
             {t("createCategoryForm.createButton")}

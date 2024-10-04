@@ -102,7 +102,7 @@ const UpdateCategoryModal = ({
           label={t('updateCategoryModal.nameLabel')}
           rules={[{ required: true, message: t('updateCategoryModal.namePlaceholder') }]}
         >
-          <Input className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+          <Input maxLength={30} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
 
         <Form.Item
@@ -111,7 +111,7 @@ const UpdateCategoryModal = ({
           label={t('updateCategoryModal.descriptionLabel')}
           rules={[{ required: true, message: t('updateCategoryModal.descriptionPlaceholder') }]}
         >
-          <Input.TextArea rows={3} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+          <Input.TextArea rows={3} maxLength={100} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
         <div className="mb-4">
           <label className="block text-lg font-bold text-black mb-2">

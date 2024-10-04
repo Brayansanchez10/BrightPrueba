@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NavigationBar from "./../NavigationBar";
 import { useUserContext } from "../../../context/user/user.context";
 import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from 'react-i18next';
+import { useCourseProgressContext } from "../../../context/courses/progress.context.jsx";
 import Logo from "../../../assets/img/hola.png";
 import { FaFlagCheckered, FaSearch } from 'react-icons/fa';
 import Footer from "../../footer.jsx"; 
@@ -12,7 +13,9 @@ const CoursesComponent = () => {
   const { t } = useTranslation("global");
   const { user } = useAuth();
   const { getUserCourses } = useUserContext();
+  const { getCourseProgress } = useCourseProgressContext();
   const [userCourses, setUserCourses] = useState([]);
+  const [courseProgress, setCourseProgress] = useState({});
   const navigate = useNavigate();
   const [itemsPerPage] = useState(15);
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +35,28 @@ const CoursesComponent = () => {
 
     fetchUserCourses();
   }, [user, getUserCourses]);
+
+  // Efecto para cargar el progreso de los cursos del usuario
+  useEffect(() => {
+    const fetchCourseProgress = async () => {
+      if (userCourses.length > 0) {
+        const progressData = {};
+        for (let course of userCourses) {
+          try {
+            const progressResponse = await getCourseProgress(user.data.id, course.id);
+            const courseProgress = progressResponse ?? 0; // Asegurar que siempre haya un valor
+            progressData[course.id] = courseProgress;
+          } catch (error) {
+            console.error(`Error al obtener el progreso para el curso ${course.id}:`, error);
+            progressData[course.id] = 0; // Valor por defecto si falla
+          }
+        }
+        setCourseProgress(progressData);
+      }
+    };
+
+    fetchCourseProgress();
+  }, [userCourses, user]);
 
   const handleCourseClick = (courseId) => {
     console.log("Course ID:", courseId);
@@ -103,13 +128,13 @@ const CoursesComponent = () => {
                     <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
                       <div
                         className="absolute top-0 left-0 h-full bg-green-500 rounded-full"
-                        style={{ width: "75%" }}
+                        style={{ width: `${courseProgress[course.id] || 0}%` }}
                       ></div>
                     </div>
                     <div className="flex mt-2">
                       <FaFlagCheckered className="text-gray-400 mt-1"/>
                       <p className="text-gray-400 font-semibold ml-2 mr-1">{"Progreso:"}</p>
-                      <p className="text-green-600 font-semibold">{"75%"}</p>
+                      <p className="text-green-600 font-semibold">{`${courseProgress[course.id] || 0}%`}</p>
                     </div>
                   </div>
                 </div>

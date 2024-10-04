@@ -9,6 +9,7 @@ import holaImage from "../../../assets/img/hola.png";
 const CreateRolForm = ({ visible, onClose }) => {
   const { createRole, rolesData } = useRoleContext();
   const { t } = useTranslation("global");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [role, setRole] = useState({ nombre: "" });
   const [error, setError] = useState({
     nombre: ""
@@ -38,6 +39,7 @@ const CreateRolForm = ({ visible, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true); // Deshabilitar el botón
 
     const errors = {
       nombre: "",
@@ -72,10 +74,13 @@ const CreateRolForm = ({ visible, onClose }) => {
         title: t('createRoleForm.roleCreated'),
         showConfirmButton: false,
         timer: 1500,
-      });
+      }).then(() => {
+        handleModalClose();
+      })
       setRole({ nombre: "" });
     } catch (error) {
       console.error("Error creating role:", error);
+      setIsSubmitting(false); // Habilitar el botón nuevamente si hay un error
     }
   };
 
@@ -128,6 +133,7 @@ const CreateRolForm = ({ visible, onClose }) => {
         <div className="flex justify-center space-x-4 mt-6">
           <button
             type="submit"
+            disabled={isSubmitting} // Desactivar el botón si está en proceso
             className="bg-[#18116A] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#140e5b] transition-all duration-300"
             onClick={handleSubmit}
           >

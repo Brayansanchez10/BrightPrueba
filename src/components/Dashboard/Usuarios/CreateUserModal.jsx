@@ -14,6 +14,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
   const [form] = Form.useForm();
   const { t } = useTranslation("global");
   const [shake, setShake] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -93,7 +94,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
             { max: 30, message: t("validations.usernameMaxLength") }
           ]}
         >
-          <Input className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+          <Input maxLength={30} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
         <Form.Item
           className="text-lg font-bold text-black mb-2"
@@ -102,10 +103,10 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
           rules={[
             { required: true, message: t("CreateUserModal.emailRequired") },
             { type: "email", message: t("CreateUserModal.emailInvalid") },
-            { max: 30, message: t("validations.maxEmail") }
+            { max: 80, message: t("validations.maxEmail") }
           ]}
         >
-          <Input className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+          <Input maxLength={80} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
         <Form.Item
           className="text-lg font-bold text-black mb-2"

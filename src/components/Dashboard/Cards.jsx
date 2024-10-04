@@ -231,7 +231,7 @@ const Cards = ({ isLeftBarVisible }) => {
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-24">
           {/* Usuario Activo */}
           <div className="relative bg-[#F8F2F2] text-gray-900 rounded-lg shadow-lg shadow-[#31BF71] hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col items-center">
             <div className="absolute top-[-4rem] left-1/2 transform -translate-x-1/2 text-[#31BF71] text-6xl">
