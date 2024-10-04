@@ -11,6 +11,8 @@ import { CoursesProvider } from "./context/courses/courses.context";
 import { CourseProgressProvider } from "./context/courses/progress.context";
 import { ResourceProvider } from "./context/courses/resource.contex";
 import { SubCategoryProvider } from "./context/courses/subCategory.context.jsx";
+import { CommentProvider } from "./context/courses/comment.context";
+import { RatingsProvider } from './context/courses/ratings.context.jsx';
 
 // Pages
 import LoginForm from "./views/LoginForm";
@@ -65,6 +67,8 @@ function App() {
                 <ResourceProvider>
                   <CourseProgressProvider>
                     <SubCategoryProvider>
+                     <CommentProvider>
+                      <RatingsProvider>
                         <Routes>
                           {/* Vistas del LOGIN */}
                           <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
@@ -109,7 +113,9 @@ function App() {
                           <Route path="*" element={<Navigate to="/notFound" />} />
                         
                         </Routes>
-                      </SubCategoryProvider>
+                        </RatingsProvider>
+                      </CommentProvider>
+                    </SubCategoryProvider>
                   </CourseProgressProvider>
                 </ResourceProvider>
               </CoursesProvider>
