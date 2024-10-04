@@ -18,6 +18,9 @@ export const getResourceUser = (id) => resourceRequest.get(`/getResourceUser/${i
 // Función para obtener un recurso con sus quizzes
 export const getResourceWithQuizzes = (id) => resourceRequest.get(`/getResourceWithQuizzes/${id}`);
 
+// Nueva función para obtener el progreso del usuario en un recurso
+export const getUserResourceProgress = (userId, resourceId) => resourceRequest.get(`/user/${userId}/resource/${resourceId}/progress`);
+
 // Función para crear un recurso
 export const createResource = async (resourceData) => {
     try {
@@ -26,6 +29,7 @@ export const createResource = async (resourceData) => {
         if (resourceData.title) formData.append('title', resourceData.title);
         if (resourceData.subcategoryId) formData.append('subcategoryId', resourceData.subcategoryId);
         if (resourceData.description) formData.append('description', resourceData.description);
+        if (resourceData.attempts) formData.append('attempts', resourceData.attempts);
         if (resourceData.file) formData.append('file', resourceData.file);
         if (resourceData.link) formData.append('link', resourceData.link);
 
@@ -56,8 +60,8 @@ export const updateResource = async (id, resourceData) => {
     try {
         const formData = new FormData();
         if (resourceData.title) formData.append('title', resourceData.title);
-        if (resourceData.subcategoryId) formData.append('subcategoryId', resourceData.subcategoryId);
         if (resourceData.description) formData.append('description', resourceData.description);
+        if (resourceData.attempts) formData.append('attempts', Number(resourceData.attempts));
         if (resourceData.file) formData.append('file', resourceData.file);
         if (resourceData.link) formData.append('link', resourceData.link);
 
@@ -85,5 +89,20 @@ export const updateResource = async (id, resourceData) => {
 };
 // Función para eliminar un recurso
 export const deleteResource = (id) => resourceRequest.delete(`/deleteResource/${id}`);
+
+// Función para completar un quiz y actualizar el progreso del usuario
+export const completeQuiz = async (userId, resourceId, score) => {
+    try {
+        const response = await resourceRequest.post('/complete-quiz', {
+            userId,
+            resourceId,
+            score,
+        });
+        return response.data; // Retorna la respuesta de la API
+    } catch (error) {
+        console.error("Error al completar el quiz:", error);
+        throw error; // Lanza el error para manejarlo en el componente que llame a esta función
+    }
+};
 
 export default resourceRequest;

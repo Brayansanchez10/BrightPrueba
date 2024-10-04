@@ -6,7 +6,9 @@ import {
     updateResource as updateResourceApi,
     deleteResource as deleteResourceApi,
     getAllResources as getAllResourcesApi,
-    getResourceUser as getResourceUserApi
+    getResourceUser as getResourceUserApi,
+    completeQuiz as completeQuizApi,
+    getUserResourceProgress as getUserResourceProgressApi,
 } from "../../api/courses/resource.request.js"; // Importamos las funciones de Resource.request
 
 // Crear el contexto
@@ -68,7 +70,7 @@ export const ResourceProvider = ({ children }) => {
     };
 
     // Función para crear un recurso
-    const createResource = async ({ courseId, title, subcategoryId, description, file, link, quizzes }) => {
+    const createResource = async ({ courseId, title, subcategoryId, description, file, link, attempts, quizzes }) => {
         try {
             const newResource = {
                 courseId, 
@@ -77,6 +79,7 @@ export const ResourceProvider = ({ children }) => {
                 description,
                 file,
                 link,
+                attempts,
                 quizzes // Añadir quizzes al nuevo recurso
             };
             console.log(newResource);
@@ -91,14 +94,14 @@ export const ResourceProvider = ({ children }) => {
     };
 
     // Función para actualizar un recurso
-    const updateResource = async (id, { title, subcategoryId, description, file, link, quizzes }) => {
+    const updateResource = async (id, { title, description, file, link, attempts, quizzes }) => {
         try {
             const resourceData = {
                 title,
-                subcategoryId,
                 description,
                 file,
                 link,
+                attempts: Number(attempts), // Convertir attempts a número
                 quizzes // Incluir quizzes en la actualización
             };
 
@@ -128,13 +131,35 @@ export const ResourceProvider = ({ children }) => {
         }
     };
 
+    // Función para completar un quiz y actualizar el progreso del usuario
+    const completeQuiz = async (userId, resourceId, score) => {
+        try {
+            const result = await completeQuizApi(userId, resourceId, score);
+            return result; // Retornar el resultado para usarlo en el componente
+        } catch (error) {
+            console.error("Error al completar el quiz:", error);
+            throw error; // Lanza el error para manejarlo en el componente que llame a esta función
+        }
+    };
+
+    // Nueva función para obtener el progreso del usuario en un recurso
+    const getUserResourceProgress = async (userId, resourceId) => {
+        try {
+            const result = await getUserResourceProgressApi(userId, resourceId);
+            return result.data; // Retornar los datos del progreso
+        } catch (error) {
+            console.error("Error al obtener el progreso del usuario:", error);
+            throw error; // Lanza el error para manejarlo en el componente que llame a esta función
+        }
+    };
+
     useEffect(() => {
         // Obtener los recursos al montar el componente
         getAllResources();
     }, []);
 
     return (
-        <ResourceContext.Provider value={{ resources, getResource, createResource, updateResource, deleteResource, getResourceUser  }}>
+        <ResourceContext.Provider value={{ resources, getResource, createResource, updateResource, deleteResource, getResourceUser, completeQuiz, getUserResourceProgress}}>
             {children}
         </ResourceContext.Provider>
     );

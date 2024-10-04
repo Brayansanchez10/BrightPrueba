@@ -36,6 +36,7 @@ const CreateResourceModal = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [attempts, setAttempts ] = useState("");
   const [link, setLink] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [resources, setResources] = useState([]);
@@ -142,6 +143,7 @@ const CreateResourceModal = ({
   const resetState = () => {
     setTitle("");
     setDescription("");
+    setAttempts(1);
     setLink("");
     setSelectedFile(null);
     setType("file");
@@ -285,6 +287,7 @@ const CreateResourceModal = ({
       description,
       link: selection === "link" ? link : null,
       file: selection === "file" ? selectedFile : null,
+      attempts,
       quizzes: quizzes.map((quiz) => ({
         question: quiz.question,
         options: quiz.options,
@@ -940,6 +943,25 @@ const CreateResourceModal = ({
                   >
                     {t("CreateResource.AddQuestion")}
                   </Button>
+
+                  <div>
+                    <label
+                      htmlFor="attempts"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      {t("quizz.NumerQuizz")}
+                    </label>
+                    <input
+                        type="number"
+                        id="attempts"
+                        value={attempts}
+                        onChange={(e) => setAttempts(e.target.value)}
+                        min="1" // Para evitar que se puedan ingresar números negativos o cero
+                        max="10"
+                        className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
+                        required
+                      />
+                  </div>
                 </div>
               )}
 

@@ -31,6 +31,7 @@ import izquierdaarriba from "../../../assets/img/IzquierdaArriba.jpeg";
 import { Anothershabby_trial } from "../../../Tipografy/Anothershabby_trial-normal";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
+import { completeQuiz } from "../../../api/courses/resource.request";
 
 export default function ResourceView() {
   const { t } = useTranslation("global");
@@ -40,7 +41,7 @@ export default function ResourceView() {
   const { getUserById } = useUserContext();
   const [username, setUsername] = useState("");
   const { id, courseId } = useParams();
-  const { getResourceUser, getResource } = useResourceContext();
+  const { getResourceUser, getResource, getUserResourceProgress } = useResourceContext();
   const { getCourse } = useCoursesContext();
   const { comments, fetchCommentsByResource, addComment } = useCommentContext();
   const { ratings, fetchRatingsByResource, addRating } = useRatingsContext();
@@ -52,6 +53,7 @@ export default function ResourceView() {
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
+  const [attempts, setAttempts] = useState(0); // Nuevo estado para manejar intentos
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [currentResourceIndex, setCurrentResourceIndex] = useState(0);
@@ -63,6 +65,10 @@ export default function ResourceView() {
   const [userComment, setUserComment] = useState("");
   const [userRating, setUserRating] = useState(0);
   const [ratingComment, setRatingComment] = useState("");
+  const [isQuizStarted, setIsQuizStarted] = useState(false);
+  const [bestScore, setBestScore] = useState(0);
+  const [currentScore, setCurrentScore] = useState(0); // Estado para el puntaje actual
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const fetchResource = async () => {
@@ -156,6 +162,25 @@ export default function ResourceView() {
     }
   }, [id, fetchCommentsByResource, fetchRatingsByResource]);
 
+  useEffect(() => {
+    const fetchProgress = async () => {
+      if (user && id) { // Verifica que el usuario y el ID sean válidos
+        try {
+          const progressData = await getUserResourceProgress(user.data.id, id); // Asegúrate de pasar el ID de usuario y el ID del recurso
+          console.log('Progreso del usuario:', progressData);
+          setProgress(progressData); // Almacena el progreso en el estado
+          setAttempts(progressData.attempts); // Actualiza los intentos
+          setBestScore(progressData.bestScore);
+          setIsQuizCompleted(progressData.attempts >= maxAttempts); // Verifica si el quiz está completo
+        } catch (error) {
+          console.error('Error al obtener el progreso del usuario:', error);
+        }
+      }
+    };
+
+    fetchProgress();
+  }, [user, id]);
+
   const isVideoLink = (url) => {
     return (
       url.includes("youtube.com/watch") ||
@@ -236,6 +261,8 @@ export default function ResourceView() {
     );
   };
 
+  const maxAttempts = resource?.attempts;
+
   const handleAnswerChange = (questionIndex, selectedAnswer) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
@@ -243,28 +270,54 @@ export default function ResourceView() {
     }));
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (!answers[currentQuestionIndex]) {
       Swal.fire({
-        icon: "warning",
-        title: "Advertencia",
-        text: "Por favor selecciona una respuesta antes de continuar.",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "OK",
+        icon: 'warning',
+        title: 'Advertencia',
+        text: 'Por favor selecciona una respuesta antes de continuar.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
       });
       return;
     }
-
+  
     if (currentQuestionIndex === (resource?.quizzes.length || 0) - 1) {
       const correctCount = Object.keys(answers).filter(
         (index) => resource?.quizzes[index]?.correctAnswer === answers[index]
       ).length;
+  
       const incorrectCount = Object.keys(answers).length - correctCount;
-
+  
       setCorrectAnswers(correctCount);
       setIncorrectAnswers(incorrectCount);
       setIsQuizCompleted(true);
       setIsContentCompleted(true);
+  
+      // Calcular el porcentaje de respuestas correctas
+      const scorePercentage = Math.round((correctCount / resource?.quizzes.length) * 100);
+      
+      // Aumentar el contador de intentos
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+      
+      // Guardar el puntaje obtenido
+      setCurrentScore(scorePercentage); // Agregar un estado para guardar el puntaje actual
+  
+      // Llama a la función para completar el quiz
+      try {
+        const result = await completeQuiz(user.data.id, resource.id, scorePercentage, newAttempts);
+        console.log('Resultado del quiz:', result);
+      } catch (error) {
+        console.error("Error al completar el quiz:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo guardar tu progreso.',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK'
+        });
+      }
     } else {
       setCurrentQuestionIndex((prevIndex) =>
         Math.min(prevIndex + 1, (resource?.quizzes.length || 0) - 1)
@@ -274,47 +327,99 @@ export default function ResourceView() {
   };
 
   const handleRetakeQuiz = () => {
-    setAnswers({});
-    setCurrentQuestionIndex(0);
+    if (attempts >= maxAttempts) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Límite de intentos alcanzado',
+        text: 'Has alcanzado el número máximo de intentos permitidos.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+  
     setCorrectAnswers(0);
     setIncorrectAnswers(0);
     setIsQuizCompleted(false);
-    setIsContentCompleted(false);
+    setCurrentQuestionIndex(0); // Restablecer el índice a la primera pregunta
+    setAnswers({}); // Restablecer las respuestas
   };
 
   const handlePreviousQuestion = () => {
     setCurrentQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
 
+  const renderStartQuizView = () => {
+    return (
+      <div className="quiz-start bg-white rounded-2xl shadow-md border border-gray-300 w-full p-6 my-6 text-center">
+        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">
+          {t("quizz.quizzStart")}
+        </h3>
+        <div className="flex justify-around mb-6">
+          <div className="flex flex-col items-center p-4 bg-blue-50 rounded-xl">
+            <span className="text-lg sm:text-xl font-medium text-gray-700">
+              {t("quizz.quizzAttemps")}
+            </span>
+            <span className="text-2xl sm:text-3xl font-bold text-gray-900">
+              {attempts}/{maxAttempts}
+            </span>
+          </div>
+        </div>
+  
+        {attempts > 0 && (
+          <div className="flex flex-col items-center mb-6">
+            <span className="text-lg sm:text-xl font-medium text-gray-700">
+              {t("quizz.quizzBestScore")}
+            </span>
+            <span className="text-2xl sm:text-3xl font-bold text-gray-900">
+              {bestScore !== undefined ? bestScore : 0}
+            </span>
+          </div>
+        )}
+  
+        {attempts < maxAttempts ? (
+          <button
+            onClick={() => setIsQuizStarted(true)}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 text-lg font-medium"
+          >
+            {t("quizz.InitQuizz")}
+          </button>
+        ) : (
+          <p className="text-red-600 font-semibold">{t("quizz.AttempsLimit")}</p>
+        )}
+      </div>
+    );
+  };
+
+
   const renderQuiz = () => {
     const question = resource.quizzes[currentQuestionIndex];
-    const quizProgress =
-      ((currentQuestionIndex + 1) / resource.quizzes.length) * 100;
-
+    const quizProgress = ((currentQuestionIndex + 1) / resource.quizzes.length) * 100;
+  
     return (
-      <div className="quiz-container bg-white rounded-xl shadow-lg border border-gray-200 w-full p-4 sm:p-6 my-4 sm:my-6">
-        <div className="mb-4 sm:mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm sm:text-base font-bold text-gray-500">
-              Progreso del quiz
+      <div className="quiz-container bg-white rounded-2xl shadow-md border border-gray-300 w-full p-6 my-6">
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-base sm:text-lg font-semibold text-gray-600">
+              {t("quizz.QuizzProgress")}
             </span>
-            <span className="text-sm sm:text-base font-bold text-gray-500">
+            <span className="text-base sm:text-lg font-semibold text-gray-600">
               {currentQuestionIndex + 1}/{resource.quizzes.length}
             </span>
           </div>
-          <div className="w-full bg-white rounded-full h-2 sm:h-2.5">
+          <div className="w-full bg-gray-300 rounded-full h-2 sm:h-3">
             <div
-              className="bg-[#9869E3] h-2 sm:h-2.5 rounded-full transition-all duration-300 ease-in-out"
+              className="bg-blue-600 h-2 sm:h-3 rounded-full transition-all duration-300"
               style={{ width: `${quizProgress}%` }}
             ></div>
           </div>
         </div>
-
-        <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6 text-center">
+  
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 text-center mb-6">
           {question.question}
         </h3>
-
-        <div className="space-y-3 sm:space-y-4">
+  
+        <div className="space-y-4 sm:space-y-6">
           {question.options.map((option, index) => (
             <div key={index} className="flex items-center">
               <input
@@ -323,18 +428,15 @@ export default function ResourceView() {
                 name={`question-${currentQuestionIndex}`}
                 value={option}
                 checked={answers[currentQuestionIndex] === option}
-                onChange={() =>
-                  handleAnswerChange(currentQuestionIndex, option)
-                }
+                onChange={() => handleAnswerChange(currentQuestionIndex, option)}
                 className="hidden"
               />
               <label
                 htmlFor={`question-${currentQuestionIndex}-option-${index}`}
-                className={`flex-1 py-2 sm:py-3 px-3 sm:px-4 rounded-lg border-2 text-sm sm:text-base cursor-pointer transition-all duration-200 
-                ${
+                className={`flex-1 py-3 px-4 rounded-lg border-2 text-lg cursor-pointer transition-all duration-200 ${
                   answers[currentQuestionIndex] === option
-                    ? "border-blue-500 bg-blue-50 text-blue-700 font-medium"
-                    : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                    ? "border-blue-500 bg-blue-50 text-blue-700 font-semibold"
+                    : "border-gray-300 hover:bg-gray-50"
                 }`}
               >
                 {option}
@@ -342,39 +444,35 @@ export default function ResourceView() {
             </div>
           ))}
         </div>
-
-        <div className="flex justify-between mt-6 sm:mt-8">
+  
+        <div className="flex justify-between mt-8">
           <button
             onClick={handlePreviousQuestion}
             disabled={currentQuestionIndex === 0}
-            className={`px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 ${
+            className={`px-4 py-2 rounded-lg transition-all duration-300 ${
               currentQuestionIndex === 0
-                ? "bg-[#DDDDDD] text-white cursor-not-allowed"
-                : "bg-[#9869E3] text-white hover:bg-[#8A5CD6]"
+                ? "bg-gray-300 text-gray-400 cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700"
             }`}
-            aria-label="Pregunta anterior"
+            aria-label="Previous question"
           >
             <FiChevronLeft size={20} />
           </button>
           <button
             onClick={handleNextQuestion}
-            disabled={!isAnswerSelected}
-            className={`px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 ${
-              isAnswerSelected
-                ? "bg-[#9869E3] text-white hover:bg-[#8A5CD6]"
-                : "bg-[#DDDDDD] text-white cursor-not-allowed"
+            disabled={!answers[currentQuestionIndex]}
+            className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+              answers[currentQuestionIndex]
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-gray-300 text-gray-400 cursor-not-allowed"
             }`}
             aria-label={
-              currentQuestionIndex === (resource?.quizzes.length || 0) - 1
-                ? "Finalizar quiz"
-                : "Siguiente pregunta"
+              currentQuestionIndex === resource.quizzes.length - 1
+                ? "Finish quiz"
+                : "Next question"
             }
           >
-            {currentQuestionIndex === (resource?.quizzes.length || 0) - 1 ? (
-              "Finalizar"
-            ) : (
-              <FiChevronRight size={20} />
-            )}
+            {currentQuestionIndex === resource.quizzes.length - 1 ? "Finish" : <FiChevronRight size={20} />}
           </button>
         </div>
       </div>
@@ -383,45 +481,39 @@ export default function ResourceView() {
 
   const renderQuizSummary = () => {
     return (
-      <div className="quiz-summary bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-200 w-full mx-auto my-4 sm:my-6">
-        <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center text-gray-800">
-          Quiz Finalizado
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <div className="flex flex-col items-center p-3 sm:p-4 bg-gray-50 rounded-lg">
-            <FaQuestionCircle className="text-3xl sm:text-4xl mb-2 text-gray-600" />
-            <span className="text-base sm:text-lg font-medium text-gray-700">
-              Preguntas Totales
-            </span>
-            <span className="text-xl sm:text-2xl font-bold text-gray-800">
-              {resource?.quizzes.length}
-            </span>
+      <div className="quiz-summary bg-white rounded-2xl shadow-md border border-gray-300 w-full p-6 my-6 text-center">
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6">{t("quizz.QuizResumen")}</h3>
+        <div className="flex justify-around mb-6">
+          <div className="flex flex-col items-center p-4 bg-green-50 rounded-xl">
+            <FaCheckCircle className="text-4xl mb-2 text-green-600" />
+            <span className="text-lg sm:text-xl font-medium text-gray-700">{t("quizz.QuizCorrectAnswers")}</span>
+            <span className="text-2xl sm:text-3xl font-bold text-gray-900">{correctAnswers}</span>
           </div>
-          <div className="flex flex-col items-center p-3 sm:p-4 bg-green-50 rounded-lg">
-            <FaCheckCircle className="text-3xl sm:text-4xl mb-2 text-green-500" />
-            <span className="text-base sm:text-lg font-medium text-gray-700">
-              Respuestas Correctas
-            </span>
-            <span className="text-xl sm:text-2xl font-bold text-green-600">
-              {correctAnswers}
-            </span>
-          </div>
-          <div className="flex flex-col items-center p-3 sm:p-4 bg-red-50 rounded-lg">
-            <FaTimesCircle className="text-3xl sm:text-4xl mb-2 text-red-500" />
-            <span className="text-base sm:text-lg font-medium text-gray-700">
-              Respuestas Incorrectas
-            </span>
-            <span className="text-xl sm:text-2xl font-bold text-red-600">
-              {incorrectAnswers}
-            </span>
+          <div className="flex flex-col items-center p-4 bg-red-50 rounded-xl">
+            <FaTimesCircle className="text-4xl mb-2 text-red-600" />
+            <span className="text-lg sm:text-xl font-medium text-gray-700">{t("quizz.QuizIncorrectAnswers")}</span>
+            <span className="text-2xl sm:text-3xl font-bold text-gray-900">{incorrectAnswers}</span>
           </div>
         </div>
-        <button
-          onClick={handleRetakeQuiz}
-          className="w-full py-2 sm:py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200"
-        >
-          Volver a Intentar
-        </button>
+        <p className="text-lg sm:text-base text-gray-600 mb-4">{t("quizz.Attemps")}{attempts}/{maxAttempts}</p>
+  
+        {isQuizCompleted && (
+          <div className="flex flex-col items-center mb-6">
+            <span className="text-lg sm:text-xl font-medium text-gray-700">{t("quizz.currentScore")}</span>
+            <span className="text-2xl sm:text-3xl font-bold text-gray-900">{currentScore}</span>
+          </div>
+        )}
+  
+        {attempts < maxAttempts ? (
+          <button
+            onClick={handleRetakeQuiz}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
+          >
+            {t("quizz.Again")}
+          </button>
+        ) : (
+          <p className="text-red-600 font-semibold">{t("quizz.AttempsLimit")}</p>
+        )}
       </div>
     );
   };
@@ -983,13 +1075,25 @@ export default function ResourceView() {
           </div>
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="w-full lg:w-2/3 bg-[#200E3E] rounded-lg shadow-lg p-4 mb-4">
-              <div className="mb-4">
-                {isQuizCompleted
-                  ? renderQuizSummary()
-                  : resource?.quizzes && resource.quizzes.length > 0
-                  ? renderQuiz()
-                  : renderContent(resource?.files)}
-              </div>
+            <div className="mb-4">
+                  {/* Si el recurso tiene quizzes, entonces evaluamos el estado del quiz */}
+                  {resource?.quizzes && resource.quizzes.length > 0 ? (
+                    // Si hay quizzes, manejamos el estado del quiz
+                    !isQuizStarted ? (
+                      renderStartQuizView() // Mostrar la vista de inicio del quiz
+                    ) : isQuizCompleted ? (
+                      renderQuizSummary() // Mostrar resumen del quiz completado
+                    ) : (
+                      renderQuiz() // Mostrar el quiz en progreso
+                    )
+                  ) : (
+                    // Si NO hay quizzes, mostramos el contenido del recurso (imagen, archivo, etc.)
+                    renderContent(resource?.files)
+                  )}
+                  
+                  {/* Mostrar error si existe */}
+                  {error && <p className="text-red-500 text-center">{error}</p>}
+                </div>
               <div className="mt-4 flex items-center">
                 <img
                   src={course?.image}

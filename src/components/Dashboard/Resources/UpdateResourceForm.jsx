@@ -4,12 +4,14 @@ import { toast } from "react-toastify";
 import { updateResource } from "../../../api/courses/resource.request";
 import Swal from "sweetalert2"; //Importamos SweetAlert
 import { useTranslation } from "react-i18next";
-import "../css/Custom.css"
+import "../css/Custom.css";
 
 const ALLOWED_FILE_TYPES = [".mov", ".docx", ".pdf", ".jpg", ".png"];
-const YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
+const YOUTUBE_URL_REGEX =
+  /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
 const VIMEO_URL_REGEX = /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)$/i;
-const GOOGLE_DRIVE_URL_REGEX = /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
+const GOOGLE_DRIVE_URL_REGEX =
+  /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
 
 const UpdateResourceForm = ({
   isVisible,
@@ -19,6 +21,7 @@ const UpdateResourceForm = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [attempts, setAttempts] = useState("");
   const [link, setLink] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [existingFileName, setExistingFileName] = useState("");
@@ -104,6 +107,7 @@ const UpdateResourceForm = ({
       setLink(resourceData.link);
       setExistingFileName(resourceData.file?.name);
       setSelectedFile(null); // Limpiar el archivo seleccionado
+      setAttempts(resourceData.attempts || "");
       setQuizzes(resourceData.quizzes || []); // Inicializar quizzes si existen en el recurso
     }
   }, [resourceData]);
@@ -142,7 +146,7 @@ const UpdateResourceForm = ({
 
   const addOption = (quizIndex) => {
     const updatedQuizzes = [...quizzes];
-    
+
     // Verificar si el número de opciones es menor a 6
     if (updatedQuizzes[quizIndex].options.length < 6) {
       updatedQuizzes[quizIndex].options.push(""); // Añadir una opción vacía
@@ -156,7 +160,7 @@ const UpdateResourceForm = ({
         timer: 2500,
       });
     }
-  };  
+  };
 
   const removeOption = (quizIndex, optionIndex) => {
     const updatedQuizzes = [...quizzes];
@@ -199,6 +203,7 @@ const UpdateResourceForm = ({
       description,
       link,
       file: selectedFile || resourceData.file,
+      attempts: Number(attempts),
       quizzes, // Incluir los quizzes actualizados
     };
 
@@ -231,6 +236,7 @@ const UpdateResourceForm = ({
       setLink(initialResourceDataRef.current.link);
       setSelectedFile(null);
       setExistingFileName(initialResourceDataRef.current.file?.name || "");
+      setAttempts(initialResourceDataRef.current.attempts);
       setQuizzes(initialResourceDataRef.current.quizzes);
     }
 
@@ -243,28 +249,28 @@ const UpdateResourceForm = ({
 
   return (
     <Modal
-    title={
-      <h2 className="custom text-2xl font-semibold text-gray-800">
-        {t("UpdateResource.ModalTitle")}
-      </h2>
-    }
-    visible={isVisible}
-    onCancel={handleCancel}
-    footer={null}
-    width={800}
-    centered
-    zIndex={1000}
-    className="p-6 max-h-[70vh] overflow-y-auto rounded-lg shadow-lg bg-white"
-    bodyStyle={{
-      padding: "20px",
-      borderRadius: "10px",
-      background: "linear-gradient(to bottom, #f0f4f8, #fff)",
-    }}
-    closeIcon={
-      <span className="text-gray-600 hover:text-gray-800">
-        &#x2715; {/* Icono de cierre personalizado */}
-      </span>
-    }
+      title={
+        <h2 className="custom text-2xl font-semibold text-gray-800">
+          {t("UpdateResource.ModalTitle")}
+        </h2>
+      }
+      visible={isVisible}
+      onCancel={handleCancel}
+      footer={null}
+      width={800}
+      centered
+      zIndex={1000}
+      className="p-6 max-h-[70vh] overflow-y-auto rounded-lg shadow-lg bg-white"
+      bodyStyle={{
+        padding: "20px",
+        borderRadius: "10px",
+        background: "linear-gradient(to bottom, #f0f4f8, #fff)",
+      }}
+      closeIcon={
+        <span className="text-gray-600 hover:text-gray-800">
+          &#x2715; {/* Icono de cierre personalizado */}
+        </span>
+      }
     >
       <form onSubmit={handleUpdate} className="space-y-6">
         <div>
@@ -496,6 +502,24 @@ const UpdateResourceForm = ({
             </Button>
           </div>
         ))}
+
+        {quizzes.length > 0 && (
+          <div>
+            <label htmlFor="attempts" className="block text-sm font-medium text-gray-700">
+              {t("quizz.NumerQuizz")}
+            </label>
+            <input
+              type="number"
+              id="attempts"
+              value={attempts}
+              onChange={(e) => setAttempts(e.target.value)}
+              min="1"
+              max="10"
+              className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
+              required
+            />
+          </div>
+        )}
 
         <div className="flex justify-end gap-4">
           <Button onClick={handleCancel}>

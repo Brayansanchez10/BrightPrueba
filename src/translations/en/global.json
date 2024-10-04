@@ -723,5 +723,20 @@
         "UpdateAlert": "Section updated successfully",
         "UpdateAlertError": "Error updated Section",
         "ModalUpdateTitle": "Update your section"
-    }
+    },
+    "quizz": {
+    "quizzStart": "Ready to start the quiz?",
+    "quizzAttemps": "Available attempts",
+    "quizzBestScore": "Best Score",
+    "InitQuizz": "Start Quiz",
+    "AttempsLimit": "You have reached the maximum number of allowed attempts. You cannot take the quiz.",
+    "QuizzProgress": "Quiz progress",
+    "QuizResumen": "Quiz Summary!",
+    "QuizCorrectAnswers": "Correct Answers",
+    "QuizIncorrectAnswers": "Incorrect Answers",
+    "Attemps": "Attempts:",
+    "currentScore": "Current Score",
+    "Again": "Try again",
+    "NumerQuizz": "Number of attempts"
+    }   
 }
