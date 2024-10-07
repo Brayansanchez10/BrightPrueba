@@ -14,10 +14,10 @@ export const getCommentsByResource = (resourceId) =>
     commentRequest.get(`comments/resource/${resourceId}`);
 
 export const updateComment = (id, commentData) => 
-    commentRequest.put(`comments/${id}`, commentData);
+    commentRequest.put(`comments/comment/${id}`, commentData);
 
 export const deleteComment = (id) => 
-    commentRequest.delete(`comments/${id}`);
+    commentRequest.delete(`comments/comment/${id}`);
 
 export const getCommentsByCourse = (courseId) => 
     commentRequest.get(`comments/course/${courseId}`);
