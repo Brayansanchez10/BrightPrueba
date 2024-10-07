@@ -722,7 +722,8 @@
         "UpdateDescription": "Description",
         "UpdateAlert": "Section updated successfully",
         "UpdateAlertError": "Error updated Section",
-        "ModalUpdateTitle": "Update your section"
+        "ModalUpdateTitle": "Update your section",
+        "titleTooShort": "Title must be a maximum of 30 characters."
     },
     "quizz": {
     "quizzStart": "Ready to start the quiz?",
@@ -738,5 +739,5 @@
     "currentScore": "Current Score",
     "Again": "Try again",
     "NumerQuizz": "Number of attempts"
-    }   
+    }
 }

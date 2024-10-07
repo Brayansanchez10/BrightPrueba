@@ -59,7 +59,7 @@ const ResetPasswordVerifyForm = () => {
                 timer: 3000,
             });
             setTimeout(() => {
-                navigate('/newPassword');
+                navigate(`/newPassword?resetCode=${resetCode}`);
             }, 3000);
         } catch (error) {
             console.error(error);

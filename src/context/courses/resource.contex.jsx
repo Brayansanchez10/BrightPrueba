@@ -94,10 +94,11 @@ export const ResourceProvider = ({ children }) => {
     };
 
     // Función para actualizar un recurso
-    const updateResource = async (id, { title, description, file, link, attempts, quizzes }) => {
+    const updateResource = async (id, { title, subcategoryId, description, file, link, attempts, quizzes }) => {
         try {
             const resourceData = {
                 title,
+                subcategoryId,
                 description,
                 file,
                 link,

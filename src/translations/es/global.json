@@ -720,7 +720,8 @@
         "UpdateDescription": "Descripción",
         "UpdateAlert": "Sección actualizada exitosamente",
         "UpdateAlertError": "Error al actualizar sección",
-        "ModalUpdateTitle": "Actualiza tu sección"
+        "ModalUpdateTitle": "Actualiza tu sección",
+        "titleTooShort": "El titulo debe tener un máximo de 30 caracteres."
     },
     "quizz": {
         "quizzStart": "¿Listo para comenzar el quiz?",

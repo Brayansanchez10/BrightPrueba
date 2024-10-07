@@ -304,6 +304,8 @@ export default function ResourceView() {
     );
   };
 
+  const maxAttempts = resource?.attempts;
+
   const handleAnswerChange = (questionIndex, selectedAnswer) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
@@ -314,54 +316,62 @@ export default function ResourceView() {
   const handleNextQuestion = async () => {
     if (!answers[currentQuestionIndex]) {
       Swal.fire({
-        icon: "warning",
-        title: "Advertencia",
-        text: "Por favor selecciona una respuesta antes de continuar.",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "OK",
+        icon: 'warning',
+        title: 'Advertencia',
+        text: 'Por favor selecciona una respuesta antes de continuar.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
       });
       return;
     }
-
+  
     if (currentQuestionIndex === (resource?.quizzes.length || 0) - 1) {
       const correctCount = Object.keys(answers).filter(
         (index) => resource?.quizzes[index]?.correctAnswer === answers[index]
       ).length;
-
+  
       const incorrectCount = Object.keys(answers).length - correctCount;
-
+  
       setCorrectAnswers(correctCount);
       setIncorrectAnswers(incorrectCount);
-      setIsQuizCompleted(true);
-      setIsContentCompleted(true);
-
-      const scorePercentage = Math.round(
-        (correctCount / resource?.quizzes.length) * 100
-      );
-
-      const newAttempts = attempts + 1;
-      setAttempts(newAttempts);
-
-      setCurrentScore(scorePercentage);
-
+  
+      // Calcular el porcentaje de respuestas correctas
+      const scorePercentage = Math.round((correctCount / resource?.quizzes.length) * 100);
+      
+      // Guardar el puntaje obtenido
+      setCurrentScore(scorePercentage); 
+  
+      // Esperar a que el bestScore se actualice
+      if (scorePercentage > bestScore) {
+        setBestScore(scorePercentage);
+      }
+  
+      // Si es el último intento
+      if (attempts + 1 === maxAttempts) {
+        setTimeout(() => {
+          setIsQuizStarted(false); // Esto redirige al usuario
+        }, 500); // Agregar un pequeño retraso
+      }
+  
       try {
-        const result = await completeQuiz(
-          user.data.id,
-          resource.id,
-          scorePercentage,
-          newAttempts
-        );
-        console.log("Resultado del quiz:", result);
+        const newAttempts = attempts + 1;
+        setAttempts(newAttempts);
+        
+        const result = await completeQuiz(user.data.id, resource.id, scorePercentage, newAttempts);
+        console.log('Resultado del quiz:', result);
       } catch (error) {
         console.error("Error al completar el quiz:", error);
         Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudo guardar tu progreso.",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "OK",
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo guardar tu progreso.',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK'
         });
       }
+  
+      setIsQuizCompleted(true);
+      setIsContentCompleted(true);
     } else {
       setCurrentQuestionIndex((prevIndex) =>
         Math.min(prevIndex + 1, (resource?.quizzes.length || 0) - 1)
@@ -369,6 +379,7 @@ export default function ResourceView() {
       setError(null);
     }
   };
+
 
   const handleRetakeQuiz = () => {
     if (attempts >= resource?.attempts) {
@@ -392,6 +403,12 @@ export default function ResourceView() {
   const handlePreviousQuestion = () => {
     setCurrentQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
+
+  useEffect(() => {
+    if (currentScore > bestScore) {
+      setBestScore(currentScore); // Actualizar el bestScore si el puntaje actual es mayor
+    }
+  }, [currentScore, bestScore]);
 
   const renderStartQuizView = () => {
     return (
@@ -817,7 +834,7 @@ export default function ResourceView() {
   
     return resources.map((res, index) => {
       // Progreso requerido para desbloquear este recurso
-      const requiredProgress = (index) * percentagePerResource;
+      const requiredProgress = Math.floor(index * percentagePerResource);
   
       // Desbloquear si el progreso actual es mayor o igual al progreso requerido
       const isUnlocked = currentProgress >= requiredProgress;
@@ -1457,16 +1474,22 @@ export default function ResourceView() {
           </div>
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="w-full lg:w-2/3 bg-[#200E3E] rounded-lg shadow-lg p-4 mb-4">
-              <div className="mb-4">
-                {resource?.quizzes && resource.quizzes.length > 0
-                  ? !isQuizStarted
-                    ? renderStartQuizView()
-                    : isQuizCompleted
-                    ? renderQuizSummary()
-                    : renderQuiz()
-                  : renderContent(resource?.files)}
-
-                {error && <p className="text-red-500 text-center">{error}</p>}
+            <div className="mb-4">
+                  {/* Si el recurso tiene quizzes, entonces evaluamos el estado del quiz */}
+                  {resource?.quizzes && resource.quizzes.length > 0 ? (
+                    !isQuizStarted ? ( // Si hay quizzes, manejamos el estado del quiz
+                      renderStartQuizView() // Mostrar la vista de inicio del quiz
+                    ) : isQuizCompleted ? (
+                      renderQuizSummary() // Mostrar resumen del quiz completado
+                    ) : (
+                      renderQuiz() // Mostrar el quiz en progreso
+                    )
+                  ) : (
+                    renderContent(resource?.files) // Si NO hay quizzes, mostramos el contenido del recurso (imagen, archivo, etc.)
+                  )}
+                  
+                  {/* Mostrar error si existe */}
+                  {error && <p className="text-red-500 text-center">{error}</p>}
               </div>
               <div className="mt-4 flex items-center">
                 <img

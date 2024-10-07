@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Modal, Button, notification } from "antd";
 import { toast } from "react-toastify";
-import { updateResource } from "../../../api/courses/resource.request";
+import { updateResource, getResource } from "../../../api/courses/resource.request";
+import { getSubCategoryCourseId } from "../../../api/courses/subCategory.requst.js";
 import Swal from "sweetalert2"; //Importamos SweetAlert
 import { useTranslation } from "react-i18next";
 import "../css/Custom.css";
@@ -18,6 +19,7 @@ const UpdateResourceForm = ({
   onCancel,
   resourceData,
   onUpdate,
+  courseId,
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -29,6 +31,9 @@ const UpdateResourceForm = ({
   const [errors, setErrors] = useState({});
   const { t } = useTranslation("global");
   const [selection, setSelection] = useState("file"); // Estado para seleccionar entre archivo y enlace
+  const [resources, setResources] = useState([]);
+  const [subCategory, setSubCategory] = useState([]);
+  const [subcategoryId, setSubcategoryId] = useState("");
 
   const validateFields = () => {
     const newErrors = {};
@@ -103,6 +108,7 @@ const UpdateResourceForm = ({
     if (resourceData) {
       // Actualizar el estado con los datos iniciales
       setTitle(resourceData.title || "");
+      setSubcategoryId(resourceData.subcategoryId || "");
       setDescription(resourceData.description || "");
       setLink(resourceData.link);
       setExistingFileName(resourceData.file?.name);
@@ -111,6 +117,37 @@ const UpdateResourceForm = ({
       setQuizzes(resourceData.quizzes || []); // Inicializar quizzes si existen en el recurso
     }
   }, [resourceData]);
+
+  useEffect(() => {
+    if (isVisible && courseId) {
+      fetchResources(courseId);
+      fetchSubCategories(courseId);
+    } else {
+      setResources([]); // Limpiar los recursos al cerrar la modal
+      setSubCategory([]);
+    }
+  }, [isVisible, courseId]); // Ahora depende de courseId también
+
+  const fetchResources = async (courseId) => {
+    try {
+      const response = await getResource(courseId);
+      setResources(response.data);
+    } catch (err) {
+      console.error("Error al obtener los recursos:", err);
+      toast.error("Error al obtener los recursos");
+    }
+  };
+
+  // Función para obtener los subCategories por CourseId
+  const fetchSubCategories = async (courseId) => {
+    try {
+      const response = await getSubCategoryCourseId(courseId);
+      console.log("SubCategory data:", response.data);
+      setSubCategory(response.data);
+    } catch (error) {
+      console.error("Error al obtener los Sub Categories By CourseId", error);
+    }
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -200,6 +237,7 @@ const UpdateResourceForm = ({
 
     const updatedData = {
       title,
+      subcategoryId,
       description,
       link,
       file: selectedFile || resourceData.file,
@@ -232,6 +270,7 @@ const UpdateResourceForm = ({
     // Restablece el estado al inicial desde la referencia
     if (initialResourceDataRef.current) {
       setTitle(initialResourceDataRef.current.title);
+      setSubcategoryId(initialResourceDataRef.current.subcategoryId);
       setDescription(initialResourceDataRef.current.description);
       setLink(initialResourceDataRef.current.link);
       setSelectedFile(null);
@@ -273,24 +312,53 @@ const UpdateResourceForm = ({
       }
     >
       <form onSubmit={handleUpdate} className="space-y-6">
-        <div>
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium text-gray-700"
-          >
-            {t("UpdateResource.Title")}
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-          />
-          {errors.title && (
-            <p className="text-red-500 text-sm mt-1">{errors.title}</p>
-          )}
+      <div className="grid grid-cols-2 gap-4">
+          <div className="col-span-2 md:col-span-1">
+            <div>
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {t("UpdateResource.Title")}
+              </label>
+              <input
+                type="text"
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              />
+              {errors.title && (
+                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="col-span-2 md:col-span-1">
+            <div>
+              <label
+                htmlFor="subcategoryId"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {t("subCategory.SelectSection")}
+              </label>
+              <select
+                id="subcategoryId"
+                value={subcategoryId}
+                onChange={(e) => setSubcategoryId(e.target.value)}
+                className="mt-1 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                required
+              >
+                <option value="">{t("subCategory.SelectSection")}</option>
+                {subCategory.map((subcategory) => (
+                  <option key={subcategory.id} value={subcategory.id}>
+                    {subcategory.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -505,16 +573,31 @@ const UpdateResourceForm = ({
 
         {quizzes.length > 0 && (
           <div>
-            <label htmlFor="attempts" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="attempts"
+              className="block text-sm font-medium text-gray-700"
+            >
               {t("quizz.NumerQuizz")}
             </label>
             <input
               type="number"
               id="attempts"
               value={attempts}
-              onChange={(e) => setAttempts(e.target.value)}
+              onChange={(e) => {
+                const value = parseInt(e.target.value, 10);
+          
+                // Validar que el valor esté dentro del rango permitido
+                if (value >= 1 && value <= 10) {
+                  setAttempts(value);
+                } else if (value < 1) {
+                  setAttempts(1); // Si es menor que 1, establecer en 1
+                } else if (value > 10) {
+                  setAttempts(10); // Si es mayor que 10, establecer en 10
+                }
+              }}
               min="1"
               max="10"
+              inputMode="numeric" // Asegura el teclado numérico en móviles
               className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
               required
             />
