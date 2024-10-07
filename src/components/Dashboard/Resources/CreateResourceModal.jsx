@@ -298,11 +298,10 @@ const CreateResourceModal = ({
     try {
       await createResource(resourceData);
       Swal.fire({
-        position: "top-end",
         icon: "success",
         title: t("CreateResource.Create"),
         showConfirmButton: false,
-        timer: 1500,
+        timer: 1000,
       });
       onCreate();
       fetchResources(courseId); // Actualizar la lista de recursos tras crear uno nuevo
@@ -315,7 +314,7 @@ const CreateResourceModal = ({
         icon: "error",
         title: t("UpdateResource.ErrorAlert"),
         showConfirmButton: false,
-        timer: 1000,
+        timer: 700,
       });
     }
   };
@@ -356,7 +355,6 @@ const CreateResourceModal = ({
     try {
       await deleteResource(resource.id);
       Swal.fire({
-        position: "top-end",
         icon: "success",
         title: t("CreateResource.DeleteResource"),
         showConfirmButton: false,
@@ -650,7 +648,7 @@ const CreateResourceModal = ({
             } sm:w-1/2 sm:block`}
             style={{ maxHeight: "700px" }}
           >
-            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl items-center flex justify-between">
+            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl items-center flex justify-center">
               <h3 className="text-2xl font-bold text-white ml-2">
                 {t("CreateResource.FormCreate")}
               </h3>
@@ -967,15 +965,14 @@ const CreateResourceModal = ({
 
               <div className="flex justify-between gap-4 mt-6">
                 <Button
-                  type="primary"
                   htmlType="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white"
+                  className="bg-[#4c1d95] text-white"
                 >
                   {t("CreateResource.ButtonCreate")}
                 </Button>
                 <Button
                   onClick={handleCancel}
-                  className="bg-gray-300 hover:bg-gray-400 text-black"
+                  className="bg-red-600 text-white"
                 >
                   {t("UpdateResource.ButtonCancel")}
                 </Button>

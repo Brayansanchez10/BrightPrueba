@@ -285,21 +285,24 @@ const DataTable = () => {
                         <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
                           {item.email}
                         </td>
-                        <td className="pl-14 border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
-                          {item.state ? (
-                            <FaCircle
-                              size="14px"
-                              className="text-green-500 -mb-[21px] -ml-8"
-                            />
-                          ) : (
-                            <FaCircle
-                              size="14px"
-                              className="text-red-500 -mb-[21px] -ml-8"
-                            />
-                          )}
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
                           {item.state
-                            ? t("datatable.Active")
-                            : t("datatable.Inactive")}
+                            ? <div className="flex items-center justify-center">
+                                <FaCircle
+                                  size="14px"
+                                  className="text-green-500 mr-3"
+                                />
+                                <p className="px-1.5">{t("datatable.Active")}</p>
+                              </div> 
+                            : 
+                              <div className="flex items-center justify-center">
+                                <FaCircle
+                                  size="14px"
+                                  className="text-red-500 mr-3"
+                                />
+                                {t("datatable.Inactive")}
+                              </div> 
+                          }
                         </td>
                         <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                           <Button

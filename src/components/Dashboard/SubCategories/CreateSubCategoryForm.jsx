@@ -320,7 +320,7 @@ const CreateSubCategoryForm = ({
             } sm:w-1/2 sm:block`}
             style={{ maxHeight: "700px" }}
           >
-            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#1E1034] to-[#FF4943] rounded-t-2xl items-center flex justify-between">
+            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#1E1034] to-[#FF4943] rounded-t-2xl items-center flex justify-center">
               <h3 className="text-2xl font-bold text-white ml-2">
                 {t("subCategory.FormTitle")}
               </h3>
@@ -382,15 +382,14 @@ const CreateSubCategoryForm = ({
 
               <div className="flex justify-between gap-4 mt-6">
                 <Button
-                  type="primary"
                   htmlType="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white"
+                  className="bg-green-500 text-white"
                 >
                   {t("subCategory.ButtonCreate")}
                 </Button>
                 <Button
                   onClick={handleCancel}
-                  className="bg-gray-300 hover:bg-gray-400 text-black"
+                  className="bg-red-500 text-white"
                 >
                   {t("subCategory.ButtonCancel")}
                 </Button>

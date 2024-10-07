@@ -532,27 +532,31 @@ export default function ResourceView() {
       const previousResource = resources[currentResourceIndex - 1];
       setCurrentResourceIndex(currentResourceIndex - 1);
 
-      // Calcula el progreso y lo actualiza
-      const newProgress = calculateProgress(currentResourceIndex - 1, resources.length);
-      await updateCourseProgress(user.data.id, courseId, newProgress);
-
       handleResourceClick(previousResource.id, previousResource.courseId);
     }
   };
 
-  // Función para manejar el clic en el recurso siguiente
   const handleNext = async () => {
     if (currentResourceIndex < resources.length - 1) {
       const nextResource = resources[currentResourceIndex + 1];
-      setCurrentResourceIndex(currentResourceIndex + 1);
       
-      // Calcula el progreso y lo actualiza
-      const newProgress = calculateProgress(currentResourceIndex + 1, resources.length);
-      await updateCourseProgress(user.data.id, courseId, newProgress);
-
+      // Calcula el porcentaje por recurso basado en la cantidad total de recursos
+      const percentagePerResource = 100 / resources.length;
+      
+      // El nuevo progreso es el índice actual + 1 multiplicado por el porcentaje por recurso
+      const newProgress = (currentResourceIndex + 1) * percentagePerResource;
+  
+      // Asegúrate de que el progreso solo suba
+      if (newProgress > currentProgress && currentProgress < 100) {
+        await updateCourseProgress(user.data.id, courseId, newProgress);
+        setCurrentProgress(newProgress); // Actualiza el progreso en el estado local
+      }
+  
+      // Avanza al siguiente recurso
+      setCurrentResourceIndex(currentResourceIndex + 1);
       handleResourceClick(nextResource.id, nextResource.courseId);
     }
-  };
+  };  
 
   const handleFinishCourse = async () => {
     // Progreso al 100% al finalizar el curso
@@ -744,6 +748,58 @@ export default function ResourceView() {
       });
     }
   };
+
+  const renderResourceList = () => {
+    const totalResources = resources.length;
+    const percentagePerResource = 100 / totalResources; // Porcentaje que representa cada recurso
+  
+    return resources.map((res, index) => {
+      // Progreso requerido para desbloquear este recurso
+      const requiredProgress = (index) * percentagePerResource;
+  
+      // Desbloquear si el progreso actual es mayor o igual al progreso requerido
+      const isUnlocked = currentProgress >= requiredProgress;
+  
+      return (
+        <div
+          key={res.id}
+          className={`flex items-start mb-6 cursor-pointer ${
+            isOpen ? "pr-4" : "justify-center"
+          }`}
+          onClick={() => isUnlocked && handleResourceClick(res.id, res.courseId)} // Solo permitir clic si está desbloqueado
+        >
+          <div className="relative mr-4">
+            <div
+              className={`
+                flex items-center justify-center
+                w-8 h-8 rounded-full 
+                ${isUnlocked ? "bg-white text-[#6D4F9E]" : "bg-gray-500 text-gray-300 cursor-not-allowed"}
+                text-sm font-bold
+              `}
+            >
+              {index + 1}
+            </div>
+            {index < resources.length - 1 && (
+              <div
+                className={`absolute left-4 top-8 w-0.5 h-10 ${
+                  isUnlocked ? "bg-white" : "bg-gray-500"
+                }`}
+              />
+            )}
+          </div>
+          {isOpen && (
+            <span
+              className={`text-xs ${
+                isUnlocked ? "text-white font-bold" : "text-gray-500"
+              }`}
+            >
+              {res.title}
+            </span>
+          )}
+        </div>
+      );
+    });
+  };  
 
   const renderRightSideContent = () => {
     return (
@@ -979,52 +1035,7 @@ export default function ResourceView() {
               {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
             </button>
             <div className="mt-16 p-4">
-              {resources.map((res, index) => (
-                <div
-                  key={res.id}
-                  className={`flex items-start mb-6 cursor-pointer ${
-                    isOpen ? "pr-4" : "justify-center"
-                  }`}
-                  onClick={() => handleResourceClick(res.id, res.courseId)}
-                >
-                  <div className="relative mr-4">
-                    <div
-                      className={`
-                        flex items-center justify-center
-                        w-8 h-8 rounded-full 
-                        ${
-                          res.id === resource.id
-                            ? "bg-white text-[#6D4F9E]"
-                            : "bg-[#6D4F9E] text-white"
-                        }
-                        text-sm font-bold
-                      `}
-                    >
-                      {index + 1}
-                    </div>
-                    {index < resources.length - 1 && (
-                      <div
-                        className={`absolute left-4 top-8 w-0.5 h-10
-                          ${
-                            res.id === resource.id ? "bg-white" : "bg-[#6D4F9E]"
-                          }
-                        `}
-                      />
-                    )}
-                  </div>
-                  {isOpen && (
-                    <span
-                      className={`text-xs ${
-                        res.id === resource.id
-                          ? "text-white font-bold"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      {res.title}
-                    </span>
-                  )}
-                </div>
-              ))}
+              {renderResourceList()}
             </div>
           </div>
         </div>

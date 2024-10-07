@@ -38,24 +38,26 @@ function Carousel() {
       <div className="absolute top-2 left-0 xl:left-[-20px]">
         <a href="https://www.facebook.com/MesaDavisEnterprises/" target="_blank" rel="noopener noreferrer">
           <div className="flex bg-blue-600 p-2 rounded-br-lg group">
-            <FaFacebookF className="flex text-white text-xl" />
-            <p className="text-white font-semibold hidden group-hover:block">Facebook</p>
+            <FaFacebookF size={20} className="flex text-white text-xl" />
+            <p className="text-white font-semibold -mt-1 ml-2 hidden group-hover:block">Facebook</p>
           </div>
         </a>
       </div>
       <div className="absolute top-[54px] left-0 xl:left-[-20px]">
         <a href="https://x.com/MesaDavisEnt" target="_blank" rel="noopener noreferrer">
-          <div className="flex bg-blue-400 p-2 rounded-br-lg group">
-            <FaTwitter className="text-white text-xl" />
-            <p className="text-white font-semibold hidden group-hover:block">Twitter</p>
+          <div className="flex bg-black p-2 rounded-br-lg group">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 512 512">
+              <path fill="white" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+            </svg>
+            <p className="text-white font-semibold -mt-1 ml-2 hidden group-hover:block">X</p>
           </div>
         </a>
       </div>
       <div className="absolute top-[100px] left-0 xl:left-[-20px]">
         <a href="https://www.instagram.com/mesadoko" target="_blank" rel="noopener noreferrer">
           <div className="flex bg-pink-500 p-2 rounded-br-lg group">
-            <FaInstagram className="text-white text-xl" />
-            <p className="text-white font-semibold hidden group-hover:block">Instagram</p>
+            <FaInstagram size={20} className="text-white text-xl" />
+            <p className="text-white font-semibold -mt-1 ml-2 hidden group-hover:block">Instagram</p>
           </div>
         </a>
       </div>
