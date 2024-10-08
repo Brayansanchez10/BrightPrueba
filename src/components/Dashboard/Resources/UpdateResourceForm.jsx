@@ -255,14 +255,24 @@ const UpdateResourceForm = ({
       });
       onUpdate();
       onCancel(); // Cierra el modal después de la actualización exitosa
-    } catch (err) {
-      console.error("Error al actualizar el recurso:", err);
-      Swal.fire({
-        icon: "error",
-        title: t("UpdateResource.ErrorAlert"),
-        showConfirmButton: false,
-        timer: 1000,
-      });
+    } catch (error) {
+      console.error(error);
+
+      if (error.response && error.response.data && error.response.data.error === "Ya existe un recurso con este nombre para esta subCategory."){
+        Swal.fire({
+          icon: "error",
+          title: t("UpdateResource.AlertDuplicate"),
+          showConfirmButton: true,
+          timer: 3000,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: t("UpdateResource.ErrorAlert"),
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
     }
   };
 

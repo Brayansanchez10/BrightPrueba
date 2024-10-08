@@ -14,11 +14,7 @@ import DetailsCategoryModal from "./DetailsCategoryModal";
 import UpdateCategoryModal from "./UpdateCategoryModal";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
-import {
-  FaChevronLeft,
-  FaChevronRight,
-  FaSearch,
-} from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 
 const DataTablete = () => {
   const { t } = useTranslation("global");
@@ -33,7 +29,7 @@ const DataTablete = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(0);
-  const [totalItems, setTotalItems] = useState(0); // Agregar estado para totalItems
+  const [totalItems, setTotalItems] = useState(0);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
@@ -43,7 +39,6 @@ const DataTablete = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(null);
   const [form] = Form.useForm();
   const [imagePreview, setImagePreview] = useState(null);
-  const pagesToShow = 1;
   const [dataFlag, setDataFlag] = useState(false);
 
   useEffect(() => {
@@ -57,7 +52,7 @@ const DataTablete = () => {
         category.description.toLowerCase().includes(searchValue.toLowerCase())
     );
 
-    setTotalItems(filteredCategory.length); 
+    setTotalItems(filteredCategory.length);
     setTotalPages(Math.ceil(filteredCategory.length / itemsPerPage));
   }, [categories, searchValue, itemsPerPage]);
 
@@ -74,7 +69,7 @@ const DataTablete = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Initial call to set the correct itemsPerPage
+    handleResize();
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -90,7 +85,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-      setDataFlag((prevFlag) => !prevFlag); 
+      setDataFlag((prevFlag) => !prevFlag);
     } catch (error) {
       Swal.fire({
         title: t("categories.createError"),
@@ -112,7 +107,7 @@ const DataTablete = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-      setDataFlag((prevFlag) => !prevFlag); 
+      setDataFlag((prevFlag) => !prevFlag);
     } catch (error) {
       Swal.fire({
         title: t("categories.updateError"),
@@ -146,28 +141,6 @@ const DataTablete = () => {
       setIsDeleteModalVisible(false);
       setCategoryToDelete(null);
     }
-  };
-
-  const getVisiblePageNumbers = () => {
-    const pages = [];
-    const half = Math.floor(pagesToShow / 1);
-
-    let start = Math.max(1, currentPage - half);
-    let end = Math.min(totalPages, currentPage + half);
-
-    if (currentPage <= half) {
-      end = Math.min(totalPages, end + (half - currentPage + 1));
-    }
-
-    if (totalPages - currentPage < half) {
-      start = Math.max(1, start - (half - (totalPages - currentPage)));
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-
-    return pages;
   };
 
   const handleCreateCategoryClick = () => {
@@ -248,33 +221,35 @@ const DataTablete = () => {
         >
           <Navbar />
           <div className="flex flex-col mt-14">
-            <div>
-              <div className="flex flex-row items-center justify-between pl-[72px] pr-12">
-                <h2 className="text-3xl text-purple-900 font-bungee">
+            <div className="px-4 md:px-12">
+              <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-2">
+                <h2 className="text-3xl text-purple-900 font-bungee mb-4 md:mb-0">
                   {t("categories.title")}
                 </h2>
-                <div className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg">
-                  <FaSearch size={"18px"} className="mt-1 mr-2" />
-                  <input
-                    type="search"
-                    className="outline-none w-full md:w-[280px] lg:w-[360px]"
-                    placeholder={t("datatable.SearchByName")}
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                  />
+                <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: "#4c1d95" }}
+                    onClick={handleCreateCategoryClick}
+                    className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
+                  >
+                    <b>{t("categories.createCategory")}</b>
+                  </Button>
+                  <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
+                    <FaSearch size={"18px"} className="mt-1 mr-2" />
+                    <input
+                      type="search"
+                      className="outline-none w-full md:w-[280px] lg:w-[360px]"
+                      placeholder={t("datatable.SearchByName")}
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
-              <Button
-                type="primary"
-                style={{ backgroundColor: "#4c1d95" }}
-                onClick={handleCreateCategoryClick}
-                className="ml-16 mt-6 rounded-t-lg rounded-b-none"
-              >
-                <b>{t("categories.createCategory")}</b>
-              </Button>
             </div>
-            <div className="flex justify-center">
-              <div className="overflow-auto w-full px-6 mx-12 py-6 bg-white rounded-t-xl rounded-b-xl shadow-lg shadow-purple-300">
+            <div className="flex justify-center mt-4 md:mt-2">
+              <div className="overflow-auto w-full px-4 md:px-6 mx-4 md:mx-12 py-6 bg-white rounded-xl shadow-lg shadow-purple-300">
                 <table className="min-w-full overflow-x-auto">
                   <thead>
                     <tr>
@@ -343,7 +318,6 @@ const DataTablete = () => {
                 </table>
                 {totalPages > 1 && (
                   <div className="flex justify-end items-center mt-5 space-x-2">
-                    {/* Botón anterior */}
                     <button
                       onClick={() => paginate(currentPage - 1)}
                       disabled={currentPage === 1}
@@ -355,8 +329,6 @@ const DataTablete = () => {
                     >
                       <FaChevronLeft size={13} />
                     </button>
-
-                    {/* Mostrar el rango actual */}
                     <span className="text-gray-600">
                       {`${(currentPage - 1) * itemsPerPage + 1} - ${
                         currentPage * itemsPerPage > totalItems
@@ -365,8 +337,6 @@ const DataTablete = () => {
                       }`}{" "}
                       {t("datatable.of")} {totalItems}
                     </span>
-
-                    {/* Botón siguiente */}
                     <button
                       onClick={() => paginate(currentPage + 1)}
                       disabled={currentPage === totalPages}
@@ -409,7 +379,8 @@ const DataTablete = () => {
             onUpdate={handleUpdateSubmit}
             category={selectedCategory}
             form={form}
-            imagePreview={imagePreview}
+            imagePre
+            view={imagePreview}
           />
         </div>
       </div>

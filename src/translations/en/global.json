@@ -66,7 +66,8 @@
         "username_exists": "Username already exists, please enter a different one",
         "register_now": "REGISTER NOW",
         "future": "BE PART OF THE FUTURE",
-        "ready": "READY!"
+        "ready": "READY!",
+        "AlertPasswordCorro": "The password cannot be an email."
     },
     "reset_password": {
         "invalid_email": "Invalid email",
@@ -619,7 +620,8 @@
         "ButtonCancel": "Cancel",
         "ButtonUpdate": "Update",
         "SelectOption": "Select an option",
-        "labelOption": "Options"
+        "labelOption": "Options",
+        "AlertDuplicate": "A resource with this name already exists related to this section."
     },
     "CreateResource": {
         "InvalidLink": "Invalid link",
@@ -725,7 +727,8 @@
         "UpdateAlert": "Section updated successfully",
         "UpdateAlertError": "Error updated Section",
         "ModalUpdateTitle": "Update your section",
-        "titleTooShort": "Title must be a maximum of 30 characters."
+        "titleTooShort": "Title must be a maximum of 30 characters.",
+        "AlertDuplicate": "There is already a section with this name for this course."
     },
     "quizz": {
     "quizzStart": "Ready to start the quiz?",

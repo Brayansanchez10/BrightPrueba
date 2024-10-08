@@ -201,6 +201,14 @@ function RegisterForm() {
                         : "border-purple-300"
                     }`}
                     placeholder={t("register.enter_password")}
+                    onInput={(e) => {
+                      const value = e.target.value;
+                      if (value.includes("@")) {
+                        e.target.setCustomValidity(t("register.AlertPasswordCorro"));
+                      } else {
+                        e.target.setCustomValidity("");
+                      }
+                    }}
                   />
                   <button
                     type="button"

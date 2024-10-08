@@ -84,9 +84,11 @@ const CreateSubCategoryForm = ({
   const validateFields = () => {
     const newErrors = {};
 
-    // Validación del título (mínimo 3 caracteres)
+    // Validación del título (mínimo 3 caracteres y máximo 30 caracteres)
     if (!title || title.length < 3) {
       newErrors.title = t("UpdateResource.ValidateTitle");
+    } else if (title.length > 30) {
+      newErrors.title = t("subCategory.titleTooShort"); // Nuevo mensaje para límite de caracteres
     }
 
     // Validación de la descripción (mínimo 8 caracteres)
@@ -120,17 +122,17 @@ const CreateSubCategoryForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validateFields()) {
       return; // Si hay errores, no envía el formulario
     }
-
+  
     const SubCategoryData = {
       courseId,
       title,
       description,
     };
-
+  
     try {
       await createSubCategory(SubCategoryData);
       Swal.fire({
@@ -145,12 +147,18 @@ const CreateSubCategoryForm = ({
       resetState();
     } catch (error) {
       console.error(error);
-      Swal.fire({
-        icon: "error",
-        title:  t("subCategory.AlertError"),
-        timer: 3000,
-        showConfirmButton: true,
-      });
+      
+      // Verificar si el error es debido a un título duplicado
+      if (error.response && error.response.data && error.response.data.error === "Ya existe una subcategoría con este nombre para este curso.") {
+        Swal.fire({
+          icon: "error",
+          title: t("subCategory.AlertDuplicate"),
+          timer: 3000,
+          showConfirmButton: true,
+        });
+      } else {
+        console.error(error);
+      }
     }
   };
 

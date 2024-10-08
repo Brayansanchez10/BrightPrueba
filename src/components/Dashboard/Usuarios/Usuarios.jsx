@@ -42,7 +42,7 @@ const DataTable = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(0);
-  const [totalItems, setTotalItems] = useState(0); // Agregar estado para totalItems
+  const [totalItems, setTotalItems] = useState(0);
   const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const DataTable = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Initial call to set the correct itemsPerPage
+    handleResize();
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -100,7 +100,6 @@ const DataTable = () => {
   );
 
   useEffect(() => {
-    // Actualiza el total de ítems filtrados
     setTotalItems(filteredUsers.length);
   }, [filteredUsers]);
 
@@ -160,7 +159,7 @@ const DataTable = () => {
       await createUser(values);
       form.resetFields();
       setShowCreateModal(false);
-      setUpdatedDataFlag(true); // Agregar esta línea para actualizar la tabla después de crear un usuario
+      setUpdatedDataFlag(true);
     } catch (error) {
       console.error(error);
     }
@@ -193,33 +192,37 @@ const DataTable = () => {
         >
           <Navbar className="" />
           <div className="flex flex-col mt-14">
-            <div>
-              <div className="flex flex-row items-center justify-between pl-[72px] pr-12">
-                <h2 className="text-3xl text-purple-900 font-bungee">
+            <div className="px-4 md:px-12">
+              <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-2">
+                <h2 className="text-3xl text-purple-900 font-bungee mb-4 md:mb-0">
                   {t("datatable.Users")}
                 </h2>
-                <div className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg">
-                  <FaSearch size={"18px"} className="mt-1 mr-2" />
-                  <input
-                    type="search"
-                    className="outline-none w-full md:w-[280px] lg:w-[360px]"
-                    placeholder={t("datatable.SearchByName")}
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                  />
+                <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: "#4c1d95" }}
+                    onClick={() => setShowCreateModal(true)}
+                    className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
+                  >
+                    <b>{t("datatable.CreateUser")}</b>
+                  </Button>
+                  <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
+                    <FaSearch size={"18px"} className="mt-1 mr-2" />
+                    <input
+                      type="search"
+                      className="outline-none w-full md:w-[280px] lg:w-[360px]"
+                      placeholder={t("datatable.SearchByName")}
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
-              <Button
-                type="primary"
-                style={{ backgroundColor: "#4c1d95" }}
-                onClick={() => setShowCreateModal(true)}
-                className="ml-16 mt-6 rounded-t-lg rounded-b-none"
-              >
-                <b>{t("datatable.CreateUser")}</b>
-              </Button>
             </div>
-            <div className="flex justify-center">
-              <div className="overflow-auto w-full px-6 mx-12 py-6 bg-white rounded-t-xl rounded-b-xl shadow-lg shadow-purple-300">
+
+            {/* Tabla */}
+            <div className="flex justify-center mt-4 md:mt-2">
+              <div className="overflow-auto w-full px-4 md:px-6 mx-4 md:mx-12 py-6 bg-white rounded-xl shadow-lg shadow-purple-300">
                 <table className="min-w-full overflow-x-auto">
                   <thead>
                     <tr>
@@ -303,24 +306,21 @@ const DataTable = () => {
                         <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
                           {item.email}
                         </td>
-                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                        <td className="pl-14 border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                          {item.state ? (
+                            <FaCircle
+                              size="14px"
+                              className="text-green-500 -mb-[21px] -ml-8"
+                            />
+                          ) : (
+                            <FaCircle
+                              size="14px"
+                              className="text-red-500 -mb-[21px] -ml-8"
+                            />
+                          )}
                           {item.state
-                            ? <div className="flex items-center justify-center">
-                                <FaCircle
-                                  size="14px"
-                                  className="text-green-500 mr-3"
-                                />
-                                <p className="px-1.5">{t("datatable.Active")}</p>
-                              </div> 
-                            : 
-                              <div className="flex items-center justify-center">
-                                <FaCircle
-                                  size="14px"
-                                  className="text-red-500 mr-3"
-                                />
-                                {t("datatable.Inactive")}
-                              </div> 
-                          }
+                            ? t("datatable.Active")
+                            : t("datatable.Inactive")}
                         </td>
                         <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                           <Button
@@ -334,12 +334,18 @@ const DataTable = () => {
                           >
                             {item.state ? (
                               <>
-                                <FaUserTimes size="16px" className="inline-block mr-1.5 -mt-1" />
+                                <FaUserTimes
+                                  size="16px"
+                                  className="inline-block mr-1.5 -mt-1"
+                                />
                                 {t("datatable.Desactivate")}
                               </>
                             ) : (
                               <>
-                                <FaUserCheck size="16px" className="inline-block mr-1.5 -mt-1" />
+                                <FaUserCheck
+                                  size="16px"
+                                  className="inline-block mr-1.5 -mt-1"
+                                />
                                 {t("datatable.Activate")}
                               </>
                             )}
@@ -368,7 +374,6 @@ const DataTable = () => {
                 </table>
                 {totalPages > 1 && (
                   <div className="flex justify-end items-center mt-5 space-x-2">
-                    {/* Botón anterior */}
                     <button
                       onClick={() => paginate(currentPage - 1)}
                       disabled={currentPage === 1}
@@ -380,8 +385,6 @@ const DataTable = () => {
                     >
                       <FaChevronLeft size={13} />
                     </button>
-
-                    {/* Mostrar el rango actual */}
                     <span className="text-gray-600">
                       {`${(currentPage - 1) * itemsPerPage + 1} - ${
                         currentPage * itemsPerPage > totalItems
@@ -390,8 +393,6 @@ const DataTable = () => {
                       }`}{" "}
                       {t("datatable.of")} {totalItems}
                     </span>
-
-                    {/* Botón siguiente */}
                     <button
                       onClick={() => paginate(currentPage + 1)}
                       disabled={currentPage === totalPages}

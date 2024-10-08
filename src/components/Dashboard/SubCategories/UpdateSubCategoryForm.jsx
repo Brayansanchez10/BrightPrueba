@@ -22,9 +22,11 @@ const UpdateSubCategoryForm = ({ isVisible, onCancel, subCategoryData, onUpdate,
     const validateFields = () => {
         const newErrors = {};
 
-        // Validación del título (mínimo 3 caracteres)
+        // Validación del título (mínimo 3 caracteres y máximo 30 caracteres)
         if (!title || title.length < 3) {
-            newErrors.title = t("UpdateResource.ValidateTitle");
+          newErrors.title = t("UpdateResource.ValidateTitle");
+        } else if (title.length > 30) {
+          newErrors.title = t("subCategory.titleTooShort"); // Nuevo mensaje para límite de caracteres
         }
 
         // Validación de la descripción (mínimo 8 caracteres)
@@ -40,38 +42,44 @@ const UpdateSubCategoryForm = ({ isVisible, onCancel, subCategoryData, onUpdate,
     const initialsubCategoryDataRef = useRef();
 
     const handleUpdate = async (e) => {
-        e.preventDefault();
-
-        if (!validateFields()) {
-            return; // Si hay errores, no envía el formulario
+      e.preventDefault();
+    
+      if (!validateFields()) {
+        return; // Si hay errores, no envía el formulario
+      }
+    
+      const updatedData = {
+        title,
+        description,
+        courseId: subCategoryData.courseId, // Asegúrate de incluir el courseId
+      };
+    
+      try {
+        await updateSubCategory(subCategoryData.id, updatedData);
+        Swal.fire({
+          icon: "success",
+          title: t("subCategory.UpdateAlert"),
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        onUpdate(); // Ejecutar la función que actualiza la lista
+        onCancel(); // Cierra el modal después de la actualización exitosa
+      } catch (error) {
+        console.error("Error al actualizar el recurso:", error);
+    
+        // Verificar si el error es debido a un título duplicado
+        if (error.response && error.response.data && error.response.data.error === "Ya existe una subcategoría con este nombre para este curso.") {
+          Swal.fire({
+            icon: "error",
+            title: t("subCategory.AlertDuplicate"),
+            showConfirmButton: true,
+            timer: 3000,
+          });
+        } else {
+          console.error(error);
         }
-
-        const updatedData = {
-            title,
-            description,
-        };
-         
-        try {
-            await updateSubCategory(subCategoryData.id, updatedData);
-            Swal.fire({
-                icon: "success",
-                title: t("subCategory.UpdateAlert"),
-                showConfirmButton: false,
-                timer: 1000,
-            });
-            onUpdate();
-            onCancel(); // Cierra el modal después de la actualización exitosa
-        } catch (error) {
-            console.error("Error al actualizar el recurso:", error);
-            Swal.fire({
-                icon: "error",
-                title: t("subCategory.UpdateAlertError"),
-                showConfirmButton: false,
-                timer: 1000,
-            });
-        }
+      }
     };
-
     const handleCancel = () => {
         if (initialsubCategoryDataRef.current) {
             setTitle(initialsubCategoryDataRef.current.title);
