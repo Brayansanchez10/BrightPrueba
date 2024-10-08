@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useResourceContext } from "../../../context/courses/resource.contex";
+import { useCourseProgressContext } from "../../../context/courses/progress.context.jsx";
 import { useAuth } from "../../../context/auth.context";
 import { useUserContext } from "../../../context/user/user.context";
 import { Collapse, Card, Col } from "antd";
@@ -35,6 +36,7 @@ export default function CourseView() {
   const { t } = useTranslation("global");
   const { getCourse } = useCoursesContext();
   const { getResource } = useResourceContext();
+  const { getCourseProgress } = useCourseProgressContext();
   const { user } = useAuth();
   const { getUserById } = useUserContext();
   const [course, setCourse] = useState(null);
@@ -44,6 +46,7 @@ export default function CourseView() {
   const [isLoading, setIsLoading] = useState(true);
   const [creatorDescription, setCreatorDescription] = useState("");
   const [subCategory, setSubCategory] = useState([]);
+  const [currentProgress, setCurrentProgress] = useState(0);
 
   const fetchCourseData = useCallback(async () => {
     if (!courseId) return;
@@ -68,6 +71,17 @@ export default function CourseView() {
       setIsLoading(false);
     }
   }, [courseId]);
+
+  useEffect(() => {
+    const fetchProgress = async () => {
+      if (user?.data?.id && courseId) {
+        const progress = await getCourseProgress(user.data.id, courseId);
+        setCurrentProgress(progress);
+      }
+    };
+
+    fetchProgress();
+  }, [user, courseId]);
 
   const fetchSubCategories = async (courseId) => {
     try {
@@ -99,6 +113,27 @@ export default function CourseView() {
 
   const handleResourceClick = (resourceId) => {
     navigate(`/course/${courseId}/resource/${resourceId}`);
+  };
+
+  const navigateToResource = () => {
+    const totalResources = resources.length;
+    const percentagePerResource = 100 / totalResources; // Porcentaje que representa cada recurso
+  
+    if (currentProgress === 0) {
+      handleResourceClick(resources[0].id);
+      return;
+    }
+
+    // Determinar qué recurso corresponde con el progreso actual
+    const unlockedIndex = Math.floor((currentProgress / percentagePerResource) + 1);
+
+    const targetIndex = Math.min(unlockedIndex, totalResources - 1);
+    const targetResource = resources[targetIndex];
+  
+    // Llevar al usuario al recurso correspondiente
+    if (targetResource) {
+      handleResourceClick(targetResource.id);
+    }
   };
 
   if (isLoading) {
@@ -162,6 +197,15 @@ export default function CourseView() {
                   {resources.length} {t("course_user.resources")}
                 </span>
               </div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={navigateToResource}
+                className="flex items-center px-4 py-2 bg-purple-600 text-white font-bold rounded-lg"
+              >
+                <FaPlay className="mr-2" />
+                {currentProgress === 0 ? t("course_user.start") : t("course_user.continue")}
+              </motion.button>
             </div>
           </div>
         </section>
@@ -225,17 +269,6 @@ export default function CourseView() {
                                     <p className="text-gray-600 mb-4">
                                       {resource.description}
                                     </p>
-                                    <motion.button
-                                      whileHover={{ scale: 1.01 }}
-                                      whileTap={{ scale: 0.99 }}
-                                      onClick={() =>
-                                        handleResourceClick(resource.id)
-                                      }
-                                      className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-150"
-                                    >
-                                      <FaPlay className="mr-2" />
-                                      {t("course_user.viewDetails")}
-                                    </motion.button>
                                   </div>
                                 </Panel>
                               ))}

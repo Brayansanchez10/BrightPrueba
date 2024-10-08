@@ -104,10 +104,11 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
       await createCategory(category);
       onCreate(category);
       onClose();
+      setIsSubmitting(false); // Habilitar nuevamente al cerrar modal
     } catch (error) {
       console.error(error);
       message.error(t("createCategoryForm.createFailure"));
-      setIsSubmitting(false); // Habilitar el botón nuevamente si hay un error
+      setIsSubmitting(false); // Habilitar nuevamente si hay un error
     }
   };
 

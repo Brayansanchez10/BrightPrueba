@@ -282,6 +282,12 @@ const DataTable = () => {
                           onClick={() => orderBy("id")}
                         >
                           ID {""}
+                          {sortConfig.key === "id" &&
+                            (sortConfig.direction === "ascending" ? (
+                              <CaretUpOutlined />
+                            ) : (
+                              <CaretDownOutlined />
+                            ))}
                         </th>
                         <th
                           className="text-lg py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
@@ -305,7 +311,7 @@ const DataTable = () => {
                         currentItems.map((role, index) => (
                           <tr key={role.id}>
                             <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
-                              {generateIds()[index]}
+                              {role.id}
                             </td>
                             <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
                               {role.nombre}

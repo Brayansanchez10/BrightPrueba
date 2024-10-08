@@ -26,6 +26,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
     image: "",
   });
 
+  const [imagePreview, setImagePreview] = useState(null);
   const imageRef = useRef(null);
 
   useEffect(() => {
@@ -36,8 +37,9 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
           name: courseData.title,
           category: courseData.category,
           description: courseData.description,
-          image: courseData.image || null,
+          image: null,
         });
+        setImagePreview(courseData.image || null); // Establecemos la vista previa de la imagen
       }
     };
     if (visible) {
@@ -107,6 +109,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
     validateField("image", file);
     if (file && file.type.startsWith("image/")) {
       setCourse({ ...course, image: file });
+      setImagePreview(URL.createObjectURL(file)); // Cambiamos la vista previa si se selecciona una nueva imagen
     }
   };
 
@@ -133,7 +136,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
       title: course.name,
       category: course.category,
       description: course.description,
-      image: course.image,
+      image: course.image ? course.image : imagePreview, // Se usa la imagen seleccionada o la vista previa existente
     };
 
     try {
@@ -266,13 +269,13 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
         </div>
 
         <div className="flex justify-center mb-6">
-          {course.image && (
+          {imagePreview && (
             <div className="w-[100px] h-[100px] border border-[#ddd] rounded-md flex items-center justify-center bg-[#f0f0f0] overflow-hidden">
               <img
                 src={
                   course.image instanceof File
                     ? URL.createObjectURL(course.image)
-                    : course.image
+                    : imagePreview
                 }
                 alt="Vista previa de la imagen"
                 className="object-contain"

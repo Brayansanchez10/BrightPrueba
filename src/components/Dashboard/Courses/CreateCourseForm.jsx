@@ -143,6 +143,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
                 onCreate(courseData);
                 resetForm();
                 onClose();
+                setIsSubmitting(false); // Habilitar nuevamente al cerrar modal
             });
         } catch (error) {
             console.error(error);
@@ -152,7 +153,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
                 timer: 3000,
                 showConfirmButton: true,
             }).then(() => {
-                setIsSubmitting(false); // Habilitar el botón nuevamente si hay un error
+                setIsSubmitting(false); // Habilitar nuevamente si hay un error
             });
         }
     };

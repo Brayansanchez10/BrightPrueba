@@ -14,7 +14,6 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
   const [form] = Form.useForm();
   const { t } = useTranslation("global");
   const [shake, setShake] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (visible) {

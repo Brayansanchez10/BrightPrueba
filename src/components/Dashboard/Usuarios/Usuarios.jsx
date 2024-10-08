@@ -228,6 +228,12 @@ const DataTable = () => {
                         onClick={() => orderBy("id")}
                       >
                         {t("datatable.ID")}{" "}
+                        {sortConfig.key === "id" &&
+                          (sortConfig.direction === "ascending" ? (
+                            <CaretUpOutlined />
+                          ) : (
+                            <CaretDownOutlined />
+                          ))}
                       </th>
                       <th
                         className="text-lg py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
@@ -258,12 +264,24 @@ const DataTable = () => {
                         onClick={() => orderBy("email")}
                       >
                         {t("datatable.Email")}{" "}
+                        {sortConfig.key === "email" &&
+                          (sortConfig.direction === "ascending" ? (
+                            <CaretUpOutlined />
+                          ) : (
+                            <CaretDownOutlined />
+                          ))}
                       </th>
                       <th
                         className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                         onClick={() => orderBy("state")}
                       >
                         {t("datatable.Status")}{" "}
+                        {sortConfig.key === "state" &&
+                          (sortConfig.direction === "ascending" ? (
+                            <CaretUpOutlined />
+                          ) : (
+                            <CaretDownOutlined />
+                          ))}
                       </th>
                       <th className="py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("datatable.Actions")}
@@ -274,7 +292,7 @@ const DataTable = () => {
                     {currentItems.map((item, index) => (
                       <tr key={item.id}>
                         <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
-                          {generateIds()[index]}
+                          {item.id}
                         </td>
                         <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
                           {item.role}

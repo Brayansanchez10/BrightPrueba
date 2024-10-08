@@ -301,7 +301,7 @@ const DataTablete = () => {
                       .map((category, index) => (
                         <tr key={category.id}>
                           <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
-                            {generateIds()[index]}
+                            {category.id}
                           </td>
                           <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
                             {category.name}

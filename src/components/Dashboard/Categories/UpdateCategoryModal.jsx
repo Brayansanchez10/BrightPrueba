@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, message } from 'antd';
+import { Modal, Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 const UpdateCategoryModal = ({
@@ -44,7 +44,7 @@ const UpdateCategoryModal = ({
       errors.description = t('updateCategoryModal.descriptionLong'); 
     }
 
-    if (!imageFile) {
+    if (!imagePreview && !imageFile) {
       errors.image = t('updateCategoryModal.imageRequired');
     }
 
@@ -59,8 +59,12 @@ const UpdateCategoryModal = ({
       });
       return;
     }
-    
-    onUpdate({ ...values, image: imageFile }); 
+
+    // Si no se ha subido una nueva imagen, usar la imagen previa
+    onUpdate({ 
+      ...values, 
+      image: imageFile ? imageFile : initialImagePreview 
+    }); 
   };
 
   return (
@@ -102,7 +106,7 @@ const UpdateCategoryModal = ({
           label={t('updateCategoryModal.nameLabel')}
           rules={[{ required: true, message: t('updateCategoryModal.namePlaceholder') }]}
         >
-          <Input maxLength={30} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+          <Input maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
 
         <Form.Item
@@ -123,7 +127,7 @@ const UpdateCategoryModal = ({
             className="w-full h-[44px] rounded-xl bg-white shadow-md px-3 py-2"
             onChange={handleImageChange}
           />
-          <span className="text-red-500">{imageFile ? '' : t('updateCategoryModal.imageRequired')}</span>
+          <span className="text-red-500">{imageFile || imagePreview ? '' : t('updateCategoryModal.imageRequired')}</span>
         </div>
         {imagePreview && (
           <div className="flex justify-center mt-2">

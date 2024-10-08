@@ -76,11 +76,12 @@ const CreateRolForm = ({ visible, onClose }) => {
         timer: 1500,
       }).then(() => {
         handleModalClose();
+        setIsSubmitting(false); // Habilitar nuevamente al cerrar modal
       })
       setRole({ nombre: "" });
     } catch (error) {
       console.error("Error creating role:", error);
-      setIsSubmitting(false); // Habilitar el botón nuevamente si hay un error
+      setIsSubmitting(false); // Habilitar nuevamente si hay un error
     }
   };
 
