@@ -66,7 +66,8 @@
         "username_exists": "El nombre de usuario ya existe, por favor ingrese uno distinto",
         "register_now": "REGÍSTRESE AHORA",
         "future": "SE PARTE DEL FUTURO",
-        "ready": "PREPARADO!"
+        "ready": "PREPARADO!",
+        "AlertPasswordCorro": "La contraseña no puede ser un correo electrónico"
     },
     "reset_password": {
         "invalid_email": "Correo electrónico no válido",
@@ -617,7 +618,8 @@
         "ButtonCancel": "Cancelar",
         "ButtonUpdate": "Actualizar",
         "SelectOption": "Seleccione una opción",
-        "labelOption": "Opciones"
+        "labelOption": "Opciones",
+        "AlertDuplicate": "Ya existe un recurso con este nombre relacionado a esta sección."
     },
     "CreateResource": {
         "InvalidLink": "Enlace inválido",
@@ -721,7 +723,8 @@
         "UpdateAlert": "Sección actualizada exitosamente",
         "UpdateAlertError": "Error al actualizar sección",
         "ModalUpdateTitle": "Actualiza tu sección",
-        "titleTooShort": "El titulo debe tener un máximo de 30 caracteres."
+        "titleTooShort": "El titulo debe tener un máximo de 30 caracteres.",
+        "AlertDuplicate": "Ya existe una sección con este nombre para este cfurso."
     },
     "quizz": {
         "quizzStart": "¿Listo para comenzar el quiz?",

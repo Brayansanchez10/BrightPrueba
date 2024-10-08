@@ -25,16 +25,6 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
   const handleFormSubmit = async () => {
     try {
       const values = await form.validateFields();
-      const { username, email } = values;
-      if (checkIfUserExists(username, email)) {
-        Swal.fire({
-          icon: "error",
-          title: t("UpdateUserModal.userExists"),
-          confirmButtonText: "OK",
-        });
-        return;
-      }
-
       onUpdate(values);
       Swal.fire({
         icon: 'success',
@@ -42,13 +32,13 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         showConfirmButton: false,
         timer: 1500,
       });
-      onCancel();
+      onCancel(); // Close the modal
     } catch (error) {
-      setShake(true);
-      setTimeout(() => setShake(false), 500); 
       console.error("Failed to update user:", error);
     }
   };
+
+
 
   return (
     <Modal

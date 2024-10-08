@@ -309,13 +309,23 @@ const CreateResourceModal = ({
       // Resetear campos del formulario
       resetState();
     } catch (error) {
-      console.error("Error al crear el recurso:", err);
-      Swal.fire({
-        icon: "error",
-        title: t("UpdateResource.ErrorAlert"),
-        showConfirmButton: false,
-        timer: 700,
-      });
+      console.error(error);
+       
+      if (error.response && error.response.data && error.response.data.error === "Ya existe un recurso con este nombre para esta subCategory.")  {
+        Swal.fire({
+          icon: "error",
+          title: t("UpdateResource.AlertDuplicate"),
+          timer: 3000,
+          showConfirmButton: true,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: t("UpdateResource.ErrorAlert"),
+          showConfirmButton: false,
+          timer: 700,
+        });
+      }
     }
   };
 
@@ -978,7 +988,7 @@ const CreateResourceModal = ({
               <div className="flex justify-between gap-4 mt-6">
                 <Button
                   htmlType="submit"
-                  className="bg-[#4c1d95] text-white"
+                  className="bg-green-600 text-white"
                 >
                   {t("CreateResource.ButtonCreate")}
                 </Button>
