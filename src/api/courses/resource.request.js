@@ -7,6 +7,7 @@ const resourceRequest = axios.create({
     baseURL: api,
     withCredentials: true,
 });
+
 // Funcipon para obtener todos los recursos
 export const getAllResources = () => resourceRequest.get('/getAllResources');
 // Función para obtener los recursos
@@ -14,6 +15,7 @@ export const getResource = (courseId) => resourceRequest.get(`/getResource/${cou
 
 //Función obtenere Recursos vista Usuario
 export const getResourceUser = (id) => resourceRequest.get(`/getResourceUser/${id}`);
+
 
 // Función para obtener un recurso con sus quizzes
 export const getResourceWithQuizzes = (id) => resourceRequest.get(`/getResourceWithQuizzes/${id}`);
@@ -60,6 +62,7 @@ export const updateResource = async (id, resourceData) => {
     try {
         const formData = new FormData();
         if (resourceData.title) formData.append('title', resourceData.title);
+        if (resourceData.subcategoryId) formData.append('subcategoryId', resourceData.subcategoryId);
         if (resourceData.description) formData.append('description', resourceData.description);
         if (resourceData.attempts) formData.append('attempts', Number(resourceData.attempts));
         if (resourceData.file) formData.append('file', resourceData.file);

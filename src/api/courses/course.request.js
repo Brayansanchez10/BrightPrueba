@@ -48,51 +48,58 @@ export const deleteResource = (courseId, resourceIndex) => {
 export const getCourse = (id) => courseRequest.get(`/getCourse/${id}`);
 
 // Función para crear un curso
-export const createCourse = (courseData) => {
-  const formData = new FormData(); // Crear una instancia de FormData
+export const createCourse = async (courseData) => {
+  try {
+    const formData = new FormData(); // Crear una instancia de FormData
+    formData.append('title', courseData.title);
+    formData.append('description', courseData.description);
+    formData.append('category', courseData.category);
+    formData.append('userId', courseData.userId);
 
-  // Agregar los datos del curso al FormData
-  formData.append('title', courseData.title);
-  formData.append('description', courseData.description);
-  formData.append('category', courseData.category);
-  formData.append('userId', courseData.userId);
+    // Agregar la imagen si existe
+    if (courseData.image) {
+      formData.append('image', courseData.image);
+    }
 
-  // Agregar la imagen si existe
-  if (courseData.image) {
-    formData.append('image', courseData.image);
-  }
-
-  // Realizar la solicitud POST utilizando Axios
-  return courseRequest.post('/createCourse', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+    // Realizar la solicitud POST utilizando Axios
+    return courseRequest.post('/createCourse', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  } catch (error) {
+    console.error("Error al crear un Curso:", error);
+    throw error;
+  }  
 };
 
 // Función para actualizar un curso
-export const updateCourse = (id, courseData) => {
-  const formData = new FormData(); // Crear una instancia de FormData
+export const updateCourse = async (id, courseData) => {
+  try {
+    const formData = new FormData(); // Crear una instancia de FormData
 
-  // Agregar los datos del curso al FormData
-  formData.append('title', courseData.title);
-  formData.append('description', courseData.description);
-  formData.append('category', courseData.category);
-  formData.append('content', courseData.content);
+    // Agregar los datos del curso al FormData
+    formData.append('title', courseData.title);
+    formData.append('description', courseData.description);
+    formData.append('category', courseData.category);
+    formData.append('content', courseData.content);
 
-  // Agregar la imagen si existe
-  if (courseData.image) {
-    formData.append('image', courseData.image);
+    // Agregar la imagen si existe
+    if (courseData.image) {
+      formData.append('image', courseData.image);
+    }
+
+    // Realizar la solicitud PUT utilizando Axios
+    return courseRequest.put(`/updateCourse/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  } catch (error) {
+    console.error("Error al crear recurso:", error);
+    throw error;
   }
-
-
-
-  // Realizar la solicitud PUT utilizando Axios
-  return courseRequest.put(`/updateCourse/${id}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  
 };
 
 // Función para actualizar el contenido de un archivo en un curso

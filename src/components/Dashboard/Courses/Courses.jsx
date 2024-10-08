@@ -271,22 +271,22 @@ const DataTablete = () => {
                 <table className="min-w-full overflow-x-auto">
                   <thead>
                     <tr>
-                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("courses.id")}
                       </th>
-                      <th className="text-lg py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("courses.category")}
                       </th>
-                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("courses.name")}
                       </th>
-                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg px-20 w-[400px] py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("courses.description")}
                       </th>
-                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg px-2 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("courses.userCount")}
                       </th>
-                      <th className="py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="px-4 py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("courses.actions")}
                       </th>
                     </tr>
@@ -296,7 +296,7 @@ const DataTablete = () => {
                       .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                       .map((course, index) => (
                         <tr key={course.id}>
-                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                          <td className="border-2 border-x-transparent px-1 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                             {generateIds()[index]}
                           </td>
                           <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
@@ -305,7 +305,7 @@ const DataTablete = () => {
                           <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                             {course.title}
                           </td>
-                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                          <td className="border-2 border-x-transparent px-4 py-2 bg-white text-lg text-black text-center max-w-2xl break-words whitespace-normal border-t-transparent border-b-cyan-200">
                             {course.description}
                           </td>
                           <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">

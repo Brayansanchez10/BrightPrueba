@@ -300,11 +300,10 @@ const CreateResourceModal = ({
     try {
       await createResource(resourceData);
       Swal.fire({
-        position: "top-end",
         icon: "success",
         title: t("CreateResource.Create"),
         showConfirmButton: false,
-        timer: 1500,
+        timer: 1000,
       });
       onCreate();
       fetchResources(courseId); // Actualizar la lista de recursos tras crear uno nuevo
@@ -312,13 +311,23 @@ const CreateResourceModal = ({
       // Resetear campos del formulario
       resetState();
     } catch (error) {
-      console.error("Error al crear el recurso:", err);
-      Swal.fire({
-        icon: "error",
-        title: t("UpdateResource.ErrorAlert"),
-        showConfirmButton: false,
-        timer: 1000,
-      });
+      console.error(error);
+       
+      if (error.response && error.response.data && error.response.data.error === "Ya existe un recurso con este nombre para esta subCategory.")  {
+        Swal.fire({
+          icon: "error",
+          title: t("UpdateResource.AlertDuplicate"),
+          timer: 3000,
+          showConfirmButton: true,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: t("UpdateResource.ErrorAlert"),
+          showConfirmButton: false,
+          timer: 700,
+        });
+      }
     }
   };
 
@@ -358,7 +367,6 @@ const CreateResourceModal = ({
     try {
       await deleteResource(resource.id);
       Swal.fire({
-        position: "top-end",
         icon: "success",
         title: t("CreateResource.DeleteResource"),
         showConfirmButton: false,
@@ -652,7 +660,7 @@ const CreateResourceModal = ({
             } sm:w-1/2 sm:block`}
             style={{ maxHeight: "700px" }}
           >
-            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl items-center flex justify-between">
+            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl items-center flex justify-center">
               <h3 className="text-2xl font-bold text-white ml-2">
                 {t("CreateResource.FormCreate")}
               </h3>
@@ -963,9 +971,21 @@ const CreateResourceModal = ({
                       type="number"
                       id="attempts"
                       value={attempts}
-                      onChange={(e) => setAttempts(e.target.value)}
-                      min="1" // Para evitar que se puedan ingresar números negativos o cero
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value, 10);
+
+                        // Validar que el valor esté dentro del rango permitido
+                        if (value >= 1 && value <= 10) {
+                          setAttempts(value);
+                        } else if (value < 1) {
+                          setAttempts(1); // Si es menor que 1, establecer en 1
+                        } else if (value > 10) {
+                          setAttempts(10); // Si es mayor que 10, establecer en 10
+                        }
+                      }}
+                      min="1"
                       max="10"
+                      inputMode="numeric" // Asegura el teclado numérico en móviles
                       className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
                       required
                     />
@@ -975,15 +995,14 @@ const CreateResourceModal = ({
 
               <div className="flex justify-between gap-4 mt-6">
                 <Button
-                  type="primary"
                   htmlType="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white"
+                  className="bg-green-600 text-white"
                 >
                   {t("CreateResource.ButtonCreate")}
                 </Button>
                 <Button
                   onClick={handleCancel}
-                  className="bg-gray-300 hover:bg-gray-400 text-black"
+                  className="bg-red-600 text-white"
                 >
                   {t("UpdateResource.ButtonCancel")}
                 </Button>
@@ -999,6 +1018,7 @@ const CreateResourceModal = ({
           onCancel={closeEditModal}
           resourceData={selectedResource}
           onUpdate={() => fetchResources(courseId)}
+          courseId={courseId}
         />
       )}
     </Modal>

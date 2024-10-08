@@ -153,13 +153,23 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
       });
     } catch (error) {
       console.error(error);
-      Swal.fire({
-        icon: "error",
-        title:
-          i18n.language === "es"
-            ? "Error al actualizar el curso"
-            : "Failed to update course",
-      });
+      // Verificar si el error es debido a un título duplicado
+      if (error.response && error.response.data && error.response.data.error === "A course with this title already exists"){
+        Swal.fire({
+          icon: "error",
+          title: t("subCategory.AlertDuplicate"),
+          showConfirmButton: true,
+          timer: 3000,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title:
+            i18n.language === "es"
+              ? "Error al actualizar el curso"
+              : "Failed to update course",
+        });
+      }
     }
   };
 

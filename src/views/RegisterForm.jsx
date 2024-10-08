@@ -127,8 +127,8 @@ function RegisterForm() {
               <p>{t("register.register_now")}</p>
               <p>{t("register.future")}</p>
           </div>
-          <div className="bg-white rounded-3xl w-10/12 px-10 py-3 shadow-lg shadow-slate-500">
-            <div className="text-2xl w-full mx-auto text-center font-black bg-gradient-to-r from-emerald-400  to-purple-800 bg-clip-text text-transparent font-impact mb-2">
+          <div className="bg-white rounded-3xl w-[72%] px-10 py-4 shadow-lg shadow-slate-500 border">
+            <div className="text-2xl w-full mx-auto text-center font-black bg-gradient-to-r from-emerald-400  to-purple-800 bg-clip-text text-transparent font-impact mb-3">
                 <p>{t("register.register")}</p>
             </div>
             <img
@@ -138,10 +138,10 @@ function RegisterForm() {
             />
             <form
               onSubmit={formik.handleSubmit}
-              className="flex flex-col space-y-1"
+              className="flex flex-col mt-3 space-y-3"
             >
               <div>
-                <label className="text-base font-bold text-gray-600 block">
+                <label className="text-lg font-bold text-gray-600 block">
                   {t("register.username")}
                 </label>
                 <input
@@ -150,7 +150,7 @@ function RegisterForm() {
                   value={formik.values.username}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className={`w-full p-2 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                  className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
                     formik.touched.username && formik.errors.username
                       ? "border-red-500"
                       : "border-purple-300"
@@ -164,7 +164,7 @@ function RegisterForm() {
                 ) : null}
               </div>
               <div>
-                <label className="text-base font-bold text-gray-600 block">
+                <label className="text-lg font-bold text-gray-600 block">
                   {t("register.email")}
                 </label>
                 <input
@@ -173,7 +173,7 @@ function RegisterForm() {
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className={`w-full p-2 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                  className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
                     formik.touched.email && formik.errors.email
                       ? "border-red-500"
                       : "border-purple-300"
@@ -185,7 +185,7 @@ function RegisterForm() {
                 ) : null}
               </div>
               <div>
-                <label className="text-base font-bold text-gray-600 block">
+                <label className="text-lg font-bold text-gray-600 block">
                   {t("register.password")}
                 </label>
                 <div className="relative">
@@ -195,12 +195,20 @@ function RegisterForm() {
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className={`w-full p-2 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                    className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
                       formik.touched.password && formik.errors.password
                         ? "border-red-500"
                         : "border-purple-300"
                     }`}
                     placeholder={t("register.enter_password")}
+                    onInput={(e) => {
+                      const value = e.target.value;
+                      if (value.includes("@")) {
+                        e.target.setCustomValidity(t("register.AlertPasswordCorro"));
+                      } else {
+                        e.target.setCustomValidity("");
+                      }
+                    }}
                   />
                   <button
                     type="button"
@@ -217,7 +225,7 @@ function RegisterForm() {
                 ) : null}
               </div>
               <div>
-                <label className="text-base font-bold text-gray-600 block">
+                <label className="text-lg font-bold text-gray-600 block">
                   {t("register.repeat_password")}
                 </label>
                 <div className="relative">
@@ -227,7 +235,7 @@ function RegisterForm() {
                     value={formik.values.confirmPassword}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className={`w-full p-2 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                    className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
                       formik.touched.confirmPassword &&
                       formik.errors.confirmPassword
                         ? "border-red-500"
@@ -255,7 +263,7 @@ function RegisterForm() {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="w-48 py-2 text-white rounded-xl font-bold text-xl mt-2 bt1"
+                  className="w-48 py-2 text-white rounded-xl font-bold text-xl mt-3 bt1"
                   disabled={
                     !formik.isValid ||
                     formik.values.password !== formik.values.confirmPassword ||
@@ -271,7 +279,7 @@ function RegisterForm() {
                 </button>
               </div>
             </form>
-            <div className="mt-3 text-base text-center font-semibold">
+            <div className="mt-3 mb-2 text-lg text-center font-semibold">
               {t("register.already_registered")}
               <Link to="/">
                 <button className="text-xl text-pink-500 hover:text-purple-600 font-semibold transition-all duration-700">

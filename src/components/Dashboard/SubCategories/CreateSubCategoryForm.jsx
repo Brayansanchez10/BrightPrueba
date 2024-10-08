@@ -84,9 +84,11 @@ const CreateSubCategoryForm = ({
   const validateFields = () => {
     const newErrors = {};
 
-    // Validación del título (mínimo 3 caracteres)
+    // Validación del título (mínimo 3 caracteres y máximo 30 caracteres)
     if (!title || title.length < 3) {
       newErrors.title = t("UpdateResource.ValidateTitle");
+    } else if (title.length > 30) {
+      newErrors.title = t("subCategory.titleTooShort"); // Nuevo mensaje para límite de caracteres
     }
 
     // Validación de la descripción (mínimo 8 caracteres)
@@ -120,17 +122,17 @@ const CreateSubCategoryForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validateFields()) {
       return; // Si hay errores, no envía el formulario
     }
-
+  
     const SubCategoryData = {
       courseId,
       title,
       description,
     };
-
+  
     try {
       await createSubCategory(SubCategoryData);
       Swal.fire({
@@ -145,12 +147,18 @@ const CreateSubCategoryForm = ({
       resetState();
     } catch (error) {
       console.error(error);
-      Swal.fire({
-        icon: "error",
-        title:  t("subCategory.AlertError"),
-        timer: 3000,
-        showConfirmButton: true,
-      });
+      
+      // Verificar si el error es debido a un título duplicado
+      if (error.response && error.response.data && error.response.data.error === "Ya existe una subcategoría con este nombre para este curso.") {
+        Swal.fire({
+          icon: "error",
+          title: t("subCategory.AlertDuplicate"),
+          timer: 3000,
+          showConfirmButton: true,
+        });
+      } else {
+        console.error(error);
+      }
     }
   };
 
@@ -320,7 +328,7 @@ const CreateSubCategoryForm = ({
             } sm:w-1/2 sm:block`}
             style={{ maxHeight: "700px" }}
           >
-            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#1E1034] to-[#FF4943] rounded-t-2xl items-center flex justify-between">
+            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#1E1034] to-[#FF4943] rounded-t-2xl items-center flex justify-center">
               <h3 className="text-2xl font-bold text-white ml-2">
                 {t("subCategory.FormTitle")}
               </h3>
@@ -382,15 +390,14 @@ const CreateSubCategoryForm = ({
 
               <div className="flex justify-between gap-4 mt-6">
                 <Button
-                  type="primary"
                   htmlType="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white"
+                  className="bg-green-500 text-white"
                 >
                   {t("subCategory.ButtonCreate")}
                 </Button>
                 <Button
                   onClick={handleCancel}
-                  className="bg-gray-300 hover:bg-gray-400 text-black"
+                  className="bg-red-500 text-white"
                 >
                   {t("subCategory.ButtonCancel")}
                 </Button>

@@ -171,8 +171,8 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
   return (
     <div className="bg-gray-300 min-h-screen">
       <NavigationBar />
-      <div className="flex justify-center pt-16">
-        <div className="md:mt-3 mt-5 mx-4 mb-2 rounded-lg">
+      <div className="justify-center items-center pt-16 w-full">
+        <div className="md:mt-3 mt-5 px-4 pb-3 rounded-lg">
           <div className="max-w-lg w-full mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-4 px-6 md:px-10">
               <h1 className="text-center font-black text-white md:text-xl lg:text-2xl">
@@ -181,7 +181,7 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
             </div>
             <div className="p-6 md:p-10">
               <div className="flex items-center mb-6">
-                <div className="relative flex-shrink-0">
+                <div className="relative">
                   {previewProfileImage && (
                     <img
                       src={previewProfileImage}
@@ -189,15 +189,17 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
                       className="w-16 h-16 sm:w-20 sm:h-20 rounded-full shadow-lg"
                     />
                   )}
-                  <button
-                    type="button"
-                    className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
-                    onClick={handleDeleteImage}
-                  >
-                    <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                  </button>
+                  {previewProfileImage && (
+                    <button
+                      type="button"
+                      className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
+                      onClick={handleDeleteImage}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
                 </div>
-                <div className="ml-4 flex-grow">
+                <div className={`${!previewProfileImage ? 'flex-grow' : 'ml-4'}`}>
                   <input
                     type="file"
                     id="profileImage"

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { passwordReset } from '../../api/auth';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,12 @@ import logo from "../../assets/img/hola.png";
 import LoginFond from "../../assets/img/Login.png"
 
 function NewPassword() {
+    const location = useLocation();
     const { token } = useParams();
+     // Extraer el resetCode de la query string
+     const queryParams = new URLSearchParams(location.search);
+     const resetCode = queryParams.get('resetCode');
+
     const [error, setError] = useState('');
     const [passwordsMatch, setPasswordsMatch] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -30,8 +35,13 @@ function NewPassword() {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
+            const newPasswordData = {
+                resetCode, // Obtenido de la query string
+                password: values.password,
+                confirmPassword: values.confirmPassword,
+            };
             try {
-                await passwordReset(values);
+                await passwordReset(newPasswordData);  // Enviamos los datos para el reset
                 Swal.fire({
                     icon: 'success',
                     title: t('new_password.success'),

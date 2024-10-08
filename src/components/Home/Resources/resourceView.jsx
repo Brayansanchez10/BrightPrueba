@@ -154,7 +154,7 @@ export default function ResourceView() {
     };
 
     fetchProgress();
-  }, [user, courseId, getCourseProgress]);
+  }, [user, courseId]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -304,6 +304,8 @@ export default function ResourceView() {
     );
   };
 
+  const maxAttempts = resource?.attempts;
+
   const handleAnswerChange = (questionIndex, selectedAnswer) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
@@ -314,54 +316,62 @@ export default function ResourceView() {
   const handleNextQuestion = async () => {
     if (!answers[currentQuestionIndex]) {
       Swal.fire({
-        icon: "warning",
-        title: "Advertencia",
-        text: "Por favor selecciona una respuesta antes de continuar.",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "OK",
+        icon: 'warning',
+        title: 'Advertencia',
+        text: 'Por favor selecciona una respuesta antes de continuar.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
       });
       return;
     }
-
+  
     if (currentQuestionIndex === (resource?.quizzes.length || 0) - 1) {
       const correctCount = Object.keys(answers).filter(
         (index) => resource?.quizzes[index]?.correctAnswer === answers[index]
       ).length;
-
+  
       const incorrectCount = Object.keys(answers).length - correctCount;
-
+  
       setCorrectAnswers(correctCount);
       setIncorrectAnswers(incorrectCount);
-      setIsQuizCompleted(true);
-      setIsContentCompleted(true);
-
-      const scorePercentage = Math.round(
-        (correctCount / resource?.quizzes.length) * 100
-      );
-
-      const newAttempts = attempts + 1;
-      setAttempts(newAttempts);
-
-      setCurrentScore(scorePercentage);
-
+  
+      // Calcular el porcentaje de respuestas correctas
+      const scorePercentage = Math.round((correctCount / resource?.quizzes.length) * 100);
+      
+      // Guardar el puntaje obtenido
+      setCurrentScore(scorePercentage); 
+  
+      // Esperar a que el bestScore se actualice
+      if (scorePercentage > bestScore) {
+        setBestScore(scorePercentage);
+      }
+  
+      // Si es el último intento
+      if (attempts + 1 === maxAttempts) {
+        setTimeout(() => {
+          setIsQuizStarted(false); // Esto redirige al usuario
+        }, 500); // Agregar un pequeño retraso
+      }
+  
       try {
-        const result = await completeQuiz(
-          user.data.id,
-          resource.id,
-          scorePercentage,
-          newAttempts
-        );
-        console.log("Resultado del quiz:", result);
+        const newAttempts = attempts + 1;
+        setAttempts(newAttempts);
+        
+        const result = await completeQuiz(user.data.id, resource.id, scorePercentage, newAttempts);
+        console.log('Resultado del quiz:', result);
       } catch (error) {
         console.error("Error al completar el quiz:", error);
         Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudo guardar tu progreso.",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "OK",
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo guardar tu progreso.',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK'
         });
       }
+  
+      setIsQuizCompleted(true);
+      setIsContentCompleted(true);
     } else {
       setCurrentQuestionIndex((prevIndex) =>
         Math.min(prevIndex + 1, (resource?.quizzes.length || 0) - 1)
@@ -369,6 +379,7 @@ export default function ResourceView() {
       setError(null);
     }
   };
+
 
   const handleRetakeQuiz = () => {
     if (attempts >= resource?.attempts) {
@@ -392,6 +403,12 @@ export default function ResourceView() {
   const handlePreviousQuestion = () => {
     setCurrentQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
+
+  useEffect(() => {
+    if (currentScore > bestScore) {
+      setBestScore(currentScore); // Actualizar el bestScore si el puntaje actual es mayor
+    }
+  }, [currentScore, bestScore]);
 
   const renderStartQuizView = () => {
     return (
@@ -601,12 +618,6 @@ export default function ResourceView() {
       const previousResource = resources[currentResourceIndex - 1];
       setCurrentResourceIndex(currentResourceIndex - 1);
 
-      const newProgress = calculateProgress(
-        currentResourceIndex - 1,
-        resources.length
-      );
-      await updateCourseProgress(user.data.id, courseId, newProgress);
-
       handleResourceClick(previousResource.id, previousResource.courseId);
     }
   };
@@ -614,17 +625,24 @@ export default function ResourceView() {
   const handleNext = async () => {
     if (currentResourceIndex < resources.length - 1) {
       const nextResource = resources[currentResourceIndex + 1];
+      
+      // Calcula el porcentaje por recurso basado en la cantidad total de recursos
+      const percentagePerResource = 100 / resources.length;
+      
+      // El nuevo progreso es el índice actual + 1 multiplicado por el porcentaje por recurso
+      const newProgress = (currentResourceIndex + 1) * percentagePerResource;
+  
+      // Asegúrate de que el progreso solo suba
+      if (newProgress > currentProgress && currentProgress < 100) {
+        await updateCourseProgress(user.data.id, courseId, newProgress);
+        setCurrentProgress(newProgress); // Actualiza el progreso en el estado local
+      }
+  
+      // Avanza al siguiente recurso
       setCurrentResourceIndex(currentResourceIndex + 1);
-
-      const newProgress = calculateProgress(
-        currentResourceIndex + 1,
-        resources.length
-      );
-      await updateCourseProgress(user.data.id, courseId, newProgress);
-
       handleResourceClick(nextResource.id, nextResource.courseId);
     }
-  };
+  };  
 
   const handleFinishCourse = async () => {
     await updateCourseProgress(user.data.id, courseId, 100);
@@ -809,6 +827,58 @@ export default function ResourceView() {
       });
     }
   };
+
+  const renderResourceList = () => {
+    const totalResources = resources.length;
+    const percentagePerResource = 100 / totalResources; // Porcentaje que representa cada recurso
+  
+    return resources.map((res, index) => {
+      // Progreso requerido para desbloquear este recurso
+      const requiredProgress = Math.floor(index * percentagePerResource);
+  
+      // Desbloquear si el progreso actual es mayor o igual al progreso requerido
+      const isUnlocked = currentProgress >= requiredProgress;
+  
+      return (
+        <div
+          key={res.id}
+          className={`flex items-start mb-6 cursor-pointer ${
+            isOpen ? "pr-4" : "justify-center"
+          }`}
+          onClick={() => isUnlocked && handleResourceClick(res.id, res.courseId)} // Solo permitir clic si está desbloqueado
+        >
+          <div className="relative mr-4">
+            <div
+              className={`
+                flex items-center justify-center
+                w-8 h-8 rounded-full 
+                ${isUnlocked ? "bg-white text-[#6D4F9E]" : "bg-gray-500 text-gray-300 cursor-not-allowed"}
+                text-sm font-bold
+              `}
+            >
+              {index + 1}
+            </div>
+            {index < resources.length - 1 && (
+              <div
+                className={`absolute left-4 top-8 w-0.5 h-10 ${
+                  isUnlocked ? "bg-white" : "bg-gray-500"
+                }`}
+              />
+            )}
+          </div>
+          {isOpen && (
+            <span
+              className={`text-xs ${
+                isUnlocked ? "text-white font-bold" : "text-gray-500"
+              }`}
+            >
+              {res.title}
+            </span>
+          )}
+        </div>
+      );
+    });
+  };  
 
   const handleEditComment = (commentId, currentContent) => {
     setEditingCommentId(commentId);
@@ -1353,52 +1423,7 @@ export default function ResourceView() {
               {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
             </button>
             <div className="mt-16 p-4">
-              {resources.map((res, index) => (
-                <div
-                  key={res.id}
-                  className={`flex items-start mb-6 cursor-pointer ${
-                    isOpen ? "pr-4" : "justify-center"
-                  }`}
-                  onClick={() => handleResourceClick(res.id, res.courseId)}
-                >
-                  <div className="relative mr-4">
-                    <div
-                      className={`
-                        flex items-center justify-center
-                        w-8 h-8 rounded-full 
-                        ${
-                          res.id === resource.id
-                            ? "bg-white text-[#6D4F9E]"
-                            : "bg-[#6D4F9E] text-white"
-                        }
-                        text-sm font-bold
-                      `}
-                    >
-                      {index + 1}
-                    </div>
-                    {index < resources.length - 1 && (
-                      <div
-                        className={`absolute left-4 top-8 w-0.5 h-10
-                          ${
-                            res.id === resource.id ? "bg-white" : "bg-[#6D4F9E]"
-                          }
-                        `}
-                      />
-                    )}
-                  </div>
-                  {isOpen && (
-                    <span
-                      className={`text-xs ${
-                        res.id === resource.id
-                          ? "text-white font-bold"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      {res.title}
-                    </span>
-                  )}
-                </div>
-              ))}
+              {renderResourceList()}
             </div>
           </div>
         </div>
@@ -1449,16 +1474,22 @@ export default function ResourceView() {
           </div>
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="w-full lg:w-2/3 bg-[#200E3E] rounded-lg shadow-lg p-4 mb-4">
-              <div className="mb-4">
-                {resource?.quizzes && resource.quizzes.length > 0
-                  ? !isQuizStarted
-                    ? renderStartQuizView()
-                    : isQuizCompleted
-                    ? renderQuizSummary()
-                    : renderQuiz()
-                  : renderContent(resource?.files)}
-
-                {error && <p className="text-red-500 text-center">{error}</p>}
+            <div className="mb-4">
+                  {/* Si el recurso tiene quizzes, entonces evaluamos el estado del quiz */}
+                  {resource?.quizzes && resource.quizzes.length > 0 ? (
+                    !isQuizStarted ? ( // Si hay quizzes, manejamos el estado del quiz
+                      renderStartQuizView() // Mostrar la vista de inicio del quiz
+                    ) : isQuizCompleted ? (
+                      renderQuizSummary() // Mostrar resumen del quiz completado
+                    ) : (
+                      renderQuiz() // Mostrar el quiz en progreso
+                    )
+                  ) : (
+                    renderContent(resource?.files) // Si NO hay quizzes, mostramos el contenido del recurso (imagen, archivo, etc.)
+                  )}
+                  
+                  {/* Mostrar error si existe */}
+                  {error && <p className="text-red-500 text-center">{error}</p>}
               </div>
               <div className="mt-4 flex items-center">
                 <img
