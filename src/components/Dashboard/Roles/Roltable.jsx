@@ -244,137 +244,128 @@ const DataTable = () => {
         >
           <Navbar />
           <div className="flex flex-col mt-14">
-            <div>
-              <div className="flex flex-row items-center justify-between pl-[72px] pr-12">
-                <h2 className="text-3xl font-bungee text-purple-900">
+            <div className="px-4 md:px-12">
+              <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-2">
+                <h2 className="text-3xl text-purple-900 font-bungee mb-4 md:mb-0">
                   {t("roles.title")}
                 </h2>
-                <div className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg">
-                  <FaSearch size={"18px"} className="mt-1 mr-2" />
-                  <input
-                    type="search"
-                    className="outline-none w-full md:w-[280px] lg:w-[360px]"
-                    placeholder={t("datatable.SearchByName")}
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                  />
+                <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: "#4c1d95" }}
+                    onClick={() => setShowForm(true)}
+                    className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
+                  >
+                    <b>{t("roles.createRole")}</b>
+                  </Button>
+                  <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
+                    <FaSearch size={"18px"} className="mt-1 mr-2" />
+                    <input
+                      type="search"
+                      className="outline-none w-full md:w-[280px] lg:w-[360px]"
+                      placeholder={t("datatable.SearchByName")}
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
-
-              {/* Botón para crear rol */}
-              <Button
-                type="primary"
-                style={{ backgroundColor: "#4c1d95" }}
-                onClick={() => setShowForm(true)}
-                className="ml-16 mt-6 rounded-t-lg rounded-b-none"
-              >
-                <b>{t("roles.createRole")}</b>
-              </Button>
-
-              {/* Tabla de roles */}
-              <div className="flex justify-center">
-                <div className="overflow-auto w-full px-6 mx-12 py-6 bg-white rounded-t-xl rounded-b-xl shadow-lg shadow-purple-300">
-                  <table className="min-w-full overflow-x-auto">
-                    <thead>
-                      <tr>
-                        <th
-                          className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
-                          onClick={() => orderBy("id")}
-                        >
-                          ID {""}
-                        </th>
-                        <th
-                          className="text-lg py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
-                          onClick={() => orderBy("nombre")}
-                        >
-                          {t("roles.role")} {""}
-                          {sortConfig.key === "nombre" &&
-                            (sortConfig.direction === "ascending" ? (
-                              <CaretUpOutlined />
-                            ) : (
-                              <CaretDownOutlined />
-                            ))}
-                        </th>
-                        <th className="py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
-                          {t("roles.actions")}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {rolesData &&
-                        currentItems.map((role, index) => (
-                          <tr key={role.id}>
-                            <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
-                              {generateIds()[index]}
-                            </td>
-                            <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
-                              {role.nombre}
-                            </td>
-                            <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+            </div>
+            <div className="flex justify-center mt-4 md:mt-2">
+              <div className="overflow-auto w-full px-4 md:px-6 mx-4 md:mx-12 py-6 bg-white rounded-xl shadow-lg shadow-purple-300">
+                <table className="min-w-full overflow-x-auto">
+                  <thead>
+                    <tr>
+                      <th
+                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        onClick={() => orderBy("id")}
+                      >
+                        ID {""}
+                      </th>
+                      <th
+                        className="text-lg py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        onClick={() => orderBy("nombre")}
+                      >
+                        {t("roles.role")} {""}
+                        {sortConfig.key === "nombre" &&
+                          (sortConfig.direction === "ascending" ? (
+                            <CaretUpOutlined />
+                          ) : (
+                            <CaretDownOutlined />
+                          ))}
+                      </th>
+                      <th className="py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                        {t("roles.actions")}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rolesData &&
+                      currentItems.map((role, index) => (
+                        <tr key={role.id}>
+                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                            {generateIds()[index]}
+                          </td>
+                          <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                            {role.nombre}
+                          </td>
+                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                            <div className="flex justify-center space-x-2">
                               <Button
-                                className="bg-green-500 text-white font-bold py-1.5 px-4 rounded-3xl flex-1 min-w-[120px] shadow-md shadow-gray-400"
+                                className="bg-green-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
                                 icon={<CheckCircleOutlined />}
-                                style={{ minWidth: "50px" }}
                                 onClick={() => handleAssignPermissions(role)}
-                              ></Button>
+                              />
                               <Button
-                                className="bg-purple-500 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 flex-1 min-w-[120px] shadow-md shadow-gray-400"
+                                className="bg-purple-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
                                 icon={<InfoCircleOutlined />}
-                                style={{ minWidth: "50px" }}
                                 onClick={() => handleViewPermissions(role)}
-                              ></Button>
+                              />
                               <Button
-                                className="bg-red-500 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 flex-1 min-w-[120px] shadow-md shadow-gray-400"
+                                className="bg-red-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
                                 icon={<DeleteOutlined />}
-                                style={{ minWidth: "50px" }}
                                 onClick={() => handleDeleteRole(role.id)}
                               />
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                  {/* Paginación */}
-                  {totalPages > 1 && (
-                    <div className="flex justify-end items-center mt-5 space-x-2">
-                      {/* Botón anterior */}
-                      <button
-                        onClick={() => paginate(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className={`px-2 py-1 rounded-full ${
-                          currentPage === 1
-                            ? "text-gray-400 cursor-not-allowed"
-                            : "text-gray-800"
-                        }`}
-                      >
-                        <FaChevronLeft size={13} />
-                      </button>
-
-                      {/* Mostrar el rango actual */}
-                      <span className="text-gray-600">
-                        {`${(currentPage - 1) * itemsPerPage + 1} - ${
-                          currentPage * itemsPerPage > totalItems
-                            ? totalItems
-                            : currentPage * itemsPerPage
-                        }`}{" "}
-                        {t("datatable.of")} {totalItems}
-                      </span>
-
-                      {/* Botón siguiente */}
-                      <button
-                        onClick={() => paginate(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className={`px-2 py-1 rounded-full ${
-                          currentPage === totalPages
-                            ? "text-gray-400 cursor-not-allowed"
-                            : "text-gray-800"
-                        }`}
-                      >
-                        <FaChevronRight size={13} />
-                      </button>
-                    </div>
-                  )}
-                </div>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+                {totalPages > 1 && (
+                  <div className="flex justify-end items-center mt-5 space-x-2">
+                    <button
+                      onClick={() => paginate(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className={`px-2 py-1 rounded-full ${
+                        currentPage === 1
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-gray-800"
+                      }`}
+                    >
+                      <FaChevronLeft size={13} />
+                    </button>
+                    <span className="text-gray-600">
+                      {`${(currentPage - 1) * itemsPerPage + 1} - ${
+                        currentPage * itemsPerPage > totalItems
+                          ? totalItems
+                          : currentPage * itemsPerPage
+                      }`}{" "}
+                      {t("datatable.of")} {totalItems}
+                    </span>
+                    <button
+                      onClick={() => paginate(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className={`px-2 py-1 rounded-full ${
+                        currentPage === totalPages
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-gray-800"
+                      }`}
+                    >
+                      <FaChevronRight size={13} />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

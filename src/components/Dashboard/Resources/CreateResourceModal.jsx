@@ -17,7 +17,7 @@ import image2 from "../../../assets/img/hola1.png";
 import { getSubCategoryCourseId } from "../../../api/courses/subCategory.requst.js";
 
 const { Text } = Typography;
-
+const MAX_TITLE_LENGTH = 30;
 const { Panel } = Collapse;
 
 const ALLOWED_FILE_TYPES = [".mov", ".docx", ".pdf", ".jpg", ".png"];
@@ -36,7 +36,7 @@ const CreateResourceModal = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [attempts, setAttempts ] = useState("");
+  const [attempts, setAttempts] = useState("");
   const [link, setLink] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [resources, setResources] = useState([]);
@@ -56,8 +56,10 @@ const CreateResourceModal = ({
     const newErrors = {};
 
     // Validación del título (mínimo 3 caracteres)
-    if (!title || title.length < 3) {
-      newErrors.title = t("UpdateResource.ValidateTitle");
+    if (!title || title.length < 3 || title.length > MAX_TITLE_LENGTH) {
+      newErrors.title = t("UpdateResource.ValidateTitle", {
+        max: MAX_TITLE_LENGTH,
+      });
     }
 
     // Validación de la descripción (mínimo 8 caracteres)
@@ -456,17 +458,18 @@ const CreateResourceModal = ({
                       {filteredResources.length > 0 ? (
                         <Collapse accordion>
                           {filteredResources.map((resource) => (
-                            <Panel
-                              header={
-                                <div className="flex flex-col lg:flex-row justify-between items-center">
-                                  {resource.title}
-                                  <div className="flex flex-col lg:flex-row lg:ml-auto space-y-2 lg:space-y-0 lg:space-x-2">
-                                    <Button
-                                      icon={<EditOutlined />}
-                                      onClick={() => openEditModal(resource)}
-                                      className="bg-yellow-500 text-white hover:bg-yellow-600"
-                                    >
-                                    </Button>
+                        <Panel
+                        header={
+                          <div className="flex flex-col lg:flex-row justify-between items-center">
+                            <div className="w-full lg:w-3/4 break-words">
+                              {resource.title}
+                            </div>
+                            <div className="flex lg:w-1/4 justify-end mt-2 lg:mt-0">
+                              <Button
+                                icon={<EditOutlined />}
+                                onClick={() => openEditModal(resource)}
+                                className="bg-yellow-500 text-white hover:bg-yellow-600 mr-2"
+                                    ></Button>
                                     <Button
                                       icon={<DeleteFilled />}
                                       onClick={() => {
@@ -501,8 +504,7 @@ const CreateResourceModal = ({
                                         });
                                       }}
                                       className="bg-red-700 text-white hover:bg-red-600"
-                                    >
-                                    </Button>
+                                    ></Button>
                                   </div>
                                 </div>
                               }
@@ -674,15 +676,21 @@ const CreateResourceModal = ({
                     type="text"
                     id="title"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) =>
+                      setTitle(e.target.value.slice(0, MAX_TITLE_LENGTH))
+                    }
                     className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
                       errors.title ? "border-red-500" : "border-gray-300"
                     } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
                     required
+                    maxLength={MAX_TITLE_LENGTH}
                   />
                   {errors.title && (
                     <p className="text-red-500 text-sm mt-1">{errors.title}</p>
                   )}
+                  <p className="text-gray-500 text-sm mt-1">
+                    {title.length}/{MAX_TITLE_LENGTH}
+                  </p>
                 </div>
 
                 <div className="col-span-2 md:col-span-1">
@@ -952,15 +960,15 @@ const CreateResourceModal = ({
                       {t("quizz.NumerQuizz")}
                     </label>
                     <input
-                        type="number"
-                        id="attempts"
-                        value={attempts}
-                        onChange={(e) => setAttempts(e.target.value)}
-                        min="1" // Para evitar que se puedan ingresar números negativos o cero
-                        max="10"
-                        className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
-                        required
-                      />
+                      type="number"
+                      id="attempts"
+                      value={attempts}
+                      onChange={(e) => setAttempts(e.target.value)}
+                      min="1" // Para evitar que se puedan ingresar números negativos o cero
+                      max="10"
+                      className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
+                      required
+                    />
                   </div>
                 </div>
               )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, message } from "antd";
+import { Button, message } from "antd";
 import {
   ReloadOutlined,
   InfoCircleOutlined,
@@ -33,10 +33,9 @@ const DataTablete = () => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [contentFile, setContentFile] = useState(null);
   const [itemsPerPage, setItemsPerPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0); // Agregar estado para totalItems
+  const [totalItems, setTotalItems] = useState(0);
   const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
   const [courseToDelete, setCourseToDelete] = useState(null);
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
@@ -47,7 +46,7 @@ const DataTablete = () => {
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [dataFlag, setDataFlag] = useState(false);
-  const [subCategoryForm, setSubCategoryForm] = useState(false); 
+  const [subCategoryForm, setSubCategoryForm] = useState(false);
 
   useEffect(() => {
     getUsers();
@@ -62,19 +61,36 @@ const DataTablete = () => {
         course.description.toLowerCase().includes(searchValue.toLowerCase())
     );
 
-    setTotalItems(filteredCourses.length); // Actualizamos totalItems
+    setTotalItems(filteredCourses.length);
     setTotalPages(Math.ceil(filteredCourses.length / itemsPerPage));
   }, [courses, searchValue, itemsPerPage]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 600) {
+        setItemsPerPage(6);
+      } else if (width < 1024) {
+        setItemsPerPage(10);
+      } else {
+        setItemsPerPage(12);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [dataFlag]);
+
   const handleCreateCourseClick = () => setShowCreateForm(true);
-
   const handleCreateFormClose = () => setShowCreateForm(false);
-
   const handleUpdateButtonClick = (course) => {
     setSelectedCourse(course);
     setShowUpdateForm(true);
   };
-
   const handleUpdateFormClose = () => {
     setShowUpdateForm(false);
     setSelectedCourse(null);
@@ -82,7 +98,6 @@ const DataTablete = () => {
 
   const handleUpdateCourse = async (updatedCourse) => {
     if (dataFlag) return;
-
     setDataFlag(true);
     try {
       await updateCourse(updatedCourse);
@@ -104,12 +119,11 @@ const DataTablete = () => {
 
   const handleCreateResource = async () => {
     if (dataFlag) return;
-
     setDataFlag(true);
     if (selectedCourse && selectedCourse.id) {
       const courseId = selectedCourse.id;
       try {
-        const res = await crearRecurso(courseId);
+        await crearRecurso(courseId);
         setIsCreateModalVisible(false);
       } catch (error) {
         console.error("Error al crear recurso:", error);
@@ -128,7 +142,7 @@ const DataTablete = () => {
       await createCourse(curso);
       setShowCreateForm(false);
     } catch (error) {
-      console.log();
+      console.log(error);
     } finally {
       setDataFlag(false);
       getAllCourses();
@@ -143,7 +157,6 @@ const DataTablete = () => {
   const handleDeleteConfirm = async () => {
     if (dataFlag) return;
     setDataFlag(true);
-
     try {
       await deleteCourse(courseToDelete.id);
       message.success(t("courses.deleteSuccess"));
@@ -163,11 +176,11 @@ const DataTablete = () => {
   };
 
   const handleNotifyButtonClick = (course) => {
-    setSelectedCourse(course); // Asegúrate de guardar todo el curso, no solo el ID
+    setSelectedCourse(course);
     setIsNotifyModalVisible(true);
   };
 
-  const handleSubCategoryButtonClick = (course) => { // Abrir Modal para subCategorias
+  const handleSubCategoryButtonClick = (course) => {
     setSelectedCourse(course);
     setSelectedCourseId(course.id);
     setSubCategoryForm(true);
@@ -178,11 +191,10 @@ const DataTablete = () => {
       if (!selectedCourse || !selectedCourse.id) {
         throw new Error("Course ID is not defined");
       }
-  
-      const response = await axios.post(`http://localhost:3068/PE/courses/${selectedCourse.id}/notify-specific`, {
-        recipients: recipients, // Pasa los destinatarios como está configurado
-      });
-  
+      const response = await axios.post(
+        `http://localhost:3068/PE/courses/${selectedCourse.id}/notify-specific`,
+        { recipients: recipients }
+      );
       if (response.data.message === "Course notification emails sent successfully") {
         message.success(t('courses.notificationSent'));
       } else {
@@ -216,26 +228,6 @@ const DataTablete = () => {
       course.description.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      if (width < 600) {
-        setItemsPerPage(6);
-      } else if (width < 1024) {
-        setItemsPerPage(10);
-      } else {
-        setItemsPerPage(12);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    handleResize(); // Initial call to set the correct itemsPerPage
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [dataFlag]);
-
   return (
     <div className="bg-gray-200 overflow-hidden min-h-screen">
       <div className="flex h-full">
@@ -247,34 +239,35 @@ const DataTablete = () => {
         >
           <Navbar />
           <div className="flex flex-col mt-14">
-            <div>
-              <div className="flex flex-row items-center justify-between pl-[72px] pr-12">
-                <h2 className="text-3xl text-purple-900 font-bungee">
+            <div className="px-4 md:px-12">
+              <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-2">
+                <h2 className="text-3xl text-purple-900 font-bungee mb-4 md:mb-0">
                   {t("courses.title")}
                 </h2>
-                <div className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg">
-                  <FaSearch size={"18px"} className="mt-1 mr-2" />
-                  <input
-                    type="search"
-                    className="outline-none w-full md:w-[280px] lg:w-[360px]"
-                    placeholder={t("datatable.SearchByName")}
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                  />
+                <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: "#4c1d95" }}
+                    onClick={handleCreateCourseClick}
+                    className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
+                  >
+                    <b>{t("courses.createCourse")}</b>
+                  </Button>
+                  <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
+                    <FaSearch size={"18px"} className="mt-1 mr-2" />
+                    <input
+                      type="search"
+                      className="outline-none w-full md:w-[280px] lg:w-[360px]"
+                      placeholder={t("datatable.SearchByName")}
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
-              <Button
-                type="primary"
-                style={{ backgroundColor: "#4c1d95" }}
-                onClick={handleCreateCourseClick}
-                className="ml-16 mt-6 rounded-t-lg rounded-b-none"
-                disabled={dataFlag}
-              >
-                <b>{t("courses.createCourse")}</b>
-              </Button>
             </div>
-            <div className="flex justify-center">
-              <div className="overflow-auto w-full px-6 mx-12 py-6 bg-white rounded-t-xl rounded-b-xl shadow-lg shadow-purple-300">
+            <div className="flex justify-center mt-4 md:mt-2">
+              <div className="overflow-auto w-full px-4 md:px-6 mx-4 md:mx-12 py-6 bg-white rounded-xl shadow-lg shadow-purple-300">
                 <table className="min-w-full overflow-x-auto">
                   <thead>
                     <tr>
@@ -300,10 +293,7 @@ const DataTablete = () => {
                   </thead>
                   <tbody>
                     {filteredCourses
-                      .slice(
-                        (currentPage - 1) * itemsPerPage,
-                        currentPage * itemsPerPage
-                      )
+                      .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                       .map((course, index) => (
                         <tr key={course.id}>
                           <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
@@ -322,20 +312,16 @@ const DataTablete = () => {
                             {course.enrolledCount}
                           </td>
                           <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
-                            <div className="flex justify-center space-x-2">
+                            <div className="flex justify-center space-x-4">
                               <Button className="bg-purple-800 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
-                                  onClick={() =>
-                                    handleSubCategoryButtonClick(course)
-                                  }
+                                  onClick={() => handleSubCategoryButtonClick(course)}
                                   icon={<QrcodeOutlined />}
                                 >
                                   {t("subCategory.ButtonCreate")}
                               </Button>
                               <Button
                                 className="bg-green-500 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
-                                onClick={() =>
-                                  handleCreateResourceClick(course)
-                                }
+                                onClick={() => handleCreateResourceClick(course)}
                                 icon={<FileAddOutlined />}
                               >
                                 {t("courses.ButtonUpContent")}
@@ -343,25 +329,25 @@ const DataTablete = () => {
                               <Button
                                 className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
                                 icon={<ReloadOutlined />}
-                                style={{ minWidth: "40px" }}
+                                style={{ minWidth: "50px" }}
                                 onClick={() => handleUpdateButtonClick(course)}
                               />
                               <Button
                                 className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
                                 icon={<InfoCircleOutlined />}
-                                style={{ minWidth: "40px" }}
+                                style={{ minWidth: "50px" }}
                                 onClick={() => handleDetailsButtonClick(course)}
                               />
                               <Button
                                 className="bg-orange-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
                                 icon={<BellOutlined />}
-                                style={{ minWidth: "40px" }}
+                                style={{ minWidth: "50px" }}
                                 onClick={() => handleNotifyButtonClick(course)}
                               />
                               <Button
                                 className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
                                 icon={<DeleteOutlined />}
-                                style={{ minWidth: "40px" }}
+                                style={{ minWidth: "50px" }}
                                 onClick={() => handleDeleteButtonClick(course)}
                               />
                             </div>
@@ -372,7 +358,6 @@ const DataTablete = () => {
                 </table>
                 {totalPages > 1 && (
                   <div className="flex justify-end items-center mt-5 space-x-2">
-                    {/* Botón anterior */}
                     <button
                       onClick={() => paginate(currentPage - 1)}
                       disabled={currentPage === 1}
@@ -384,8 +369,6 @@ const DataTablete = () => {
                     >
                       <FaChevronLeft size={13} />
                     </button>
-
-                    {/* Mostrar el rango actual */}
                     <span className="text-gray-600">
                       {`${(currentPage - 1) * itemsPerPage + 1} - ${
                         currentPage * itemsPerPage > totalItems
@@ -394,8 +377,6 @@ const DataTablete = () => {
                       }`}{" "}
                       {t("datatable.of")} {totalItems}
                     </span>
-
-                    {/* Botón siguiente */}
                     <button
                       onClick={() => paginate(currentPage + 1)}
                       disabled={currentPage === totalPages}
@@ -457,7 +438,7 @@ const DataTablete = () => {
           <NotifyCourseModal
             visible={isNotifyModalVisible}
             onClose={() => setIsNotifyModalVisible(false)}
-            courseId={selectedCourse?.id} // Pasamos el ID del curso seleccionado al modal
+            courseId={selectedCourse?.id}
             onSendEmail={handleSendNotification}
           />
         </div>
