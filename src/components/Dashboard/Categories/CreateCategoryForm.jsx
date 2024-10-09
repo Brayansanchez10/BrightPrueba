@@ -97,6 +97,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
 
     if (Object.values(errors).some((error) => error)) {
       setErrorMessage(errors);
+      setIsSubmitting(false); // Habilitar nuevamente si hay un error
       return;
     }
 

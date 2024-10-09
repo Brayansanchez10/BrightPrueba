@@ -55,6 +55,7 @@ const CreateRolForm = ({ visible, onClose }) => {
 
     if (Object.values(errors).some((error) => error)) {
       setError(errors);
+      setIsSubmitting(false); // Habilitar nuevamente si hay un error
       return;
     }
 
