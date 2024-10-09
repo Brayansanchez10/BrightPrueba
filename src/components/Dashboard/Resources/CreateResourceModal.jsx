@@ -261,16 +261,17 @@ const CreateResourceModal = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Llamar a la validación
+    // Llamar a la validación de los campos
     if (!validateFields()) {
-      return; // Si hay errores, no envía el formulario
+      return; // Si hay errores en los campos, no envía el formulario
     }
 
     // Validar los quizzes antes de enviar el formulario
     if (!validateQuizzes()) {
-      return; // Si hay errores, no enviar el formulario
+      return; // Si hay errores en los quizzes, no envía el formulario
     }
 
+    // Verificar si el usuario eligió un archivo o un quiz
     if (selection === "link" && link && !isValidLink(link)) {
       Swal.fire({
         icon: "warning",
@@ -280,6 +281,18 @@ const CreateResourceModal = ({
         timer: 2500,
       });
       return;
+    }
+
+    // Validar que el usuario haya elegido subir un archivo o un quiz
+    if (selection === "file" && !selectedFile && quizzes.length === 0) {
+      Swal.fire({
+        icon: "error",
+        title: t("Error"),
+        text: t("CreateResource.PleaseSelectFileOrQuiz"),
+        showConfirmButton: false,
+        timer: 3000,
+      });
+      return; // No envía el formulario si ambos están vacíos
     }
 
     const resourceData = {

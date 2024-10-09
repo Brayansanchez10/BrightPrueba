@@ -42,7 +42,6 @@ const DataTablete = () => {
   const [dataFlag, setDataFlag] = useState(false);
 
   useEffect(() => {
-    getCategories();
   }, [dataFlag]);
 
   useEffect(() => {
@@ -109,6 +108,7 @@ const DataTablete = () => {
       });
       setDataFlag((prevFlag) => !prevFlag);
     } catch (error) {
+      console.error(error);
       Swal.fire({
         title: t("categories.updateError"),
         icon: "error",
@@ -379,8 +379,7 @@ const DataTablete = () => {
             onUpdate={handleUpdateSubmit}
             category={selectedCategory}
             form={form}
-            imagePre
-            view={imagePreview}
+            imagePreview={imagePreview}  // Aquí estaba mal escrito
           />
         </div>
       </div>

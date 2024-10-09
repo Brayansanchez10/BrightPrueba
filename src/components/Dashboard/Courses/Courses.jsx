@@ -26,7 +26,7 @@ import CreateSubCategoryForm from "../SubCategories/CreateSubCategoryForm";
 const DataTablete = () => {
   const { t } = useTranslation("global");
   const { getUsers, usersData } = useUserContext();
-  const { getAllCourses, courses, deleteCourse, updateCourse, crearRecurso } =
+  const { getAllCourses, courses, deleteCourse, updateCourse, crearRecurso, createCourse } =
     useCoursesContext();
   const [searchValue, setSearchValue] = useState("");
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -135,11 +135,9 @@ const DataTablete = () => {
     }
   };
 
-  const handleCreateCourse = async (curso) => {
-    if (dataFlag) return;
-    setDataFlag(true);
+  const handleCreateCourse = async (course) => {
     try {
-      await createCourse(curso);
+      await createCourse(course);
       setShowCreateForm(false);
     } catch (error) {
       console.log(error);

@@ -1,11 +1,33 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import { useRoleContext } from "../../../context/user/role.context";
 import { Modal } from "antd";
 import Swal from "sweetalert2";
 import zorroImage from "../../../assets/img/Zorro.png";
 import { useTranslation } from "react-i18next";
 
-const DeleteRolModal = ({ visible, onClose, roleId, deleteRole }) => {
+const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => {
   const { t } = useTranslation("global");
+  const [role, setRole] = useState({ nombre: "" });
+  const { createRole, rolesData, getAllRoles } = useRoleContext();
+
+  useEffect(() => {
+    if (isVisible) {
+      fetchRoles();
+    } else {
+      setRole([]); // Limpiar los recursos al cerrar la modal
+    }
+  }, [isVisible]);
+
+  const fetchRoles = async () => {
+    try {
+      const response = await getAllRoles();
+      setRole(response.data);
+    } catch (err) {
+      console.error("Error al obtener todas los roles:", err);
+      toast.error("Error al obtener todas los roles");
+    }
+  };
+
 
   const confirmDeleteRole = async () => {
     try {
@@ -18,6 +40,7 @@ const DeleteRolModal = ({ visible, onClose, roleId, deleteRole }) => {
       }).then(() => {
         onClose();
       });
+      fetchRoles();
     } catch (error) {
       Swal.fire({
         icon: "error",

@@ -6,7 +6,7 @@ import holaImage from "../../../assets/img/hola.png";
 
 const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
   const { t } = useTranslation("global");
-  const { createCategory } = useCategoryContext();
+  const { createCategory, categories } = useCategoryContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [category, setCategory] = useState({
@@ -93,6 +93,10 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
     }
     if (!category.image) {
       errors.image = t("createCategoryForm.imageRequired");
+    }
+
+    if (categories.some((existingCategory) => existingCategory.name === category.name)) {
+      errors.name = t("createCategoryForm.nameExists")
     }
 
     if (Object.values(errors).some((error) => error)) {

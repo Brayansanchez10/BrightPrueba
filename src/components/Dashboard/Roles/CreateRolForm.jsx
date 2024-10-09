@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
 import { useRoleContext } from "../../../context/user/role.context";
 import Swal from "sweetalert2";
@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import "../css/Custom.css";
 import holaImage from "../../../assets/img/hola.png";
 
-const CreateRolForm = ({ visible, onClose }) => {
-  const { createRole, rolesData } = useRoleContext();
+const CreateRolForm = ({ visible, onClose, isVisible }) => {
+  const { createRole, rolesData, getAllRoles } = useRoleContext();
   const { t } = useTranslation("global");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [role, setRole] = useState({ nombre: "" });
@@ -36,6 +36,25 @@ const CreateRolForm = ({ visible, onClose }) => {
         break;
     }
   };
+
+  useEffect(() => {
+    if (isVisible) {
+      fetchRoles();
+    } else {
+      setRole([]); // Limpiar los recursos al cerrar la modal
+    }
+  }, [isVisible]);
+
+  const fetchRoles = async () => {
+    try {
+      const response = await getAllRoles();
+      setRole(response.data);
+    } catch (err) {
+      console.error("Error al obtener todas los roles:", err);
+      toast.error("Error al obtener todas los roles");
+    } 
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,7 +97,7 @@ const CreateRolForm = ({ visible, onClose }) => {
         handleModalClose();
         setIsSubmitting(false); // Habilitar nuevamente al cerrar modal
       })
-      setRole({ nombre: "" });
+      fetchRoles();
     } catch (error) {
       console.error("Error creating role:", error);
       setIsSubmitting(false); // Habilitar nuevamente si hay un error

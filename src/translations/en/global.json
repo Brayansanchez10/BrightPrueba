@@ -540,7 +540,8 @@
         "invalidImageFile": "Please upload a valid image file.",
         "nameRequired": "Please enter the category name",
         "descriptionRequired": "Please enter the description",
-        "nameTooLong": "The category name must be a maximum of 20 characters"
+        "nameTooLong": "The category name must be a maximum of 20 characters",
+        "nameExists": "The name of this category already exists"
     },
     "deleteCategory": {
         "confirmDeletion": "Confirm Deletion",
@@ -646,7 +647,8 @@
         "AddQuestion": "Add Question",
         "ButtonCreate": "Create Resource",
         "MaxOptionsAlert": "Options Limit",
-        "MaxOptionsText": "You have reached the maximum number of options."
+        "MaxOptionsText": "You have reached the maximum number of options.",
+        "PleaseSelectFileOrQuiz": "Please upload a file or create a quiz."
     },
     "course_user": {
         "courseImageAlt": "Course Image",

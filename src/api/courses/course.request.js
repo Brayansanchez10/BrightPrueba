@@ -77,8 +77,6 @@ export const createCourse = async (courseData) => {
 export const updateCourse = async (id, courseData) => {
   try {
     const formData = new FormData(); // Crear una instancia de FormData
-
-    // Agregar los datos del curso al FormData
     formData.append('title', courseData.title);
     formData.append('description', courseData.description);
     formData.append('category', courseData.category);
@@ -99,7 +97,6 @@ export const updateCourse = async (id, courseData) => {
     console.error("Error al crear recurso:", error);
     throw error;
   }
-  
 };
 
 // Función para actualizar el contenido de un archivo en un curso
