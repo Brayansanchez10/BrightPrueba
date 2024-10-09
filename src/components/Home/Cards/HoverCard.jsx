@@ -13,9 +13,9 @@ const HoverCard = ({ title, description, ruta, creatorName, rating, duration, le
     img.onload = () => setImageLoaded(true);
   }, [ruta]);
 
-  const handleHeartClick = (e) => {
+  const handleHeartClick = async (e) => {
     e.stopPropagation();
-    onFavoriteToggle();
+    await onFavoriteToggle();
   };
 
   return (
