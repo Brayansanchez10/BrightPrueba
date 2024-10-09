@@ -14,8 +14,11 @@ export const RatingsProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await getRatingsByCourse(courseId);
-      setRatings(response.data);
+      // Verificar si los datos vienen como `response.data` o `response`
+      const ratings = response.data || response; 
+      setRatings((prevRatings) => [...prevRatings, ...ratings]);
     } catch (err) {
+      console.error("Error fetching ratings:", err);
       setError(err.message);
     } finally {
       setLoading(false);

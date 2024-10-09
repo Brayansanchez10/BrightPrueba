@@ -5,7 +5,9 @@ import HoverCard from "../Cards/HoverCard";
 import NavigationBar from "../NavigationBar";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useUserContext } from "../../../context/user/user.context";
+import { useRatingsContext } from "../../../context/courses/ratings.context.jsx";
 import { useAuth } from "../../../context/auth.context";
+import { useFavorite } from "../../../context/courses/favorites.context";
 import { useTranslation } from "react-i18next";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdPlayCircleOutline } from "react-icons/md";
@@ -20,12 +22,10 @@ import Footer from "../../footer.jsx";
 export default function AllCourses() {
   const { t } = useTranslation("global");
   const { courses } = useCoursesContext();
+  const { ratings, fetchRatingsByCourse } = useRatingsContext();
   const { user } = useAuth();
   const { registerToCourse, getUserCourses } = useUserContext();
-  const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem("favorites");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { favorites, toggleFavorite, loading: favoritesLoading } = useFavorite();
   const [userCourses, setUserCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -34,12 +34,37 @@ export default function AllCourses() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentSlide, setCurrentSlide] = useState({});
+  const [allRatings, setAllRatings] = useState([]); // Estado para almacenar las calificaciones
 
   const sliderRefs = useRef({});
 
   useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
+    // Función para cargar calificaciones de todos los cursos
+    const loadRatings = async () => {
+      for (const course of courses) {
+        const courseRatings = await fetchRatingsByCourse(course.id);
+        allRatings.push(courseRatings);
+      }
+      setAllRatings(allRatings); // Actualiza el estado con todas las calificaciones
+    };
+  
+    loadRatings();
+  }, [courses]);
+
+  // Función para calcular el promedio de ratings
+  const calculateAverageRating = (courseId) => {
+    const courseRatings = ratings.filter(rating => rating.courseId === courseId);
+    console.log(`Calificaciones para el curso ${courseId}:`, courseRatings);
+    if (courseRatings.length === 0) return 0;
+  
+    const sumRatings = courseRatings.reduce((sum, rating) => {
+      return sum + (rating.score || 0);
+    }, 0);
+    
+    console.log(`Suma de ratings para el curso ${courseId}:`, sumRatings);
+    console.log((sumRatings / courseRatings.length).toFixed(1));
+    return (sumRatings / courseRatings.length).toFixed(1);
+  };
 
   useEffect(() => {
     const fetchUserCourses = async () => {
@@ -63,14 +88,8 @@ export default function AllCourses() {
     setIsConfirmModalOpen(true);
   };
 
-  const handleFavoriteToggle = (courseId) => {
-    setFavorites((prevFavorites) => {
-      if (prevFavorites.includes(courseId)) {
-        return prevFavorites.filter((id) => id !== courseId);
-      } else {
-        return [...prevFavorites, courseId];
-      }
-    });
+  const handleFavoriteToggle = async (courseId) => {
+    await toggleFavorite(courseId);
   };
 
   const closeConfirmModal = () => {
@@ -113,26 +132,29 @@ export default function AllCourses() {
       course.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const renderCourseCard = (course) => (
-    <div className="px-2">
-      <HoverCard
-        key={course.id}
-        title={course.title}
-        description={course.description}
-        ruta={course.image}
-        creatorName={course.instructor || "Daniel Gomez"}
-        rating={course.rating || 4}
-        duration="6 horas"
-        lessons="12 lecciones"
-        onClick={() => handleCardClick(course)}
-        onFavoriteToggle={() => handleFavoriteToggle(course.id)}
-        isFavorite={favorites.includes(course.id)}
-      />
-    </div>
-  );
+  const renderCourseCard = (course) => {
+    const averageRating = calculateAverageRating(course.id); // Llama a la función directamente cada vez que se renderiza
+  
+    return (
+      <div className="px-2" key={course.id}>
+        <HoverCard
+          title={course.title}
+          description={course.description}
+          ruta={course.image}
+          creatorName={course.instructor || "Daniel Gomez"}
+          rating={averageRating || 0} // Asegúrate de mostrar 0 si el promedio es undefined
+          duration="6 horas"
+          lessons="12 lecciones"
+          onClick={() => handleCardClick(course)}
+          onFavoriteToggle={() => handleFavoriteToggle(course.id)}
+          isFavorite={favorites.some(fav => fav.courseId === course.id)}
+        />
+      </div>
+    );
+  };
 
   const favoriteCourses = filteredCourses.filter((course) =>
-    favorites.includes(course.id)
+    favorites.some(fav => fav.courseId === course.id)
   );
   const categorizedCourses = filteredCourses.reduce((acc, course) => {
     if (!acc[course.category]) {
@@ -379,7 +401,7 @@ export default function AllCourses() {
                   <MdPlayCircleOutline className="mr-1" />
                   <span>12 lecciones</span>
                 </div>
-                <div className="flex items-center mt-1">
+                <div  className="flex items-center mt-1">
                   <FaRegChartBar className="mr-1" />
                   <span>Principiante</span>
                 </div>
