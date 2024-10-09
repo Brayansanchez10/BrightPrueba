@@ -7,6 +7,7 @@ import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useUserContext } from "../../../context/user/user.context";
 import { useRatingsContext } from "../../../context/courses/ratings.context.jsx";
 import { useAuth } from "../../../context/auth.context";
+import { useFavorite } from "../../../context/courses/favorites.context";
 import { useTranslation } from "react-i18next";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdPlayCircleOutline } from "react-icons/md";
@@ -24,10 +25,7 @@ export default function AllCourses() {
   const { ratings, fetchRatingsByCourse } = useRatingsContext();
   const { user } = useAuth();
   const { registerToCourse, getUserCourses } = useUserContext();
-  const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem("favorites");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { favorites, toggleFavorite, loading: favoritesLoading } = useFavorite();
   const [userCourses, setUserCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -69,10 +67,6 @@ export default function AllCourses() {
   };
 
   useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
-
-  useEffect(() => {
     const fetchUserCourses = async () => {
       if (user && user.data && user.data.id) {
         try {
@@ -94,14 +88,8 @@ export default function AllCourses() {
     setIsConfirmModalOpen(true);
   };
 
-  const handleFavoriteToggle = (courseId) => {
-    setFavorites((prevFavorites) => {
-      if (prevFavorites.includes(courseId)) {
-        return prevFavorites.filter((id) => id !== courseId);
-      } else {
-        return [...prevFavorites, courseId];
-      }
-    });
+  const handleFavoriteToggle = async (courseId) => {
+    await toggleFavorite(courseId);
   };
 
   const closeConfirmModal = () => {
@@ -159,14 +147,14 @@ export default function AllCourses() {
           lessons="12 lecciones"
           onClick={() => handleCardClick(course)}
           onFavoriteToggle={() => handleFavoriteToggle(course.id)}
-          isFavorite={favorites.includes(course.id)}
+          isFavorite={favorites.some(fav => fav.courseId === course.id)}
         />
       </div>
     );
   };
 
   const favoriteCourses = filteredCourses.filter((course) =>
-    favorites.includes(course.id)
+    favorites.some(fav => fav.courseId === course.id)
   );
   const categorizedCourses = filteredCourses.reduce((acc, course) => {
     if (!acc[course.category]) {
@@ -413,7 +401,7 @@ export default function AllCourses() {
                   <MdPlayCircleOutline className="mr-1" />
                   <span>12 lecciones</span>
                 </div>
-                <div className="flex items-center mt-1">
+                <div  className="flex items-center mt-1">
                   <FaRegChartBar className="mr-1" />
                   <span>Principiante</span>
                 </div>
