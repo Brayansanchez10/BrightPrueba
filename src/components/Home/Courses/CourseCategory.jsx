@@ -18,12 +18,9 @@ const CourseCategory = () => {
   const { category } = useParams();
   const { t } = useTranslation("global");
   const { courses } = useCoursesContext();
-  const { user, refreshUser } = useAuth();
-  const { registerToCourse, updateFavorites } = useUserContext();
-  const [userCourses, setUserCourses] = useState(() => {
-    const saved = localStorage.getItem('userCourses');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { user } = useAuth();
+  const { registerToCourse, getUserCourses } = useUserContext();
+  const [userCourses, setUserCourses] = useState([]);
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem('favorites');
     return saved ? JSON.parse(saved) : [];
@@ -32,39 +29,25 @@ const CourseCategory = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadUserData = async () => {
-      if (user) {
-        await refreshUser();
-        if (user.data) {
-          const serverUserCourses = user.data.courses || [];
-          const serverFavorites = user.data.favorites || [];
-
-          setUserCourses(prevUserCourses => {
-            const newUserCourses = [...new Set([...prevUserCourses, ...serverUserCourses])];
-            localStorage.setItem('userCourses', JSON.stringify(newUserCourses));
-            return newUserCourses;
-          });
-
-          setFavorites(prevFavorites => {
-            const newFavorites = [...new Set([...prevFavorites, ...serverFavorites])];
-            localStorage.setItem('favorites', JSON.stringify(newFavorites));
-            return newFavorites;
-          });
+    const fetchUserCourses = async () => {
+      if (user && user.data && user.data.id) {
+        try {
+          const courses = await getUserCourses(user.data.id);
+          setUserCourses(courses);
+        } catch (error) {
+          console.error("Error fetching user courses:", error);
+          setError(
+            "No se pudieron cargar tus cursos. Por favor, intenta de nuevo más tarde."
+          );
         }
       }
     };
-    loadUserData();
-  }, [user, refreshUser]);
-
-  useEffect(() => {
-    localStorage.setItem('userCourses', JSON.stringify(userCourses));
-  }, [userCourses]);
-
-  useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-  }, [favorites]);
+    fetchUserCourses();
+  }, [user, getUserCourses]);
 
   const handleCardClick = (course) => {
     setSelectedCourse(course);
@@ -79,15 +62,7 @@ const CourseCategory = () => {
     } else {
       setFavorites(prevFavorites => [...prevFavorites, courseId]);
     }
-
-    if (user && user.data) {
-      try {
-        await updateFavorites(user.data.id, courseId, isFavorite ? 'remove' : 'add');
-      } catch (error) {
-        console.error("Error al actualizar favoritos:", error);
-        setFavorites(prevFavorites => isFavorite ? [...prevFavorites, courseId] : prevFavorites.filter(id => id !== courseId));
-      }
-    }
+    console.log(`Toggle favorite for course ${courseId}`);
   };
 
   const closeConfirmModal = () => {
@@ -95,23 +70,28 @@ const CourseCategory = () => {
   };
 
   const handleRegister = async () => {
-    if (selectedCourse && !userCourses.includes(selectedCourse.id)) {
-      setUserCourses(prevUserCourses => [...prevUserCourses, selectedCourse.id]);
-      setIsConfirmModalOpen(false);
-      setIsSuccessModalOpen(true);
-
-      if (user && user.data) {
-        try {
-          await registerToCourse(user.data.id, selectedCourse.id);
-        } catch (error) {
-          console.error("Error al registrar el curso:", error);
-          setUserCourses(prevUserCourses => prevUserCourses.filter(id => id !== selectedCourse.id));
-          setIsSuccessModalOpen(false);
-          alert("Hubo un error al registrar el curso. Por favor, inténtalo de nuevo.");
-        }
+    if (
+      selectedCourse &&
+      !userCourses.some((course) => course.id === selectedCourse.id)
+    ) {
+      setIsLoading(true);
+      setError(null);
+      try {
+        await registerToCourse(user.data.id, selectedCourse.id);
+        const updatedCourses = await getUserCourses(user.data.id);
+        setUserCourses(updatedCourses);
+        setIsConfirmModalOpen(false);
+        setIsSuccessModalOpen(true);
+      } catch (error) {
+        console.error("Error al inscribir al usuario en el curso:", error);
+        setError(
+          "Hubo un error al inscribirte en el curso. Por favor, intenta de nuevo."
+        );
+      } finally {
+        setIsLoading(false);
       }
     } else {
-      alert("Ya estás inscrito en este curso.");
+      setError("Ya estás inscrito en este curso.");
     }
   };
 
@@ -126,19 +106,21 @@ const CourseCategory = () => {
   );
 
   const renderCourseCard = (course) => (
-    <HoverCard
-      key={course.id}
-      title={course.title}
-      description={course.description}
-      ruta={course.image}
-      creatorName={course.instructor || "Instructor Desconocido"}
-      rating={course.rating || 4}
-      duration="6 horas"
-      lessons="12 lecciones"
-      onClick={() => handleCardClick(course)}
-      onFavoriteToggle={() => handleFavoriteToggle(course.id)}
-      isFavorite={favorites.includes(course.id)}
-    />
+    <div className="flex justify-center items-center">
+      <HoverCard
+        key={course.id}
+        title={course.title}
+        description={course.description}
+        ruta={course.image}
+        creatorName={course.instructor || "Daniel Gomez"}
+        rating={course.rating || 4}
+        duration="6 horas"
+        lessons="12 lecciones"
+        onClick={() => handleCardClick(course)}
+        onFavoriteToggle={() => handleFavoriteToggle(course.id)}
+        isFavorite={favorites.includes(course.id)}
+      />
+    </div>
   );
 
   return (
@@ -165,7 +147,7 @@ const CourseCategory = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-6 mx-auto max-w-7xl place-items-center mb-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6 mx-auto max-w-7xl px-4 mb-16">
         {filteredCourses.map(renderCourseCard)}
       </div>
 
@@ -224,12 +206,29 @@ const CourseCategory = () => {
               </div>
               <button
                 onClick={handleRegister}
-                className={`bg-[#783CDA] text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${userCourses.includes(selectedCourse.id) ? "opacity-50 cursor-not-allowed" : ""}`}
-                disabled={userCourses.includes(selectedCourse.id)}
+                className={`bg-[#783CDA] text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${
+                  userCourses.some(
+                    (course) => course.id === selectedCourse.id
+                  ) || isLoading
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                disabled={
+                  userCourses.some(
+                    (course) => course.id === selectedCourse.id
+                  ) || isLoading
+                }
               >
-                {userCourses.includes(selectedCourse.id) ? "YA REGISTRADO!" : "INSCRÍBETE!"}
+                {isLoading
+                  ? "Inscribiendo..."
+                  : userCourses.some(
+                      (course) => course.id === selectedCourse.id
+                    )
+                  ? "YA REGISTRADO!"
+                  : "INSCRÍBETE!"}
               </button>
             </div>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           </div>
         </div>
       )}
