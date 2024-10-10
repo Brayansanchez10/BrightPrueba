@@ -97,14 +97,18 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true); // Deshabilitar el botón
-
+    
         const errors = {
             name: "",
             category: "",
             description: "",
             image: "",
         };
-
+    
+        if (categories.some((existingCategory) => existingCategory.name === course.name)) {
+            errors.name = t("createCourseForm.nameExists");
+        }
+    
         if (!course.name || course.name.length < MIN_COURSE_NAME_LENGTH || course.name.length > MAX_COURSE_NAME_LENGTH) {
             errors.name = t("createCourseForm.nameInvalidLength");
         }
@@ -117,14 +121,14 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
         if (!course.image) {
             errors.image = t("createCourseForm.allFieldsRequired");
         }
-
+    
         if (Object.values(errors).some((error) => error)) {
             setErrorMessage(errors);
             setIsSubmitting(false); // Habilitar nuevamente si hay un error
             vibrate();
             return;
         }
-
+    
         const courseData = {
             title: course.name,
             category: course.category,
@@ -132,7 +136,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
             image: course.image,
             userId: username,
         };
-
+    
         try {
             await createCourse(courseData);
             Swal.fire({
