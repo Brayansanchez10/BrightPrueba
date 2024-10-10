@@ -117,7 +117,7 @@ function RegisterForm() {
     >
       <div className="flex w-full max-w-7xl sm:rounded-none md:rounded-3xl shadow-xl shadow-slate-800">
 
-        <div className="w-3/4 h-full justify-center items-center hidden md:block">
+        <div className="w-3/4 h-full justify-center items-center hidden lg:block">
           <Carousel/>
         </div>
         
@@ -201,14 +201,6 @@ function RegisterForm() {
                         : "border-purple-300"
                     }`}
                     placeholder={t("register.enter_password")}
-                    onInput={(e) => {
-                      const value = e.target.value;
-                      if (value.includes("@")) {
-                        e.target.setCustomValidity(t("register.AlertPasswordCorro"));
-                      } else {
-                        e.target.setCustomValidity("");
-                      }
-                    }}
                   />
                   <button
                     type="button"

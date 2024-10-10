@@ -69,14 +69,14 @@ const HomePage = () => {
 
                     <div className='md:pb-5  sm:pb-0 lg:pb-20'>
                         <div className='flex flex-col lg:flex-row gap-10 mx-5 md:mx-10 lg:mx-20 my-10'>
-                            <div className='w-full lg:w-1/3 mx-auto p-6'>
+                            <div className='w-full lg:w-1/2 mx-auto p-6 xl:w-1/3'>
                                 <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee pt-10'>{t('home.welcome')}<span className='text-purple-900'>bringmind</span></h2>
                                 <p className='text-base md:text-xl lg:text-2xl text-justify pt-5'>{t('home.welcome_message')}</p>
                             </div>
-                            <div className='bg-purple-900 rounded-t-full rounded-b-3xl w-1/3 items-center hidden lg:flex mx-auto'>
+                            <div className='bg-purple-900 rounded-t-full rounded-b-3xl w-1/3 items-center hidden xl:flex mx-auto'>
                                 <img src={logo} alt="Aquí hay una imagen" className='py-20 mx-auto' />
                             </div>
-                            <div className='w-full lg:w-1/3 pt-6'>
+                            <div className='w-full lg:w-1/2 pt-6 xl:w-1/3'>
                                 <h2 className='text-center text-4xl md:text-5xl lg:text-5xl text-purple-900 font-bungee pt-10'>{t('home.mission')}</h2>
                                 <p className='text-base md:text-xl lg:text-2xl text-justify pt-5 pb-10'>{t('home.mission_message')}</p>
                                 <div className='flex flex-col md:flex-row gap-5 mx-4'>
@@ -99,7 +99,7 @@ const HomePage = () => {
                     
                     <div className='md:pb-5  sm:pb-0 lg:pb-20'>
                         <div className='my-10 p-6'>
-                            <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee'><span className='text-purple-900'>bringmind </span>{t('home.offert')}</h2>
+                            <h2 className='text-center text-3xl md:text-5xl lg:text-5xl font-bungee'><span className='text-purple-900'>bringmind </span>{t('home.offert')}</h2>
                             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pt-20 mx-5 md:mx-10 lg:mx-20'>
                                 <div className='border border-black bg-white rounded-3xl'>
                                     <div className='my-10 lg:my-24 text-center'>
