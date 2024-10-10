@@ -22,6 +22,7 @@ const DataTablete = () => {
     getCategories,
     categories,
     deleteCategory,
+    deleteOnlyCategory,
     createCategory,
     updateCategory,
   } = useCategoryContext();
@@ -61,9 +62,9 @@ const DataTablete = () => {
       if (width < 600) {
         setItemsPerPage(6);
       } else if (width < 1024) {
-        setItemsPerPage(10);
+        setItemsPerPage(8);
       } else {
-        setItemsPerPage(12);
+        setItemsPerPage(10);
       }
     };
 
@@ -136,6 +137,33 @@ const DataTablete = () => {
         icon: "error",
         timer: 1500,
         showConfirmButton: true,
+      });
+    } finally {
+      setIsDeleteModalVisible(false);
+      setCategoryToDelete(null);
+    }
+  };
+
+  const handleDeleteOnlyConfirm = async () => {
+    try {
+      await deleteOnlyCategory(categoryToDelete.id);
+      Swal.fire({
+        title: t("categories.deleteSuccess"),
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      setDataFlag((prevFlag) => !prevFlag);
+    } catch (error) {
+      const errorMessage = error.response?.status === 404 
+        ? t("categories.auxiliaryNotFound") 
+        : t("categories.deleteError");
+      
+      Swal.fire({
+        title: errorMessage,
+        icon: "error",
+        timer: 3000,
+        showConfirmButton: false,
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -253,16 +281,16 @@ const DataTablete = () => {
                 <table className="min-w-full overflow-x-auto">
                   <thead>
                     <tr>
-                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("categories.id")}
                       </th>
-                      <th className="text-lg py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg px-3 py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("categories.name")}
                       </th>
-                      <th className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="text-lg px-20 w-[560px] py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("categories.description")}
                       </th>
-                      <th className="py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="px-5 py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
                         {t("categories.actions")}
                       </th>
                     </tr>
@@ -275,16 +303,16 @@ const DataTablete = () => {
                       )
                       .map((category, index) => (
                         <tr key={category.id}>
-                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                          <td className="border-2 border-x-transparent px-1 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                             {category.id}
                           </td>
-                          <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                          <td className="text-center border-2 border-x-transparent px-3 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
                             {category.name}
                           </td>
-                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                          <td className="border-2 border-x-transparent px-2 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                             {category.description}
                           </td>
-                          <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                          <td className="border-2 border-x-transparent px-3 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                             <div className="flex justify-center space-x-4">
                               <Button
                                 className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
@@ -365,6 +393,7 @@ const DataTablete = () => {
             visible={isDeleteModalVisible}
             onClose={handleDeleteModalClose}
             onConfirm={handleDeleteConfirm}
+            onConfirmOnly={handleDeleteOnlyConfirm}
           />
 
           <DetailsCategoryModal

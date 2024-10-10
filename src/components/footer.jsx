@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { MailIcon, ChevronUpIcon, BookOpenIcon, GlobeIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "../assets/img/hola.png";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -35,10 +36,10 @@ const Footer = () => {
             </motion.button>
             {!isExpanded && (
               <>
-                <span className="text-xs">
+                <span className="text-xs mr-[25%] sm:-mr-16">
                   {t('footer.copy')}
                 </span>
-                <img src={Logo} alt="Logo" className="h-10" />
+                <img src={Logo} alt="Logo" className="h-10 mr-16 hidden sm:block" />
               </>
             )}
           </div>
@@ -60,20 +61,24 @@ const Footer = () => {
                 {t('footer.text')}
                     </p>
                     <div className="flex space-x-4">
-                      {["facebook", "twitter", "instagram"].map((social) => (
+                      {["https://www.facebook.com/disruptive.devops", "https://x.com/DisruptiveITDev", "https://www.instagram.com/disruptive.info/"].map((social) => (
                         <motion.a
                           key={social}
-                          href={`https://www.${social}.com/disruptive.devops`}
+                          href={`${social}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center justify-center w-8 h-8 bg-white rounded-full text-[#783CDA] hover:bg-[#000000] hover:text-white transition-colors duration-300"
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                         >
-                          {social === "facebook" && <FaFacebook size="16px" />}
-                          {social === "twitter" && <FaTwitter size="16px" />}
-                          {social === "instagram" && <FaInstagram size="16px" />}
-                        </motion.a>
+                          {social === "https://www.facebook.com/disruptive.devops" && <FaFacebook size="16px" />}
+                          {social === "https://x.com/DisruptiveITDev" && (
+                            <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 512 512">
+                              <path fill="currentColor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+                            </svg>
+                          )}
+                          {social === "https://www.instagram.com/disruptive.info/" && <FaInstagram size="16px" />}
+                        </motion.a>                      
                       ))}
                     </div>
                   </div>
@@ -106,7 +111,7 @@ const Footer = () => {
                       </h4>
                       <div className="grid grid-cols-2 gap-4">
                         <motion.a
-                          href="#"
+                          href="/AllCourses"
                           className="flex items-center space-x-2 text-sm hover:text-[#00D8A1] transition-colors duration-300"
                           whileHover={{ x: 5 }}
                         >
@@ -122,7 +127,7 @@ const Footer = () => {
                           <span>{t('footer.blog')}</span>
                         </motion.a>
                         <motion.a
-                          href="#"
+                          href="/MyCourses"
                           className="flex items-center space-x-2 text-sm hover:text-[#00D8A1] transition-colors duration-300"
                           whileHover={{ x: 5 }}
                         >

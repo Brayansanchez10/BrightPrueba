@@ -79,9 +79,9 @@ const DataTable = () => {
       if (width < 600) {
         setItemsPerPage(6);
       } else if (width < 1024) {
-        setItemsPerPage(10);
+        setItemsPerPage(8);
       } else {
-        setItemsPerPage(12);
+        setItemsPerPage(10);
       }
     };
 

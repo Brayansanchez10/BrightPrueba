@@ -509,6 +509,7 @@
         "updateError": "Error al actualizar categoría",
         "deleteSuccess": "Categoría eliminada con éxito",
         "deleteError": "Error al eliminar categoría",
+        "auxiliaryNotFound": "Error al eliminar, no se encuentra la categoría Auxiliar",
         "assign": "Asignar",
         "cancel": "Cancelar",
         "resource": "Recurso",
@@ -543,10 +544,10 @@
     },
     "deleteCategory": {
         "confirmDeletion": "Confirmar Eliminación",
-        "confirmMessage": "¿Estás seguro de que deseas eliminar esta categoría?",
+        "confirmMessage": "¿Quieres eliminar esta categoría con todos sus cursos?",
         "warningMessage": "Esta acción no se puede deshacer.",
-        "confirmButton": "Confirmar",
-        "cancelButton": "Cancelar"
+        "confirmButton": "Si",
+        "onlyButton": "Solo la categoría"
     },
     "detailsCategoryModal": {
         "title": "Detalles de la categoría",

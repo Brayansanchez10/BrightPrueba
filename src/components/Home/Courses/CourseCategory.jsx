@@ -4,6 +4,7 @@ import HoverCard from "../Cards/HoverCard";
 import NavigationBar from "../NavigationBar";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useUserContext } from "../../../context/user/user.context";
+import { useRatingsContext } from "../../../context/courses/ratings.context";
 import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from "react-i18next";
 import { AiOutlineClockCircle } from "react-icons/ai";
@@ -18,6 +19,7 @@ const CourseCategory = () => {
   const { category } = useParams();
   const { t } = useTranslation("global");
   const { courses } = useCoursesContext();
+  const { ratings, fetchRatingsByCourse } = useRatingsContext();
   const { user, refreshUser } = useAuth();
   const { registerToCourse, updateFavorites } = useUserContext();
   const [userCourses, setUserCourses] = useState(() => {
@@ -32,6 +34,7 @@ const CourseCategory = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [allRatings, setAllRatings] = useState([]); // Estado para almacenar las calificaciones
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -57,6 +60,34 @@ const CourseCategory = () => {
     };
     loadUserData();
   }, [user, refreshUser]);
+
+  useEffect(() => {
+    // Función para cargar calificaciones de todos los cursos
+    const loadRatings = async () => {
+      for (const course of courses) {
+        const courseRatings = await fetchRatingsByCourse(course.id);
+        allRatings.push(courseRatings);
+      }
+      setAllRatings(allRatings); // Actualiza el estado con todas las calificaciones
+    };
+  
+    loadRatings();
+  }, [courses]);
+
+  // Función para calcular el promedio de ratings
+  const calculateAverageRating = (courseId) => {
+    const courseRatings = ratings.filter(rating => rating.courseId === courseId);
+    console.log(`Calificaciones para el curso ${courseId}:`, courseRatings);
+    if (courseRatings.length === 0) return 0;
+  
+    const sumRatings = courseRatings.reduce((sum, rating) => {
+      return sum + (rating.score || 0);
+    }, 0);
+    
+    console.log(`Suma de ratings para el curso ${courseId}:`, sumRatings);
+    console.log((sumRatings / courseRatings.length).toFixed(1));
+    return (sumRatings / courseRatings.length).toFixed(1);
+  };
 
   useEffect(() => {
     localStorage.setItem('userCourses', JSON.stringify(userCourses));
@@ -125,21 +156,26 @@ const CourseCategory = () => {
     course.category.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  const renderCourseCard = (course) => (
-    <HoverCard
-      key={course.id}
-      title={course.title}
-      description={course.description}
-      ruta={course.image}
-      creatorName={course.instructor || "Instructor Desconocido"}
-      rating={course.rating || 4}
-      duration="6 horas"
-      lessons="12 lecciones"
-      onClick={() => handleCardClick(course)}
-      onFavoriteToggle={() => handleFavoriteToggle(course.id)}
-      isFavorite={favorites.includes(course.id)}
-    />
-  );
+  const renderCourseCard = (course) => {
+    const averageRating = calculateAverageRating(course.id); // Llama a la función directamente cada vez que se renderiza
+  
+    return (
+      <div className="px-2" key={course.id}>
+        <HoverCard
+          title={course.title}
+          description={course.description}
+          ruta={course.image}
+          creatorName={course.instructor || "Daniel Gomez"}
+          rating={averageRating || 0} // Asegúrate de mostrar 0 si el promedio es undefined
+          duration="6 horas"
+          lessons="12 lecciones"
+          onClick={() => handleCardClick(course)}
+          onFavoriteToggle={() => handleFavoriteToggle(course.id)}
+          isFavorite={favorites.some(fav => fav.courseId === course.id)}
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 mt-16">

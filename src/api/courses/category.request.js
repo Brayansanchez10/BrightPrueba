@@ -43,3 +43,6 @@ export const updateCategory = (id, categoryData) => {
 
 // Función para eliminar una categoría
 export const deleteCategory = (id) => axios.delete(`${api}/category/deleteCategory/${id}`, { withCredentials: true });
+
+// Función para eliminar solo la categoría
+export const deleteOnlyCategory = (id) => axios.delete(`${api}/category/deleteOnlyCategory/${id}`, { withCredentials: true });

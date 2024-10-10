@@ -511,6 +511,7 @@
         "updateError": "Error updating category",
         "deleteSuccess": "Category successfully deleted",
         "deleteError": "Error deleting category",
+        "auxiliaryNotFound": "Error while deleting, Auxiliary category not found",
         "assign": "Assign",
         "cancel": "Cancel",
         "resource": "Resource",
@@ -545,10 +546,10 @@
     },
     "deleteCategory": {
         "confirmDeletion": "Confirm Deletion",
-        "confirmMessage": "Are you sure you want to delete this category?",
+        "confirmMessage": "Do you want to delete this category with all its courses?",
         "warningMessage": "This action cannot be undone.",
-        "confirmButton": "Confirm",
-        "cancelButton": "Cancel"
+        "confirmButton": "Yes",
+        "onlyButton": "Just the category"
     },
     "detailsCategoryModal": {
         "title": "Details of category",

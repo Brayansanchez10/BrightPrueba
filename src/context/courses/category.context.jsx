@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
-import { createCategory as createCategoryApi, getCategories as getCategoriesApi, updateCategory as updateCategoryApi, deleteCategory as deleteCategoryApi } from '../../api/courses/category.request'; // Importa las funciones de tu archivo api
+import { createCategory as createCategoryApi, getCategories as getCategoriesApi, updateCategory as updateCategoryApi, deleteCategory as deleteCategoryApi, deleteOnlyCategory as deleteOnlyCategoryApi } from '../../api/courses/category.request'; // Importa las funciones de tu archivo api
 
 export const CategoryContext = createContext();
 
@@ -66,12 +66,21 @@ export const CategoryProvider = ({ children }) => {
         }
     };
 
+    const deleteOnlyCategory = async (id) => {
+        try {
+            await deleteOnlyCategoryApi(id);
+            setCategories(categories.filter(cat => cat._id !== id));
+        } catch (error) {
+            throw error;
+        }
+    };
+
     useEffect(() => {
         getCategories();
     }, []);
 
     return (
-        <CategoryContext.Provider value={{ categories, createCategory, getCategories, updateCategory, deleteCategory }}>
+        <CategoryContext.Provider value={{ categories, createCategory, getCategories, updateCategory, deleteCategory, deleteOnlyCategory }}>
             {children}
         </CategoryContext.Provider>
     );

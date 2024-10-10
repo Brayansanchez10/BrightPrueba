@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import pulpoImage from "../../../assets/img/pulpo.png";
 import "../css/Custom.css";
 
-const DeleteCategory = ({ visible, onClose, onConfirm }) => {
+const DeleteCategory = ({ visible, onClose, onConfirm, onConfirmOnly }) => {
   const { t } = useTranslation("global");
   const [loading, setLoading] = useState(false);
 
@@ -12,6 +12,18 @@ const DeleteCategory = ({ visible, onClose, onConfirm }) => {
     setLoading(true);
     try {
       await onConfirm();
+    } catch (error) {
+      console.error("Error confirming deletion:", error);
+    } finally {
+      setLoading(false);
+      onClose();
+    }
+  };
+
+  const handleConfirmOnly = async () => {
+    setLoading(true);
+    try {
+      await onConfirmOnly();
     } catch (error) {
       console.error("Error confirming deletion:", error);
     } finally {
@@ -60,6 +72,14 @@ const DeleteCategory = ({ visible, onClose, onConfirm }) => {
             aria-busy={loading}
           >
             {loading ? <Spin size="small" /> : t("deleteCategory.confirmButton")}
+          </button>
+          <button
+            className={`bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#ff2f22] transition-all duration-300 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+            onClick={handleConfirmOnly}
+            disabled={loading}
+            aria-busy={loading}
+          >
+            {loading ? <Spin size="small" /> : t("deleteCategory.onlyButton")}
           </button>
         </div>
       </div>
