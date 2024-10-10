@@ -101,7 +101,7 @@ const LoginForm = () => {
     >
       <div className="flex w-full max-w-7xl sm:rounded-none sm:m-0 md:rounded-3xl shadow-xl shadow-slate-800 md:m-4">
         
-        <div className="w-3/4 h-full justify-center items-center hidden md:block">
+        <div className="w-3/4 h-full justify-center items-center hidden lg:block">
           <Carousel />
         </div>
 
