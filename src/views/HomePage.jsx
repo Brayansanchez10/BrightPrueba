@@ -1,6 +1,6 @@
 import NavigationBar from '../components/Home/NavigationBar';
 import QuoteCarousel from '../components/Home/QuoteCarousel';
-import Footer from '../components/Footer';
+import Footer from '../components/footer.jsx';
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/img/hola.png';
 import Testimonials from '../components/Home/Testimonials';
