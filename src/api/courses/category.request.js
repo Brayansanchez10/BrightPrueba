@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const api = 'http://localhost:3068/PE'; // Reemplaza la URL base con la correcta
+const api = `https://apibrightmind.mesadoko.com/PE`; // Reemplaza la URL base con la correcta
 
 // Función para crear una categoría
 export const createCategory = (categoryData) => {
