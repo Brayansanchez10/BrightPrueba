@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const api = 'http://localhost:3068/PE/courses/'; 
+const api = `https://apibrightmind.mesadoko.com/PE/courses/`;
 
 const courseRequest = axios.create({
   baseURL: api,
@@ -31,7 +31,7 @@ export const asignarLinkContenido = (id, texto) => {
   const data = { texto };
 
   //Realizar la solicitud POST utilizando axios
-  return courseRequest.post(`/asignarLinkContenido/${id}`, data,{
+  return courseRequest.post(`/asignarLinkContenido/${id}`, data, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -70,7 +70,7 @@ export const createCourse = async (courseData) => {
   } catch (error) {
     console.error("Error al crear un Curso:", error);
     throw error;
-  }  
+  }
 };
 
 // Función para actualizar un curso
