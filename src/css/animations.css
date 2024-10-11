@@ -1,0 +1,25 @@
+/*Login*/
+.bt1 {
+    background: linear-gradient(290deg,#00D8A1, #E6E6FA, #9C27B0);
+    background-size: 1000%;
+    cursor: pointer;
+    transition: background-position 1.5s ease;
+    background-position: 0% 50%;
+}
+
+.bt1:hover {
+    background-position: 100% 50%;
+}
+
+/*Home page*/
+.bt2 {
+    background: linear-gradient(290deg, #00D8A1, #9554d6, #7f0ee9);
+    background-size: 400% 400%;
+    cursor: pointer;
+    transition: background-position 1s ease;
+    background-position: 0% 50%;
+}
+
+.bt2:hover {
+    background-position: 100% 50%;
+}
