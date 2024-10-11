@@ -7,7 +7,11 @@ import { useUserContext } from "../../../context/user/user.context";
 import { useCourseProgressContext } from "../../../context/courses/progress.context";
 import { useCommentContext } from "../../../context/courses/comment.context";
 import { useRatingsContext } from "../../../context/courses/ratings.context";
-import { updateRating, deleteRating } from "../../../api/courses/ratings.request";
+import { useGeneralCommentContext } from "../../../context/courses/generalComment.context";
+import {
+  updateRating,
+  deleteRating,
+} from "../../../api/courses/ratings.request";
 import NavigationBar from "../NavigationBar";
 import {
   updateComment,
@@ -65,6 +69,13 @@ export default function ResourceView() {
     editRating,
     removeRating,
   } = useRatingsContext();
+  const {
+    generalComments,
+    fetchGeneralComments,
+    addGeneralComment,
+    editGeneralComment,
+    removeGeneralComment,
+  } = useGeneralCommentContext();
   const [resource, setResource] = useState(null);
   const [resources, setResources] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -96,6 +107,114 @@ export default function ResourceView() {
   const [editedRatingComment, setEditedRatingComment] = useState("");
   const [showDropdown, setShowDropdown] = useState(null);
   const [userExistingRating, setUserExistingRating] = useState(null);
+  const [userGeneralComment, setUserGeneralComment] = useState("");
+  const [editingGeneralCommentId, setEditingGeneralCommentId] = useState(null);
+  const [editedGeneralCommentContent, setEditedGeneralCommentContent] = useState("");
+
+  useEffect(() => {
+    if (courseId) {
+      fetchGeneralComments(courseId);
+    }
+  }, [courseId, fetchGeneralComments]);
+
+  const handleGeneralCommentSubmit = async (e) => {
+    e.preventDefault();
+    if (userGeneralComment.trim() !== "" && user?.data?.id) {
+      try {
+        const existingComment = generalComments.find(comment => comment.userId === user.data.id);
+        if (existingComment) {
+          Swal.fire({
+            icon: "warning",
+            title: "Ya has comentado",
+            text: "Solo puedes hacer un comentario general por curso. Puedes editar tu comentario existente.",
+          });
+          return;
+        }
+
+        await addGeneralComment({
+          content: userGeneralComment,
+          userId: user.data.id,
+          courseId: parseInt(courseId),
+        });
+        setUserGeneralComment("");
+        await fetchGeneralComments(courseId);
+        Swal.fire({
+          icon: "success",
+          title: "Comentario enviado",
+          text: "Tu comentario general ha sido publicado exitosamente.",
+        });
+      } catch (error) {
+        console.error("Error al enviar comentario general:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ocurrió un error al enviar el comentario general. Por favor, intenta de nuevo más tarde.",
+        });
+      }
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Advertencia",
+        text: "Por favor, escribe un comentario antes de enviar.",
+      });
+    }
+  };
+
+  const handleEditGeneralComment = (commentId, currentContent) => {
+    setEditingGeneralCommentId(commentId);
+    setEditedGeneralCommentContent(currentContent);
+  };
+
+  const handleSaveEditedGeneralComment = async (commentId) => {
+    if (editedGeneralCommentContent.trim() !== "") {
+      try {
+        await editGeneralComment(commentId, { content: editedGeneralCommentContent });
+        await fetchGeneralComments(courseId);
+        setEditingGeneralCommentId(null);
+        setEditedGeneralCommentContent("");
+        Swal.fire({
+          icon: "success",
+          title: "Comentario general actualizado",
+          text: "Tu comentario general ha sido actualizado exitosamente.",
+        });
+      } catch (error) {
+        console.error("Error al editar el comentario general:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ocurrió un error al editar el comentario general. Por favor, intenta de nuevo más tarde.",
+        });
+      }
+    }
+  };
+
+  const handleDeleteGeneralComment = async (commentId) => {
+    try {
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "No podrás revertir esta acción",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (result.isConfirmed) {
+        await removeGeneralComment(commentId);
+        await fetchGeneralComments(courseId);
+        Swal.fire("Eliminado", "Tu comentario general ha sido eliminado.", "success");
+      }
+    } catch (error) {
+      console.error("Error al eliminar el comentario general:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al eliminar el comentario general. Por favor, intenta de nuevo más tarde.",
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchResource = async () => {
@@ -212,7 +331,9 @@ export default function ResourceView() {
   useEffect(() => {
     const checkExistingRating = () => {
       if (user?.data?.id && ratings.length > 0) {
-        const existing = ratings.find(rating => rating.userId === user.data.id);
+        const existing = ratings.find(
+          (rating) => rating.userId === user.data.id
+        );
         setUserExistingRating(existing || null);
         if (existing) {
           setUserRating(existing.score);
@@ -316,60 +437,67 @@ export default function ResourceView() {
   const handleNextQuestion = async () => {
     if (!answers[currentQuestionIndex]) {
       Swal.fire({
-        icon: 'warning',
-        title: 'Advertencia',
-        text: 'Por favor selecciona una respuesta antes de continuar.',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK'
+        icon: "warning",
+        title: "Advertencia",
+        text: "Por favor selecciona una respuesta antes de continuar.",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
       });
       return;
     }
-  
+
     if (currentQuestionIndex === (resource?.quizzes.length || 0) - 1) {
       const correctCount = Object.keys(answers).filter(
         (index) => resource?.quizzes[index]?.correctAnswer === answers[index]
       ).length;
-  
+
       const incorrectCount = Object.keys(answers).length - correctCount;
-  
+
       setCorrectAnswers(correctCount);
       setIncorrectAnswers(incorrectCount);
-  
+
       // Calcular el porcentaje de respuestas correctas
-      const scorePercentage = Math.round((correctCount / resource?.quizzes.length) * 100);
-      
+      const scorePercentage = Math.round(
+        (correctCount / resource?.quizzes.length) * 100
+      );
+
       // Guardar el puntaje obtenido
-      setCurrentScore(scorePercentage); 
-  
+      setCurrentScore(scorePercentage);
+
       // Esperar a que el bestScore se actualice
       if (scorePercentage > bestScore) {
         setBestScore(scorePercentage);
       }
-  
+
       // Si es el último intento
       if (attempts + 1 === maxAttempts) {
         setTimeout(() => {
           setIsQuizStarted(false); // Esto redirige al usuario
         }, 500); // Agregar un pequeño retraso
       }
-  
+
       try {
         const newAttempts = attempts + 1;
         setAttempts(newAttempts);
-        
-        const result = await completeQuiz(user.data.id, resource.id, scorePercentage, newAttempts);
-        console.log('Resultado del quiz:', result);
+
+        const result = await completeQuiz(
+          user.data.id,
+          resource.id,
+          scorePercentage,
+          newAttempts
+        );
+        console.log("Resultado del quiz:", result);
       } catch (error) {
         console.error("Error al completar el quiz:", error);
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo guardar tu progreso.',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'OK'
+          icon: "error",
+          title: "Error",
+          text: "No se pudo guardar tu progreso.",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "OK",
         });
       }
-  
+
       setIsQuizCompleted(true);
       setIsContentCompleted(true);
     } else {
@@ -379,7 +507,6 @@ export default function ResourceView() {
       setError(null);
     }
   };
-
 
   const handleRetakeQuiz = () => {
     if (attempts >= resource?.attempts) {
@@ -625,24 +752,24 @@ export default function ResourceView() {
   const handleNext = async () => {
     if (currentResourceIndex < resources.length - 1) {
       const nextResource = resources[currentResourceIndex + 1];
-      
+
       // Calcula el porcentaje por recurso basado en la cantidad total de recursos
       const percentagePerResource = 100 / resources.length;
-      
+
       // El nuevo progreso es el índice actual + 1 multiplicado por el porcentaje por recurso
       const newProgress = (currentResourceIndex + 1) * percentagePerResource;
-  
+
       // Asegúrate de que el progreso solo suba
       if (newProgress > currentProgress && currentProgress < 100) {
         await updateCourseProgress(user.data.id, courseId, newProgress);
         setCurrentProgress(newProgress); // Actualiza el progreso en el estado local
       }
-  
+
       // Avanza al siguiente recurso
       setCurrentResourceIndex(currentResourceIndex + 1);
       handleResourceClick(nextResource.id, nextResource.courseId);
     }
-  };  
+  };
 
   const handleFinishCourse = async () => {
     await updateCourseProgress(user.data.id, courseId, 100);
@@ -809,7 +936,7 @@ export default function ResourceView() {
             text: "Tu valoración ha sido registrada exitosamente.",
           });
         }
-        
+
         await fetchRatingsByResource(id);
       } catch (error) {
         console.error("Error al enviar calificación:", error);
@@ -831,28 +958,34 @@ export default function ResourceView() {
   const renderResourceList = () => {
     const totalResources = resources.length;
     const percentagePerResource = 100 / totalResources; // Porcentaje que representa cada recurso
-  
+
     return resources.map((res, index) => {
       // Progreso requerido para desbloquear este recurso
       const requiredProgress = Math.floor(index * percentagePerResource);
-  
+
       // Desbloquear si el progreso actual es mayor o igual al progreso requerido
       const isUnlocked = currentProgress >= requiredProgress;
-  
+
       return (
         <div
           key={res.id}
           className={`flex items-start mb-6 cursor-pointer ${
             isOpen ? "pr-4" : "justify-center"
           }`}
-          onClick={() => isUnlocked && handleResourceClick(res.id, res.courseId)} // Solo permitir clic si está desbloqueado
+          onClick={() =>
+            isUnlocked && handleResourceClick(res.id, res.courseId)
+          } // Solo permitir clic si está desbloqueado
         >
           <div className="relative mr-4">
             <div
               className={`
                 flex items-center justify-center
                 w-8 h-8 rounded-full 
-                ${isUnlocked ? "bg-white text-[#6D4F9E]" : "bg-gray-500 text-gray-300 cursor-not-allowed"}
+                ${
+                  isUnlocked
+                    ? "bg-white text-[#6D4F9E]"
+                    : "bg-gray-500 text-gray-300 cursor-not-allowed"
+                }
                 text-sm font-bold
               `}
             >
@@ -878,7 +1011,7 @@ export default function ResourceView() {
         </div>
       );
     });
-  };  
+  };
 
   const handleEditComment = (commentId, currentContent) => {
     setEditingCommentId(commentId);
@@ -968,7 +1101,7 @@ export default function ResourceView() {
       }
     }
   };
-  
+
   const handleDeleteRating = async (ratingId) => {
     try {
       const result = await Swal.fire({
@@ -981,7 +1114,7 @@ export default function ResourceView() {
         confirmButtonText: "Sí, eliminar",
         cancelButtonText: "Cancelar",
       });
-  
+
       if (result.isConfirmed) {
         await deleteRating(ratingId);
         await fetchRatingsByResource(id);
@@ -1040,9 +1173,9 @@ export default function ResourceView() {
             RECURSO
           </button>
           <button
-            onClick={() => setRightSideContent("courseNotes")}
+            onClick={() => setRightSideContent("generalComments")}
             className={`px-6 py-2 rounded-lg text-xs font-bungee whitespace-nowrap ${
-              rightSideContent === "courseNotes"
+              rightSideContent === "generalComments"
                 ? "bg-white text-[#321A5A]"
                 : "bg-[#4B2F7A] text-white"
             }`}
@@ -1082,7 +1215,7 @@ export default function ResourceView() {
               <div className="flex justify-end mt-2">
                 <button
                   onClick={handleCommentSubmit}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center text-sm"
+                  className="px-4 py-2 bg-[#4B2F7A] text-white rounded-md hover:bg-blue-600 transition-colors flex items-center text-sm font-bungee"
                 >
                   <FiSend className="mr-2" /> Comentar
                 </button>
@@ -1231,16 +1364,19 @@ export default function ResourceView() {
               <div className="flex justify-end mt-2">
                 <button
                   onClick={handleRatingSubmit}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center text-sm"
+                  className="px-4 py-2 bg-[#4B2F7A] text-white rounded-md hover:bg-blue-600 transition-colors flex items-center text-sm font-bungee"
                 >
-                  <FiSend className="mr-2" /> 
-                  {userExistingRating ? "Actualizar calificación" : "Enviar calificación"}
+                  <FiSend className="mr-2" />
+                  {userExistingRating
+                    ? "Actualizar calificación"
+                    : "Enviar calificación"}
                 </button>
               </div>
             </div>
             {userExistingRating && (
               <p className="text-yellow-400 mb-4">
-                Ya has calificado este recurso. Puedes actualizar tu calificación si lo deseas.
+                Ya has calificado este recurso. Puedes actualizar tu
+                calificación si lo deseas.
               </p>
             )}
             <div className="space-y-4 max-h-[25.5rem] overflow-y-auto custom-scrollbar">
@@ -1383,12 +1519,141 @@ export default function ResourceView() {
             </div>
           </div>
         )}
-        {rightSideContent === "courseNotes" && (
+    {rightSideContent === "generalComments" && (
           <div className="bg-[#200E3E] p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold mb-4 font-bungee text-white">
-              Comentarios del curso
+            <h3 className="text-lg font-roboto text-white mb-4">
+              {generalComments.length} comentarios generales
             </h3>
-            <p className="text-white">Contenido próximamente disponible.</p>
+            <div className="mb-4">
+              <div className="flex items-center">
+                <input
+                  type="text"
+                  value={userGeneralComment}
+                  onChange={(e) => setUserGeneralComment(e.target.value)}
+                  placeholder="Escribe tu opinión general del curso"
+                  className="w-full bg-transparent border-b border-[#8D8282] focus:outline-none focus:border-white text-[#8D8282] placeholder-[#8D8282] focus:text-white"
+                />
+              </div>
+              <div className="flex justify-end mt-2">
+                <button
+                  onClick={handleGeneralCommentSubmit}
+                  className="px-4 py-2 bg-[#4B2F7A] text-white rounded-md hover:bg-blue-600 transition-colors flex items-center text-sm font-bungee"
+                >
+                  <FiSend className="mr-2" /> Comentar
+                </button>
+              </div>
+            </div>
+            <div className="space-y-4 max-h-[30rem] overflow-y-auto custom-scrollbar">
+              {generalComments.map((comment) => (
+                <div
+                  key={comment.id}
+                  className="flex items-start space-x-3 pb-3 border-b border-gray-700"
+                >
+                  <div className="flex-shrink-0">
+                    {comment.user.userImage ? (
+                      <img
+                        src={comment.user.userImage}
+                        alt={comment.user.username}
+                        className="w-8 sm:w-10 h-8 sm:h-10 rounded-full"
+                      />
+                    ) : (
+                      <div className="w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-gray-700 flex items-center justify-center">
+                        <FaUser className="text-gray-400" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-grow">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-white">
+                          {comment.user.username}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {formatDate(comment.createdAt)}
+                        </p>
+                      </div>
+                      {user.data.id === comment.userId && (
+                        <div className="relative">
+                          <button
+                            onClick={() =>
+                              setShowDropdown(
+                                showDropdown === `general-comment-${comment.id}`
+                                  ? null
+                                  : `general-comment-${comment.id}`
+                              )
+                            }
+                            className="text-gray-400 hover:text-white"
+                          >
+                            <FiMoreVertical />
+                          </button>
+                          
+                          {showDropdown === 
+                            `general-comment-${comment.id}` && (
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                              <button
+                                onClick={() => {
+                                  handleEditGeneralComment(
+                                    comment.id,
+                                    comment.content
+                                  );
+                                  setShowDropdown(null);
+                                }}
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                              >
+                                <FiEdit className="inline-block mr-2" />
+                                Editar
+                              </button>
+                              <button
+                                onClick={() => {
+                                  handleDeleteGeneralComment(comment.id);
+                                  setShowDropdown(null);
+                                }}
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                              >
+                                <FiTrash2 className="inline-block mr-2" />
+                                Eliminar
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    {editingGeneralCommentId === comment.id ? (
+                      <div className="mt-2">
+                        <textarea
+                          value={editedGeneralCommentContent}
+                          onChange={(e) =>
+                            setEditedGeneralCommentContent(e.target.value)
+                          }
+                          className="w-full bg-gray-700 text-white rounded p-2"
+                          rows="3"
+                        />
+                        <div className="flex justify-end mt-2">
+                          <button
+                            onClick={() =>
+                              handleSaveEditedGeneralComment(comment.id)
+                            }
+                            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm mr-2"
+                          >
+                            Guardar
+                          </button>
+                          <button
+                            onClick={() => setEditingGeneralCommentId(null)}
+                            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors text-sm"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-xs sm:text-sm text-gray-300">
+                        {comment.content}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
         {rightSideContent === "secondBrain" && (
@@ -1422,9 +1687,7 @@ export default function ResourceView() {
             >
               {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
             </button>
-            <div className="mt-16 p-4">
-              {renderResourceList()}
-            </div>
+            <div className="mt-16 p-4">{renderResourceList()}</div>
           </div>
         </div>
         <div
@@ -1474,22 +1737,20 @@ export default function ResourceView() {
           </div>
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="w-full lg:w-2/3 bg-[#200E3E] rounded-lg shadow-lg p-4 mb-4">
-            <div className="mb-4">
-                  {/* Si el recurso tiene quizzes, entonces evaluamos el estado del quiz */}
-                  {resource?.quizzes && resource.quizzes.length > 0 ? (
-                    !isQuizStarted ? ( // Si hay quizzes, manejamos el estado del quiz
-                      renderStartQuizView() // Mostrar la vista de inicio del quiz
-                    ) : isQuizCompleted ? (
-                      renderQuizSummary() // Mostrar resumen del quiz completado
-                    ) : (
-                      renderQuiz() // Mostrar el quiz en progreso
-                    )
-                  ) : (
-                    renderContent(resource?.files) // Si NO hay quizzes, mostramos el contenido del recurso (imagen, archivo, etc.)
-                  )}
-                  
-                  {/* Mostrar error si existe */}
-                  {error && <p className="text-red-500 text-center">{error}</p>}
+              <div className="mb-4">
+                {/* Si el recurso tiene quizzes, entonces evaluamos el estado del quiz */}
+                {
+                  resource?.quizzes && resource.quizzes.length > 0
+                    ? !isQuizStarted // Si hay quizzes, manejamos el estado del quiz
+                      ? renderStartQuizView() // Mostrar la vista de inicio del quiz
+                      : isQuizCompleted
+                      ? renderQuizSummary() // Mostrar resumen del quiz completado
+                      : renderQuiz() // Mostrar el quiz en progreso
+                    : renderContent(resource?.files) // Si NO hay quizzes, mostramos el contenido del recurso (imagen, archivo, etc.)
+                }
+
+                {/* Mostrar error si existe */}
+                {error && <p className="text-red-500 text-center">{error}</p>}
               </div>
               <div className="mt-4 flex items-center">
                 <img
@@ -1509,8 +1770,12 @@ export default function ResourceView() {
               <h1 className="text-xl sm:text-2xl font-bold mb-3 mt-4 font-bungee text-white">
                 {resource.title}
               </h1>
-              <div className="prose max-w-none text-sm sm:text-base text-white ml-4">
-                <p>{resource.description}</p>
+              <div className="prose max-w-5xl text-sm sm:text-base text-white ml-4">
+                <div className="h-80 overflow-y-auto">
+                  <p className="whitespace-normal break-words">
+                    {resource.description}
+                  </p>
+                </div>
               </div>
             </div>
             <div className="w-full lg:w-1/3">{renderRightSideContent()}</div>

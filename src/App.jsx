@@ -14,6 +14,7 @@ import { SubCategoryProvider } from "./context/courses/subCategory.context.jsx";
 import { CommentProvider } from "./context/courses/comment.context";
 import { RatingsProvider } from './context/courses/ratings.context.jsx';
 import { FavoritesProvider } from './context/courses/favorites.context.jsx';
+import { GeneralCommentProvider } from './context/courses/generalComment.context.jsx';
 
 // Pages
 import LoginForm from "./views/LoginForm";
@@ -71,6 +72,7 @@ function App() {
                      <CommentProvider>
                       <RatingsProvider>
                         <FavoritesProvider>
+                        <GeneralCommentProvider>
                         <Routes>
                           {/* Vistas del LOGIN */}
                           <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
@@ -114,8 +116,9 @@ function App() {
                           <Route path="/activate" element={<ActivationComponent />} />
                           <Route path="*" element={<Navigate to="/notFound" />} />
                         
-                        </Routes>
-                         </FavoritesProvider>
+                        </Routes> 
+                         </GeneralCommentProvider>
+                        </FavoritesProvider>
                         </RatingsProvider>
                       </CommentProvider>
                     </SubCategoryProvider>
