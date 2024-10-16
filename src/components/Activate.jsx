@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import imagen from "../assets/img/hola.png";
 import { motion } from "framer-motion";
-
-const phrases = ["User successfully activated"];
 
 const WelcomePage = () => {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [userActivated, setUserActivated] = useState(false);
+  const [activationError, setActivationError] = useState(null);
   const navigate = useNavigate();
+  const { userId } = useParams(); // Asumiendo que pasas el ID del usuario por la URL
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -17,20 +17,33 @@ const WelcomePage = () => {
       );
     }, 3000);
 
-    const activationTimeout = setTimeout(() => {
-      setUserActivated(true);
-    }, 1000);
+    // Petición al backend para activar al usuario
+    const activateUser = async () => {
+      try {
+        const response = await fetch(`https://brightmind-back.onrender.com/PE/activation/${userId}`);
+        const data = await response.json();
+
+        if (data.success) {
+          setUserActivated(true); // Si la activación fue exitosa
+        } else {
+          setActivationError(data.message); // Si hubo un error
+        }
+      } catch (error) {
+        setActivationError("Error de servidor. Inténtalo de nuevo más tarde.");
+      }
+    };
+
+    activateUser();
 
     const navigateTimeout = setTimeout(() => {
-      navigate("/");
+      navigate("/"); // Redirigir al home después de la activación
     }, 3000);
 
     return () => {
       clearInterval(interval);
-      clearTimeout(activationTimeout);
       clearTimeout(navigateTimeout);
     };
-  }, [navigate]);
+  }, [navigate, userId]);
 
   return (
     <div className="bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 min-h-screen flex justify-center items-center">
@@ -55,35 +68,46 @@ const WelcomePage = () => {
             transition={{ duration: 2, loop: Infinity, ease: "linear" }}
           />
         </motion.div>
-        <motion.div
-          className="text-2xl mt-2 text-center font-semibold text-white"
-          key={currentPhraseIndex}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          {phrases[currentPhraseIndex]}
-        </motion.div>
-        {userActivated && (
-          <motion.h2
-            className="text-3xl mb-4 font-bold text-black flex justify-center mt-4"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            Welcome to our educational platform!
-          </motion.h2>
+        
+        {activationError ? (
+          <div className="text-2xl mt-2 text-center font-semibold text-red-500">
+            {activationError}
+          </div>
+        ) : (
+          <>
+            <motion.div
+              className="text-2xl mt-2 text-center font-semibold text-white"
+              key={currentPhraseIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+            >
+              User successfully activated
+            </motion.div>
+
+            {userActivated && (
+              <motion.h2
+                className="text-3xl mb-4 font-bold text-black flex justify-center mt-4"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                Welcome to our educational platform!
+              </motion.h2>
+            )}
+
+            <div className="flex justify-center mt-6">
+              <motion.button
+                onClick={() => navigate("/")}
+                className="py-2 px-6 text-lg bg-green-500 text-white rounded-lg shadow-lg hover:bg-lime-500 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                Log in
+              </motion.button>
+            </div>
+          </>
         )}
-        <div className="flex justify-center mt-6">
-          <motion.button
-            onClick={() => navigate("/")}
-            className="py-2 px-6 text-lg bg-green-500 text-white rounded-lg shadow-lg hover:bg-lime-500 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            Log in
-          </motion.button>
-        </div>
       </motion.div>
     </div>
   );
