@@ -1,7 +1,7 @@
 // Resource.request.js
 import axios from "axios";
 
-const api = 'http://localhost:3068/PE/resource/';
+const api = `http://localhost:3068/PE/resource/`;
 
 const resourceRequest = axios.create({
     baseURL: api,

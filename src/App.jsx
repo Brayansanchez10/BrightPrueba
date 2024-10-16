@@ -15,6 +15,7 @@ import { CommentProvider } from "./context/courses/comment.context";
 import { RatingsProvider } from './context/courses/ratings.context.jsx';
 import { FavoritesProvider } from './context/courses/favorites.context.jsx';
 import { NotesProvider } from './context/courses/notes.context.jsx'; // Importar NoteProvider
+import { GeneralCommentProvider } from './context/courses/generalComment.context.jsx';
 
 // Pages
 import LoginForm from "./views/LoginForm";
@@ -73,7 +74,8 @@ function App() {
                       <RatingsProvider>
                         <FavoritesProvider>
                           <NotesProvider> {/* Agregar NoteProvider */}
-                            <Routes>
+                            <GeneralCommentProvider>
+                        <Routes>
                               {/* Vistas del LOGIN */}
                               <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
                                 <Route path="/" element={<LoginForm />} />
@@ -111,24 +113,26 @@ function App() {
                                 <Route path="" element={Footer} />
                               </Route>
 
-                              {/* Vistas ADICIONALES */}
-                              <Route path="/notFound" element={<NotFoundPage />} />
-                              <Route path="/activate" element={<ActivationComponent />} />
-                              <Route path="*" element={<Navigate to="/notFound" />} />
-                            </Routes>
-                          </NotesProvider>
+                          {/* Vistas ADICIONALES */}
+                          <Route path="/notFound" element={<NotFoundPage />} />
+                          <Route path="/activate" element={<ActivationComponent />} />
+                          <Route path="*" element={<Navigate to="/notFound" />} />
+                        
+                        </Routes> 
+                         </GeneralCommentProvider>
+                         </NotesProvider>
                         </FavoritesProvider>
-                      </RatingsProvider>
-                    </CommentProvider>
-                  </SubCategoryProvider>
-                </CourseProgressProvider>
-              </ResourceProvider>
-            </CoursesProvider>
-          </CategoryProvider>
-        </PermissionProvider>
-      </RoleProvider>
-    </UserProvider>
-  </AuthProvider>
+                        </RatingsProvider>
+                      </CommentProvider>
+                    </SubCategoryProvider>
+                  </CourseProgressProvider>
+                </ResourceProvider>
+              </CoursesProvider>
+            </CategoryProvider>
+          </PermissionProvider>
+        </RoleProvider>
+      </UserProvider>
+    </AuthProvider>
   );
 }
 

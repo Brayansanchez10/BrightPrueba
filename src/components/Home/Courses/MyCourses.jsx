@@ -36,7 +36,6 @@ const CoursesComponent = () => {
     fetchUserCourses();
   }, [user, getUserCourses]);
 
-  // Efecto para cargar el progreso de los cursos del usuario
   useEffect(() => {
     const fetchCourseProgress = async () => {
       if (userCourses.length > 0) {
@@ -44,11 +43,11 @@ const CoursesComponent = () => {
         for (let course of userCourses) {
           try {
             const progressResponse = await getCourseProgress(user.data.id, course.id);
-            const courseProgress = progressResponse ?? 0; // Asegurar que siempre haya un valor
+            const courseProgress = progressResponse ?? 0;
             progressData[course.id] = courseProgress;
           } catch (error) {
             console.error(`Error al obtener el progreso para el curso ${course.id}:`, error);
-            progressData[course.id] = 0; // Valor por defecto si falla
+            progressData[course.id] = 0;
           }
         }
         setCourseProgress(progressData);
@@ -56,7 +55,7 @@ const CoursesComponent = () => {
     };
 
     fetchCourseProgress();
-  }, [userCourses, user]);
+  }, [userCourses, user, getCourseProgress]);
 
   const handleCourseClick = (courseId) => {
     console.log("Course ID:", courseId);
@@ -87,7 +86,7 @@ const CoursesComponent = () => {
                   <span className="text-purple-700">{t('coursesComponent.courses')}</span>
                 </h1>
               </div>
-              <div className="w-full md:w-auto">
+              <div className="w-full md:w-auto mt-4 sm:mt-0">
                 <div className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md">
                   <FaSearch size={"18px"} className="mt-1 mr-2" />
                   <input
@@ -100,7 +99,7 @@ const CoursesComponent = () => {
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-1 p-4 mx-4 mt-10 gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 md:mx-6 lg:mx-10 xl:mx-20 md:gap-x-8 md:gap-y-4 lg:gap-x-10 lg:gap-y-6 xl:gap-x-14 xl:gap-y-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 p-4 mx-4 mt-10 gap-5 md:mx-6 lg:mx-10 xl:mx-20 md:gap-y-6 lg:gap-y-8 xl:gap-y-10">
               {paginatedCourses.map((course) => (
                 <div
                   key={course.id}
@@ -112,11 +111,11 @@ const CoursesComponent = () => {
                       <img
                         src={course.image}
                         alt={course.title}
-                        className="w-full h-[220px] sm:w-36 sm:h-36 rounded-t-xl sm:rounded-xl"
+                        className="w-full h-[220px] sm:w-36 sm:h-36 rounded-t-xl sm:rounded-xl object-cover"
                       />
                     </div>
                     <div className="flex-grow p-5">
-                      <h3 className="text-xl sm:text-3xl font-bold text-gray-800 mb-2 sm:mb-4 -mt-3">
+                      <h3 className="text-xl sm:text-3xl font-bold text-gray-800 mb-2 sm:mb-4 -mt-3 break-words">
                         {course.title}
                       </h3>
                       <p className="text-[12px] sm:text-base text-gray-400 font-semibold -mb-12">
