@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { FaHeart, FaClock, FaPlay } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdPlayCircleOutline } from "react-icons/md";
-import { FaRegChartBar } from "react-icons/fa";
+import { getSubCategoryCourseId } from "../../../api/courses/subCategory.requst.js";
 
-const HoverCard = ({ title, description, ruta, creatorName, rating, duration, lessons, onClick, onFavoriteToggle, isFavorite }) => {
+export default function Component({ 
+  title, 
+  description, 
+  ruta, 
+  creatorName, 
+  rating, 
+  duration, 
+  courseId, 
+  onClick, 
+  onFavoriteToggle, 
+  isFavorite 
+}) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [subCategories, setSubCategories] = useState([]);
 
   useEffect(() => {
     const img = new Image();
@@ -13,9 +25,27 @@ const HoverCard = ({ title, description, ruta, creatorName, rating, duration, le
     img.onload = () => setImageLoaded(true);
   }, [ruta]);
 
+  useEffect(() => {
+    const fetchSubCategories = async () => {
+      try {
+        const response = await getSubCategoryCourseId(courseId);
+        setSubCategories(response.data);
+      } catch (error) {
+        console.error("Error al obtener las subcategorías:", error);
+      }
+    };
+
+    fetchSubCategories();
+  }, [courseId]);
+
   const handleHeartClick = async (e) => {
     e.stopPropagation();
     await onFavoriteToggle();
+  };
+
+  const formatRating = (rating) => {
+    const numRating = parseFloat(rating);
+    return Number.isInteger(numRating) ? numRating.toString() : numRating.toFixed(1);
   };
 
   return (
@@ -23,8 +53,8 @@ const HoverCard = ({ title, description, ruta, creatorName, rating, duration, le
       className="group cursor-pointer rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 mb-4"
       onClick={onClick}
       style={{
-        width: "250px", 
-        height: "290px", 
+        width: "250px",
+        height: "290px",
         marginRight: "20px",
         marginTop: "10px",
       }}
@@ -35,14 +65,14 @@ const HoverCard = ({ title, description, ruta, creatorName, rating, duration, le
           overflow: "hidden",
           borderTopLeftRadius: "0.5rem",
           borderTopRightRadius: "0.5rem",
-          height: "175px", 
+          height: "175px",
         }}
       >
         <img
           src={ruta}
           alt="Image Course Preview"
           className={`w-full h-full ${imageLoaded ? "" : "hidden"}`}
-          style={{ objectFit: "cover", width: "100%", height: "100%" }} 
+          style={{ objectFit: "cover", width: "100%", height: "100%" }}
         />
 
         <div
@@ -76,7 +106,7 @@ const HoverCard = ({ title, description, ruta, creatorName, rating, duration, le
               <path d="M12 2.2l2.4 4.8 5.2.8-3.8 3.7.9 5.3-4.7-2.5-4.7 2.5.9-5.3-3.8-3.7 5.2-.8L12 2.2z" />
             </svg>
           ))}
-          <span className="text-gray-600 ml-1 text-xs mt-2">{rating}/5</span>
+          <span className="text-gray-600 ml-1 text-xs mt-2">{formatRating(rating)}/5</span>
         </div>
         <div className="border-t border-gray-300 pt-1 flex justify-between items-center text-gray-600 text-xs mt-0">
           <div className="flex items-center">
@@ -85,12 +115,10 @@ const HoverCard = ({ title, description, ruta, creatorName, rating, duration, le
           </div>
           <div className="flex items-center">
             <MdPlayCircleOutline className="mr-1" />
-            <span>{lessons}</span>
+            <span>{subCategories.length} recursos</span>
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default HoverCard;
+}
