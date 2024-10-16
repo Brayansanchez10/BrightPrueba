@@ -277,7 +277,7 @@
     "datatable": {
         "Users": "Users",
         "CreateUser": "Create User",
-        "SearchByName": "Search by Name",
+        "SearchByName": "Search...",
         "ID": "ID",
         "Role": "Role",
         "Name": "Name",
@@ -685,19 +685,45 @@
         "previous": "Previous",
         "next": "Next",
         "finish": "Finish"
-      },
-      "resource_view": {
+    },
+    "resource_view": {
         "title": "Resource Title",
         "description": "Resource Description",
-        "publishedOn": "Published on"
-      },
-      "announcement": {
+        "publishedOn": "Published on",
+        "progress": "Course progress",
+        "commentsR": "Resource comments",
+        "comments": "comments",
+        "comment": "Comment",
+        "placeholder": "Write your opinion of the resource",
+        "notes1": "Resource",
+        "notes2": "notes",
+        "commentsG": "General comments",
+        "notesOf": "Notes of",
+        "notesR": "course",
+        "addNotePlaceholder2": "Write your note",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save",
+        "cancel": "Cancel",
+        "ratings": "ratings",
+        "placeholderR": "Write a comment about your rating (optional)",
+        "already": "You have already rated this resource. You can update your rating if you wish.",
+        "qualify": "Qualify",
+        "update": "Update",
+        "courseNotes": "Notes",
+        "addNotePlaceholder1": "Write the title of general note",
+        "addNote": "Create",
+        "noNotes": "There are no notes for this course yet",
+        "noResourceNotes": "There are no notes for this resource yet",
+        "resourceNoteExists": "There is already a note for this resource. You can edit it if you wish."
+    },
+    "announcement": {
         "comingSoon": "Course User Comments",
         "comingSoonNotes": "Course Ratings and Reviews",
         "stayTuned": "Stay tuned for our upcoming updates and events.",
         "descriptionSoon": "Discover the opinions of other users and share your experience by engaging with the course.",
         "descriptionNotes": "Check out other students' ratings to get a better idea of the course's quality."
-      },
+    },
     "months": {
         "january": "January",
         "february": "February",

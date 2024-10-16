@@ -166,7 +166,6 @@ const CreateSubCategoryForm = ({
     try {
       await deleteSubcategory(sub.id); // Asegúrate de que sub.id contenga el identificador correcto.
       Swal.fire({
-        position: "top-end",
         icon: "success",
         title: t("subCategory.AlertSuccessDelete"),
         showConfirmButton: false,
@@ -355,6 +354,7 @@ const CreateSubCategoryForm = ({
                   className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
                     errors.title ? "border-red-500" : "border-gray-300"
                   } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
+                  maxLength={30}
                   required
                 ></input>
                 {errors.title && (

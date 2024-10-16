@@ -14,6 +14,7 @@ import { SubCategoryProvider } from "./context/courses/subCategory.context.jsx";
 import { CommentProvider } from "./context/courses/comment.context";
 import { RatingsProvider } from './context/courses/ratings.context.jsx';
 import { FavoritesProvider } from './context/courses/favorites.context.jsx';
+import { NotesProvider } from './context/courses/notes.context.jsx'; // Importar NoteProvider
 
 // Pages
 import LoginForm from "./views/LoginForm";
@@ -71,62 +72,63 @@ function App() {
                      <CommentProvider>
                       <RatingsProvider>
                         <FavoritesProvider>
-                        <Routes>
-                          {/* Vistas del LOGIN */}
-                          <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
-                            <Route path="/" element={<LoginForm />} />
-                            <Route path="/register" element={<RegisterForm />} />
-                            <Route path="/reset" element={<ResetPasswordForm />} />
-                            <Route path="/code" element={<ResetPasswordVerifyForm />} />
-                            <Route path="/newPassword" element={<NewPassword />} />
-                          </Route>
+                          <NotesProvider> {/* Agregar NoteProvider */}
+                            <Routes>
+                              {/* Vistas del LOGIN */}
+                              <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
+                                <Route path="/" element={<LoginForm />} />
+                                <Route path="/register" element={<RegisterForm />} />
+                                <Route path="/reset" element={<ResetPasswordForm />} />
+                                <Route path="/code" element={<ResetPasswordVerifyForm />} />
+                                <Route path="/newPassword" element={<NewPassword />} />
+                              </Route>
 
-                        {/* Vistas para USUARIO */}
-                        <Route element={<ProtectedRoute requiredRole="usuario"/>}>
-                          <Route path="/Home" element={<HomePage />} />
-                          <Route path="/MyCourses" element={<MyCourses />} />
-                          <Route path="/CoursesHome" element={<CoursesHome />} />
-                          <Route path="/course/:courseId" element={<CourseView />} />
-                          <Route path="/course/:courseId/resource/:id" element={<ResourceView /> } />
-                          <Route path="/Account" element={<ProfileUser />} />
-                          <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />
-                          <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />
-                          <Route path="/AllCourses" element={<AllCourses />}/>
-                          <Route path="/CourseCategory/:category" element={<CourseCategory />} />
-                          <Route path="" element={Footer} />
-                        </Route>
+                              {/* Vistas para USUARIO */}
+                              <Route element={<ProtectedRoute requiredRole="usuario"/>}>
+                                <Route path="/Home" element={<HomePage />} />
+                                <Route path="/MyCourses" element={<MyCourses />} />
+                                <Route path="/CoursesHome" element={<CoursesHome />} />
+                                <Route path="/course/:courseId" element={<CourseView />} />
+                                <Route path="/course/:courseId/resource/:id" element={<ResourceView /> } />
+                                <Route path="/Account" element={<ProfileUser />} />
+                                <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />
+                                <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />
+                                <Route path="/AllCourses" element={<AllCourses />}/>
+                                <Route path="/CourseCategory/:category" element={<CourseCategory />} />
+                                <Route path="" element={Footer} />
+                              </Route>
 
-                        {/* Rutas Protegidas PARA ADMINISTRADOR */}
-                        <Route element={<ProtectedRoute requiredRole="Admin"/>}>
-                          <Route path="/admin" element={<Dashboard />} />
-                          <Route path="/Usuarios" element={<Usuarios />} />
-                          <Route path="/Courses" element={<Courses />} />
-                          <Route path="/Categories" element={<Categories />} />
-                          <Route path="/roles" element={<Roles />} />
-                          <Route path="/ProfileEditor" element={<ProfileEditor />} />
-                          <Route path="/ChangePassword" element={<ChangePassword />} />
-                          <Route path="/eliminatedCode" element={<DeleteAccountConfirmation />} />
-                          <Route path="" element={Footer} />
-                        </Route>
+                              {/* Rutas Protegidas PARA ADMINISTRADOR */}
+                              <Route element={<ProtectedRoute requiredRole="Admin"/>}>
+                                <Route path="/admin" element={<Dashboard />} />
+                                <Route path="/Usuarios" element={<Usuarios />} />
+                                <Route path="/Courses" element={<Courses />} />
+                                <Route path="/Categories" element={<Categories />} />
+                                <Route path="/roles" element={<Roles />} />
+                                <Route path="/ProfileEditor" element={<ProfileEditor />} />
+                                <Route path="/ChangePassword" element={<ChangePassword />} />
+                                <Route path="/eliminatedCode" element={<DeleteAccountConfirmation />} />
+                                <Route path="" element={Footer} />
+                              </Route>
 
-                          {/* Vistas ADICIONALES */}
-                          <Route path="/notFound" element={<NotFoundPage />} />
-                          <Route path="/activate" element={<ActivationComponent />} />
-                          <Route path="*" element={<Navigate to="/notFound" />} />
-                        
-                        </Routes>
-                         </FavoritesProvider>
-                        </RatingsProvider>
-                      </CommentProvider>
-                    </SubCategoryProvider>
-                  </CourseProgressProvider>
-                </ResourceProvider>
-              </CoursesProvider>
-            </CategoryProvider>
-          </PermissionProvider>
-        </RoleProvider>
-      </UserProvider>
-    </AuthProvider>
+                              {/* Vistas ADICIONALES */}
+                              <Route path="/notFound" element={<NotFoundPage />} />
+                              <Route path="/activate" element={<ActivationComponent />} />
+                              <Route path="*" element={<Navigate to="/notFound" />} />
+                            </Routes>
+                          </NotesProvider>
+                        </FavoritesProvider>
+                      </RatingsProvider>
+                    </CommentProvider>
+                  </SubCategoryProvider>
+                </CourseProgressProvider>
+              </ResourceProvider>
+            </CoursesProvider>
+          </CategoryProvider>
+        </PermissionProvider>
+      </RoleProvider>
+    </UserProvider>
+  </AuthProvider>
   );
 }
 
