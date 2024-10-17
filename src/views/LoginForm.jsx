@@ -193,7 +193,7 @@ const LoginForm = () => {
                 {t("login.register")}
               </Link>
             </div>
-            <div className="flex items-center justify-center md:hidden">
+            <div className="flex items-center justify-center lg:hidden">
               <p className="text-xs text-gray-300 font-bold text-center">
                 {t('footer.description')}
                 <p className="text-xs text-center">{t('footer.copy_right')}</p>
