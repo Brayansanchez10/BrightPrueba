@@ -8,7 +8,7 @@ const WelcomePage = () => {
   const [userActivated, setUserActivated] = useState(false);
   const [activationError, setActivationError] = useState(null);
   const navigate = useNavigate();
-  const { userId } = useParams(); // Asumiendo que pasas el ID del usuario por la URL
+  const { id } = useParams(); // Asumiendo que pasas el ID del usuario por la URL
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -20,7 +20,7 @@ const WelcomePage = () => {
     // Petición al backend para activar al usuario
     const activateUser = async () => {
       try {
-        const response = await fetch(`https://brightmind-back.onrender.com/PE/activation/${userId}`);
+        const response = await fetch(`https://apibrightmind.mesadoko.com/PE/activation/${id}`);
         const data = await response.json();
 
         if (data.success) {
@@ -43,7 +43,8 @@ const WelcomePage = () => {
       clearInterval(interval);
       clearTimeout(navigateTimeout);
     };
-  }, [navigate, userId]);
+  }, [navigate, id]);
+
 
   return (
     <div className="bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 min-h-screen flex justify-center items-center">

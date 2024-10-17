@@ -113,7 +113,7 @@ function App() {
 
                           {/* Vistas ADICIONALES */}
                           <Route path="/notFound" element={<NotFoundPage />} />
-                          <Route path="/activate" element={<ActivationComponent />} />
+                          <Route path="/activate/:id" element={<ActivationComponent />} />
                           <Route path="*" element={<Navigate to="/notFound" />} />
                         
                         </Routes> 
