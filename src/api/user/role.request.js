@@ -1,5 +1,5 @@
 import axios from 'axios'
-const api = `http://localhost:3068/PE`
+const api = `https://apibrightmind.mesadoko.com/PE`
 
 export const getAllRoles = () => axios.get(`${api}/roles/getRoles`,{withCredentials: true})
 export const getRole = (_id) => axios.get(`${api}/roles/getRole/${_id}`,{withCredentials: true})

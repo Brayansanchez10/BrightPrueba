@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const api = 'http://localhost:3068/PE/notes';
+const api = 'https://apibrightmind.mesadoko.com/PE/notes';
 
 const notesRequest = axios.create({
     baseURL: api,
