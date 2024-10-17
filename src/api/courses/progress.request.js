@@ -10,17 +10,13 @@ export const getCourseProgress = async (userId, courseId) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching course progress:", error);
-    throw error; // o maneja el error como prefieras
+    console.error("Error al obtener o crear el progreso del curso:", error);
+    throw error;
   }
 };
 
 // Función para actualizar el progreso de un curso para un usuario específico
 export const updateCourseProgress = async (userId, courseId, progress) => {
-  console.log("userID: " + userId);
-  console.log("courseID: " + courseId);
-  console.log("progress: " + progress);
-
   try {
     const response = await axios.post(`${api}/updateProgress`, {
       userId,
@@ -34,7 +30,7 @@ export const updateCourseProgress = async (userId, courseId, progress) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error updating course progress:", error);
+    console.error("Error al actualizar el progreso del curso:", error);
     throw error;
   }
 };

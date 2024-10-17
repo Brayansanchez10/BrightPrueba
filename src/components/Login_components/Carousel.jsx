@@ -62,10 +62,10 @@ function Carousel() {
           </div>
         </a>
       </div>
-      <div className="absolute top-[150px] left-0 xl:left-[-20px]">
+      <div className="absolute top-[146px] left-0 xl:left-[-20px]">
         <a href="https://mesadoko.com/mesadoko-app.html" target="_blank" rel="noopener noreferrer">
           <div className="flex bg-blue-600 p-2 rounded-br-lg group">
-            <img src={doko} className="text-white text-xl h-6 drop-shadow-xl" />
+            <img src={doko} className="text-white text-xl h-[20px] drop-shadow-xl" />
             <p className="text-white font-semibold  ml-2 hidden group-hover:block">Diviertete aprendiendo</p>
           </div>
         </a>
