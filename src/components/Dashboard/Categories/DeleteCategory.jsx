@@ -3,10 +3,23 @@ import { Modal, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import pulpoImage from "../../../assets/img/pulpo.png";
 import "../css/Custom.css";
+import { useCategoryContext } from "../../../context/courses/category.context";
 
 const DeleteCategory = ({ visible, onClose, onConfirm, onConfirmOnly }) => {
   const { t } = useTranslation("global");
   const [loading, setLoading] = useState(false);
+  const { getCategories } = useCategoryContext();
+  const [ categories, setCategories ] = useState();
+
+  const fetchCategories = async () => {
+    try {
+      const response = await getCategories();
+      setCategories(response.data);
+    } catch (err) {
+      console.error("Error al obtener todas las categorias:", err);
+      toast.error("Error al obtener todas las categorias");
+    }
+  };
 
   const handleConfirm = async () => {
     setLoading(true);
@@ -17,6 +30,7 @@ const DeleteCategory = ({ visible, onClose, onConfirm, onConfirmOnly }) => {
     } finally {
       setLoading(false);
       onClose();
+      fetchCategories();
     }
   };
 
@@ -29,6 +43,7 @@ const DeleteCategory = ({ visible, onClose, onConfirm, onConfirmOnly }) => {
     } finally {
       setLoading(false);
       onClose();
+      fetchCategories();
     }
   };
 

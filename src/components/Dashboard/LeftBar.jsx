@@ -160,6 +160,9 @@ const LeftBar = ({ onVisibilityChange }) => {
         <Link to="/Categories" className={`group flex rounded-xl my-1 py-2 px-4 md:px-6 text-left shadow-lg w-full transition duration-300 ${location.pathname === '/Categories' ? 'shadow-gray-500 bg-white text-purple-700' : 'hover:shadow-gray-500 hover:bg-white hover:text-purple-700'}`}>
           <FaTags size="20px" className={`mr-2 h-5 ${location.pathname === '/Categories' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('leftBarComponent.categories')}
         </Link>
+        <Link to="/ForumCategories" className={`group flex rounded-xl my-1 py-2 px-4 md:px-6 text-left shadow-lg w-full transition duration-300 ${location.pathname === '/ForumCategories' ? 'shadow-gray-500 bg-white text-purple-700' : 'hover:shadow-gray-500 hover:bg-white hover:text-purple-700'}`}>
+          <FaTags size="20px" className={`mr-2 h-5 ${location.pathname === '/ForumCategories' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('Foro')}
+        </Link>
         <Link to="/Roles" className={`group flex rounded-xl my-1 py-2 px-4 md:px-6 text-left shadow-lg w-full transition duration-300 ${location.pathname === '/Roles' ? 'shadow-gray-500 bg-white text-purple-700' : 'hover:shadow-gray-500 hover:bg-white hover:text-purple-700'}`}>
           <FaDiceD20 size="20px" className={`mr-2 h-5 ${location.pathname === '/Roles' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('leftBarComponent.roles')}
         </Link>

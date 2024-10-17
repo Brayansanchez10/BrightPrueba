@@ -11,7 +11,7 @@ const DetailsCategoryModal = ({ visible, onClose, category }) => {
 
   return (
     <Modal 
-      className="custom w-[543px] h-[700px] bg-white rounded-3xl"
+      className="custom w-[543px] h-[680px] bg-white rounded-3xl"
       onCancel={onClose} 
       closable={false}
       visible={visible}
@@ -36,9 +36,8 @@ const DetailsCategoryModal = ({ visible, onClose, category }) => {
           </button>
         </div>
         <div className="px-5 py-6">
-          <h1 className="text-center text-[#350B48] text-3xl font-extrabold mt-10 mb-5 overflow-hidden text-ellipsis whitespace-nowrap font-bungee">
+          <h1 className="text-center text-[#350B48] text-2xl mt-10 mb-5 font-bungee">
             {t("detailsCategoryModal.title")}
-            <span className="font-extrabold uppercase"></span>
           </h1>
           <div>
             <div className="mb-5">

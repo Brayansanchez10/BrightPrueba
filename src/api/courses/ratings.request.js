@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const api = 'http://localhost:3068/PE/ratings/';
+const api = `http://localhost:3068/PE/ratings/`;
 
 const ratingsRequest = axios.create({
     baseURL: api,

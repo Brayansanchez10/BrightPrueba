@@ -100,13 +100,18 @@ const DataTablete = () => {
 
   const handleUpdateSubmit = async (values) => {
     try {
-      await updateCategory(selectedCategory.id, values);
+      const updatedCategory = await updateCategory(selectedCategory.id, values);
       Swal.fire({
         title: t("categories.updateSuccess"),
         icon: "success",
         timer: 1500,
         showConfirmButton: false,
       });
+      // Actualizar el estado local de las categorías
+      const updatedCategories = categories.map(cat => 
+        cat.id === selectedCategory.id ? updatedCategory : cat
+      );
+      getCategories(updatedCategories);
       setDataFlag((prevFlag) => !prevFlag);
     } catch (error) {
       console.error(error);
