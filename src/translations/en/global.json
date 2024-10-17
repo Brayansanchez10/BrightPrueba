@@ -773,5 +773,81 @@
     "currentScore": "Current Score",
     "Again": "Try again",
     "NumerQuizz": "Number of attempts"
+    },
+    "forumCategory": {
+        "noCategory": "No categories created"
+    },
+    "Topic": {
+        "topicDelete": "Topic successfully deleted",
+        "topicDeleteError": "Error deleting the topic",
+        "topicLoading": "Loading",
+        "alertDelete": "Are you sure you want to delete?",
+        "texAlertDelete": "This action cannot be undone",
+        "yesDelete": "Yes, delete",
+        "buttonCancel": "Cancel",
+        "noTopic": "No topics created",
+        "topicCreate": "Create Topic"
+    },
+    "topicView": {
+        "topicComment": "Create Comment",
+        "comments": "Comments"
+    },
+    "createTopic": {
+        "topicCreateAlert": "Topic successfully created",
+        "topicCreateErrorAlert": "Error creating the topic",
+        "ModalTitle": "Create Topic",
+        "buttonCreate": "Create Topic",
+        "topicTitle": "Please enter a title for your topic",
+        "topicContent": "Content",
+        "create": "Create",
+        "cancel": "Cancel",
+        "validateTitle": "Minimum characters for the title is 3",
+        "validateContent": "Minimum characters for the content is 8"
+    },
+    "updateTopic": {
+        "updateAlert": "Topic successfully updated",
+        "TitleModalCreate": "Update Topic",
+        "topicTitle": "Please enter a title for your topic",
+        "topicContent": "Content",
+        "update": "Save",
+        "cancel": "Cancel",
+        "validateTitle": "Minimum characters for the title is 3",
+        "validateContent": "Minimum characters for the content is 8"
+    },
+    "createComments": {
+        "createAlert": "Comment successfully created",
+        "createErrorAlert": "Error creating the comment",
+        "TitleModalCreate": "Create Comment",
+        "commentsContent": "Content",
+        "create": "Create",
+        "cancel": "Cancel",
+        "validateContent": "Minimum characters for the content is 8"
+    },
+    "updateComments": {
+        "updateAlert": "Comment successfully updated",
+        "updateErrorAlert": "Error updating the comment",
+        "TitleModalCreate": "Update Comment",
+        "commentsContent": "Content",
+        "create": "Create",
+        "cancel": "Cancel",
+        "validateContent": "Minimum characters for the content is 8"
+    },
+    "CreateAnswer": {
+        "createAlert": "Answer successfully created",
+        "createErrorAlert": "Error creating the answer",
+        "TitleModalCreate": "Replying to the comment: ",
+        "answersContent": "Content",
+        "create": "Create",
+        "cancel": "Cancel",
+        "validateContent": "Minimum characters for the content is 8"
+    },
+    "updateAnswer": {
+        "updateAlert": "Answer successfully updated",
+        "updateErrorAlert": "Error updating the answer",
+        "TitleModalCreate": "Updating Answer",
+        "answersContent": "Content",
+        "create": "Create",
+        "cancel": "Cancel",
+        "validateContent": "Minimum characters for the content is 8"
     }
 }

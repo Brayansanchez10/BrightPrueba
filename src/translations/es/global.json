@@ -771,5 +771,81 @@
         "currentScore": "Puntaje Obtenido",
         "Again": "Volver a intentar",
         "NumerQuizz": "Numero de intentos"
+    },
+    "forumCategory": {
+        "noCategory": "No hay categorias creadas"
+    },
+    "Topic": {
+        "topicDelete": "Tema eliminado exitosamente",
+        "topicDeleteError": "Error al eliminar un tema",
+        "topicLoading": "Cargando",
+        "alertDelete": "Estas seguro de eliminar?",
+        "texAlertDelete": "No podrás revertir esta acción",
+        "yesDelete": "Sí, eliminar",
+        "buttonCancel": "Cancelar",
+        "noTopic": "No hay temas creados",
+        "topicCreate": "Crear Tema"
+    },
+    "topicView": {
+        "topicComment": "Crear Comentario",
+        "comments": "Comentarios"
+    },
+    "createTopic": {
+        "topicCreateAlert": "Tema creado exitosamente",
+        "topicCreateErrorAlert": "Error al crear tema",
+        "ModalTitle": "Crear Tema",
+        "buttonCreate": "Crear Tema",
+        "topicTitle": "Por favor ingrese un titulo para su tema",
+        "topicContent": "Contenido",
+        "create": "Crear",
+        "cancel": "Cancelar",
+        "validateTitle": "Minimo de caracteres para el título es 3",
+        "validateContent": "Minimo de caracteres para el contenido es 8"
+    },
+    "updateTopic":{
+        "updateAlert": "Tema actualizado exitosamente",
+        "TitleModalCreate": "Actualizar Tema",
+        "topicTitle": "Por favor ingrese un titulo para su tema",
+        "topicContent": "Contenido",
+        "update": "Guardar",
+        "cancel": "Cancelar",
+        "validateTitle": "Minimo de caracteres para el título es 3",
+        "validateContent": "Minimo de caracteres para el contenido es 8"
+    },
+    "createComments": {
+        "createAlert": "Comentario Creado Exitosamente",
+        "createErrorAlert": "Error al Crear Comentario",
+        "TitleModalCreate": "Crear Comentario",
+        "commentsContent": "Contenido",
+        "create": "Crear",
+        "cancel": "Cancelar",
+        "validateContent": "Minimo de caracteres para el contenido es 8"
+    },
+    "updateComments": {
+        "updateAlert": "Comentario Actualizado Exitosamente",
+        "updateErrorAlert": "Error al Actualizar Comentario",
+        "TitleModalCreate": "Actualizar Comentario",
+        "commentsContent": "Contenido",
+        "create": "Crear",
+        "cancel": "Cancelar",
+        "validateContent": "Minimo de caracteres para el contenido es 8"
+    },
+    "CreateAnswer": {
+        "createAlert": "Respuesta Creada Exitosamente",
+        "createErrorAlert": "Error al Crear Respuesta",
+        "TitleModalCreate": "Respondiendo al comentario: ",
+        "answersContent": "Contenido",
+        "create": "Crear",
+        "cancel": "Cancelar",
+        "validateContent": "Minimo de caracteres para el contenido es 8"
+    },
+    "updateAnswer": {
+        "updateAlert": "Respuesta Actualizada Exitosamente",
+        "updateErrorAlert": "Error al Crear Respuesta",
+        "TitleModalCreate": "Actualizando respuesta: ",
+        "answersContent": "Contenido",
+        "create": "Crear",
+        "cancel": "Cancelar",
+        "validateContent": "Minimo de caracteres para el contenido es 8"
     }
 }
