@@ -41,8 +41,8 @@ export const createCourse = async (courseData) => {
     formData.append('description', courseData.description);
     formData.append('category', courseData.category);
     formData.append('userId', courseData.userId);
-    formData.append('duracion', courseData.duracion);
     formData.append('nivel', courseData.nivel); 
+    formData.append('duracion', Number(courseData.duracion));
 
     if (courseData.image) {
       formData.append('image', courseData.image);

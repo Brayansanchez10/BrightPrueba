@@ -58,7 +58,7 @@ export const CoursesProvider = ({ children }) => {
                 userId,  
                 image,
                 nivel,
-                duracion
+                duracion: Number(duracion)
             };
             console.log(newCourseData);
 

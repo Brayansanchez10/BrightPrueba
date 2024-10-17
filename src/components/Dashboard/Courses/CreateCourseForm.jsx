@@ -45,8 +45,8 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
         description: "",
         image: null,
         imagePreview: null,
-        level: "",
-        duration: "",
+        nivel: "",
+        duracion: "",
     });
 
     const [errorMessage, setErrorMessage] = useState({
@@ -54,8 +54,8 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
         category: "",
         description: "",
         image: "",
-        level: "",
-        duration: "",
+        nivel: "",
+        duracion: "",
     });
 
     const imageRef = useRef(null);
@@ -93,11 +93,11 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                     setErrorMessage((prev) => ({ ...prev, description: "" }));
                 }
                 break;
-            case "duration":
+            case "duracion":
                 if (value < 0 || value > 99) {
-                    setErrorMessage((prev) => ({ ...prev, duration: t("createCourseForm.durationInvalid") }));
+                    setErrorMessage((prev) => ({ ...prev, duracion: t("createCourseForm.durationInvalid") }));
                 } else {
-                    setErrorMessage((prev) => ({ ...prev, duration: "" }));
+                    setErrorMessage((prev) => ({ ...prev, duracion: "" }));
                 }
                 break;
             default:
@@ -114,8 +114,8 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
             category: "",
             description: "",
             image: "",
-            level: "",
-            duration: "",
+            nivel: "",
+            duracion: "",
         };
     
         if (categories.some((existingCategory) => existingCategory.name === course.name)) {
@@ -134,11 +134,11 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
         if (!course.image) {
             errors.image = t("createCourseForm.allFieldsRequired");
         }
-        if (!course.level) {
-            errors.level = t("createCourseForm.allFieldsRequired");
+        if (!course.nivel) {
+            errors.nivel = t("createCourseForm.allFieldsRequired");
         }
-        if (!course.duration || course.duration < 0 || course.duration > 99) {
-            errors.duration = t("createCourseForm.durationInvalid");
+        if (!course.duracion || course.duracion < 0 || course.duracion > 99) {
+            errors.duracion = t("createCourseForm.durationInvalid");
         }
     
         if (Object.values(errors).some((error) => error)) {
@@ -154,8 +154,8 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
             description: course.description,
             image: course.image,
             userId: username,
-            level: course.level,
-            duration: parseInt(course.duration, 10),
+            nivel: course.nivel,
+            duracion: course.duracion
         };
     
         try {
@@ -191,16 +191,16 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
             description: "",
             image: null,
             imagePreview: null,
-            level: "",
-            duration: "",
+            nivel: "",
+            duracion: "",
         });
         setErrorMessage({
             name: "",
             category: "",
             description: "",
             image: "",
-            level: "",
-            duration: "",
+            nivel: "",
+            duracion: "",
         });
         if (imageRef.current) {
             imageRef.current.value = null;
@@ -301,16 +301,16 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                     <Select
                         className="w-full mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                         style={{ borderRadius: "0.375rem" }}
-                        value={course.level}
-                        onChange={(value) => setCourse({ ...course, level: value })}
+                        value={course.nivel}
+                        onChange={(value) => setCourse({ ...course, nivel: value })}
                         required
                     >
                         <Option value="Principiante">{t("createCourseForm.beginner")}</Option>
                         <Option value="Intermedio">{t("createCourseForm.intermediate")}</Option>
                         <Option value="Avanzado">{t("createCourseForm.advanced")}</Option>
                     </Select>
-                    {errorMessage.level && (
-                        <p className="text-red-500 text-sm mt-1">{errorMessage.level}</p>
+                    {errorMessage.nivel && (
+                        <p className="text-red-500 text-sm mt-1">{errorMessage.nivel}</p>
                     )}
                 </div>
                 <div className="text-left mb-4">
@@ -320,15 +320,15 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                     <input
                         className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                         type="number"
-                        name="duration"
-                        value={course.duration}
+                        name="duracion"
+                        value={course.duracion}
                         onChange={handleChange}
                         min="0"
                         max="99"
                         required
                     />
-                    {errorMessage.duration && (
-                        <p className="text-red-500 text-sm mt-1">{errorMessage.duration}</p>
+                    {errorMessage.duracion && (
+                        <p className="text-red-500 text-sm mt-1">{errorMessage.duracion}</p>
                     )}
                 </div>
                 <div className="text-left mb-4">
