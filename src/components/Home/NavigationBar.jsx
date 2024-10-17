@@ -181,6 +181,12 @@ export default function NavigationBar() {
           >
             {t('navigationBar.myCourses')}
           </Link>
+          <Link
+            to="/Forum"
+            className={`${getActiveClass("/Forum")} font-bold text-lg`}
+          >
+            {t('Foro')}
+          </Link>
         </div>
         <div className="hidden lg:flex items-center">
           <div className="relative text-white text-lg font-bold mr-4 cursor-pointer max-w-[200px] truncate">
