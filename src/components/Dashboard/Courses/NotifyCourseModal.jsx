@@ -8,14 +8,14 @@ import "../css/Custom.css";
 const NotifyCourseModal = ({ visible, onClose, courseId }) => {
   const { t } = useTranslation("global");
   const [emailList, setEmailList] = useState("");
-  const [sendToAll, setSendToAll] = useState(false);
+  const [sendToAll, setSendToAll] = useState(null);
   const [expanded, setExpanded] = useState(false);
 
   const { notifyAllUsersInCourse, notifySpecificUser } = useCoursesContext();
 
   useEffect(() => {
     if (visible) {
-      setSendToAll(false);
+      setSendToAll(null);
       setExpanded(false);
       setEmailList("");
     }
@@ -83,7 +83,11 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
         </p>
 
         <button
-          className="w-[239px] h-[38px] mt-10 bg-[#4A48AA] text-white text-lg font-bold rounded-2xl shadow-lg transition-transform duration-200"
+          className={`w-[239px] h-[38px] mt-10 text-lg font-bold rounded-2xl shadow-lg transition-all duration-300 ${
+            sendToAll === true
+              ? "bg-[#4A48AA] text-white transform scale-105"
+              : "bg-white text-black border border-gray-300 hover:bg-gray-100"
+          }`}
           onClick={() => {
             setSendToAll(true);
             setExpanded(false);
@@ -93,7 +97,11 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
         </button>
 
         <button
-          className="w-[239px] h-[38px] mt-5 bg-white text-black text-lg font-bold rounded-2xl border border-gray-300 shadow-lg transition-transform duration-200"
+          className={`w-[239px] h-[38px] mt-5 text-lg font-bold rounded-2xl shadow-lg transition-all duration-300 ${
+            sendToAll === false
+              ? "bg-[#4A48AA] text-white transform scale-105"
+              : "bg-white text-black border border-gray-300 hover:bg-gray-100"
+          }`}
           onClick={() => {
             setSendToAll(false);
             setExpanded(true);
@@ -102,7 +110,7 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
           {t('notifyCourse.sendToSpecific')}
         </button>
 
-        {!sendToAll && expanded && (
+        {sendToAll === false && expanded && (
           <>
             <Input
               type="text"

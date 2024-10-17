@@ -144,6 +144,7 @@ const CreateRolForm = ({ visible, onClose, isVisible }) => {
           onChange={handleChange}
           className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
           placeholder={t('createRoleForm.namePlaceholder')}
+          maxLength={10}
           required
         />
         {error.nombre && (
