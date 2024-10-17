@@ -306,67 +306,73 @@ const DataTable = () => {
                         <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
                           {item.email}
                         </td>
-                        <td className="pl-14 border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
-                          {item.state ? (
-                            <FaCircle
-                              size="14px"
-                              className="text-green-500 -mb-[21px] -ml-8"
-                            />
-                          ) : (
-                            <FaCircle
-                              size="14px"
-                              className="text-red-500 -mb-[21px] -ml-8"
-                            />
-                          )}
-                          {item.state
-                            ? t("datatable.Active")
-                            : t("datatable.Inactive")}
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                          <div className="flex items-center justify-center">
+                            {item.state ? (
+                              <FaCircle
+                                size="14px"
+                                className="text-green-500 mr-2 flex-shrink-0"
+                              />
+                            ) : (
+                              <FaCircle
+                                size="14px"
+                                className="text-red-500 mr-2 flex-shrink-0"
+                              />
+                            )}
+                            <span className="whitespace-nowrap">
+                              {item.state
+                                ? t("datatable.Active")
+                                : t("datatable.Inactive")}
+                            </span>
+                          </div>
                         </td>
                         <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
-                          <Button
-                            onClick={() => handleActivateAccount(item.id)}
-                            className={`${
-                              item.state
-                                ? "bg-red-500 hover:bg-red-700"
-                                : "bg-green-500 hover:bg-green-700"
-                            } text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400`}
-                            style={{ minWidth: "120px" }}
-                          >
-                            {item.state ? (
-                              <>
-                                <FaUserTimes
-                                  size="16px"
-                                  className="inline-block mr-1.5 -mt-1"
-                                />
-                                {t("datatable.Desactivate")}
-                              </>
-                            ) : (
-                              <>
-                                <FaUserCheck
-                                  size="16px"
-                                  className="inline-block mr-1.5 -mt-1"
-                                />
-                                {t("datatable.Activate")}
-                              </>
-                            )}
-                          </Button>
+                          <div className="flex flex-nowrap justify-center space-x-2">
+                            <Button
+                              onClick={() => handleActivateAccount(item.id)}
+                              className={`${
+                                item.state
+                                  ? "bg-red-500 hover:bg-red-700"
+                                  : "bg-green-500 hover:bg-green-700"
+                              } text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400 whitespace-nowrap`}
+                              style={{ minWidth: "120px" }}
+                            >
+                              {item.state ? (
+                                <>
+                                  <FaUserTimes
+                                    size="16px"
+                                    className="inline-block mr-1.5 -mt-1"
+                                  />
+                                  {t("datatable.Desactivate")}
+                                </>
+                              ) : (
+                                <>
+                                  <FaUserCheck
+                                    size="16px"
+                                    className="inline-block mr-1.5 -mt-1"
+                                  />
+                                  {t("datatable.Activate")}
+                                </>
+                              )}
+                            </Button>
 
-                          <Button
-                            onClick={() => handleUpdateButtonClick(item)}
-                            className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 shadow-md shadow-gray-400"
-                            style={{ minWidth: "50px" }}
-                            icon={<ReloadOutlined />}
-                          ></Button>
+                            <Button
+                              onClick={() => handleUpdateButtonClick(item)}
+                              className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
+                              style={{ minWidth: "50px" }}
+                              icon={<ReloadOutlined />}
+                            />
 
-                          <Button
-                            onClick={() => {
-                              setSelectedUserId(item.id);
-                              setShowDetailsModal(true);
-                            }}
-                            className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 shadow-md shadow-gray-400"
-                            style={{ minWidth: "50px" }}
-                            icon={<InfoCircleOutlined />}
-                          ></Button>
+                            <Button
+                              onClick={() => {
+                                setSelectedUserId(item.id);
+                                setShowDetailsModal(true);
+                              }}
+                              className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
+                              style={{ minWidth: "50px" }}
+                              icon={<InfoCircleOutlined />}
+                            />
+                          </div>
                         </td>
                       </tr>
                     ))}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useResourceContext } from "../../../context/courses/resource.contex";
 import { useCoursesContext } from "../../../context/courses/courses.context";
@@ -27,6 +27,10 @@ import {
   FiMoreVertical,
   FiEdit,
   FiTrash2,
+  FiCheckCircle,
+  FiPlus,
+  FiEdit2,
+  FiDownload,
 } from "react-icons/fi";
 import {
   FaCheckCircle,
@@ -44,16 +48,22 @@ import { Anothershabby_trial } from "../../../Tipografy/Anothershabby_trial-norm
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import { completeQuiz } from "../../../api/courses/resource.request";
+import { useNotesContext } from "../../../context/courses/notes.context";
+import "./resourceView.css";
+import { useHorizontalScroll } from "./horizontalScroll.jsx";
+import { generateNotesPDF } from "./notesDownload.jsx";
 
 export default function ResourceView() {
   const { t } = useTranslation("global");
   const { user } = useAuth();
-  const { getCourseProgress, updateCourseProgress } = useCourseProgressContext();
+  const { getCourseProgress, updateCourseProgress } =
+    useCourseProgressContext();
   const [currentProgress, setCurrentProgress] = useState(0);
   const { getUserById } = useUserContext();
   const [username, setUsername] = useState("");
   const { id, courseId } = useParams();
-  const { getResourceUser, getResource, getUserResourceProgress } = useResourceContext();
+  const { getResourceUser, getResource, getUserResourceProgress } =
+    useResourceContext();
   const { getCourse } = useCoursesContext();
   const {
     comments,
@@ -107,6 +117,26 @@ export default function ResourceView() {
   const [editedRatingComment, setEditedRatingComment] = useState("");
   const [showDropdown, setShowDropdown] = useState(null);
   const [userExistingRating, setUserExistingRating] = useState(null);
+  const [creator, setCreator] = useState(null);
+  const {
+    notes,
+    resourceNotes,
+    fetchCourseNotes,
+    fetchResourceNotes,
+    addNote,
+    addNoteToResource,
+    editNote,
+    editResourceNote,
+    removeNote,
+    removeResourceNote,
+  } = useNotesContext();
+  const [userNote, setUserNote] = useState("");
+  const [userResourceNote, setUserResourceNote] = useState("");
+  const [editingNoteId, setEditingNoteId] = useState(null);
+  const [editedNoteContent, setEditedNoteContent] = useState("");
+  const [editingResourceNoteId, setEditingResourceNoteId] = useState(null);
+  const [editedResourceNoteContent, setEditedResourceNoteContent] = useState("");
+  const scrollContainerRef = useHorizontalScroll();
   const [userGeneralComment, setUserGeneralComment] = useState("");
   const [editingGeneralCommentId, setEditingGeneralCommentId] = useState(null);
   const [editedGeneralCommentContent, setEditedGeneralCommentContent] = useState("");
@@ -252,9 +282,12 @@ export default function ResourceView() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        if (courseId) {
-          const courseData = await getCourse(courseId);
-          setCourse(courseData);
+        const courseData = await getCourse(courseId);
+        setCourse(courseData);
+
+        if (courseData && courseData.userId) {
+          const creatorData = await getUserById(courseData.userId);
+          setCreator(creatorData);
         }
       } catch (error) {
         console.error("Error al obtener la información del curso:", error);
@@ -344,6 +377,23 @@ export default function ResourceView() {
 
     checkExistingRating();
   }, [user, ratings]);
+
+  useEffect(() => {
+    if (course?.id) {
+      fetchCourseNotes(course.id);
+    }
+  }, [course, fetchCourseNotes]);
+
+  useEffect(() => {
+    if (course?.id && resource?.id) {
+      fetchResourceNotes(course.id, resource.id);
+    }
+  }, [course, resource, fetchResourceNotes]);
+
+  useEffect(() => {
+    console.log("Apuntes:", notes);
+    console.log("Apuntes del recurso:", resourceNotes);
+  }, [notes, resourceNotes]);
 
   const isVideoLink = (url) => {
     return (
@@ -878,6 +928,229 @@ export default function ResourceView() {
     doc.save(`Certificado_${courseTitle}.pdf`);
   };
 
+  const handleAddNote = async (e) => {
+    e.preventDefault();
+    if (userNote.trim() !== "" && user?.data?.id) {
+      try {
+        const result = await addNote(course.id, {
+          content: userNote,
+          userId: user.data.id,
+        });
+
+        if (result) {
+          setUserNote("");
+          await fetchCourseNotes(course.id);
+          Swal.fire({
+            icon: "success",
+            title: "Apunte creado",
+            text: "Tu apunte ha sido creado exitosamente.",
+          });
+        }
+      } catch (error) {
+        console.error("Error al añadir nota:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ocurrió un error al crear el apunte. Por favor, intenta de nuevo más tarde.",
+        });
+      }
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Advertencia",
+        text: "Por favor, escribe un apunte antes de guardar.",
+      });
+    }
+  };
+
+  const handleAddResourceNote = async (e) => {
+    e.preventDefault();
+
+    if (userResourceNote.trim() === "") {
+      Swal.fire({
+        icon: "warning",
+        title: "Advertencia",
+        text: "Por favor, escribe un apunte antes de guardar.",
+      });
+      return;
+    }
+
+    try {
+      // Verificar si ya existe una nota para este recurso específico
+      const existingResourceNote = resourceNotes.find(
+        (note) => note.resourceId === resource.id
+      );
+      if (existingResourceNote) {
+        Swal.fire({
+          icon: "info",
+          title: "Apunte existente",
+          text: "Ya existe un apunte para este recurso. Puedes editarlo si deseas hacer cambios.",
+        });
+        return;
+      }
+
+      // Buscar la nota general del curso
+      const generalNote = notes.find(
+        (note) => note.courseId === parseInt(courseId) && !note.resourceId
+      );
+      if (!generalNote) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se encontró una nota general para este curso. Por favor, crea una primero.",
+        });
+        return;
+      }
+
+      const newResourceNote = await addNoteToResource(resource.id, {
+        content: userResourceNote,
+        noteId: generalNote.id,
+      });
+      console.log("Nueva nota del recurso creada:", newResourceNote);
+
+      // Actualizamos el contexto
+      await fetchResourceNotes(course.id, resource.id);
+      setUserResourceNote("");
+
+      Swal.fire({
+        icon: "success",
+        title: "Éxito",
+        text: "El apunte del recurso ha sido añadido exitosamente.",
+      });
+    } catch (error) {
+      console.error("Error al añadir el apunte del recurso:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al añadir el apunte del recurso. Por favor, intenta de nuevo más tarde.",
+      });
+    }
+  };
+
+  const handleEditNote = async (noteId, content) => {
+    setEditingNoteId(noteId);
+    setEditedNoteContent(content);
+  };
+
+  const handleSaveEditedNote = async (noteId) => {
+    try {
+      await editNote(noteId, { content: editedNoteContent });
+      // Actualizar el estado local de las notas
+      const updatedNotes = notes.map((note) =>
+        note.id === noteId ? { ...note, content: editedNoteContent } : note
+      );
+      // Actualizar el estado de las notas
+      fetchCourseNotes(course.id);
+      // Resetear el estado de edición
+      setEditingNoteId(null);
+      setEditedNoteContent("");
+      // Mostrar mensaje de éxito
+      Swal.fire({
+        icon: "success",
+        title: "Apunte actualizado",
+        text: "Tu apunte ha sido actualizado exitosamente.",
+      });
+    } catch (error) {
+      console.error("Error al editar nota:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al editar el apunte. Por favor, intenta de nuevo más tarde.",
+      });
+    }
+  };
+
+  const handleDeleteNote = async (noteId) => {
+    try {
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "No podrás revertir esta acción",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (result.isConfirmed) {
+        await removeNote(noteId);
+        await fetchCourseNotes(course.id);
+        await fetchResourceNotes(course.id, resource.id);
+        Swal.fire(
+          "Eliminado",
+          "Tu apunte ha sido eliminado.",
+          "success"
+        );
+      }
+    } catch (error) {
+      console.error("Error al eliminar nota:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al eliminar el apunte. Por favor, intenta de nuevo más tarde.",
+      });
+    }
+  };
+
+  const handleEditResourceNote = (noteId, content) => {
+    setEditingResourceNoteId(noteId);
+    setEditedResourceNoteContent(content);
+  };
+
+  const handleSaveEditedResourceNote = async (noteId) => {
+    try {
+      await editResourceNote(noteId, { content: editedResourceNoteContent });
+      await fetchResourceNotes(course.id, resource.id);
+      setEditingResourceNoteId(null);
+      setEditedResourceNoteContent("");
+      Swal.fire({
+        icon: "success",
+        title: "Apunte actualizado",
+        text: "Tu apunte del recurso ha sido actualizado exitosamente.",
+      });
+    } catch (error) {
+      console.error("Error al editar el apunte del recurso:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al editar el apunte del recurso. Por favor, intenta de nuevo más tarde.",
+      });
+    }
+  };
+
+  const handleDeleteResourceNote = async (noteId) => {
+    try {
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "No podrás revertir esta acción",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (result.isConfirmed) {
+        await removeResourceNote(noteId);
+        await fetchResourceNotes(course.id, resource.id);
+        Swal.fire(
+          "Eliminado",
+          "Tu apunte del recurso ha sido eliminado.",
+          "success"
+        );
+      }
+    } catch (error) {
+      console.error("Error al eliminar el apunte del recurso:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al eliminar el apunte del recurso. Por favor, intenta de nuevo más tarde.",
+      });
+    }
+  };
+
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (userComment.trim() !== "" && user?.data?.id) {
@@ -976,11 +1249,11 @@ export default function ResourceView() {
             isUnlocked && handleResourceClick(res.id, res.courseId)
           } // Solo permitir clic si está desbloqueado
         >
-          <div className="relative mr-4">
+          <div className="relative mr-2.5">
             <div
               className={`
                 flex items-center justify-center
-                w-8 h-8 rounded-full 
+                w-10 h-10 rounded-full 
                 ${
                   isUnlocked
                     ? "bg-white text-[#6D4F9E]"
@@ -993,7 +1266,7 @@ export default function ResourceView() {
             </div>
             {index < resources.length - 1 && (
               <div
-                className={`absolute left-4 top-8 w-0.5 h-10 ${
+                className={`absolute left-[19px] top-8 w-0.5 h-10 ${
                   isUnlocked ? "bg-white" : "bg-gray-500"
                 }`}
               />
@@ -1001,7 +1274,7 @@ export default function ResourceView() {
           </div>
           {isOpen && (
             <span
-              className={`text-xs ${
+              className={`mt-2 text-xs ${
                 isUnlocked ? "text-white font-bold" : "text-gray-500"
               }`}
             >
@@ -1144,21 +1417,23 @@ export default function ResourceView() {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  const handleDownloadNotes = () => {
+    generateNotesPDF(notes, resourceNotes, resources);
+  };
+
   const renderRightSideContent = () => {
     return (
       <div className="space-y-4">
-        <div className="flex space-x-4 overflow-x-auto pb-2">
+        <div ref={scrollContainerRef} className="flex space-x-4 custom-scrollbar-x pb-2">
           <button
             onClick={() => setRightSideContent("allComments")}
-            className={`px-6 py-2 rounded-lg text-xs font-bungee whitespace-nowrap ${
+            className={`px-6 py-2 rounded-lg text-xs font-bungee ${
               rightSideContent === "allComments"
                 ? "bg-white text-[#321A5A]"
                 : "bg-[#4B2F7A] text-white"
             }`}
           >
-            COMENTARIOS
-            <br />
-            DEL RECURSO
+            {t("resource_view.commentsR")}
           </button>
           <button
             onClick={() => setRightSideContent("ratings")}
@@ -1168,39 +1443,37 @@ export default function ResourceView() {
                 : "bg-[#4B2F7A] text-white"
             }`}
           >
-            NOTAS DEL
+            {t("resource_view.notes1")}
             <br />
-            RECURSO
+            {t("resource_view.notes2")}
           </button>
           <button
             onClick={() => setRightSideContent("generalComments")}
-            className={`px-6 py-2 rounded-lg text-xs font-bungee whitespace-nowrap ${
+            className={`px-6 py-2 rounded-lg text-xs font-bungee ${
               rightSideContent === "generalComments"
                 ? "bg-white text-[#321A5A]"
                 : "bg-[#4B2F7A] text-white"
             }`}
           >
-            COMENTARIOS
-            <br />
-            GENERAL
+            {t("resource_view.commentsG")}
           </button>
           <button
-            onClick={() => setRightSideContent("secondBrain")}
-            className={`px-6 py-2 rounded-lg text-xs font-bungee whitespace-nowrap ${
-              rightSideContent === "secondBrain"
+            onClick={() => setRightSideContent("notesCourse")}
+            className={`px-5 py-2 rounded-lg text-xs font-bungee whitespace-nowrap ${
+              rightSideContent === "notesCourse"
                 ? "bg-white text-[#321A5A]"
                 : "bg-[#4B2F7A] text-white"
             }`}
           >
-            SEGUNDO
+            {t("resource_view.notesOf")}
             <br />
-            CEREBRO
+            {t("resource_view.notesR")}
           </button>
         </div>
         {rightSideContent === "allComments" && (
           <div className="bg-[#200E3E] p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-roboto text-white mb-4">
-              {comments.length} comentarios
+              {comments.length} {t("resource_view.comments")}
             </h3>
             <div className="mb-4">
               <div className="flex items-center">
@@ -1208,20 +1481,20 @@ export default function ResourceView() {
                   type="text"
                   value={userComment}
                   onChange={(e) => setUserComment(e.target.value)}
-                  placeholder="Escribe tu opinión del recurso"
+                  placeholder={t("resource_view.placeholder")}
                   className="w-full bg-transparent border-b border-[#8D8282] focus:outline-none focus:border-white text-[#8D8282] placeholder-[#8D8282] focus:text-white"
                 />
               </div>
               <div className="flex justify-end mt-2">
                 <button
                   onClick={handleCommentSubmit}
-                  className="px-4 py-2 bg-[#4B2F7A] text-white rounded-md hover:bg-blue-600 transition-colors flex items-center text-sm font-bungee"
+                  className="px-4 py-2 bg-[#4B2F7A] font-bungee text-white rounded-md hover:bg-[#6e46b4] transition-colors flex items-center text-xs"
                 >
-                  <FiSend className="mr-2" /> Comentar
+                  <FiSend className="mr-2" /> {t("resource_view.comment")}
                 </button>
               </div>
             </div>
-            <div className="space-y-4 max-h-[30rem] overflow-y-auto custom-scrollbar">
+            <div className="space-y-4 max-h-[30rem] custom-scrollbar-y">
               {comments.map((comment) => (
                 <div
                   key={comment.id}
@@ -1275,7 +1548,7 @@ export default function ResourceView() {
                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                               >
                                 <FiEdit className="inline-block mr-2" />
-                                Editar
+                                {t("resource_view.edit")}
                               </button>
                               <button
                                 onClick={() => {
@@ -1285,7 +1558,7 @@ export default function ResourceView() {
                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                               >
                                 <FiTrash2 className="inline-block mr-2" />
-                                Eliminar
+                                {t("resource_view.delete")}
                               </button>
                             </div>
                           )}
@@ -1305,15 +1578,15 @@ export default function ResourceView() {
                         <div className="flex justify-end mt-2">
                           <button
                             onClick={() => handleSaveEditedComment(comment.id)}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm mr-2"
+                            className="px-4 py-2 bg-[#4B2F7A] font-bungee text-white rounded-md hover:bg-[#6e46b4] transition-colors text-xs mr-2"
                           >
-                            Guardar
+                            {t("resource_view.save")}
                           </button>
                           <button
                             onClick={() => setEditingCommentId(null)}
-                            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors text-sm"
+                            className="px-4 py-2 bg-gray-500 font-bungee text-white rounded-md hover:bg-gray-600 transition-colors text-xs"
                           >
-                            Cancelar
+                            {t("resource_view.cancel")}
                           </button>
                         </div>
                       </div>
@@ -1331,7 +1604,7 @@ export default function ResourceView() {
         {rightSideContent === "ratings" && (
           <div className="bg-[#200E3E] p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-roboto text-white mb-4">
-              {ratings.length} valoraciones
+              {ratings.length} {t("resource_view.ratings")}
             </h3>
             <div className="mb-4">
               <div className="flex items-center">
@@ -1356,7 +1629,7 @@ export default function ResourceView() {
                     type="text"
                     value={ratingComment}
                     onChange={(e) => setRatingComment(e.target.value)}
-                    placeholder="Escribe un comentario sobre tu calificación (opcional)"
+                    placeholder={t("resource_view.placeholderR")}
                     className="w-full bg-transparent border-b border-[#8D8282] focus:outline-none focus:border-white text-[#8D8282] placeholder-[#8D8282] focus:text-white"
                   />
                 </div>
@@ -1364,22 +1637,23 @@ export default function ResourceView() {
               <div className="flex justify-end mt-2">
                 <button
                   onClick={handleRatingSubmit}
-                  className="px-4 py-2 bg-[#4B2F7A] text-white rounded-md hover:bg-blue-600 transition-colors flex items-center text-sm font-bungee"
+                  className="px-4 py-2 bg-[#4B2F7A] font-bungee text-white rounded-md hover:bg-[#6e46b4] transition-colors flex items-center text-xs"
                 >
                   <FiSend className="mr-2" />
-                  {userExistingRating
-                    ? "Actualizar calificación"
-                    : "Enviar calificación"}
+                  {userExistingRating ? (
+                    <>{t("resource_view.update")}</>
+                  ) : (
+                    <>{t("resource_view.qualify")}</>
+                  )}
                 </button>
               </div>
             </div>
             {userExistingRating && (
               <p className="text-yellow-400 mb-4">
-                Ya has calificado este recurso. Puedes actualizar tu
-                calificación si lo deseas.
+                {t("resource_view.already")}
               </p>
             )}
-            <div className="space-y-4 max-h-[25.5rem] overflow-y-auto custom-scrollbar">
+            <div className="space-y-4 max-h-[25.5rem] overflow-y-auto custom-scrollbar-y">
               {ratings.map((rating) => (
                 <div
                   key={rating.id}
@@ -1436,7 +1710,7 @@ export default function ResourceView() {
                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                               >
                                 <FiEdit className="inline-block mr-2" />
-                                Editar
+                                {t("resource_view.edit")}
                               </button>
                               <button
                                 onClick={() => {
@@ -1446,7 +1720,7 @@ export default function ResourceView() {
                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                               >
                                 <FiTrash2 className="inline-block mr-2" />
-                                Eliminar
+                                {t("resource_view.delete")}
                               </button>
                             </div>
                           )}
@@ -1482,15 +1756,15 @@ export default function ResourceView() {
                         <div className="flex justify-end mt-2">
                           <button
                             onClick={() => handleSaveEditedRating(rating.id)}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm mr-2"
+                            className="px-4 py-2 bg-[#4B2F7A] font-bungee text-white rounded-md hover:bg-[#6e46b4] transition-colors text-xs mr-2"
                           >
-                            Guardar
+                            {t("resource_view.save")}
                           </button>
                           <button
                             onClick={() => setEditingRatingId(null)}
-                            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors text-sm"
+                            className="px-4 py-2 bg-gray-500 font-bungee text-white rounded-md hover:bg-gray-600 transition-colors text-xs"
                           >
-                            Cancelar
+                            {t("resource_view.cancel")}
                           </button>
                         </div>
                       </div>
@@ -1656,12 +1930,220 @@ export default function ResourceView() {
             </div>
           </div>
         )}
-        {rightSideContent === "secondBrain" && (
+        {rightSideContent === "notesCourse" && (
           <div className="bg-[#200E3E] p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold mb-4 font-bungee text-white">
-              Segundo Cerebro
+              {t("resource_view.courseNotes")}
             </h3>
-            <p className="text-white">Contenido próximamente disponible.</p>
+            {notes.length === 0 && (
+              <div className="mb-4">
+                <input
+                  value={userNote}
+                  onChange={(e) => setUserNote(e.target.value)}
+                  placeholder={t("resource_view.addNotePlaceholder1")}
+                  className="w-full bg-[#321A5A] text-white rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#9869E3]"
+                />
+                <div className="flex justify-end mt-2">
+                  <button
+                    onClick={handleAddNote}
+                    className="px-4 py-2 bg-[#4B2F7A] font-bungee text-white rounded-md hover:bg-[#6e46b4] transition-colors flex items-center text-xs"
+                  >
+                    <FiPlus className="mr-2" /> {t("resource_view.addNote")}
+                  </button>
+                </div>
+              </div>
+            )}
+            <div className="space-y-4 max-h-[30rem] custom-scrollbar-y">
+              {notes.map((note, index) => (
+                <div
+                  key={note.id || index}
+                  className="bg-[#321A5A] p-3 rounded-lg shadow-md"
+                >
+                  {editingNoteId === note.id ? (
+                    <div>
+                      <input
+                        value={editedNoteContent}
+                        onChange={(e) => setEditedNoteContent(e.target.value)}
+                        className="w-full bg-[#4B2F7A] text-white rounded p-2 mb-2"
+                      />
+                      <div className="flex justify-end space-x-2">
+                        <button
+                          onClick={() => handleSaveEditedNote(note.id)}
+                          className="px-3 py-1 bg-[#9869E3] text-white font-bungee rounded-md hover:bg-[#8A5CD6] transition-colors text-xs"
+                        >
+                          {t("resource_view.save")}
+                        </button>
+                        <button
+                          onClick={() => setEditingNoteId(null)}
+                          className="px-3 py-1 bg-gray-500 text-white font-bungee rounded-md hover:bg-gray-600 transition-colors text-xs"
+                        >
+                          {t("resource_view.cancel")}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="flex justify-between mx-2 mb-3">
+                        <p className="text-white text-lg font-semibold">
+                          {note.content}
+                        </p>
+                        <div className="space-x-2 flex items-center">
+                          <button
+                            onClick={handleDownloadNotes}
+                            className="text-blue-400 hover:text-blue-600"
+                          >
+                            <FiDownload />
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleEditNote(note.id, note.content)
+                            }
+                            className="text-[#9869E3] hover:text-[#8A5CD6]"
+                          >
+                            <FiEdit2 />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteNote(note.id)}
+                            className="text-red-500 hover:text-red-600"
+                          >
+                            <FiTrash2 />
+                          </button>
+                        </div>
+                      </div>
+                      {/* Si ya hay un apunte para este recurso, mostrar un mensaje */}
+                      {resourceNotes && resourceNotes.some(note => note.resourceId === resource.id) ? (
+                        <div className="text-white text-sm italic mb-2 mx-1">
+                          {t("resource_view.resourceNoteExists")}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-end">
+                          <textarea
+                            value={userResourceNote}
+                            onChange={(e) => {
+                              const newValue = e.target.value.slice(0, 1000);
+                              setUserResourceNote(newValue);
+                              e.target.style.height = 'auto';
+                              e.target.style.height = e.target.scrollHeight + 'px';
+                            }}
+                            placeholder={t("resource_view.addNotePlaceholder2")}
+                            className="w-full bg-[#4B2F7A] text-white rounded-md p-2 mb-2 overflow-hidden resize-none"
+                            style={{ minHeight: '100px' }}
+                            maxLength={1000}
+                          />
+                          <div className="flex justify-between w-full mb-2">
+                            <span className="text-white text-sm">{`${userResourceNote.length}/1000`}</span>
+                            <button
+                              onClick={handleAddResourceNote}
+                              className="flex items-center justify-center w-24 py-1 bg-[#9869E3] text-white font-bungee rounded-md hover:bg-[#8A5CD6] transition-colors text-xs"
+                            >
+                              {t("resource_view.addNote")}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      {/* Notas específicas del recurso */}
+                      {resourceNotes && resourceNotes.length > 0 ? (
+                        resourceNotes
+                          .sort((a, b) => a.resourceId - b.resourceId)
+                          .map((resourceNote, index) => {
+                            // Encuentra el recurso correspondiente
+                            const correspondingResource = resources.find(
+                              (resource) =>
+                                resource.id === resourceNote.resourceId
+                            );
+
+                            return (
+                              <div
+                                key={resourceNote.id || index}
+                                className="bg-gray-200 p-3 rounded-lg shadow-md mb-4"
+                              >
+                                <div className="flex justify-between items-center mb-2">
+                                  <p className="font-semibold">
+                                    {correspondingResource
+                                      ? correspondingResource.title
+                                      : `Recurso ${resourceNote.resourceId}`}
+                                  </p>
+                                  <div className="space-x-2">
+                                    <button
+                                      onClick={() =>
+                                        handleEditResourceNote(
+                                          resourceNote.id,
+                                          resourceNote.content
+                                        )
+                                      }
+                                      className="text-[#6d4aa5] hover:text-[#a473f3]"
+                                    >
+                                      <FiEdit2 />
+                                    </button>
+                                    <button
+                                      onClick={() =>
+                                        handleDeleteResourceNote(
+                                          resourceNote.id
+                                        )
+                                      }
+                                      className="text-red-600 hover:text-red-400"
+                                    >
+                                      <FiTrash2 />
+                                    </button>
+                                  </div>
+                                </div>
+                                {editingResourceNoteId === resourceNote.id ? (
+                                  <div>
+                                    <textarea
+                                      value={editedResourceNoteContent}
+                                      onChange={(e) =>
+                                        setEditedResourceNoteContent(
+                                          e.target.value
+                                        )
+                                      }
+                                      className="w-full bg-white text-gray-800 rounded p-2 mb-2"
+                                      rows="3"
+                                    />
+                                    <div className="flex justify-end space-x-2">
+                                      <button
+                                        onClick={() =>
+                                          handleSaveEditedResourceNote(
+                                            resourceNote.id
+                                          )
+                                        }
+                                        className="px-3 py-1 bg-[#4B2F7A] text-white font-bungee rounded-md hover:bg-[#6e46b4] transition-colors text-xs"
+                                      >
+                                        {t("resource_view.save")}
+                                      </button>
+                                      <button
+                                        onClick={() =>
+                                          setEditingResourceNoteId(null)
+                                        }
+                                        className="px-3 py-1 bg-gray-500 text-white font-bungee rounded-md hover:bg-gray-600 transition-colors text-xs"
+                                      >
+                                        {t("resource_view.cancel")}
+                                      </button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <pre className="whitespace-pre-wrap mb-1 font-sans text-sm">
+                                    {resourceNote.content}
+                                  </pre>
+                                )}
+                              </div>
+                            );
+                          })
+                      ) : (
+                        <p className="text-white italic mb-2">
+                          {t("resource_view.noResourceNotes")}
+                        </p>
+                      )}
+                      <div className="flex justify-between items-center text-xs text-gray-400">
+                        <span>{formatDate(note.createdAt)}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+              {notes.length === 0 && (
+                <p className="text-white italic">{t("resource_view.noNotes")}</p>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -1683,7 +2165,7 @@ export default function ResourceView() {
           >
             <button
               onClick={toggleSidebar}
-              className="absolute top-4 left-2 p-2 bg-[#5D4B8A] text-white rounded-full shadow-lg hover:bg-[#3D2A5F] transition-colors"
+              className="absolute top-4 left-2 p-[10px] bg-[#5D4B8A] text-white rounded-full shadow-lg hover:bg-[#3D2A5F] transition-colors"
             >
               {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
             </button>
@@ -1698,45 +2180,24 @@ export default function ResourceView() {
           <div className="mb-4">
             <div className="flex items-center justify-between mb-1">
               <span className="text-sm sm:text-base font-medium text-white font-bungee">
-                Progreso del curso
+                {t("resource_view.progress")}
               </span>
               <span className="text-sm sm:text-base font-medium text-white font-bungee">
                 {currentProgress}%
               </span>
             </div>
-            <div className="w-full bg-white rounded-full h-2">
+            <div className="w-full bg-white rounded-full h-6">
               <div
-                className="bg-[#9869E3] h-2 rounded-full transition-all duration-300 ease-in-out"
+                className="bg-[#9869E3] h-6 rounded-full transition-all duration-300 ease-in-out"
                 style={{ width: `${currentProgress}%` }}
               ></div>
             </div>
           </div>
-          <div className="flex justify-between mb-4">
-            <button
-              onClick={handlePrevious}
-              disabled={currentResourceIndex === 0}
-              className={`p-2 rounded-full transition-colors ${
-                currentResourceIndex === 0
-                  ? "bg-[#DDDDDD] text-white cursor-not-allowed"
-                  : "bg-[#9869E3] text-white hover:bg-[#8A5CD6]"
-              }`}
-            >
-              <FiChevronLeft size={20} />
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={currentResourceIndex === resources.length - 1}
-              className={`p-2 rounded-full transition-colors ${
-                currentResourceIndex === resources.length - 1
-                  ? "bg-[#DDDDDD] text-white cursor-not-allowed"
-                  : "bg-[#9869E3] text-white hover:bg-[#8A5CD6]"
-              }`}
-            >
-              <FiChevronRight size={20} />
-            </button>
-          </div>
           <div className="flex flex-col lg:flex-row gap-4">
-            <div className="w-full lg:w-2/3 bg-[#200E3E] rounded-lg shadow-lg p-4 mb-4">
+            <div className="w-full lg:w-2/3 bg-[#200E3E] rounded-lg shadow-lg pb-4 mb-4">
+              <h1 className="flex justify-center text-2xl font-bungee text-white mb-4">
+                {course?.title}
+              </h1>
               <div className="mb-4">
                 {/* Si el recurso tiene quizzes, entonces evaluamos el estado del quiz */}
                 {
@@ -1752,45 +2213,64 @@ export default function ResourceView() {
                 {/* Mostrar error si existe */}
                 {error && <p className="text-red-500 text-center">{error}</p>}
               </div>
-              <div className="mt-4 flex items-center">
-                <img
-                  src={course?.image}
-                  alt={course?.title}
-                  className="w-12 h-12 rounded-full mr-3"
-                />
-                <div>
-                  <h2 className="text-lg font-roboto text-white">
-                    {course?.title}
-                  </h2>
-                  <p className="text-sm text-gray-300">
-                    {course?.creator?.username}
-                  </p>
+              <div className="flex justify-between">
+                <div className="flex items-center">
+                  <img
+                    src={course?.image}
+                    alt={course?.title}
+                    className="w-12 h-12 rounded-full mr-3"
+                  />
+                  <div className="flex flex-col -mt-2">
+                    <h2 className="text-xl font-bungee text-white">
+                      {resource.title}
+                    </h2>
+                    <p className="text-xs font-bungee text-gray-400">
+                      {creator?.username}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <button
+                    onClick={handlePrevious}
+                    disabled={currentResourceIndex === 0}
+                    className={`p-2.5 mr-2 rounded-full transition-colors ${
+                      currentResourceIndex === 0
+                        ? "bg-[#DDDDDD] text-white cursor-not-allowed"
+                        : "bg-[#9869E3] text-white hover:bg-[#8A5CD6]"
+                    }`}
+                  >
+                    <FiChevronLeft size={24} />
+                  </button>
+                  <button
+                    onClick={
+                      currentResourceIndex === resources.length - 1
+                        ? handleFinishCourse
+                        : handleNext
+                    }
+                    className={`p-2.5 ml-2 rounded-full transition-colors ${
+                      currentResourceIndex === resources.length - 1
+                        ? "bg-[#9869E3] text-white hover:bg-[#8A5CD6]"
+                        : "bg-[#9869E3] text-white hover:bg-[#8A5CD6]"
+                    }`}
+                  >
+                    {currentResourceIndex === resources.length - 1 ? (
+                      <>
+                        <FiCheckCircle size={24} />
+                      </>
+                    ) : (
+                      <FiChevronRight size={24} />
+                    )}
+                  </button>
                 </div>
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold mb-3 mt-4 font-bungee text-white">
-                {resource.title}
-              </h1>
-              <div className="prose max-w-5xl text-sm sm:text-base text-white ml-4">
-                <div className="h-80 overflow-y-auto">
-                  <p className="whitespace-normal break-words">
-                    {resource.description}
-                  </p>
-                </div>
+              <div className="max-w-none text-sm sm:text-base text-white ml-4 mt-4">
+                <p>{resource.description}</p>
               </div>
             </div>
-            <div className="w-full lg:w-1/3">{renderRightSideContent()}</div>
+            <div className="w-full lg:w-1/3 pt-[52px]">
+              {renderRightSideContent()}
+            </div>
           </div>
-          {currentResourceIndex === resources.length - 1 &&
-            isContentCompleted && (
-              <div className="fixed bottom-8 right-8 z-50">
-                <button
-                  onClick={handleFinishCourse}
-                  className="px-4 sm:px-6 py-2 sm:py-3 bg-green-500 text-white rounded-full hover:bg-green-600 text-base sm:text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-                >
-                  {t("navigation.finish")}
-                </button>
-              </div>
-            )}
         </div>
       </div>
     </div>

@@ -9,10 +9,10 @@ import {
     asignarLinkContenido as asignarLinkContenidoApi,
     actualizarLinkContenido as actualizarLinkContenidoApi,
     actualizarContenidoArchivo as actualizarContenidoArchivoApi,
-    asignarContenido as asignarContenidoApi, // Importa la función asignarContenido desde tu archivo api
+    asignarContenido as asignarContenidoApi,
     notifyAllUsersInCourse as notifyAllUsersInCourseApi,
     notifySpecificUser as notifySpecificUserApi
-} from '../../api/courses/course.request'; // Importa las funciones de tu archivo api
+} from '../../api/courses/course.request';
 
 export const CoursesContext = createContext();
 
@@ -32,7 +32,6 @@ export const CoursesProvider = ({ children }) => {
             const res = await getAllCoursesApi();
             setCourses(res.data);
             console.log(res.data)
-
             return res.data;
         } catch (error) {
             console.error(error);
@@ -50,14 +49,16 @@ export const CoursesProvider = ({ children }) => {
         }
     };
 
-    const createCourse = async ({ title, description, category, userId, image }) => {
+    const createCourse = async ({ title, description, category, userId, image, nivel, duracion }) => {
         try {
             const newCourseData = {
                 title,
                 description,
                 category,  
                 userId,  
-                image
+                image,
+                nivel,
+                duracion: Number(duracion)
             };
             console.log(newCourseData);
 
@@ -90,7 +91,7 @@ export const CoursesProvider = ({ children }) => {
           console.error(error);
           return null;
         }
-      };
+    };
 
     const deleteCourse = async (id) => {
         try {
@@ -105,7 +106,7 @@ export const CoursesProvider = ({ children }) => {
     const notifyAllUsersInCourse = async (courseId) => {
         try {
             const res = await notifyAllUsersInCourseApi(courseId);
-            console.log(res.data.message); // Mensaje de éxito
+            console.log(res.data.message);
             return res.data;
         } catch (error) {
             console.error('Error notificando a todos los usuarios:', error.response.data);
@@ -116,7 +117,7 @@ export const CoursesProvider = ({ children }) => {
     const notifySpecificUser = async (courseId, email) => {
         try {
             const res = await notifySpecificUserApi(courseId, email);
-            console.log(res.data.message); // Mensaje de éxito
+            console.log(res.data.message);
             return res.data;
         } catch (error) {
             console.error(`Error notificando al usuario ${email}:`, error.response.data);
@@ -142,7 +143,6 @@ export const CoursesProvider = ({ children }) => {
         try {
             console.log("ID del curso:", id);
             console.log("Texto recibido:", texto);
-            //Llamar a la Api con el texto en lugar del archivo
             const res = await asignarLinkContenidoApi(id, texto);
             console.log("Respuesta Api", res);
             return res.data;
@@ -152,15 +152,12 @@ export const CoursesProvider = ({ children }) => {
         }
     };
 
-
-    //Funcion para actualizar archivo de componente: 
     const actualizarContenidoArchivo = async (id, index, nuevoArchivo) => {
         try {
             console.log("ID del curso:", id);
             console.log("Índice del archivo:", index);
             console.log("Nuevo archivo recibido:", nuevoArchivo);
     
-            // Llamar a la API para actualizar el archivo
             const res = await actualizarContenidoArchivoApi(id, index, nuevoArchivo);
             console.log("Respuesta de la API para actualizar contenido de archivo:", res);
             return res.data;
@@ -170,13 +167,11 @@ export const CoursesProvider = ({ children }) => {
         }
     };
 
-
     const actualizarLinkContenido = async (id, nuevoTexto, index) => {
         try {
             console.log("ID del curso:", id);
             console.log("Nuevo texto recibido:", nuevoTexto);
     
-            // Llamar a la API para actualizar el texto o enlace
             const res = await actualizarLinkContenidoApi(id, nuevoTexto, index);
             console.log("Respuesta de la API para actualizar link de contenido:", res);
             return res.data;
@@ -191,7 +186,21 @@ export const CoursesProvider = ({ children }) => {
     }, []);
 
     return (
-        <CoursesContext.Provider value={{ courses, getAllCourses, getCourse, createCourse, getCoursesByCategory, updateCourse, deleteCourse, asignarContenido, asignarLinkContenido, actualizarContenidoArchivo, actualizarLinkContenido, notifyAllUsersInCourse, notifySpecificUser }}>
+        <CoursesContext.Provider value={{ 
+            courses, 
+            getAllCourses, 
+            getCourse, 
+            createCourse, 
+            getCoursesByCategory, 
+            updateCourse, 
+            deleteCourse, 
+            asignarContenido, 
+            asignarLinkContenido, 
+            actualizarContenidoArchivo, 
+            actualizarLinkContenido, 
+            notifyAllUsersInCourse, 
+            notifySpecificUser 
+        }}>
             {children}
         </CoursesContext.Provider>
     );

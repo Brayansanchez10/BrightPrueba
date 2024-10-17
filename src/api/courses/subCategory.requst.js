@@ -11,7 +11,7 @@ const subCategoryRequest = axios.create({
 export const getAllSubcategories = () => subCategoryRequest.get('/getAllSubCategory');
 
 // Función para obtener una SubCategory por el id
-export const getSubcategoryById = (id) => subCategoryRequest.get(`/getSubCategoryId/${id}`);
+export const getSubcategoryById = () => subCategoryRequest.get(`/getSubCategoryId/${id}`);
 
 // Función para obtener SubCatgories relacionadas con el courseId
 export const getSubCategoryCourseId = (courseId) => subCategoryRequest.get(`/getSubCategoryCourseId/${courseId}`);

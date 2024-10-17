@@ -126,6 +126,7 @@ const UpdateSubCategoryForm = ({ isVisible, onCancel, subCategoryData, onUpdate,
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                maxLength={30}
                 required
                 className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-200 placeholder-gray-400"
                 placeholder={t("subCategory.EnterTitle")}

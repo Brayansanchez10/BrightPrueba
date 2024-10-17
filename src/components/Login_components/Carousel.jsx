@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
 import imagen from "../../assets/img/hola.png";
+import doko from "../../assets/img/dokoimg.png"
 
 function Carousel() {
   const { t } = useTranslation("global");
@@ -58,6 +59,14 @@ function Carousel() {
           <div className="flex bg-pink-500 p-2 rounded-br-lg group">
             <FaInstagram size={20} className="text-white text-xl" />
             <p className="text-white font-semibold -mt-1 ml-2 hidden group-hover:block">Instagram</p>
+          </div>
+        </a>
+      </div>
+      <div className="absolute top-[150px] left-0 xl:left-[-20px]">
+        <a href="https://mesadoko.com/mesadoko-app.html" target="_blank" rel="noopener noreferrer">
+          <div className="flex bg-blue-600 p-2 rounded-br-lg group">
+            <img src={doko} className="text-white text-xl h-6 drop-shadow-xl" />
+            <p className="text-white font-semibold  ml-2 hidden group-hover:block">Diviertete aprendiendo</p>
           </div>
         </a>
       </div>

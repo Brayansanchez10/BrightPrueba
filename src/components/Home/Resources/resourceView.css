@@ -1,25 +1,39 @@
-.custom-scrollbar {
-    overflow-y: hidden; /* Oculta el scroll por defecto */
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f1f1f1;
-    transition: overflow 0.3s ease; /* Transición suave */
-  }
-  
-  .custom-scrollbar:hover {
-    overflow-y: scroll; /* Muestra el scroll al pasar el mouse */
-  }
-  
-  /* Scrollbar para Webkit */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 10px;
-  }
-  
+.custom-scrollbar-y {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #6037a1 #f1f1f100;
+}
+
+.custom-scrollbar-y::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar-y::-webkit-scrollbar-track {
+  background: #f1f1f100;
+  border-radius: 5px;
+}
+
+.custom-scrollbar-y::-webkit-scrollbar-thumb {
+  background: #6037a1;
+  border-radius: 5px;
+}
+
+.custom-scrollbar-x {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #6037a1 #f1f1f100;
+}
+
+.custom-scrollbar-x::-webkit-scrollbar {
+  height: 8px;
+}
+
+.custom-scrollbar-x::-webkit-scrollbar-track {
+  background: #f1f1f100;
+  border-radius: 5px;
+}
+
+.custom-scrollbar-x::-webkit-scrollbar-thumb {
+  background: #6037a1;
+  border-radius: 5px;
+}

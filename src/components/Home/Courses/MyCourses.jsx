@@ -55,7 +55,7 @@ const CoursesComponent = () => {
     };
 
     fetchCourseProgress();
-  }, [userCourses, user, getCourseProgress]);
+  }, [userCourses, user]);
 
   const handleCourseClick = (courseId) => {
     console.log("Course ID:", courseId);

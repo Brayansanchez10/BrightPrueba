@@ -7,13 +7,13 @@ const favoriteRequest = axios.create({
     withCredentials: true,
 });
 
-export const addFavorite = (userId, courseId) =>
+export const addFavorite = (userId, courseId) => 
     favoriteRequest.post(`favorite`, { userId, courseId });
 
-export const removeFavorite = (userId, courseId) =>
+export const removeFavorite = (userId, courseId) => 
     favoriteRequest.delete(`favorite/${userId}/${courseId}`);
 
-export const getUserFavorites = (userId) =>
+export const getUserFavorites = (userId) => 
     favoriteRequest.get(`favorite/user/${userId}`);
 
 export default favoriteRequest;
