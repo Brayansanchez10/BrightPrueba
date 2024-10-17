@@ -27,11 +27,14 @@ export default function Component({
 
   useEffect(() => {
     const fetchSubCategories = async () => {
-      try {
-        const response = await getSubCategoryCourseId(courseId);
-        setSubCategories(response.data);
-      } catch (error) {
-        console.error("Error al obtener las subcategorías:", error);
+      if (courseId) {
+        try {
+          const response = await getSubCategoryCourseId(courseId);
+          setSubCategories(response.data);
+        } catch (error) {
+          console.error("Error al obtener las subcategorías:", error);
+          setSubCategories([]);
+        }
       }
     };
 

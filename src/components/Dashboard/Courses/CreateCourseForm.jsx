@@ -11,7 +11,7 @@ import "../css/Custom.css";
 
 const { Option } = Select;
 
-const CreateCourseForm = ({ visible, onClose, onCreate }) => {
+export default function CreateCourseForm({ visible = false, onClose = () => {}, onCreate = () => {} }) {
     const { categories } = useCategoryContext();
     const { createCourse } = useCoursesContext();
     const { getUserById } = useUserContext();
@@ -45,6 +45,8 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
         description: "",
         image: null,
         imagePreview: null,
+        level: "",
+        duration: "",
     });
 
     const [errorMessage, setErrorMessage] = useState({
@@ -52,6 +54,8 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
         category: "",
         description: "",
         image: "",
+        level: "",
+        duration: "",
     });
 
     const imageRef = useRef(null);
@@ -89,6 +93,13 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
                     setErrorMessage((prev) => ({ ...prev, description: "" }));
                 }
                 break;
+            case "duration":
+                if (value < 0 || value > 99) {
+                    setErrorMessage((prev) => ({ ...prev, duration: t("createCourseForm.durationInvalid") }));
+                } else {
+                    setErrorMessage((prev) => ({ ...prev, duration: "" }));
+                }
+                break;
             default:
                 break;
         }
@@ -96,13 +107,15 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsSubmitting(true); // Deshabilitar el botón
+        setIsSubmitting(true);
     
         const errors = {
             name: "",
             category: "",
             description: "",
             image: "",
+            level: "",
+            duration: "",
         };
     
         if (categories.some((existingCategory) => existingCategory.name === course.name)) {
@@ -121,10 +134,16 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
         if (!course.image) {
             errors.image = t("createCourseForm.allFieldsRequired");
         }
+        if (!course.level) {
+            errors.level = t("createCourseForm.allFieldsRequired");
+        }
+        if (!course.duration || course.duration < 0 || course.duration > 99) {
+            errors.duration = t("createCourseForm.durationInvalid");
+        }
     
         if (Object.values(errors).some((error) => error)) {
             setErrorMessage(errors);
-            setIsSubmitting(false); // Habilitar nuevamente si hay un error
+            setIsSubmitting(false);
             vibrate();
             return;
         }
@@ -135,6 +154,8 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
             description: course.description,
             image: course.image,
             userId: username,
+            level: course.level,
+            duration: parseInt(course.duration, 10),
         };
     
         try {
@@ -148,7 +169,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
                 onCreate(courseData);
                 resetForm();
                 onClose();
-                setIsSubmitting(false); // Habilitar nuevamente al cerrar modal
+                setIsSubmitting(false);
             });
         } catch (error) {
             console.error(error);
@@ -158,7 +179,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
                 timer: 3000,
                 showConfirmButton: true,
             }).then(() => {
-                setIsSubmitting(false); // Habilitar nuevamente si hay un error
+                setIsSubmitting(false);
             });
         }
     };
@@ -170,12 +191,16 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
             description: "",
             image: null,
             imagePreview: null,
+            level: "",
+            duration: "",
         });
         setErrorMessage({
             name: "",
             category: "",
             description: "",
             image: "",
+            level: "",
+            duration: "",
         });
         if (imageRef.current) {
             imageRef.current.value = null;
@@ -184,7 +209,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
 
     const vibrate = () => {
         if (navigator.vibrate) {
-            navigator.vibrate(200); // Vibrar durante 200 ms
+            navigator.vibrate(200);
         }
     };
 
@@ -196,9 +221,11 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
             className="custom"
             centered
             onCancel={onClose}
-            bodyStyle={{
-                borderRadius: "20px",
-                overflow: "hidden",
+            styles={{
+                body: {
+                    borderRadius: "20px",
+                    overflow: "hidden",
+                }
             }}
         >
             <div className="absolute top-5 right-8 cursor-pointer" onClick={onClose}>
@@ -259,12 +286,49 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
                         value={course.description}
                         onChange={handleChange}
                         maxLength={MAX_DESCRIPTION_LENGTH}
-                        style={{ minHeight: "80px" }} // Reducido en altura
+                        style={{ minHeight: "80px" }}
                         required
                     />
                     <div className="text-gray-500 text-sm">{`${course.description.length}/${MAX_DESCRIPTION_LENGTH}`}</div>
                     {errorMessage.description && (
                         <p className="text-red-500 text-sm mt-1">{errorMessage.description}</p>
+                    )}
+                </div>
+                <div className="text-left mb-4">
+                    <label className="text-lg font-bold text-[#000000] block">
+                        {t("createCourseForm.level")}
+                    </label>
+                    <Select
+                        className="w-full mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                        style={{ borderRadius: "0.375rem" }}
+                        value={course.level}
+                        onChange={(value) => setCourse({ ...course, level: value })}
+                        required
+                    >
+                        <Option value="Principiante">{t("createCourseForm.beginner")}</Option>
+                        <Option value="Intermedio">{t("createCourseForm.intermediate")}</Option>
+                        <Option value="Avanzado">{t("createCourseForm.advanced")}</Option>
+                    </Select>
+                    {errorMessage.level && (
+                        <p className="text-red-500 text-sm mt-1">{errorMessage.level}</p>
+                    )}
+                </div>
+                <div className="text-left mb-4">
+                    <label className="text-lg font-bold text-[#000000] block">
+                        {t("createCourseForm.duration")}
+                    </label>
+                    <input
+                        className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                        type="number"
+                        name="duration"
+                        value={course.duration}
+                        onChange={handleChange}
+                        min="0"
+                        max="99"
+                        required
+                    />
+                    {errorMessage.duration && (
+                        <p className="text-red-500 text-sm mt-1">{errorMessage.duration}</p>
                     )}
                 </div>
                 <div className="text-left mb-4">
@@ -287,7 +351,7 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
                 </div>
                 <button
                     type="submit"
-                    disabled={isSubmitting} // Desactivar el botón si está en proceso
+                    disabled={isSubmitting}
                     className="w-full py-2 bg-[#18116A] text-white font-bold rounded-lg shadow-md hover:bg-blue-500 transition duration-200"
                 >
                     {t("createCourseForm.createButton")}
@@ -295,6 +359,4 @@ const CreateCourseForm = ({ visible, onClose, onCreate }) => {
             </form>
         </Modal>
     );
-};
-
-export default CreateCourseForm;
+}

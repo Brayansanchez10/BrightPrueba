@@ -1,23 +1,17 @@
 import axios from 'axios';
 
-const api = `https://apibrightmind.mesadoko.com/PE/courses/`;
+const api = 'http://localhost:3068/PE/courses/';
 
 const courseRequest = axios.create({
   baseURL: api,
   withCredentials: true,
 });
 
-// Función para obtener todos los cursos
 export const getAllCourses = () => courseRequest.get('/getAllCourses');
 
-// Función para asignar contenido a un curso
 export const asignarContenido = (id, contentFile) => {
-  const formData = new FormData(); // Crear una instancia de FormData
-
-  // Agregar el archivo de contenido al FormData
+  const formData = new FormData();
   formData.append('content', contentFile);
-
-  // Realizar la solicitud POST utilizando Axios
   return courseRequest.post(`/asignarContenido/${id}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -25,12 +19,8 @@ export const asignarContenido = (id, contentFile) => {
   });
 };
 
-//Función para asignar texto a un contenido
 export const asignarLinkContenido = (id, texto) => {
-  //Crear un objeto Json con el texto
   const data = { texto };
-
-  //Realizar la solicitud POST utilizando axios
   return courseRequest.post(`/asignarLinkContenido/${id}`, data, {
     headers: {
       'Content-Type': 'application/json',
@@ -38,56 +28,52 @@ export const asignarLinkContenido = (id, texto) => {
   });
 };
 
-// Función para eliminar un recurso de un curso
 export const deleteResource = (courseId, resourceIndex) => {
   return courseRequest.delete(`/courses/${courseId}/resources/${resourceIndex}`);
 };
 
-
-// Función para obtener un curso por ID
 export const getCourse = (id) => courseRequest.get(`/getCourse/${id}`);
 
-// Función para crear un curso
 export const createCourse = async (courseData) => {
   try {
-    const formData = new FormData(); // Crear una instancia de FormData
+    const formData = new FormData();
     formData.append('title', courseData.title);
     formData.append('description', courseData.description);
     formData.append('category', courseData.category);
     formData.append('userId', courseData.userId);
+    formData.append('duracion', courseData.duracion);
+    formData.append('nivel', courseData.nivel); 
 
-    // Agregar la imagen si existe
     if (courseData.image) {
       formData.append('image', courseData.image);
     }
 
-    // Realizar la solicitud POST utilizando Axios
-    return courseRequest.post('/createCourse', formData, {
+    const response = await courseRequest.post('/createCourse', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
+
+    console.log('Respuesta del servidor:', response.data);
+    return response;
   } catch (error) {
-    console.error("Error al crear un Curso:", error);
+    console.error("Error al crear un Curso:", error.response ? error.response.data : error.message);
     throw error;
   }
 };
 
-// Función para actualizar un curso
 export const updateCourse = async (id, courseData) => {
   try {
-    const formData = new FormData(); // Crear una instancia de FormData
+    const formData = new FormData();
     formData.append('title', courseData.title);
     formData.append('description', courseData.description);
     formData.append('category', courseData.category);
     formData.append('content', courseData.content);
 
-    // Agregar la imagen si existe
     if (courseData.image) {
       formData.append('image', courseData.image);
     }
 
-    // Realizar la solicitud PUT utilizando Axios
     return courseRequest.put(`/updateCourse/${id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -99,14 +85,9 @@ export const updateCourse = async (id, courseData) => {
   }
 };
 
-// Función para actualizar el contenido de un archivo en un curso
 export const actualizarContenidoArchivo = (id, index, nuevoArchivo) => {
-  const formData = new FormData(); // Crear una instancia de FormData
-
-  // Agregar el nuevo archivo de contenido al FormData
+  const formData = new FormData();
   formData.append('content', nuevoArchivo);
-
-  // Realizar la solicitud PUT utilizando Axios
   return courseRequest.put(`/actualizarContenidoArchivo/${id}/${index}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -114,11 +95,8 @@ export const actualizarContenidoArchivo = (id, index, nuevoArchivo) => {
   });
 };
 
-// Función para actualizar el texto o enlace en un curso
 export const actualizarLinkContenido = (id, nuevoTexto, index) => {
   const data = { nuevoTexto, index };
-
-  // Realizar la solicitud PUT utilizando Axios
   return courseRequest.put(`/actualizarLinkContenido/${id}`, data, {
     headers: {
       'Content-Type': 'application/json',
@@ -126,15 +104,12 @@ export const actualizarLinkContenido = (id, nuevoTexto, index) => {
   });
 };
 
-// Función para notificar a todos los usuarios inscritos en un curso
 export const notifyAllUsersInCourse = (courseId) => {
   return courseRequest.post(`/${courseId}/notify-all`);
 };
 
-// Función para notificar a un usuario específico
 export const notifySpecificUser = (courseId, email) => {
-  const data = { email }; // Crear un objeto con el correo del usuario
-
+  const data = { email };
   return courseRequest.post(`/${courseId}/notify-specific`, data, {
     headers: {
       'Content-Type': 'application/json',
@@ -142,9 +117,8 @@ export const notifySpecificUser = (courseId, email) => {
   });
 };
 
-// Función para eliminar un curso
 export const deleteCourse = (id) => courseRequest.delete(`/deleteCourse/${id}`);
+
 export const getCoursesByCategory = (categoryName) => courseRequest.get(`/category/${categoryName}`);
 
 export default courseRequest;
-

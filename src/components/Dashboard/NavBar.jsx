@@ -86,7 +86,7 @@ const Navbar = () => {
           </div>
           <div className="flex-1 justify-center font-bungee text-center flex items-center md:ml-48 ml-12 sm:ml-48">
             <Link to="/admin" className="flex items-center text-white text-[28px] tracking-wider">
-              <span>BRING</span>
+              <span>BRIGHT</span>
               <span className="text-[#00D8A1]">MIND</span>
               <img className="h-[70px]" src={Logo} alt="Logo" />
             </Link>
