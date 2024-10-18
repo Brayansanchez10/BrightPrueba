@@ -1,3 +1,4 @@
+import React from 'react';
 import NavigationBar from '../components/Home/NavigationBar';
 import QuoteCarousel from '../components/Home/QuoteCarousel';
 import Footer from '../components/footer.jsx';
@@ -63,14 +64,14 @@ const HomePage = () => {
             <NavigationBar/>
             <div className="flex flex-col bg-slate-300 mt-5">
                 <div className='mt-4 p-0'>
-                    <div className='md:pb-5  sm:pb-0 lg:pb-20'>
+                    <div className='md:pb-5 sm:pb-0 lg:pb-20 mt-16 sm:mt-24 md:mt-32 lg:mt-5'>
                         <QuoteCarousel phrases={phrases} />
                     </div>
 
-                    <div className='md:pb-5  sm:pb-0 lg:pb-20'>
-                        <div className='flex flex-col lg:flex-row gap-10 mx-5 md:mx-10 lg:mx-20 my-10'>
+                    <div className='md:pb-5 sm:pb-0 lg:pb-20'>
+                        <div className='flex flex-col lg:flex-row gap-10 mx-5 md:mx-10 lg:mx-20 my-6'>
                             <div className='w-full lg:w-1/2 mx-auto p-6 xl:w-1/3'>
-                                <h2 className='text-center text-4xl md:text-5xl lg:text-5xl font-bungee pt-10'>{t('home.welcome')}<span className='text-purple-900'>bringmind</span></h2>
+                                <h2 className='text-center lg:text-center text-4xl md:text-5xl lg:text-5xl font-bungee pt-2 sm:pt-4 md:pt-6 lg:pt-10 -ml-4 sm:-ml-8 md:-ml-12 lg:ml-0'>{t('home.welcome')}<span className='text-purple-900'>bringmind</span></h2>
                                 <p className='text-base md:text-xl lg:text-2xl text-justify pt-5'>{t('home.welcome_message')}</p>
                             </div>
                             <div className='bg-purple-900 rounded-t-full rounded-b-3xl w-1/3 items-center hidden xl:flex mx-auto'>
@@ -194,7 +195,8 @@ const HomePage = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <div className='text-center rounded-3xl p-4 sm:p-6 md:p-8'>
+                                    
+                                    <div className='text-center  rounded-3xl p-4 sm:p-6 md:p-8'>
                                         <img src={Cooking} alt="" className='w-3/4 h-3/4 mx-auto sm:w-full sm:h-full rounded-3xl'/>
                                     </div>
                                     <div className='text-center'>
@@ -248,7 +250,6 @@ const HomePage = () => {
             </div>
             <Footer />
         </div>
-        
     );
 }
 

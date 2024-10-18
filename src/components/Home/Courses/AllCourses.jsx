@@ -38,8 +38,15 @@ export default function Component() {
   const [allRatings, setAllRatings] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [creators, setCreators] = useState({});
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const sliderRefs = useRef({});
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const fetchCreatorName = useCallback(async (userId) => {
     if (!creators[userId]) {
@@ -184,31 +191,8 @@ export default function Component() {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: windowWidth >= 1024 ? 4 : windowWidth >= 768 ? 3 : windowWidth >= 480 ? 2 : 1,
     slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
     arrows: false,
     beforeChange: (oldIndex, newIndex) => {
       setCurrentSlide((prev) => ({ ...prev, [category]: newIndex + 1 }));
@@ -230,7 +214,8 @@ export default function Component() {
   const renderSlider = (category, courses) => {
     const settings = sliderSettings(category, courses.length);
     const totalSlides = courses.length;
-    const maxSlide = Math.max(1, totalSlides - 3);
+    const slidesToShow = settings.slidesToShow;
+    const maxSlide = Math.ceil(totalSlides / slidesToShow);
 
     return (
       <div className="mt-6 mx-auto max-w-7xl px-4">
@@ -240,17 +225,9 @@ export default function Component() {
             {...settings}
           >
             {courses.map(renderCourseCard)}
-            {courses.length < 4 &&
-              Array(4 - courses.length)
-                .fill(null)
-                .map((_, index) => (
-                  <div key={`empty-${index}`} className="px-2">
-                    <div className="w-full h-full"></div>
-                  </div>
-                ))}
           </Slider>
         </div>
-        {courses.length > 4 && (
+        {courses.length > slidesToShow && (
           <div className="flex justify-center sm:justify-start items-center mt-4 text-[#CFCFCF]">
             <button
               onClick={(e) => {
@@ -271,6 +248,10 @@ export default function Component() {
               <span className="text-white font-bold">
                 {currentSlide[category] || 1}
               </span>
+            </div>
+            <span className="mx-2 text-[#B99CEA]">de</span>
+            <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
+              <span className="text-white font-bold">{maxSlide}</span>
             </div>
             <button
               onClick={(e) => {
@@ -352,7 +333,7 @@ export default function Component() {
               src={Logo}
               alt="Logo"
             />
-            <h2 className="text-xl font-bold mb-4 text-center text-gray-800 sm:text-2xl md:text-3xl lg:text-4xl">
+            <h2 className="text-xl font-bold mb-4 text-center text-gray-800 sm:text-2xl md:text-3xl  lg:text-4xl">
               {t("courseComponent.no_courses_available")}
             </h2>
             
