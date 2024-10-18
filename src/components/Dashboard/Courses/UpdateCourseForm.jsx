@@ -5,6 +5,7 @@ import { useCategoryContext } from "../../../context/courses/category.context";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import "../css/Custom.css";
+import zorroImage from "../../../assets/img/imagen1.png"; 
 
 const { Option } = Select;
 
@@ -189,7 +190,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
     >
       <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
         <img
-          src="/src/assets/img/imagen1.png"
+          src={zorroImage}
           alt="Imagen de la cabecera"
           className="w-[189.69px] h-[148px] object-contain mt-8"
         />

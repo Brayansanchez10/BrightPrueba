@@ -254,7 +254,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
                 className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
                 value={name}
                 onChange={handleNameChange}
-                maxLength={30}
+                maxLength={50}
               />
               {errors.name && (
                 <p className="text-red-500 text-sm mt-1">{errors.name}</p>
