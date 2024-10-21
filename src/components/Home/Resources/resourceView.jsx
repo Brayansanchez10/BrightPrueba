@@ -2263,9 +2263,11 @@ export default function ResourceView() {
                   </button>
                 </div>
               </div>
-              <div className="max-w-none text-sm sm:text-base text-white ml-4 mt-4">
-                <p>{resource.description}</p>
-              </div>
+              <div className="max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl text-sm sm:text-base text-white ml-4 mt-4">
+              <p className="break-words whitespace-pre-wrap">
+                {resource.description}
+              </p>
+            </div>
             </div>
             <div className="w-full lg:w-1/3 pt-[52px]">
               {renderRightSideContent()}
