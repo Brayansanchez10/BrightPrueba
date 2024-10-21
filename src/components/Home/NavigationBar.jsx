@@ -69,10 +69,10 @@ export default function NavigationBar() {
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -97,7 +97,7 @@ export default function NavigationBar() {
   };
 
   const formatUsername = (name) => {
-    const words = name.split(' ');
+    const words = name.split(" ");
     if (words.length > 2) {
       return (
         <>
@@ -106,7 +106,7 @@ export default function NavigationBar() {
           </span>
           <br />
           <span className="inline-block max-w-full break-words hyphens-auto">
-            {words.slice(1).join(' ')}
+            {words.slice(1).join(" ")}
           </span>
         </>
       );
@@ -123,7 +123,7 @@ export default function NavigationBar() {
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
-    
+
     const handleScroll = () => {
       if (window.scrollY > lastScrollY) {
         setScrollDirection("down");
@@ -158,34 +158,31 @@ export default function NavigationBar() {
           <span className="text-white font-bold text-xl text-center flex-1">
             BRIGHT<span className="text-[#00D8A1]">MIND</span>
           </span>
-          <button onClick={toggleMobileMenu} className="text-white">
-            {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-          </button>
         </div>
         <div className="hidden lg:flex items-center space-x-8">
           <Link
             to="/Home"
             className={`${getActiveClass("/Home")} font-bold text-lg`}
           >
-            {t('navigationBar.home')}
+            {t("navigationBar.home")}
           </Link>
           <Link
             to="/AllCourses"
             className={`${getActiveClass("/AllCourses")} font-bold text-lg`}
           >
-            {t('navigationBar.courses')}
+            {t("navigationBar.courses")}
           </Link>
           <Link
             to="/MyCourses"
             className={`${getActiveClass("/MyCourses")} font-bold text-lg`}
           >
-            {t('navigationBar.myCourses')}
+            {t("navigationBar.myCourses")}
           </Link>
           <Link
             to="/Forum"
             className={`${getActiveClass("/Forum")} font-bold text-lg`}
           >
-            {t('Foro')}
+            {t("Foro")}
           </Link>
         </div>
         <div className="hidden lg:flex items-center">
@@ -216,126 +213,148 @@ export default function NavigationBar() {
                   to="/Account"
                   className="flex items-center px-4 py-2 text-white hover:text-black hover:bg-gray-200"
                 >
-                  <FaUserCog className="mr-2" /> {t('navigationBar.configProfile')}
+                  <FaUserCog className="mr-2" />{" "}
+                  {t("navigationBar.configProfile")}
                 </Link>
                 <div
                   onClick={handleLogout}
                   className="flex items-center px-4 py-2 text-white hover:text-black hover:bg-red-200 cursor-pointer"
                 >
-                  <FaSignOutAlt className="mr-2" /> {t('navigationBar.logout')}
+                  <FaSignOutAlt className="mr-2" /> {t("navigationBar.logout")}
                 </div>
               </div>
             </div>
           )}
         </div>
       </nav>
+      <button
+        onClick={toggleMobileMenu}
+        className="fixed top-5 right-4 text-white z-[70] lg:hidden"
+      >
+        {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+      </button>
       {isMobileMenuOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-    <div className="fixed inset-0 top-16 bg-gradient-to-r from-[#783CDA] to-[#200E3E] flex flex-col items-center py-4 z-50 overflow-y-auto">
-      <div className="flex flex-col items-center justify-between h-full w-full">
-        <div className="flex flex-col items-center w-full flex-grow">
-          <Link
-            to="/Account"
-            className="p-4 flex m-auto w-[85%] bg-gradient-to-r from-[#512599] to-[#190736] rounded-xl shadow-[#8f77b6] shadow-[0_10px_20px] mt-4"
-          >
-            <div className="flex items-center w-full">
-              <div
-                className={`h-16 w-16 flex-shrink-0 rounded-full border transition-all duration-300 ${
-                  userImage ? "" : "bg-purple-500 flex items-center justify-center"
-                }`}
-                style={{
-                  backgroundImage: userImage ? `url(${userImage})` : "none",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              >
-                {!userImage && <FaUserCircle className="text-white h-12 w-12" />}
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 top-16 bg-gradient-to-r from-[#783CDA] to-[#200E3E] flex flex-col items-center py-4 z-50 overflow-y-auto">
+            <div className="flex flex-col items-center justify-between h-full w-full">
+              <div className="flex flex-col items-center w-full flex-grow">
+                <Link
+                  to="/Account"
+                  className="p-4 py-6 flex m-auto w-[85%] bg-gradient-to-r from-[#512599] to-[#190736] rounded-xl shadow-[#8f77b6] shadow-[0_10px_20px]"
+                >
+                  <div className="flex items-center w-full">
+                    <div
+                      className={`h-16 w-16 flex-shrink-0 rounded-full border transition-all duration-300 ${
+                        userImage
+                          ? ""
+                          : "bg-purple-500 flex items-center justify-center"
+                      }`}
+                      style={{
+                        backgroundImage: userImage
+                          ? `url(${userImage})`
+                          : "none",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      {!userImage && (
+                        <FaUserCircle className="text-white h-12 w-12" />
+                      )}
+                    </div>
+                    <div className="flex flex-col justify-center ml-2 w-full min-w-0">
+                      <span className="text-white font-bungee text-2xl leading-tight">
+                        {formatUsername(username)}
+                      </span>
+                      <span className="text-white text-lg font-sans truncate">
+                        {t("navigationBar.myAccount")}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+                <div className="my-auto">
+                  <div className="flex flex-col items-center w-full space-y-4 mt-4">
+                    <Link
+                      to="/Home"
+                      className="flex items-center py-2 w-full justify-center text-[#783CDA] text-2xl font-bold"
+                      onClick={toggleMobileMenu}
+                    >
+                      <div
+                        className="flex items-center justify-center w-[250px] h-[90px] rounded-lg shadow-lg"
+                        style={{
+                          backgroundImage: `url(${fondoInicio})`,
+                          backgroundSize: "cover",
+                          backgroundColor: "white",
+                          backgroundPosition: "center",
+                        }}
+                      >
+                        <FaHome className="mr-2 text-[#783CDA] h-6 w-6" />
+                        <span className="text-2xl font-bungee">
+                          {t("navigationBar.home")}
+                        </span>
+                      </div>
+                    </Link>
+
+                    <Link
+                      to="/AllCourses"
+                      className="flex items-center py-2 w-full justify-center text-[#00D8A1] text-2xl font-bold"
+                      onClick={toggleMobileMenu}
+                    >
+                      <div
+                        className="flex items-center justify-center w-[250px] h-[90px] rounded-lg shadow-lg"
+                        style={{
+                          backgroundImage: `url(${fondoCursos})`,
+                          backgroundSize: "cover",
+                          backgroundColor: "white",
+                          backgroundPosition: "center",
+                        }}
+                      >
+                        <FaBook className="mr-2 text-[#00D8A1] h-6 w-6" />
+                        <span className="text-2xl font-bungee">
+                          {t("navigationBar.courses")}
+                        </span>
+                      </div>
+                    </Link>
+
+                    <Link
+                      to="/MyCourses"
+                      className="flex items-center py-2 w-full justify-center text-[#F9BE0A] hover:text-[#00D8A1] text-2xl font-bold"
+                      onClick={toggleMobileMenu}
+                    >
+                      <div
+                        className="flex items-center justify-center w-[250px] h-[90px] rounded-lg shadow-lg"
+                        style={{
+                          backgroundImage: `url(${fondoMiscursos})`,
+                          backgroundSize: "cover",
+                          backgroundColor: "white",
+                          backgroundPosition: "center",
+                        }}
+                      >
+                        <FaGraduationCap className="mr-2 text-[#F9BE0A] h-6 w-6" />
+                        <span className="text-2xl font-bungee">
+                          {t("navigationBar.myCourses")}
+                        </span>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-col justify-center ml-2 w-full min-w-0">
-                <span className="text-white font-bungee text-2xl leading-tight">
-                  {formatUsername(username)}
-                </span>
-                <span className="text-white text-lg font-sans truncate">
-                  {t('navigationBar.myAccount')}
+
+              <div
+                onClick={() => {
+                  handleLogout();
+                  toggleMobileMenu();
+                }}
+                className="flex items-center justify-center w-full p-4 cursor-pointer text-red-500 hover:opacity-80 mt-8"
+              >
+                <FaSignOutAlt className="mr-2 text-xl sm:text-2xl" />
+                <span className="text-white text-xl sm:text-2xl font-bold font-bungee">
+                  {t("navigationBar.logout")}
                 </span>
               </div>
             </div>
-          </Link>
-          <div className="flex flex-col items-center w-full space-y-4 transform -translate-y-20">
-            <Link
-              to="/Home"
-              className="flex items-center py-2 w-full justify-center text-[#783CDA] text-2xl font-bold"
-              onClick={toggleMobileMenu}
-            >
-              <div
-                className="flex items-center justify-center w-[250px] h-[90px] rounded-lg shadow-lg"
-                style={{
-                  backgroundImage: `url(${fondoInicio})`,
-                  backgroundSize: "cover",
-                  backgroundColor: "white",
-                  backgroundPosition: "center",
-                }}
-              >
-                <FaHome className="mr-2 text-[#783CDA] h-6 w-6" />
-                <span className="text-2xl font-bungee">{t('navigationBar.home')}</span>
-              </div>
-            </Link>
-
-            <Link
-              to="/AllCourses"
-              className="flex items-center py-2 w-full justify-center text-[#00D8A1] text-2xl font-bold"
-              onClick={toggleMobileMenu}
-            >
-              <div
-                className="flex items-center justify-center w-[250px] h-[90px] rounded-lg shadow-lg"
-                style={{
-                  backgroundImage: `url(${fondoCursos})`,
-                  backgroundSize: "cover",
-                  backgroundColor: "white",
-                  backgroundPosition: "center",
-                }}
-              >
-                <FaBook className="mr-2 text-[#00D8A1] h-6 w-6" />
-                <span className="text-2xl font-bungee">{t('navigationBar.courses')}</span>
-              </div>
-            </Link>
-
-            <Link
-              to="/MyCourses"
-              className="flex items-center py-2 w-full justify-center text-[#F9BE0A] hover:text-[#00D8A1] text-2xl font-bold"
-              onClick={toggleMobileMenu}
-            >
-              <div
-                className="flex items-center justify-center w-[250px] h-[90px] rounded-lg shadow-lg"
-                style={{
-                  backgroundImage: `url(${fondoMiscursos})`,
-                  backgroundSize: "cover",
-                  backgroundColor: "white",
-                  backgroundPosition: "center",
-                }}
-              >
-                <FaGraduationCap className="mr-2 text-[#F9BE0A] h-6 w-6" />
-                <span className="text-2xl font-bungee">{t('navigationBar.myCourses')}</span>
-              </div>
-            </Link>
           </div>
         </div>
-
-        <div
-          onClick={() => {
-            handleLogout();
-            toggleMobileMenu();
-          }}
-          className="flex items-center justify-center w-full p-4 cursor-pointer text-red-500 hover:opacity-80 mt-auto"
-        >
-          <FaSignOutAlt className="mr-2 text-2xl" />
-          <span className="text-white text-2xl font-bold font-bungee">{t('navigationBar.logout')}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
-
+      )}
     </>
   );
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const api = 'https://apibrightmind.mesadoko.com/PE/notes';
+const api = `https://apibrightmind.mesadoko.com/PE/notes`;
 
 const notesRequest = axios.create({
     baseURL: api,
@@ -16,12 +16,12 @@ export const addResourceNote = (resourceId, noteData) =>
     notesRequest.post(`/resources/${resourceId}/notes`, noteData);
 
 // Función para obtener las notas de un curso
-export const getCourseNotes = (courseId) => 
-    notesRequest.get(`/getNotes/courses/${courseId}`);
+export const getCourseNotes = (courseId, userId) => 
+    notesRequest.get(`/getNotes/courses/${courseId}?userId=${userId}`);
 
 // Función para obtener las notas de un recurso específico
-export const getResourceNotes = (courseId, resourceId) => 
-    notesRequest.get(`/getNotes/courses/${courseId}/resources/${resourceId}`);
+export const getResourceNotes = (courseId, resourceId, userId) => 
+    notesRequest.get(`/getNotes/courses/${courseId}/resources/${resourceId}?userId=${userId}`);
 
 // Función para actualizar una nota
 export const updateNote = (id, noteData) => 

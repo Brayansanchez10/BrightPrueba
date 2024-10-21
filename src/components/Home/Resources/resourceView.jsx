@@ -379,16 +379,16 @@ export default function ResourceView() {
   }, [user, ratings]);
 
   useEffect(() => {
-    if (course?.id) {
-      fetchCourseNotes(course.id);
+    if (course?.id && user?.data?.id) {
+      fetchCourseNotes(course.id, user.data.id);
     }
-  }, [course, fetchCourseNotes]);
+  }, [course, user, fetchCourseNotes]);
 
   useEffect(() => {
-    if (course?.id && resource?.id) {
-      fetchResourceNotes(course.id, resource.id);
+    if (course?.id && resource?.id && user?.data?.id) {
+      fetchResourceNotes(course.id, resource.id, user.data.id);
     }
-  }, [course, resource, fetchResourceNotes]);
+  }, [course, resource, user, fetchResourceNotes]);
 
   useEffect(() => {
     console.log("Apuntes:", notes);
@@ -939,7 +939,7 @@ export default function ResourceView() {
 
         if (result) {
           setUserNote("");
-          await fetchCourseNotes(course.id);
+          await fetchCourseNotes(course.id, user.data.id);
           Swal.fire({
             icon: "success",
             title: "Apunte creado",
@@ -1009,7 +1009,7 @@ export default function ResourceView() {
       console.log("Nueva nota del recurso creada:", newResourceNote);
 
       // Actualizamos el contexto
-      await fetchResourceNotes(course.id, resource.id);
+      await fetchResourceNotes(course.id, resource.id, user.data.id);
       setUserResourceNote("");
 
       Swal.fire({
@@ -1040,7 +1040,7 @@ export default function ResourceView() {
         note.id === noteId ? { ...note, content: editedNoteContent } : note
       );
       // Actualizar el estado de las notas
-      fetchCourseNotes(course.id);
+      fetchCourseNotes(course.id, user.data.id);
       // Resetear el estado de edición
       setEditingNoteId(null);
       setEditedNoteContent("");
@@ -1075,8 +1075,8 @@ export default function ResourceView() {
 
       if (result.isConfirmed) {
         await removeNote(noteId);
-        await fetchCourseNotes(course.id);
-        await fetchResourceNotes(course.id, resource.id);
+        await fetchCourseNotes(course.id, user.data.id);
+        await fetchResourceNotes(course.id, resource.id, user.data.id);
         Swal.fire(
           "Eliminado",
           "Tu apunte ha sido eliminado.",
@@ -1101,7 +1101,7 @@ export default function ResourceView() {
   const handleSaveEditedResourceNote = async (noteId) => {
     try {
       await editResourceNote(noteId, { content: editedResourceNoteContent });
-      await fetchResourceNotes(course.id, resource.id);
+      await fetchResourceNotes(course.id, resource.id, user.data.id);
       setEditingResourceNoteId(null);
       setEditedResourceNoteContent("");
       Swal.fire({
@@ -1134,7 +1134,7 @@ export default function ResourceView() {
 
       if (result.isConfirmed) {
         await removeResourceNote(noteId);
-        await fetchResourceNotes(course.id, resource.id);
+        await fetchResourceNotes(course.id, resource.id, user.data.id);
         Swal.fire(
           "Eliminado",
           "Tu apunte del recurso ha sido eliminado.",

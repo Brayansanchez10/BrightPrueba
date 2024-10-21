@@ -20,10 +20,10 @@ export const NotesProvider = ({ children }) => {
     const [error, setError] = useState(null);
     const [resourceNotes, setResourceNotes] = useState([]);
 
-    const fetchCourseNotes = useCallback(async (courseId) => {
+    const fetchCourseNotes = useCallback(async (courseId, userId) => {
         setLoading(true);
         try {
-            const response = await getCourseNotes(courseId);
+            const response = await getCourseNotes(courseId, userId);
             
             // Asegurarse de que estamos trabajando con un array plano
             const notesArray = Array.isArray(response.data) 
@@ -45,10 +45,10 @@ export const NotesProvider = ({ children }) => {
         }
     }, []);
 
-    const fetchResourceNotes = useCallback(async (courseId, resourceId, noteId) => {
+    const fetchResourceNotes = useCallback(async (courseId, resourceId, userId) => {
         setLoading(true);
         try {
-            const response = await getResourceNotes(courseId, resourceId, noteId);
+            const response = await getResourceNotes(courseId, resourceId, userId);
             console.log('Respuesta de getResourceNotes:', response);
             
             const notesArray = Array.isArray(response.data) 
