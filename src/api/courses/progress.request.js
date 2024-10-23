@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const api = `https://apibrightmind.mesadoko.com/PE/progress`;
+const api = `http://localhost:3068/PE/progress`;
 
 // Función para obtener el progreso de un curso para un usuario específico
 export const getCourseProgress = async (userId, courseId) => {

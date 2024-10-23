@@ -12,6 +12,7 @@ const DetailsUserModal = ({ visible, onCancel, user }) => {
       className="custom w-[543px] bg-white rounded-3xl"
       centered
       visible={visible}
+      closable={false}
       onCancel={onCancel}
       footer={null}
       bodyStyle={{
@@ -47,6 +48,21 @@ const DetailsUserModal = ({ visible, onCancel, user }) => {
                 <strong className="font-bold text-xl text-black">{t('userDetails.name')}:</strong>
                 <br />
                 <span className="text-lg">{user.username}</span>
+              </p>
+              <p className="mb-5">
+                <strong className="font-bold text-xl text-black">{t('userDetails.firstNames')}:</strong>
+                <br />
+                <span className="text-lg">{user.firstNames}</span>
+              </p>
+              <p className="mb-5">
+                <strong className="font-bold text-xl text-black">{t('userDetails.lastNames')}:</strong>
+                <br />
+                <span className="text-lg">{user.lastNames}</span>
+              </p>
+              <p className="mb-5">
+                <strong className="font-bold text-xl text-black">{t('userDetails.documentNumber')}:</strong>
+                <br />
+                <span className="text-lg">{user.documentNumber}</span>
               </p>
               <p className="mb-5">
                 <strong className="font-bold text-xl text-black">{t('userDetails.email')}:</strong>

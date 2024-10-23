@@ -24,9 +24,9 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
   const handleFormSubmit = async () => {
     try {
       const values = await form.validateFields();
-      const { username, email } = values;
+      const { username, email, documentNumber } = values;
 
-      if (checkIfUserExists(username, email)) {
+      if (checkIfUserExists(username, email, documentNumber)) {
         Swal.fire({
           icon: "error",
           title: t("CreateUserModal.userExists"),
@@ -94,6 +94,30 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
           ]}
         >
           <Input maxLength={30} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+        </Form.Item>
+        <Form.Item
+          className="text-lg font-bold text-black mb-2"
+          name="firstNames"
+          label={t("CreateUserModal.firstNames")}
+          rules={[{ required: true, message: t("CreateUserModal.firstNamesRequired") }]}
+        >
+          <Input minLength={3} maxLength={60} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+        </Form.Item>
+        <Form.Item
+          className="text-lg font-bold text-black mb-2"
+          name="lastNames"
+          label={t("CreateUserModal.lastNames")}
+          rules={[{ required: true, message: t("CreateUserModal.lastNamesRequired") }]}
+        >
+          <Input minLength={3} maxLength={60} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+        </Form.Item>
+        <Form.Item
+          className="text-lg font-bold text-black mb-2"
+          name="documentNumber"
+          label={t("CreateUserModal.documentNumber")}
+          rules={[{ required: true, message: t("CreateUserModal.documentNumberRequired") }]}
+        >
+          <Input minLength={3} maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
         <Form.Item
           className="text-lg font-bold text-black mb-2"

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const api = 'https://apibrightmind.mesadoko.com/PE/';
+const api = `http://localhost:3068/PE/`;
 
 const bookmarkRequest = axios.create({
     baseURL: api,

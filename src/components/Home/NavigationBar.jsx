@@ -18,6 +18,7 @@ import "../../css/Style.css";
 import fondoInicio from "../../assets/img/fondo_inicio.png";
 import fondoCursos from "../../assets/img/fondo_cursos.png";
 import fondoMiscursos from "../../assets/img/fondo_miscursos.png";
+import ThemeToggle from '../ThemeToggle';
 
 export default function NavigationBar() {
   const { t } = useTranslation("global");
@@ -186,8 +187,11 @@ export default function NavigationBar() {
           </Link>
         </div>
         <div className="hidden lg:flex items-center">
-          <div className="relative text-white text-lg font-bold mr-4 cursor-pointer max-w-[200px] truncate">
-            {username}
+          <div className="flex flex-col items-end mr-4">
+            <div className="relative text-white text-lg font-bold cursor-pointer max-w-[200px] truncate">
+              {username}
+            </div>
+            <ThemeToggle />
           </div>
           <div
             className={`h-14 w-14 rounded-full cursor-pointer border transition-all duration-300 hover:scale-110 ${

@@ -12,6 +12,8 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
   const [name, setName] = useState(initialName);
   const [email, setEmail] = useState(initialEmail);
+  const [firstNames, setFirstNames] = useState("");
+  const [lastNames, setLastNames] = useState("");
   const [userId, setUserId] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [previewProfileImage, setPreviewProfileImage] = useState(null);
@@ -26,6 +28,8 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           setUserId(userData.id);
           setName(userData.username);
           setEmail(userData.email);
+          setFirstNames(userData.firstNames);
+          setLastNames(userData.lastNames);
 
           if (userData.userImage && userData.userImage !== "null") {
             setPreviewProfileImage(userData.userImage);
@@ -57,6 +61,20 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
     return "";
   };
 
+  const validateFirstNames = (firstNames) => {
+    if (firstNames.length < 3 || firstNames.length > 60) {
+      return t('userProfileSettings.firstNames_length_invalid');
+    }
+    return "";
+  };
+
+  const validateLastNames = (lastNames) => {
+    if (lastNames.length < 3 || lastNames.length > 60) {
+      return t('userProfileSettings.lastNames_length_invalid');
+    }
+    return "";
+  };
+
   const validateImage = (file) => {
     if (file.size > 5 * 1024 * 1024) {
       return t('userProfileSettings.image_too_large');
@@ -71,9 +89,11 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
     const newErrors = {
       name: validateName(name),
       email: validateEmail(email),
+      firstNames: validateFirstNames(firstNames),
+      lastNames: validateLastNames(lastNames),
     };
     setErrors(newErrors);
-    return !newErrors.name && !newErrors.email;
+    return !Object.values(newErrors).some(error => error !== "");
   };
 
   const handleSubmit = async (e) => {
@@ -84,6 +104,8 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           const userData = {
             username: name,
             email,
+            firstNames,
+            lastNames,
             userImage: deleteProfileImage ? null : (profileImage || previewProfileImage),
           };
 
@@ -138,6 +160,24 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
     }));
   };
 
+  const handleFirstNamesChange = (e) => {
+    const newFirstNames = e.target.value;
+    setFirstNames(newFirstNames);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      firstNames: validateFirstNames(newFirstNames),
+    }));
+  };
+
+  const handleLastNamesChange = (e) => {
+    const newLastNames = e.target.value;
+    setLastNames(newLastNames);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      lastNames: validateLastNames(newLastNames),
+    }));
+  };
+
   const handleImageChange = (e) => {
     const imageFile = e.target.files[0];
     if (imageFile) {
@@ -174,7 +214,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
       if (result.isConfirmed) {
         try {
-          await updateUserPartial(userId, { username: name, email, userImage: null });
+          await updateUserPartial(userId, { username: name, email, firstNames, lastNames, userImage: null });
 
           Swal.fire({
             icon: 'success',
@@ -258,6 +298,38 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
               />
               {errors.name && (
                 <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="firstNames" className="text-base font-bold text-black block mb-2">
+                {t('userProfileSettings.firstNames')}
+              </label>
+              <input
+                type="text"
+                id="firstNames"
+                className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                value={firstNames}
+                onChange={handleFirstNamesChange}
+                maxLength={50}
+              />
+              {errors.firstNames && (
+                <p className="text-red-500 text-sm mt-1">{errors.firstNames}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="lastNames" className="text-base font-bold text-black block mb-2">
+                {t('userProfileSettings.lastNames')}
+              </label>
+              <input
+                type="text"
+                id="lastNames"
+                className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                value={lastNames}
+                onChange={handleLastNamesChange}
+                maxLength={50}
+              />
+              {errors.lastNames && (
+                <p className="text-red-500 text-sm mt-1">{errors.lastNames}</p>
               )}
             </div>
             <div className="mb-4">

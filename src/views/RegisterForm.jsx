@@ -23,6 +23,15 @@ function RegisterForm() {
   const { t } = useTranslation("global");
 
   const validationSchema = yup.object().shape({
+    firstNames: yup
+      .string()
+      .required(t("register.firstNames_required")),
+    lastNames: yup
+      .string()
+      .required(t("register.lastNames_required")),
+    documentNumber: yup
+      .string()
+      .required(t("register.documentNumber_required")),
     username: yup
       .string()
       .min(4, t("register.username_min_length"))
@@ -48,6 +57,9 @@ function RegisterForm() {
 
   const formik = useFormik({
     initialValues: {
+      firstNames: "",
+      lastNames: "",
+      documentNumber: "",
       username: "",
       email: "",
       password: "",
@@ -127,7 +139,7 @@ function RegisterForm() {
               <p>{t("register.register_now")}</p>
               <p>{t("register.future")}</p>
           </div>
-          <div className="bg-white rounded-3xl w-[72%] px-10 py-4 shadow-lg shadow-slate-500 border">
+          <div className="bg-white rounded-3xl w-[85%] px-10 py-4 shadow-lg shadow-slate-500 border">
             <div className="text-2xl w-full mx-auto text-center font-black bg-gradient-to-r from-emerald-400  to-purple-800 bg-clip-text text-transparent font-impact mb-3">
                 <p>{t("register.register")}</p>
             </div>
@@ -140,29 +152,104 @@ function RegisterForm() {
               onSubmit={formik.handleSubmit}
               className="flex flex-col mt-3 space-y-3"
             >
-              <div>
-                <label className="text-lg font-bold text-gray-600 block">
-                  {t("register.username")}
-                </label>
-                <input
-                  type="text"
-                  name="username"
-                  value={formik.values.username}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
-                    formik.touched.username && formik.errors.username
-                      ? "border-red-500"
-                      : "border-purple-300"
-                  }`}
-                  placeholder={t("register.enter_username")}
-                />
-                {formik.touched.username && formik.errors.username ? (
-                  <div className="text-red-500 mt-1">
-                    {formik.errors.username}
-                  </div>
-                ) : null}
+              <div className="flex space-x-3">
+                <div className="w-1/2">
+                  <label className="text-lg font-bold text-gray-600 block">
+                    {t("register.firstNames")}
+                  </label>
+                  <input
+                    type="text"
+                    name="firstNames"
+                    value={formik.values.firstNames}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                      formik.touched.firstNames && formik.errors.firstNames
+                        ? "border-red-500"
+                        : "border-purple-300"
+                    }`}
+                    placeholder={t("register.enter_firstNames")}
+                  />
+                  {formik.touched.firstNames && formik.errors.firstNames ? (
+                    <div className="text-red-500 mt-1">
+                      {formik.errors.firstNames}
+                    </div>
+                  ) : null}
+                </div>
+                <div className="w-1/2">
+                  <label className="text-lg font-bold text-gray-600 block">
+                    {t("register.lastNames")}
+                  </label>
+                  <input
+                    type="text"
+                    name="lastNames"
+                    value={formik.values.lastNames}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                      formik.touched.lastNames && formik.errors.lastNames
+                        ? "border-red-500"
+                        : "border-purple-300"
+                    }`}
+                    placeholder={t("register.enter_lastNames")}
+                  />
+                  {formik.touched.lastNames && formik.errors.lastNames ? (
+                    <div className="text-red-500 mt-1">
+                      {formik.errors.lastNames}
+                    </div>
+                  ) : null}
+                </div>
               </div>
+              
+              <div className="flex space-x-3">
+                <div className="w-1/2">
+                  <label className="text-lg font-bold text-gray-600 block">
+                    {t("register.username")}
+                  </label>
+                  <input
+                    type="text"
+                    name="username"
+                    value={formik.values.username}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                      formik.touched.username && formik.errors.username
+                        ? "border-red-500"
+                        : "border-purple-300"
+                    }`}
+                    placeholder={t("register.enter_username")}
+                  />
+                  {formik.touched.username && formik.errors.username ? (
+                    <div className="text-red-500 mt-1">
+                      {formik.errors.username}
+                    </div>
+                  ) : null}
+                </div>
+                <div className="w-1/2">
+                  <label className="text-lg font-bold text-gray-600 block">
+                    {t("register.documentNumber")}
+                  </label>
+                  <input
+                    type="text"
+                    name="documentNumber"
+                    value={formik.values.documentNumber}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                      formik.touched.documentNumber && formik.errors.documentNumber
+                        ? "border-red-500"
+                        : "border-purple-300"
+                    }`}
+                    placeholder={t("register.enter_documentNumber")}
+                  />
+                  {formik.touched.documentNumber && formik.errors.documentNumber ? (
+                    <div className="text-red-500 mt-1">
+                      {formik.errors.documentNumber}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+              
               <div>
                 <label className="text-lg font-bold text-gray-600 block">
                   {t("register.email")}

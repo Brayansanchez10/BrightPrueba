@@ -11,6 +11,8 @@ export default function ProfileEditor() {
   const [userData, setUserData] = useState({
     name: '',
     email: '',
+    firstNames: '',
+    lastNames: '',
     profileImage: null
   });
   const { getUserById } = useUserContext();
@@ -24,6 +26,8 @@ export default function ProfileEditor() {
           setUserData({
             name: fetchedUserData.username,
             email: fetchedUserData.email,
+            firstNames: fetchedUserData.firstNames,
+            lastNames: fetchedUserData.lastNames,
             profileImage: fetchedUserData.userImage
           });
         } catch (error) {
@@ -53,6 +57,8 @@ export default function ProfileEditor() {
             <ProfileForm
               name={userData.name}
               email={userData.email}
+              firstNames={userData.firstNames}
+              lastNames={userData.lastNames}
               profileImage={userData.profileImage}
               onUserDataChange={handleUserDataChange}
             />

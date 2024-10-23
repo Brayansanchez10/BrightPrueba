@@ -14,6 +14,8 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
 
   const [name, setName] = useState(initialName);
   const [email, setEmail] = useState(initialEmail);
+  const [firstNames, setFirstNames] = useState("");
+  const [lastNames, setLastNames] = useState("");
   const [userId, setUserId] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [previewProfileImage, setPreviewProfileImage] = useState(null);
@@ -28,6 +30,8 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
           setUserId(userData.id);
           setName(userData.username);
           setEmail(userData.email);
+          setFirstNames(userData.firstNames);
+          setLastNames(userData.lastNames);
 
           if (userData.userImage && userData.userImage !== "null") {
             setPreviewProfileImage(userData.userImage);
@@ -74,9 +78,15 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
         : email.length > 30
         ? t("userProfileSettings.email_too_long")
         : "",
+      firstNames: firstNames.length < 3 || firstNames.length > 60
+        ? t("userProfileSettings.firstNames_length_invalid")
+        : "",
+      lastNames: lastNames.length < 3 || lastNames.length > 60
+        ? t("userProfileSettings.lastNames_length_invalid")
+        : "",
     };
     setErrors(newErrors);
-    return !newErrors.name && !newErrors.email;
+    return !Object.values(newErrors).some(error => error !== "");
   };
 
   const handleSubmit = async (e) => {
@@ -87,6 +97,8 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
         const userData = {
           username: name,
           email,
+          firstNames,
+          lastNames,
           userImage: deleteProfileImage
             ? null
             : profileImage || previewProfileImage,
@@ -141,6 +153,8 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
           await updateUserPartial(userId, {
             username: name,
             email,
+            firstNames,
+            lastNames,
             userImage: null,
           });
 
@@ -229,6 +243,42 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
                   />
                   {errors.name && (
                     <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                  )}
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="firstNames"
+                    className="text-base font-bold text-black block mb-2"
+                  >
+                    {t("userProfileSettings.firstNames")}
+                  </label>
+                  <input
+                    type="text"
+                    id="firstNames"
+                    className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                    value={firstNames}
+                    onChange={(e) => setFirstNames(e.target.value)}
+                  />
+                  {errors.firstNames && (
+                    <p className="text-red-500 text-sm mt-1">{errors.firstNames}</p>
+                  )}
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="lastNames"
+                    className="text-base font-bold text-black block mb-2"
+                  >
+                    {t("userProfileSettings.lastNames")}
+                  </label>
+                  <input
+                    type="text"
+                    id="lastNames"
+                    className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                    value={lastNames}
+                    onChange={(e) => setLastNames(e.target.value)}
+                  />
+                  {errors.lastNames && (
+                    <p className="text-red-500 text-sm mt-1">{errors.lastNames}</p>
                   )}
                 </div>
                 <div className="mb-4">

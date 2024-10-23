@@ -89,6 +89,31 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
 
         <Form.Item
           className="mb-4"
+          name="firstNames"
+          label={<span className="text-lg font-bold text-black">{t('CreateUserModal.firstNames')}</span>}
+          rules={[{ required: true, message: t("CreateUserModal.firstNamesRequired") }]}
+        >
+          <Input minLength={3} maxLength={60} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+        </Form.Item>
+        <Form.Item
+          className="mb-4"
+          name="lastNames"
+          label={<span className="text-lg font-bold text-black">{t('CreateUserModal.lastNames')}</span>}
+          rules={[{ required: true, message: t("CreateUserModal.lastNamesRequired") }]}
+        >
+          <Input minLength={3} maxLength={60} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+        </Form.Item>
+        <Form.Item
+          className="mb-4"
+          name="documentNumber"
+          label={<span className="text-lg font-bold text-black">{t('CreateUserModal.documentNumber')}</span>}
+          rules={[{ required: true, message: t("CreateUserModal.documentNumberRequired") }]}
+        >
+          <Input minLength={3} maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+        </Form.Item>
+
+        <Form.Item
+          className="mb-4"
           name="email"
           label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.email')}</span>}
           rules={[

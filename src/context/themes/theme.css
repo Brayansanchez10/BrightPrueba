@@ -1,0 +1,23 @@
+:root {
+    /* Modo claro (por defecto) */
+    --bg-primary: #cbd5e1;
+    --text-primary: #000000;
+    --bg-secondary: #ffffff;
+    --text-secondary: #4b5563; /* Por pensar */
+}
+
+.dark {
+    /* Modo oscuro */
+    --bg-primary: #200844;
+    --text-primary: #ffffff;
+    --bg-secondary: #581c87;
+    --text-secondary: #a0aec0; /* Por pensar */
+}
+
+/* Aplicar transición solo cuando se cambia el tema */
+.theme-transition, 
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}

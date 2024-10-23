@@ -84,7 +84,10 @@ const DataTable = () => {
   useEffect(() => {
     form.setFieldsValue({
       username: selectedUser?.username,
+      firstNames: selectedUser?.firstNames,
+      lastNames: selectedUser?.lastNames,
       email: selectedUser?.email,
+      documentNumber: selectedUser?.documentNumber,
       role: selectedUser?.role,
       state: selectedUser?.state ? true : false,
     });
@@ -172,8 +175,8 @@ const DataTable = () => {
   };
 
   const handleUpdateUser = (values) => {
-    const { username, email, role, state } = values;
-    updateUser(selectedUser.id, { username, email, role, state });
+    const { username, firstNames, lastNames, email, documentNumber, role, state } = values;
+    updateUser(selectedUser.id, { username, firstNames, lastNames, email, documentNumber, role, state });
     setShowUpdateModal(false);
     setUpdatedDataFlag(true);
     setSelectedUser(null);
@@ -264,6 +267,42 @@ const DataTable = () => {
                       </th>
                       <th
                         className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        onClick={() => orderBy("firstNames")}
+                      >
+                        {t("datatable.FirstNames")}{" "}
+                        {sortConfig.key === "firstNames" &&
+                          (sortConfig.direction === "ascending" ? (
+                            <CaretUpOutlined />
+                          ) : (
+                            <CaretDownOutlined />
+                          ))}
+                      </th>
+                      <th
+                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        onClick={() => orderBy("lastNames")}
+                      >
+                        {t("datatable.LastNames")}{" "}
+                        {sortConfig.key === "lastNames" &&
+                          (sortConfig.direction === "ascending" ? (
+                            <CaretUpOutlined />
+                          ) : (
+                            <CaretDownOutlined />
+                          ))}
+                      </th>
+                      <th
+                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        onClick={() => orderBy("documentNumber")}
+                      >
+                        {t("datatable.DocumentNumber")}{" "}
+                        {sortConfig.key === "documentNumber" &&
+                          (sortConfig.direction === "ascending" ? (
+                            <CaretUpOutlined />
+                          ) : (
+                            <CaretDownOutlined />
+                          ))}
+                      </th>
+                      <th
+                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
                         onClick={() => orderBy("email")}
                       >
                         {t("datatable.Email")}{" "}
@@ -302,6 +341,15 @@ const DataTable = () => {
                         </td>
                         <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                           {item.username}
+                        </td>
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                          {item.firstNames}
+                        </td>
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                          {item.lastNames}
+                        </td>
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                          {item.documentNumber}
                         </td>
                         <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
                           {item.email}

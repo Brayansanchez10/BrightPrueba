@@ -70,12 +70,15 @@ export const UserProvider = ({ children }) => {
         }
     };
 
-    const updateUserPartial = async (_id, { username, email, userImage }) => {
+    const updateUserPartial = async (_id, { username, firstNames, lastNames, documentNumber, email, userImage }) => {
         try {
             const { data: currentUserData } = await getUser(_id);
     
             const updatedUserData = {
                 username: username || currentUserData.username,
+                firstNames: firstNames || currentUserData.firstNames,
+                lastNames: lastNames || currentUserData.lastNames,
+                documentNumber: documentNumber || currentUserData.documentNumber,
                 email: email || currentUserData.email,
                 state: currentUserData.state,
                 role: currentUserData.role,
@@ -151,7 +154,7 @@ export const UserProvider = ({ children }) => {
             value={{
                 usersData,
                 getUsers,
-                checkIfUserExists, // Añadir la función al contexto
+                checkIfUserExists,
                 activateAccount,
                 getUserById,
                 updateUser,
@@ -160,8 +163,8 @@ export const UserProvider = ({ children }) => {
                 deleteUser,
                 deleteUserConfirmation,
                 registerToCourse,
-                getUserCourses, // Agregar la función al contexto
-                changePassword, // Agregar la nueva función al contexto
+                getUserCourses,
+                changePassword,
             }}
         >
             {children}
