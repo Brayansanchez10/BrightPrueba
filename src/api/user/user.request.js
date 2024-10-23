@@ -1,5 +1,5 @@
 import axios from 'axios';
-const api = `https://apibrightmind.mesadoko.com/PE`;
+const api = `http://localhost:3068/PE`;
 
 export const getAllUsers = () => axios.get(`${api}/users/getAll`, { withCredentials: true });
 

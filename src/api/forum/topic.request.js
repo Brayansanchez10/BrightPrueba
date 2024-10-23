@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const api = 'https://apibrightmind.mesadoko.com/PE/forumTopic/';
+const api = 'http://localhost:3068/PE/forumTopic/';
 
 const topicRequest = axios.create({
     baseURL: api,

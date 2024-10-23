@@ -12,7 +12,7 @@ import { useForumFavorite } from "../../../context/forum/forumFavorite.context.j
 import { useUserContext } from "../../../context/user/user.context.jsx";
 import { EditOutlined, DeleteFilled } from "@ant-design/icons";
 import { FcLike } from "react-icons/fc";
-import { FaChevronRight, FaSearch, FaUser } from "react-icons/fa";
+import { FaChevronRight, FaSearch, FaUser, FaStopwatch  } from "react-icons/fa";
 import Swal from "sweetalert2";
 import Footer from "../../footer.jsx";
 import Hola from "../../../assets/img/hola.png";
@@ -176,10 +176,10 @@ const TopicComponent = () => {
                 <span className="text-purple-800">Foro</span> de conocimiento
             </h1>
         </div>
-        <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4 mt-8 sm:mt-0">
+        <div className="block flex-col sm:flex-row items-center w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4 mt-8 sm:mt-0 lg:flex">
           {activeTab === "myForums" && (
                 <Button
-                    className="bg-purple-800 text-white font-bold text-xl py-5 px-6 rounded-1xl min-w-[160px] shadow-md shadow-gray-400 font-bungee"
+                    className="bg-purple-800 text-white font-bold text-xl py-5 px-6 rounded-1xl min-w-[160px] shadow-md shadow-gray-400 font-bungee hidden lg:flex"
                     onClick={handleCreateTopicForm}
                 >
                     {t("CREAR FORO")}
@@ -194,6 +194,17 @@ const TopicComponent = () => {
                     value="Titulo"
                 />
             </div>
+          {activeTab === "myForums" && (
+            <div className="flex">
+              <Button
+                    className="m-auto my-1 bg-purple-800 text-white font-bold text-xl py-5 px-6 rounded-1xl min-w-[160px] shadow-md shadow-gray-400 font-bungee lg:hidden"
+                    onClick={handleCreateTopicForm}
+                >
+                    {t("CREAR FORO")}
+              </Button>
+            </div>
+            
+          )}
         </div>
      </div>
 
@@ -226,11 +237,11 @@ const TopicComponent = () => {
         style={{ height: `${containerHeight}px` }}
       >
         <div 
-          className="my-7 flex flex-col sm:flex-row text-white mx-3 px-1 overflow-y-auto custom-scrollbar"
+          className="my-7 flex flex-col sm:flex-row text-white mx-3 px-1 overflow-y-auto"
           style={{ height: "92%" }}
         >
           {/* Contenido de los temas */}
-          <div className="mt-12 sm:mt-20">
+          <div className="m-2">
             <div className="flex flex-wrap justify-evenly gap-4 w-full">
               {loading ? (
                 <div className="text-center py-16">
@@ -239,14 +250,14 @@ const TopicComponent = () => {
                   </h2>
                 </div>
               ) : filteredTopics().length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xl:grid-cols-3  cursor-pointer">
                   {filteredTopics().map((topic) => (
                     <div
                     key={topic.id}
                     className="bg-purple-800 text-white p-6 rounded-lg shadow-lg w-full "
                     onClick={() => handleTopicClick(topic.id)}
                   >
-                    <div className="flex justify-between items-start">
+                    <div className="items-start block md:flex">
                       <div>
                         {/* Sección de la imagen del creador y el título */}
                         <div className="flex items-center mt-4">
@@ -268,20 +279,26 @@ const TopicComponent = () => {
                               </svg>
                             </div>
                           )}
-                          <h3 className="text-2xl font-semibold text-white">
+                          <h3 className="text-2xl font-semibold text-white block">
                             {topic.title}
                           </h3>
                         </div>
                         
                         <p className="hidden col-span-5 m-2 md:block xl:col-span-5">{topic.Content}</p>
-                        <div className="flex items-center mt-2">
+                        <div className="flex gap-10">
+                          <div className="flex items-center mt-2 w-1/2">
                             <FaUser className="mr-2" /> {/* Icono del usuario */}
                             <p className="text-white">{topic.user.username}</p>
                           </div>
+                            <div className="flex items-center mt-2">
+                              <FaStopwatch className="mr-2"/>
+                              <p>Abierto</p>
+                            </div>
+                        </div>
                       </div>
                   
                       {/* Botones de acciones (editar, eliminar, favoritos) */}
-                      <div className="flex space-x-2">
+                      <div className="flex sm:block lg:flex gap-3 space-y-3 m-auto">
                         <Button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -289,12 +306,12 @@ const TopicComponent = () => {
                           }}
                           icon={
                             isFavorite(topic.id) ? (
-                              <FcLike className="text-red-500" />
+                              <FcLike className="w-full h-8 hover:h-4 duration-700 transition-all bg-white rounded-md hover:bg-transparent" />
                             ) : (
-                              <FcLike />
+                              <FcLike className="h-4 w-full hover:h-8 duration-700 transition-all hover:bg-white rounded-md"/>
                             )
                           }
-                          className="bg-transparent border-none focus:outline-none"
+                          className="bg-transparent border-none focus:outline-none mt-auto"
                           disabled={favoritesLoading}
                         />
                         {user && user.data && user.data.id === topic.userId && (
@@ -353,9 +370,11 @@ const TopicComponent = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
-
+      
+      <div className="pt-10">
+        <Footer />
+      </div>
+      
       <CreateTopicForm
         visible={createTopicForm}
         onClose={() => setCreateTopicForm(false)}
