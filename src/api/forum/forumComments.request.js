@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const api = 'https://apibrightmind.mesadoko.com/PE/forumComments/';
+const api = 'http://localhost:3068/PE/forumComments/';
 
 const forumCommentRequest = axios.create({
     baseURL: api,

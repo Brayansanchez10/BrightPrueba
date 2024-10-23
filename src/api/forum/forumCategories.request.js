@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const api = 'https://apibrightmind.mesadoko.com/PE/forumCategory/';
+const api = 'http://localhost:3068/PE/forumCategory/';
 
 const categoryRequest = axios.create({
     baseURL: api,
