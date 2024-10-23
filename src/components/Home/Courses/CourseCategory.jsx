@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import HoverCard from "../Cards/HoverCard";
+import Modal from "../Cards/Modal";
 import NavigationBar from "../NavigationBar";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useUserContext } from "../../../context/user/user.context";
@@ -8,32 +10,30 @@ import { useRatingsContext } from "../../../context/courses/ratings.context";
 import { useAuth } from "../../../context/auth.context";
 import { useFavorite } from "../../../context/courses/favorites.context";
 import { useTranslation } from "react-i18next";
-import { AiOutlineClockCircle } from "react-icons/ai";
-import { MdPlayCircleOutline } from "react-icons/md";
-import { FaRegChartBar, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import '../../../css/Style.css';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import Footer from "../../footer";
 import { getSubCategoryCourseId } from "../../../api/courses/subCategory.requst.js";
 
-export default function Component() {
+export default function CourseCategory() {
   const { category } = useParams();
   const { t } = useTranslation("global");
   const { courses } = useCoursesContext();
   const { ratings, fetchRatingsByCourse } = useRatingsContext();
   const { user } = useAuth();
   const { registerToCourse, getUserCourses, getUserById } = useUserContext();
-  const { favorites, toggleFavorite, loading: favoritesLoading } = useFavorite();
+  const { favorites, toggleFavorite } = useFavorite();
   const [userCourses, setUserCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [allRatings, setAllRatings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [allRatings, setAllRatings] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState({});
   const [creators, setCreators] = useState({});
 
   const fetchCreatorName = useCallback(async (userId) => {
@@ -47,6 +47,18 @@ export default function Component() {
     }
   }, [getUserById, creators]);
 
+  const fetchSubCategories = useCallback(async (courseId) => {
+    if (!subCategories[courseId]) {
+      try {
+        const response = await getSubCategoryCourseId(courseId);
+        setSubCategories(prev => ({ ...prev, [courseId]: response.data }));
+      } catch (error) {
+        console.error("Error fetching subcategories:", error);
+        setSubCategories(prev => ({ ...prev, [courseId]: [] }));
+      }
+    }
+  }, [subCategories]);
+
   useEffect(() => {
     const loadRatings = async () => {
       const newAllRatings = [];
@@ -54,20 +66,13 @@ export default function Component() {
         const courseRatings = await fetchRatingsByCourse(course.id);
         newAllRatings.push(courseRatings);
         fetchCreatorName(course.userId);
+        fetchSubCategories(course.id);
       }
       setAllRatings(newAllRatings);
     };
   
     loadRatings();
-  }, [courses, fetchRatingsByCourse, fetchCreatorName]);
-
-  const calculateAverageRating = (courseId) => {
-    const courseRatings = ratings.filter(rating => rating.courseId === courseId);
-    if (courseRatings.length === 0) return 0;
-  
-    const sumRatings = courseRatings.reduce((sum, rating) => sum + (rating.score || 0), 0);
-    return (sumRatings / courseRatings.length).toFixed(1);
-  };
+  }, [courses, fetchRatingsByCourse, fetchCreatorName, fetchSubCategories]);
 
   useEffect(() => {
     const fetchUserCourses = async () => {
@@ -86,15 +91,16 @@ export default function Component() {
     fetchUserCourses();
   }, [user, getUserCourses]);
 
-  const handleCardClick = async (course) => {
+  const calculateAverageRating = (courseId) => {
+    const courseRatings = ratings.filter(rating => rating.courseId === courseId);
+    if (courseRatings.length === 0) return 0;
+  
+    const sumRatings = courseRatings.reduce((sum, rating) => sum + (rating.score || 0), 0);
+    return (sumRatings / courseRatings.length).toFixed(1);
+  };
+
+  const handleCardClick = (course) => {
     setSelectedCourse(course);
-    try {
-      const response = await getSubCategoryCourseId(course.id);
-      setSubCategories(response.data);
-    } catch (error) {
-      console.error("Error al obtener las subcategorías del curso:", error);
-      setSubCategories([]);
-    }
     setIsConfirmModalOpen(true);
   };
 
@@ -142,12 +148,19 @@ export default function Component() {
     course.category.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  const renderCourseCard = (course) => {
+  const renderCourseCard = (course, index) => {
     const averageRating = calculateAverageRating(course.id);
     const creator = creators[course.userId];
-
+    const resourceCount = subCategories[course.id] ? subCategories[course.id].length : 0;
+  
     return (
-      <div className="flex justify-center items-center" key={course.id}>
+      <motion.div
+        className="flex justify-center items-center"
+        key={course.id}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: index * 0.1 }}
+      >
         <HoverCard
           title={course.title}
           description={course.description}
@@ -156,26 +169,47 @@ export default function Component() {
           courseId={course.id}
           rating={averageRating || 0}
           duration={`${course.duracion} horas`}
+          lessons={`${resourceCount} recursos`}
           onClick={() => handleCardClick(course)}
           onFavoriteToggle={() => handleFavoriteToggle(course.id)}
           isFavorite={favorites.some(fav => fav.courseId === course.id)}
         />
-      </div>
+      </motion.div>
     );
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 mt-16">
+    <motion.div
+      className="min-h-screen flex flex-col bg-gray-100 mt-16"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <NavigationBar />
 
-      <div className="flex flex-col sm:flex-row justify-between mt-6 mx-6">
+      <motion.div
+        className="flex flex-col sm:flex-row justify-between mt-6 mx-6"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <div className="w-full sm:w-auto">
-          <h1 className="text-4xl font-bold text-black text-center sm:text-left font-bungee">
+          <motion.h1
+            className="text-4xl font-bold text-black text-center sm:text-left font-bungee"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
             {decodeURIComponent(category)}
-          </h1>
+          </motion.h1>
         </div>
         <div className="w-full md:w-auto">
-          <div className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md">
+          <motion.div
+            className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             <FaSearch size={"18px"} className="mt-1 mr-2" />
             <input
               type="search"
@@ -184,123 +218,70 @@ export default function Component() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6 mx-auto max-w-7xl px-4 mb-16">
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6 mx-auto max-w-7xl px-4 mb-16"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+      >
         {filteredCourses.map(renderCourseCard)}
-      </div>
+      </motion.div>
 
-      {isConfirmModalOpen && selectedCourse && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center px-4"
-          onClick={closeConfirmModal}
-        >
-          <div
-            className="bg-white rounded-lg shadow-lg w-[300px] p-4 relative"
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+        {isConfirmModalOpen && (
+          <Modal
+            isOpen={isConfirmModalOpen}
+            onClose={closeConfirmModal}
+            course={selectedCourse}
+            creator={selectedCourse ? creators[selectedCourse.userId] : null}
+            subCategories={selectedCourse ? subCategories[selectedCourse.id] : []}
+            onRegister={handleRegister}
+            isLoading={isLoading}
+            error={error}
+            isRegistered={selectedCourse ? userCourses.some((course) => course.id === selectedCourse.id) : false}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isSuccessModalOpen && (
+          <Modal
+            isOpen={isSuccessModalOpen}
+            onClose={closeSuccessModal}
+            course={null}
+            creator={null}
+            subCategories={[]}
+            onRegister={() => {}}
+            isLoading={false}
+            error={null}
+            isRegistered={false}
           >
-            <button
-              onClick={closeConfirmModal}
-              className="absolute top-2 right-2 text-black hover:text-gray-600"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.3 }}
             >
-              X
-            </button>
-            <div className="flex items-start mb-2">
-              <img
-                src={selectedCourse.image}
-                alt={selectedCourse.title}
-                className="w-[38px] h-[39.63px] rounded-lg shadow-sm"
-              />
-              <div className="ml-2">
-                <h2 className="font-bold text-[#272C33] text-[15px]">
-                  {selectedCourse.title}
-                </h2>
-                <p className="text-[#939599] text-[11px]">
-                  Con <strong>{creators[selectedCourse.userId] ? creators[selectedCourse.userId].username : "Cargando..."}</strong>
-                </p>
-              </div>
-            </div>
-            <p className="text-[#676B70] text-[15px] font-regular mb-2">
-              {selectedCourse.description}
-            </p>
-            <div className="mb-4 text-[14px] mt-3">
-              {subCategories.map((subCategory, index) => (
-                <div key={index} className="flex items-center mb-1">
-                  <span className="text-[#939599] mr-2">✓</span>
-                  <span className="text-[#939599]">{subCategory.title}</span>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between mt-8">
-              <div className="flex flex-col text-[#939599] text-[12px]">
-                <div className="flex items-center mt-1">
-                  <AiOutlineClockCircle className="mr-1" />
-                  <span>{selectedCourse.duracion} horas</span>
-                </div>
-                <div className="flex items-center mt-1">
-                  <MdPlayCircleOutline className="mr-1" />
-                  <span>{subCategories.length} recursos</span>
-                </div>
-                <div className="flex items-center mt-1">
-                  <FaRegChartBar className="mr-1" />
-                  <span>{selectedCourse.nivel}</span>
-                </div>
-              </div>
-              <button
-                onClick={handleRegister}
-                className={`bg-[#783CDA] text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${
-                  userCourses.some(
-                    (course) => course.id === selectedCourse.id
-                  ) || isLoading
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }`}
-                disabled={
-                  userCourses.some(
-                    (course) => course.id === selectedCourse.id
-                  ) || isLoading
-                }
-              >
-                {isLoading
-                  ? "Inscribiendo..."
-                  : userCourses.some(
-                      (course) => course.id === selectedCourse.id
-                    )
-                  ? "YA REGISTRADO!"
-                  : "INSCRÍBETE!"}
-              </button>
-            </div>
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          </div>
-        </div>
-      )}
+              <h2 className="text-center font-bold text-lg mb-4">{t('courseComponent.modalA')}</h2>
+              <p className="text-center">
+                {t('courseComponent.modalM')}
+              </p>
+            </motion.div>
+          </Modal>
+        )}
+      </AnimatePresence>
 
-      {isSuccessModalOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center px-4"
-          onClick={closeSuccessModal}
-        >
-          <div
-            className="bg-white rounded-lg shadow-lg w-[300px] p-4 relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={closeSuccessModal}
-              className="absolute top-2 right-2 text-black hover:text-gray-600"
-            >
-              X
-            </button>
-            <h2 className="text-center font-bold text-lg mb-4">¡Éxito!</h2>
-            <p className="text-center">
-              Te has registrado en el curso exitosamente.
-            </p>
-          </div>
-        </div>
-      )}
-
-      <Footer />
-    </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      >
+        <Footer />
+      </motion.div>
+    </motion.div>
   );
 }
