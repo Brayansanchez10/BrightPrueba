@@ -18,7 +18,7 @@ import "../../css/Style.css";
 import fondoInicio from "../../assets/img/fondo_inicio.png";
 import fondoCursos from "../../assets/img/fondo_cursos.png";
 import fondoMiscursos from "../../assets/img/fondo_miscursos.png";
-import ThemeToggle from '../ThemeToggle';
+import ThemeToggle from '../../context/themes/ThemeToggle';
 
 export default function NavigationBar() {
   const { t } = useTranslation("global");

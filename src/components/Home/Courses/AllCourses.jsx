@@ -379,7 +379,7 @@ export default function AllCourses() {
 
   return (
     <motion.div
-      className="min-h-screen flex flex-col pt-16 bg-gray-100"
+      className="min-h-screen flex flex-col pt-16 bg-primary"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -394,20 +394,20 @@ export default function AllCourses() {
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         <div className="w-full sm:w-auto">
-          <h1 className="text-4xl font-bold text-black  text-center sm:text-left font-bungee">
+          <h1 className="text-4xl font-bold text-primary text-center sm:text-left font-bungee">
             {t("courseComponent.title")}
           </h1>
         </div>
         <div className="w-full md:w-auto">
           <motion.div
-            className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md"
+            className="flex px-4 py-2 border bg-secondary border-gray-300 dark:border-purple-900 rounded-xl shadow-md"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <FaSearch size={"18px"} className="mt-1 mr-2" />
+            <FaSearch size={"18px"} className="text-primary mt-1 mr-2" />
             <input
               type="search"
-              className="outline-none w-full md:w-[280px] lg:w-[360px] xl:w-[420px]"
+              className="bg-secondary dark:text-primary outline-none w-full md:w-[280px] lg:w-[360px] xl:w-[420px]"
               placeholder={t("coursesComponent.search_placeholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -423,7 +423,7 @@ export default function AllCourses() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <h2 className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60">
+          <h2 className="text-[20px] font-bold text-primary font-bungee text-center lg:text-left ml-4 lg:ml-60">
             {t("courseComponent.favorites")}
           </h2>
           {renderSlider("favorites", favoriteCourses)}
@@ -439,12 +439,12 @@ export default function AllCourses() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 * (index + 1) }}
             >
-              <div className="text-[20px] font-bold text-gray-800 font-bungee text-center lg:text-left ml-4 lg:ml-60 mt-14">
+              <div className="text-[20px] font-bold text-center lg:text-left ml-4 lg:ml-60 mt-14">
                 <Link
                   to={`/CourseCategory/${encodeURIComponent(category)}`}
                   className="hover:text-blue-600 transition-colors duration-200"
                 >
-                  <h2 className="text-[20px] font-bold text-gray-800 font-bungee">
+                  <h2 className="text-[20px] font-bold text-primary font-bungee">
                     {category}
                   </h2>
                 </Link>
@@ -460,16 +460,16 @@ export default function AllCourses() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full">
+          <div className="bg-secondary p-6 rounded-lg shadow-lg max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full">
             <img
               className="h-20 mb-4 mx-auto sm:h-24 md:h-36 lg:h-48"
               src={Logo}
               alt="Logo"
             />
-            <h2 className="text-xl font-bold mb-4 text-center text-gray-800 sm:text-2xl md:text-3xl lg:text-4xl">
+            <h2 className="text-xl font-bold mb-4 text-center text-primary sm:text-2xl md:text-3xl lg:text-4xl">
               {t("courseComponent.no_courses_available")}
             </h2>
-            <p className="text-center text-gray-600 text-sm sm:text-base md:text-lg lg:text-xl">
+            <p className="text-center text-gray-600 dark:text-primary text-sm sm:text-base md:text-lg lg:text-xl">
               {t("courseComponent.check_back_later")}
             </p>
           </div>

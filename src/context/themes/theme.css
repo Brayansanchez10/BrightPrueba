@@ -3,15 +3,15 @@
     --bg-primary: #cbd5e1;
     --text-primary: #000000;
     --bg-secondary: #ffffff;
-    --text-secondary: #4b5563; /* Por pensar */
+    --text-secondary: #000000; /* Por pensar */
 }
 
 .dark {
     /* Modo oscuro */
-    --bg-primary: #200844;
+    --bg-primary: #200E3E;
     --text-primary: #ffffff;
     --bg-secondary: #581c87;
-    --text-secondary: #a0aec0; /* Por pensar */
+    --text-secondary: #581c87; /* Por pensar */
 }
 
 /* Aplicar transición solo cuando se cambia el tema */
