@@ -1,4 +1,3 @@
-import axios from 'axios'
-const api = `http://localhost:3068/PE`
+import axios from '../axios';
 
-export const getAllPermissions = () => axios.get(`${api}/permissions/getPermissions`)
+export const getAllPermissions = () => axios.get(`/permissions/getPermissions`)
