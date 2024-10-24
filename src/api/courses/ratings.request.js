@@ -1,25 +1,17 @@
-import axios from "axios";
-
-const api = `http://localhost:3068/PE/ratings/`;
-
-const ratingsRequest = axios.create({
-    baseURL: api,
-    withCredentials: true,
-});
+import axios from "../axios";
 
 export const createRating = (courseId, resourceId, ratingData) => 
-    ratingsRequest.post(`/course/${courseId}/resource/${resourceId}`, ratingData);
+    axios.post(`/ratings/course/${courseId}/resource/${resourceId}`, ratingData);
 
 export const getRatingsByCourse = (courseId) => 
-    ratingsRequest.get(`/course/${courseId}`);
+    axios.get(`/ratings/course/${courseId}`);
 
 export const getRatingsByResource = (resourceId) => 
-    ratingsRequest.get(`/resource/${resourceId}`);
+    axios.get(`/ratings/resource/${resourceId}`);
 
 export const updateRating = (id, ratingData) => 
-    ratingsRequest.put(`/${id}`, ratingData);
+    axios.put(`/ratings/${id}`, ratingData);
 
 export const deleteRating = (id) => 
-    ratingsRequest.delete(`/${id}`);
+    axios.delete(`/ratings/${id}`);
 
-export default ratingsRequest;
