@@ -6,7 +6,7 @@ const courseRequest = axios.create({
   baseURL: api,
   withCredentials: true,
 });
-export const unregisterFromCourse = (userId, courseId) => courseRequest.post(`/unregisterFromCourse/${userId}/${courseId}`);
+export const unregisterFromCourse = (userId, courseId) => courseRequest.post(`/unregisterFromCourse/${userId}/${courseId}`); 
 export const getAllCourses = () => courseRequest.get('/getAllCourses');
 
 export const asignarContenido = (id, contentFile) => {

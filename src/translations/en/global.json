@@ -248,7 +248,8 @@
         "no_courses_available": "Coming soon",
         "check_back_later": "There are no courses available at the moment. New courses will be available soon! Please check back later.",
         "no_courses_enrolled": "You are not enrolled in any courses yet.",
-
+        "modalA": "¡Success!",
+        "modalM": "You have successfully registered",
          "title": "Courses",
          "favorites": "Your favorites",
          "desFavorites": "Here will be shown your favorite courses."
@@ -440,7 +441,9 @@
         "title": "DELETE COURSE",
         "confirmationMessage": "Are you sure you want to delete the course {{courseName}}?",
         "irreversibleMessage": "This action cannot be undone.",
-        "confirmButton": "Delete"
+        "confirmButton": "Delete",
+        "loseProgressMessage": "You will lose your course progress",
+        "currentProgress": "Current progress:"
     },
     "deleteConfirmation": {
         "confirmDeletion": "Confirm Deletion",
