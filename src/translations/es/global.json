@@ -246,7 +246,8 @@
         "no_courses_available": "Próximamente",
         "check_back_later": "No hay cursos disponibles en este momento. ¡Próximamente, nuevos cursos estarán disponibles! Por favor, vuelve más tarde.",
         "no_courses_enrolled": "No estás inscrito en ningún curso aún.", 
-
+        "modalA": "¡Éxito!",
+        "modalM": "Te has registrado exitosamente",
         "title": "Cursos",
         "favorites": "Tus favoritos",
         "desFavorites": "Aquí se mostrarán tus cursos favoritos"
@@ -438,7 +439,9 @@
         "title": "ELIMINAR CURSO",
         "confirmationMessage": "¿Estás seguro que deseas eliminar el curso de {{courseName}}?",
         "irreversibleMessage": "Esta acción no se podrá revertir.",
-        "confirmButton": "Eliminar"
+        "confirmButton": "Eliminar",
+        "loseProgressMessage": "Perderas el progreso del curso",
+        "currentProgress": "Progreso actual:"
     },
     "deleteConfirmation": {
         "confirmDeletion": "Confirmar Eliminación",

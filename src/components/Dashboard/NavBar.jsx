@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { FaBars, FaEdit, FaSignOutAlt, FaUserCircle } from 'react-icons/fa'; 
-import { useUserContext } from '../../context/user/user.context.jsx';
-import { useAuth } from '../../context/auth.context.jsx';
-import { Link } from 'react-router-dom';
-import LeftBar from './LeftBar';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useRef } from "react";
+import { FaBars, FaEdit, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
+import { useUserContext } from "../../context/user/user.context.jsx";
+import { useAuth } from "../../context/auth.context.jsx";
+import { Link } from "react-router-dom";
+import LeftBar from "./LeftBar";
+import { useTranslation } from "react-i18next";
 import Logo from "../../assets/img/hola.png";
 
 const Navbar = () => {
@@ -22,10 +22,10 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      localStorage.removeItem('token');
-      window.location.href = '/';
+      localStorage.removeItem("token");
+      window.location.href = "/";
     } catch (error) {
-      console.error('Error al hacer logout:', error);
+      console.error("Error al hacer logout:", error);
     }
   };
 
@@ -35,10 +35,12 @@ const Navbar = () => {
         try {
           const userData = await getUserById(user.data.id);
           setUsername(userData.username);
-          setUserImage(userData.userImage !== "null" ? userData.userImage : null);
+          setUserImage(
+            userData.userImage !== "null" ? userData.userImage : null
+          );
         } catch (error) {
           console.error(error);
-          setUserImage(null); 
+          setUserImage(null);
         }
       }
     };
@@ -54,10 +56,10 @@ const Navbar = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [getUserById, user]);
 
@@ -73,7 +75,9 @@ const Navbar = () => {
     <>
       <nav className="shadow-lg bg-[#160a2b] py-2 transition-all duration-500 justify-center flex w-full max-h-16">
         <div ref={sidebarRef}>
-          <LeftBar onVisibilityChange={(isVisible) => setIsSidebarVisible(isVisible)} />
+          <LeftBar
+            onVisibilityChange={(isVisible) => setIsSidebarVisible(isVisible)}
+          />
         </div>
         <div className="flex items-center w-screen text-justify">
           <div className="absolute left-0 top-6 flex items-center">
@@ -85,7 +89,10 @@ const Navbar = () => {
             />
           </div>
           <div className="flex-1 justify-center font-bungee text-center flex items-center md:ml-48 ml-12 sm:ml-48">
-            <Link to="/admin" className="flex items-center text-white text-[28px] tracking-wider">
+            <Link
+              to="/admin"
+              className="flex items-center text-white text-[28px] tracking-wider"
+            >
               <span>BRIGHT</span>
               <span className="text-[#00D8A1]">MIND</span>
               <img className="h-[70px]" src={Logo} alt="Logo" />
@@ -113,17 +120,21 @@ const Navbar = () => {
               {isMenuVisible && (
                 <div
                   ref={menuRef}
-                  className="absolute right-0 mt-2 w-64 bg-gradient-to-r from-[#200E3E] to-[#341369] shadow-lg rounded-md transition-all duration-300"
+                  className="absolute right-0 mt-2 w-72 bg-gradient-to-r from-[#200E3E] to-[#341369] shadow-lg rounded-md transition-all duration-300 z-50"
                 >
                   <ul className="py-2">
                     <li className="flex px-4 py-3 hover:bg-gray-600 cursor-pointer text-white rounded">
-                      <FaEdit size="20px" className="mr-2" /><Link to="/ProfileEditor">{t('navigationBar.configure_profile')}</Link>
+                      <FaEdit size="20px" className="mr-2" />
+                      <Link to="/ProfileEditor">
+                        {t("navigationBar.configure_profile")}
+                      </Link>
                     </li>
                     <li
                       className="flex px-4 py-3 hover:bg-red-600 cursor-pointer text-white rounded"
                       onClick={handleLogout}
-                    > <FaSignOutAlt size="20px" className="mr-2" />
-                      {t('navigationBar.logout')}
+                    >
+                      <FaSignOutAlt size="20px" className="mr-2" />
+                      {t("navigationBar.logout")}
                     </li>
                   </ul>
                 </div>
