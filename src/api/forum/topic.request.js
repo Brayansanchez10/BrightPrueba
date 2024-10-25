@@ -1,20 +1,13 @@
-import axios from "axios";
-
-const api = `http://localhost:3068/PE/forumTopic/`;
-
-const topicRequest = axios.create({
-    baseURL: api,
-    withCredentials: true,
-});
+import axios from "../axios";
 
 // Función para obtener todos los temas
-export const getAllForumTopic = () => topicRequest.get('/getAll');
+export const getAllForumTopic = () => axios.get('/forumTopic/getAll');
 
 // Función para obtener un tema relacionado a una categoría de un foro
-export const getForumTopicByCategoryId = (forumCategoryId) => topicRequest.get(`/forumCategory/${forumCategoryId}`);
+export const getForumTopicByCategoryId = (forumCategoryId) => axios.get(`/forumTopic/forumCategory/${forumCategoryId}`);
 
 // Función para obtener un tema por su ID
-export const getTopicById = (id) => topicRequest.get(`/topic/${id}`);
+export const getTopicById = (id) => axios.get(`/forumTopic/topic/${id}`);
 
 // Función para crear un nuevo tema
 export const createForumTopic = async (topicData) => {
@@ -26,7 +19,7 @@ export const createForumTopic = async (topicData) => {
     formData.append('forumCategoryId', Number(topicData.forumCategoryId));
 
     // Realizar la solicitud POST utilizando Axios
-    return topicRequest.post('/create', formData, {
+    return axios.post('/forumTopic/create', formData, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -46,7 +39,7 @@ export const updateForumTopic = async (id, topicData) => {
         formData.append('userId', topicData.userId);
         formData.append('forumCategoryId', Number(topicData.forumCategoryId));
 
-        return topicRequest.put(`/update/${id}`, formData, {
+        return axios.put(`/forumTopic/update/${id}`, formData, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -58,6 +51,4 @@ export const updateForumTopic = async (id, topicData) => {
 };
 
 // Función para eliminar un tema
-export const deleteForumTopic = (id) => topicRequest.delete(`/delete/${id}`);
-
-export default topicRequest;
+export const deleteForumTopic = (id) => axios.delete(`/forumTopic/delete/${id}`);
