@@ -1,6 +1,6 @@
 :root {
     /* Modo claro (por defecto) */
-    --bg-primary: #cbd5e1;
+    --bg-primary: #e5e7eb;
     --text-primary: #000000;
     --bg-secondary: #ffffff;
     --text-secondary: #000000; /* Por pensar */
@@ -11,7 +11,7 @@
     --bg-primary: #200E3E;
     --text-primary: #ffffff;
     --bg-secondary: #581c87;
-    --text-secondary: #581c87; /* Por pensar */
+    --text-secondary: #00D8A1; /* Por pensar */
 }
 
 /* Aplicar transición solo cuando se cambia el tema */

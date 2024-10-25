@@ -34,7 +34,7 @@ const ForumCategoriesComponent = () => {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-100">
+        <div className="flex flex-col min-h-screen bg-primary">
         <NavigationBar />
             <div className="flex-grow mt-16">
                 <div className="container mx-auto mt-16 flex-grow px-4 sm:px-6 pb-16">

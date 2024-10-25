@@ -244,7 +244,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
   return (
     <div className="md:mt-3 mt-5 mx-4 mb-2 flex rounded-lg">
-      <div className="max-w-lg w-full mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+      <div className="max-w-lg w-full mx-auto bg-secondary rounded-lg shadow-lg overflow-hidden">
         <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-4 px-6 md:px-10">
           <h1 className="text-center font-black text-white md:text-xl lg:text-2xl">
             {t('userProfileSettings.edit_profile')}
@@ -275,7 +275,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
                 type="file"
                 id="profileImage"
                 accept="image/*"
-                className="w-full border text-sm border-gray-300 rounded-md p-2 hover:bg-gray-100"
+                className="w-full border text-sm border-gray-300 dark:border-purple-800 rounded-md p-2 dark:text-primary hover:bg-primary transition-colors duration-300"
                 onChange={handleImageChange}
               />
               {errors.image && (
@@ -285,7 +285,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           </div>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="name" className="text-base font-bold text-black block mb-2">
+              <label htmlFor="name" className="text-base font-bold text-primary block mb-2">
                 {t('userProfileSettings.name')}
               </label>
               <input
@@ -301,7 +301,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
               )}
             </div>
             <div className="mb-4">
-              <label htmlFor="firstNames" className="text-base font-bold text-black block mb-2">
+              <label htmlFor="firstNames" className="text-base font-bold text-primary block mb-2">
                 {t('userProfileSettings.firstNames')}
               </label>
               <input
@@ -317,7 +317,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
               )}
             </div>
             <div className="mb-4">
-              <label htmlFor="lastNames" className="text-base font-bold text-black block mb-2">
+              <label htmlFor="lastNames" className="text-base font-bold text-primary block mb-2">
                 {t('userProfileSettings.lastNames')}
               </label>
               <input
@@ -333,7 +333,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
               )}
             </div>
             <div className="mb-4">
-              <label htmlFor="email" className="text-base font-bold text-black block mb-2">
+              <label htmlFor="email" className="text-base font-bold text-primary block mb-2">
                 {t('userProfileSettings.email')}
               </label>
               <input

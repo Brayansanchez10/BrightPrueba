@@ -166,14 +166,14 @@ const TopicComponent = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col pt-16 bg-gray-100">
+    <div className="min-h-screen flex flex-col pt-16 bg-primary">
       <NavigationBar />
 
        {/* Título y barra de búsqueda */}
        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 mx-4 sm:mx-6">
         <div className="w-full sm:w-auto mb-4 sm:mb-0">
             <h1 className="text-3xl sm:text-4xl font-bold text-black text-center sm:text-left font-bungee">
-                <span className="text-purple-800">Foro</span> de conocimiento
+                <span className="text-purple-800 dark:text-secondary">Foro</span> <span className="text-primary">de conocimiento</span>
             </h1>
         </div>
         <div className="block flex-col sm:flex-row items-center w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4 mt-8 sm:mt-0 lg:flex">
@@ -185,11 +185,11 @@ const TopicComponent = () => {
                     {t("CREAR FORO")}
                 </Button>
             )}
-            <div className="flex items-center px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md">
-                <FaSearch size={"18px"} className="mr-2" />
+            <div className="flex items-center px-4 py-2 border bg-secondary border-gray-300 dark:border-purple-900 rounded-xl shadow-md">
+                <FaSearch size={"18px"} className="text-primary mr-2" />
                 <input
                     type="search"
-                    className="outline-none w-full sm:w-[220px] md:w-[280px] lg:w-[360px] xl:w-[420px]"
+                    className="bg-secondary text-primary outline-none w-full sm:w-[220px] md:w-[280px] lg:w-[360px] xl:w-[420px]"
                     placeholder={t("coursesComponent.search_placeholder")}
                     value="Titulo"
                 />
@@ -212,19 +212,19 @@ const TopicComponent = () => {
       <div className="mx-4 sm:mx-12 mt-8 sm:mb-2 md:mb-0">
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:justify-center md:ml-0 lg:justify-start lg:ml-6">
           <button
-            className={`px-6 sm:px-10 py-2 rounded-xl sm:rounded-t-xl sm:rounded-b-xl md:rounded-b-none md:rounded-t-2xl font-bungee ${activeTab === "forums" ? "bg-purple-600 text-white" : "bg-slate-300 hover:bg-purple-600 hover:text-white transition-all duration-500"}`}
+            className={`px-6 sm:px-10 py-2 rounded-xl sm:rounded-t-xl sm:rounded-b-xl md:rounded-b-none md:rounded-t-2xl font-bungee ${activeTab === "forums" ? "bg-purple-600 text-white dark:bg-secondary" : "bg-slate-300 hover:bg-purple-600 hover:text-white transition-all duration-500"}`}
             onClick={() => setActiveTab("forums")}
           >
             Foros
           </button>
           <button
-            className={`px-6 sm:px-10 py-2 rounded-xl sm:rounded-t-xl sm:rounded-b-xl md:rounded-b-none md:rounded-t-2xl font-bungee ${activeTab === "myFavorites" ? "bg-purple-600 text-white" : "bg-slate-300 hover:bg-purple-600 hover:text-white transition-all duration-500"}`}
+            className={`px-6 sm:px-10 py-2 rounded-xl sm:rounded-t-xl sm:rounded-b-xl md:rounded-b-none md:rounded-t-2xl font-bungee ${activeTab === "myFavorites" ? "bg-purple-600 text-white dark:bg-secondary" : "bg-slate-300 hover:bg-purple-600 hover:text-white transition-all duration-500"}`}
             onClick={() => setActiveTab("myFavorites")}
           >
             Mis favoritos
           </button>
           <button
-            className={`px-6 sm:px-10 py-2 rounded-xl sm:rounded-t-xl sm:rounded-b-xl md:rounded-b-none md:rounded-t-2xl font-bungee ${activeTab === "myForums" ? "bg-purple-600 text-white" : "bg-slate-300 hover:bg-purple-600 hover:text-white transition-all duration-500"}`}
+            className={`px-6 sm:px-10 py-2 rounded-xl sm:rounded-t-xl sm:rounded-b-xl md:rounded-b-none md:rounded-t-2xl font-bungee ${activeTab === "myForums" ? "bg-purple-600 text-white dark:bg-secondary" : "bg-slate-300 hover:bg-purple-600 hover:text-white transition-all duration-500"}`}
             onClick={() => setActiveTab("myForums")}
           >
             Mis foros
@@ -233,7 +233,7 @@ const TopicComponent = () => {
       </div>
 
       <div
-        className="bg-slate-300 mx-4 mt-4 sm:mx-12 rounded-3xl md:mt-0 mb-4"
+        className="bg-slate-300 dark:bg-secondary mx-4 mt-4 sm:mx-12 rounded-3xl md:mt-0 mb-4"
         style={{ height: `${containerHeight}px` }}
       >
         <div 
@@ -250,11 +250,11 @@ const TopicComponent = () => {
                   </h2>
                 </div>
               ) : filteredTopics().length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xl:grid-cols-3  cursor-pointer">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 xl:grid-cols-3 cursor-pointer">
                   {filteredTopics().map((topic) => (
                     <div
                     key={topic.id}
-                    className="bg-purple-800 text-white p-6 rounded-lg shadow-lg w-full "
+                    className="bg-purple-800 dark:bg-primary text-white p-6 rounded-lg shadow-lg w-full "
                     onClick={() => handleTopicClick(topic.id)}
                   >
                     <div className="items-start block md:flex">
@@ -361,7 +361,7 @@ const TopicComponent = () => {
                 </div>
               ) : (
                 <div className="text-center py-16">
-                  <h2 className="text-3xl font-bold text-gray-700">
+                  <h2 className="text-3xl font-bold text-gray-700 dark:text-primary">
                     {t("Topic.noTopic")}
                   </h2>
                 </div>

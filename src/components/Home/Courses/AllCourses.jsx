@@ -394,7 +394,7 @@ export default function AllCourses() {
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         <div className="w-full sm:w-auto">
-          <h1 className="text-4xl font-bold text-primary text-center sm:text-left font-bungee">
+          <h1 className="text-4xl font-bold dark:text-secondary text-center sm:text-left font-bungee">
             {t("courseComponent.title")}
           </h1>
         </div>

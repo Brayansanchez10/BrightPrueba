@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import LeftBar from './LeftBar';
 import { useTranslation } from 'react-i18next';
 import Logo from "../../assets/img/hola.png";
+import ThemeToggle from '../../context/themes/ThemeToggle';
 
 const Navbar = () => {
   const { t } = useTranslation("global");
@@ -94,7 +95,7 @@ const Navbar = () => {
 
           {/* Imagen y nombre de usuario solo en pantallas más grandes */}
           <div className="hidden sm:flex items-center font-bungee ml-auto mr-4 relative tracking-wide">
-            <span className="text-white text-lg mr-4">{username}</span>
+            <span className="text-white text-lg mr-4">{username}<ThemeToggle /></span>
             <div className="relative">
               {userImage ? (
                 <img

@@ -162,19 +162,19 @@ const Cards = ({ isLeftBarVisible }) => {
   }, [usersData, courses]);
 
   return (
-    <div className="bg-gray-300 overflow-hidden min-h-screen">
+    <div className="bg-primary overflow-hidden min-h-screen">
       <div className="p-4 md:p-24 space-y-8 md:space-y-16">
         <div className="flex flex-col sm:flex-row space-x-0 sm:space-x-4 mb-16 md:mb-0">
-          <h1 className="text-3xl relative font-bungee mb-0 top-0 md:top-[-4rem] text-left">
+          <h1 className="text-primary text-3xl relative font-bungee mb-0 top-0 md:top-[-4rem] text-left">
             {t("cardsComponent.stadisticTitle")}
           </h1>
-          <h1 className="text-3xl relative font-bungee mb-0 top-0 md:top-[-4rem] text-left text-[#783CDA]">
+          <h1 className="text-[#783CDA] dark:text-secondary text-3xl relative font-bungee mb-0 top-0 md:top-[-4rem] text-left">
             {t("cardsComponent.stadisticTitle1")}
           </h1>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-16 md:gap-24 mt-24 md:mt-0">
-          <div className="relative bg-[#F8F2F2] text-gray-900 rounded-lg shadow-lg shadow-[#31BF71] hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col items-center w-full mt-12 md:mt-0">
+          <div className="relative bg-secondary text-primary rounded-lg shadow-lg shadow-[#31BF71] hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col items-center w-full mt-12 md:mt-0">
             <div className="absolute top-[-4rem] left-1/2 transform -translate-x-1/2 text-[#31BF71] text-5xl md:text-6xl">
               <FaUserCheck />
             </div>
@@ -192,7 +192,7 @@ const Cards = ({ isLeftBarVisible }) => {
               {t("cardsComponent.activeUsersDescription")}
             </p>
           </div>
-          <div className="relative bg-[#F8F2F2] text-gray-900 rounded-lg shadow-lg shadow-[#F45442] hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col items-center w-full mt-12 md:mt-0">
+          <div className="relative bg-secondary text-primary rounded-lg shadow-lg shadow-[#F45442] hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col items-center w-full mt-12 md:mt-0">
             <div className="absolute top-[-4rem] left-1/2 transform -translate-x-1/2 text-[#F45442] text-5xl md:text-6xl">
               <FaUserSlash />
             </div>
@@ -210,7 +210,7 @@ const Cards = ({ isLeftBarVisible }) => {
               {t("cardsComponent.inactiveUsersDescription")}
             </p>
           </div>
-          <div className="relative bg-[#F8F2F2] text-gray-900 rounded-lg shadow-lg shadow-[#783CDA] hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col items-center w-full mt-12 md:mt-0">
+          <div className="relative bg-secondary text-primary rounded-lg shadow-lg shadow-[#783CDA] hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col items-center w-full mt-12 md:mt-0">
             <div className="absolute top-[-4rem] left-1/2 transform -translate-x-1/2 text-[#783CDA] text-5xl md:text-6xl">
               <FaGraduationCap />
             </div>
@@ -228,7 +228,7 @@ const Cards = ({ isLeftBarVisible }) => {
               {t("cardsComponent.coursesDescription")}
             </p>
           </div>
-          <div className="relative bg-[#F8F2F2] text-gray-900 rounded-lg shadow-lg shadow-[#FBBF24] hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col items-center w-full mt-12 md:mt-0">
+          <div className="relative bg-secondary text-primary rounded-lg shadow-lg shadow-[#FBBF24] hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col items-center w-full mt-12 md:mt-0">
             <div className="absolute top-[-4rem] left-1/2 transform -translate-x-1/2 text-[#FBBF24] text-5xl md:text-6xl">
               <FaUserPlus />
             </div>
@@ -248,7 +248,7 @@ const Cards = ({ isLeftBarVisible }) => {
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-24 md:mt-10">
-          <div className="w-full h-80 bg-[#F8F2F2] shadow-lg p-4 rounded-lg flex flex-col items-start shadow-[#1E1034] hover:shadow-lg transition-shadow duration-300">
+          <div className="w-full h-80 bg-secondary text-primary rounded-lg shadow-lg p-4 flex flex-col items-start shadow-[#1E1034] hover:shadow-lg transition-shadow duration-300">
             <h3 className="text-lg font-black mb-2 text-left w-full">
               {t("cardsComponent.users")}
             </h3>
@@ -260,7 +260,7 @@ const Cards = ({ isLeftBarVisible }) => {
             </div>
           </div>
 
-          <div className="w-full h-80 bg-[#F8F2F2] shadow-lg p-4 rounded-lg flex flex-col items-start shadow-[#1E1034] hover:shadow-lg transition-shadow duration-300">
+          <div className="w-full h-80 bg-secondary text-primary rounded-lg shadow-lg p-4 flex flex-col items-start shadow-[#1E1034] hover:shadow-lg transition-shadow duration-300">
             <h3 className="text-lg font-black mb-2 text-left w-full">
               {t("cardsComponent.stadisticCourse")}
             </h3>
