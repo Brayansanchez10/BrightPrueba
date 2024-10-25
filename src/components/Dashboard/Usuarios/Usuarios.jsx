@@ -20,13 +20,15 @@ import DetailsUserModal from "./UserDetailsModal";
 import CreateUserModal from "./CreateUserModal";
 import UpdateUserModal from "./UpdateUserModal";
 import { useUserContext } from "../../../context/user/user.context";
+import { useAuth } from "../../../context/auth.context";
 import { useRoleContext } from "../../../context/user/role.context";
+import { usePermissionContext } from "../../../context/user/permissions.context";
 import { useTranslation } from "react-i18next";
 
 const DataTable = () => {
   const { t } = useTranslation("global");
   const { rolesData } = useRoleContext();
-  const { getUsers, usersData, activateAccount, updateUser, createUser } =
+  const { getUsers, usersData, activateAccount, updateUser, createUser, getUserById } =
     useUserContext();
   const [updatedDataFlag, setUpdatedDataFlag] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -45,9 +47,40 @@ const DataTable = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
 
+  const [username, setUsername] = useState("");
+  const { user } = useAuth();
+
+  const { permissionsData, rolePermissions, loading, error, getPermissionsByRole } = usePermissionContext();
+  const [ permisosByRol, setPermisosByRol ] = useState("");
+
   useEffect(() => {
     getUsers();
   }, [updatedDataFlag]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+        if (user && user.data && user.data.id) {
+            try {
+                // Obtener datos del usuario
+                const userData = await getUserById(user.data.id);
+                setUsername(userData.username); // Guarda el nombre de usuario (u otra información)
+                
+                // Si el usuario tiene un roleId, obtener los permisos
+                if (userData.roleId) {
+                    const permisos = await getPermissionsByRole(userData.roleId); // Asegúrate de que esta función retorna los permisos
+                    setPermisosByRol(permisos || []); // Si permisos es undefined, establece un array vacío
+                    console.log("Permisos del rol", permisos);
+                }
+            } catch (error) {
+                console.error("Error al obtener datos del usuario o permisos del rol:", error);
+                setError("Error al obtener datos del usuario o permisos del rol.");
+            }
+        }
+    };
+
+    fetchUserData();
+  }, [user]);
+
 
   useEffect(() => {
     if (updatedDataFlag) {
@@ -184,6 +217,15 @@ const DataTable = () => {
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
+  if (loading) return <p>Cargando permisos del rol...</p>;
+  if (error) return <p>{error}</p>;
+
+  // Ejemplo de cómo ocultar botones según los permisos
+  const canCreate = rolePermissions.some(perm => perm.nombre === "Crear usuario");
+  const canActive = rolePermissions.some(perm => perm.nombre === "Activar usuario");
+  const canEdit = rolePermissions.some(perm => perm.nombre === "Editar usuario");
+  const canShow = rolePermissions.some(perm => perm.nombre === "Ver usuario");
+
   return (
     <div className="bg-gray-200 overflow-hidden min-h-screen">
       <div className="flex h-full">
@@ -201,14 +243,17 @@ const DataTable = () => {
                   {t("datatable.Users")}
                 </h2>
                 <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
-                  <Button
-                    type="primary"
-                    style={{ backgroundColor: "#4c1d95" }}
-                    onClick={() => setShowCreateModal(true)}
-                    className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
-                  >
-                    <b>{t("datatable.CreateUser")}</b>
-                  </Button>
+                  {canCreate &&
+                    <Button
+                      type="primary"
+                      style={{ backgroundColor: "#4c1d95" }}
+                      onClick={() => setShowCreateModal(true)}
+                      className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
+                    >
+                      <b>{t("datatable.CreateUser")}</b>
+                    </Button>
+                  }
+                  
                   <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
                     <FaSearch size={"18px"} className="mt-1 mr-2" />
                     <input
@@ -376,50 +421,55 @@ const DataTable = () => {
                         </td>
                         <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                           <div className="flex flex-nowrap justify-center space-x-2">
-                            <Button
-                              onClick={() => handleActivateAccount(item.id)}
-                              className={`${
-                                item.state
-                                  ? "bg-red-500 hover:bg-red-700"
-                                  : "bg-green-500 hover:bg-green-700"
-                              } text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400 whitespace-nowrap`}
-                              style={{ minWidth: "120px" }}
-                            >
-                              {item.state ? (
-                                <>
-                                  <FaUserTimes
-                                    size="16px"
-                                    className="inline-block mr-1.5 -mt-1"
-                                  />
-                                  {t("datatable.Desactivate")}
-                                </>
-                              ) : (
-                                <>
-                                  <FaUserCheck
-                                    size="16px"
-                                    className="inline-block mr-1.5 -mt-1"
-                                  />
-                                  {t("datatable.Activate")}
-                                </>
-                              )}
-                            </Button>
-
-                            <Button
-                              onClick={() => handleUpdateButtonClick(item)}
-                              className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
-                              style={{ minWidth: "50px" }}
-                              icon={<ReloadOutlined />}
-                            />
-
-                            <Button
-                              onClick={() => {
-                                setSelectedUserId(item.id);
-                                setShowDetailsModal(true);
-                              }}
-                              className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
-                              style={{ minWidth: "50px" }}
-                              icon={<InfoCircleOutlined />}
-                            />
+                            {canActive &&
+                              <Button
+                                onClick={() => handleActivateAccount(item.id)}
+                                className={`${
+                                  item.state
+                                    ? "bg-red-500 hover:bg-red-700"
+                                    : "bg-green-500 hover:bg-green-700"
+                                } text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400 whitespace-nowrap`}
+                                style={{ minWidth: "120px" }}
+                              >
+                                {item.state ? (
+                                  <>
+                                    <FaUserTimes
+                                      size="16px"
+                                      className="inline-block mr-1.5 -mt-1"
+                                    />
+                                    {t("datatable.Desactivate")}
+                                  </>
+                                ) : (
+                                  <>
+                                    <FaUserCheck
+                                      size="16px"
+                                      className="inline-block mr-1.5 -mt-1"
+                                    />
+                                    {t("datatable.Activate")}
+                                  </>
+                                )}
+                              </Button>
+                            }
+                            {canEdit &&
+                              <Button
+                                onClick={() => handleUpdateButtonClick(item)}
+                                className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
+                                style={{ minWidth: "50px" }}
+                                icon={<ReloadOutlined />}
+                              />
+                            }
+                            
+                            {canShow &&
+                              <Button
+                                onClick={() => {
+                                  setSelectedUserId(item.id);
+                                  setShowDetailsModal(true);
+                                }}
+                                className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
+                                style={{ minWidth: "50px" }}
+                                icon={<InfoCircleOutlined />}
+                              />
+                            }
                           </div>
                         </td>
                       </tr>

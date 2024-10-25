@@ -33,6 +33,8 @@ export default function NavigationBar() {
   const menuRef = useRef(null);
   const [scrollDirection, setScrollDirection] = useState("up");
 
+  const forumActive = localStorage.getItem("forumActive") === "true";
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (user && user.data && user.data.id) {
@@ -179,12 +181,14 @@ export default function NavigationBar() {
           >
             {t("navigationBar.myCourses")}
           </Link>
-          <Link
-            to="/Forum"
-            className={`${getActiveClass("/Forum")} font-bold text-lg`}
-          >
-            {t("Foro")}
-          </Link>
+          {forumActive && (
+                <Link
+                    to="/Forum"
+                    className={`${getActiveClass("/Forum")} font-bold text-lg`}
+                >
+                    {t("Foro")}
+                </Link>
+          )}
         </div>
         <div className="hidden lg:flex items-center">
           <div className="flex flex-col items-end mr-4">

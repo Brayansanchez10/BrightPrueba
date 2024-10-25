@@ -3,7 +3,7 @@ import { useAuth } from "./context/auth.context";
 import { Outlet, Navigate } from 'react-router-dom';
 import VideoPage from './views/VideoPage';
 
-function ProtectedRoute({ requiredRole }) {
+function ProtectedRoute({ allowedRoles }) {
     const { loading, isAuthenticated, user, role } = useAuth();
     const [showVideo, setShowVideo] = useState(false);
 
@@ -39,8 +39,8 @@ function ProtectedRoute({ requiredRole }) {
 
     // Verificar si el rol del usuario está disponible y coincide con el rol requerido
     const userRole = role;
-    if (requiredRole && (!userRole || userRole !== requiredRole)) {
-        console.log(`User role (${userRole}) does not match required role (${requiredRole}), redirecting to /notFound`);
+    if (allowedRoles && (!userRole || !allowedRoles.includes(userRole))) {
+        console.log(`User role (${userRole}) does not match allowed roles (${allowedRoles.join(', ')}), redirecting to /notFound`);
         return <Navigate to="/notFound" />;
     }
 

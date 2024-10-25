@@ -23,9 +23,12 @@ import axios from "axios";
 import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 import CreateSubCategoryForm from "../SubCategories/CreateSubCategoryForm";
 
+import { useAuth } from "../../../context/auth.context";
+import { usePermissionContext } from "../../../context/user/permissions.context";
+
 const DataTablete = () => {
     const { t } = useTranslation("global");
-    const { getUsers, usersData } = useUserContext();
+    const { getUsers, usersData, getUserById } = useUserContext();
     const {
         getAllCourses,
         courses,
@@ -54,10 +57,40 @@ const DataTablete = () => {
     const [dataFlag, setDataFlag] = useState(false);
     const [subCategoryForm, setSubCategoryForm] = useState(false);
 
+    const { user } = useAuth();
+    const [username, setUsername] = useState("");
+    const { permissionsData, rolePermissions, loading, error, getPermissionsByRole } = usePermissionContext();
+    const [ permisosByRol, setPermisosByRol ] = useState("");
+
     useEffect(() => {
         getUsers();
         getAllCourses();
     }, []);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (user && user.data && user.data.id) {
+                try {
+                    // Obtener datos del usuario
+                    const userData = await getUserById(user.data.id);
+                    setUsername(userData.username); // Guarda el nombre de usuario (u otra información)
+                    
+                    // Si el usuario tiene un roleId, obtener los permisos
+                    if (userData.roleId) {
+                        const permisos = await getPermissionsByRole(userData.roleId); // Asegúrate de que esta función retorna los permisos
+                        setPermisosByRol(permisos || []); // Si permisos es undefined, establece un array vacío
+                        console.log("Permisos del rol", permisos);
+                    }
+                } catch (error) {
+                    console.error("Error al obtener datos del usuario o permisos del rol:", error);
+                    setError("Error al obtener datos del usuario o permisos del rol.");
+                }
+            }
+        };
+    
+        fetchUserData();
+    }, [user]);
+    
 
     useEffect(() => {
         const filteredCourses = courses.filter(
@@ -247,6 +280,18 @@ const DataTablete = () => {
             course.description.toLowerCase().includes(searchValue.toLowerCase())
     );
 
+    if (loading) return <p>Cargando permisos del rol...</p>;
+    if (error) return <p>{error}</p>;
+
+    // Ejemplo de cómo ocultar botones según los permisos
+    const canCreate = rolePermissions.some(perm => perm.nombre === "Crear Curso");
+    const canSection = rolePermissions.some(perm => perm.nombre === "Crear sección");
+    const canContent = rolePermissions.some(perm => perm.nombre === "Asignar contenido");
+    const canEdit = rolePermissions.some(perm => perm.nombre === "Editar curso");
+    const canShow = rolePermissions.some(perm => perm.nombre === "Ver curso");
+    const canNotify = rolePermissions.some(perm => perm.nombre === "Notificar curso");
+    const canDelete = rolePermissions.some(perm => perm.nombre === "Eliminar curso");
+
     return (
         <div className="bg-gray-200 overflow-hidden min-h-screen">
             <div className="flex h-full">
@@ -264,14 +309,17 @@ const DataTablete = () => {
                                     {t("courses.title")}
                                 </h2>
                                 <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
-                                    <Button
-                                        type="primary"
-                                        style={{ backgroundColor: "#4c1d95" }}
-                                        onClick={handleCreateCourseClick}
-                                        className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
-                                    >
-                                        <b>{t("courses.createCourse")}</b>
-                                    </Button>
+                                    {canCreate &&
+                                        <Button
+                                            type="primary"
+                                            style={{ backgroundColor: "#4c1d95" }}
+                                            onClick={handleCreateCourseClick}
+                                            className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
+                                        >
+                                            <b>{t("courses.createCourse")}</b>
+                                        </Button>
+                                    }
+                                    
                                     <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
                                         <FaSearch
                                             size={"18px"}
@@ -343,96 +391,115 @@ const DataTablete = () => {
                                                     </td>
                                                     <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                                                         <div className="flex justify-center space-x-4">
-                                                            <Button
-                                                                className="bg-purple-800 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
-                                                                onClick={() =>
-                                                                    handleSubCategoryButtonClick(
-                                                                        course
-                                                                    )
-                                                                }
-                                                                icon={
-                                                                    <QrcodeOutlined />
-                                                                }
-                                                            >
-                                                                {t(
-                                                                    "subCategory.ButtonCreate"
-                                                                )}
-                                                            </Button>
-                                                            <Button
-                                                                className="bg-green-500 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
-                                                                onClick={() =>
-                                                                    handleCreateResourceClick(
-                                                                        course
-                                                                    )
-                                                                }
-                                                                icon={
-                                                                    <FileAddOutlined />
-                                                                }
-                                                            >
-                                                                {t(
-                                                                    "courses.ButtonUpContent"
-                                                                )}
-                                                            </Button>
-                                                            <Button
-                                                                className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
-                                                                icon={
-                                                                    <ReloadOutlined />
-                                                                }
-                                                                style={{
-                                                                    minWidth:
-                                                                        "50px",
-                                                                }}
-                                                                onClick={() =>
-                                                                    handleUpdateButtonClick(
-                                                                        course
-                                                                    )
-                                                                }
-                                                            />
-                                                            <Button
-                                                                className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
-                                                                icon={
-                                                                    <InfoCircleOutlined />
-                                                                }
-                                                                style={{
-                                                                    minWidth:
-                                                                        "50px",
-                                                                }}
-                                                                onClick={() =>
-                                                                    handleDetailsButtonClick(
-                                                                        course
-                                                                    )
-                                                                }
-                                                            />
-                                                            <Button
-                                                                className="bg-orange-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
-                                                                icon={
-                                                                    <BellOutlined />
-                                                                }
-                                                                style={{
-                                                                    minWidth:
-                                                                        "50px",
-                                                                }}
-                                                                onClick={() =>
-                                                                    handleNotifyButtonClick(
-                                                                        course
-                                                                    )
-                                                                }
-                                                            />
-                                                            <Button
-                                                                className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
-                                                                icon={
-                                                                    <DeleteOutlined />
-                                                                }
-                                                                style={{
-                                                                    minWidth:
-                                                                        "50px",
-                                                                }}
-                                                                onClick={() =>
-                                                                    handleDeleteButtonClick(
-                                                                        course
-                                                                    )
-                                                                }
-                                                            />
+                                                            
+                                                            {canSection &&
+                                                                <Button
+                                                                    className="bg-purple-800 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
+                                                                    onClick={() =>
+                                                                        handleSubCategoryButtonClick(
+                                                                            course
+                                                                        )
+                                                                    }
+                                                                    icon={
+                                                                        <QrcodeOutlined />
+                                                                    }
+                                                                >
+                                                                    {t(
+                                                                        "subCategory.ButtonCreate"
+                                                                    )}
+                                                                </Button>
+                                                            }
+                                                            
+                                                            {canContent &&
+                                                                <Button
+                                                                    className="bg-green-500 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
+                                                                    onClick={() =>
+                                                                        handleCreateResourceClick(
+                                                                            course
+                                                                        )
+                                                                    }
+                                                                    icon={
+                                                                        <FileAddOutlined />
+                                                                    }
+                                                                >
+                                                                    {t(
+                                                                        "courses.ButtonUpContent"
+                                                                    )}
+                                                                </Button>
+                                                            }
+                                                            
+                                                            {canEdit &&
+                                                                <Button
+                                                                    className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
+                                                                    icon={
+                                                                        <ReloadOutlined />
+                                                                    }
+                                                                    style={{
+                                                                        minWidth:
+                                                                            "50px",
+                                                                    }}
+                                                                    onClick={() =>
+                                                                        handleUpdateButtonClick(
+                                                                            course
+                                                                        )
+                                                                    }
+                                                                />
+                                                            }
+                                                           
+                                                            {canShow &&
+                                                                <Button
+                                                                    className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
+                                                                    icon={
+                                                                        <InfoCircleOutlined />
+                                                                    }
+                                                                    style={{
+                                                                        minWidth:
+                                                                            "50px",
+                                                                    }}
+                                                                    onClick={() =>
+                                                                        handleDetailsButtonClick(
+                                                                            course
+                                                                        )
+                                                                    }
+                                                                />
+                                                            }
+                                                            
+                                                            {canNotify &&
+                                                                <Button
+                                                                    className="bg-orange-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
+                                                                    icon={
+                                                                        <BellOutlined />
+                                                                    }
+                                                                    style={{
+                                                                        minWidth:
+                                                                            "50px",
+                                                                    }}
+                                                                    onClick={() =>
+                                                                        handleNotifyButtonClick(
+                                                                            course
+                                                                        )
+                                                                    }
+                                                                />
+                                                            }
+                                                            
+                                                            {canDelete &&
+                                                                <Button
+                                                                    className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
+                                                                    icon={
+                                                                        <DeleteOutlined />
+                                                                    }
+                                                                    style={{
+                                                                        minWidth:
+                                                                            "50px",
+                                                                    }}
+                                                                    onClick={() =>
+                                                                        handleDeleteButtonClick(
+                                                                            course
+                                                                        )
+                                                                    }
+                                                                />
+                                                            }
+                                                            
                                                         </div>
                                                     </td>
                                                 </tr>

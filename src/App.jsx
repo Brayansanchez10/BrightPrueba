@@ -73,6 +73,8 @@ import DeleteAccountConfirmation from "./components/Dashboard/ProfileAdmin/elimi
 import Footer from "./components/footer.jsx";
 
 function App() {
+  const forumActive = localStorage.getItem("forumActive") === "true";
+
   return (
     <ThemeProvider>
       <AuthProvider>
@@ -107,7 +109,7 @@ function App() {
                                                     </Route>
 
                                                     {/* Vistas para USUARIO */}
-                                                    <Route element={<ProtectedRoute requiredRole="usuario"/>}>
+                                                    <Route element={<ProtectedRoute allowedRoles="usuario"/>}>
                                                       <Route path="/Home" element={<HomePage />} />
                                                       <Route path="/MyCourses" element={<MyCourses />} />
                                                       <Route path="/CoursesHome" element={<CoursesHome />} />
@@ -118,14 +120,18 @@ function App() {
                                                       <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />
                                                       <Route path="/AllCourses" element={<AllCourses />}/>
                                                       <Route path="/CourseCategory/:category" element={<CourseCategory />} />
-                                                      <Route path="/Forum" element={<ForumCategoriesComponent />} />
-                                                      <Route path="/categories/:forumCategoryId" element={<TopicComponent />} />
-                                                      <Route path="/topic/:topicId" element={<TopicViewComponente />} />
+                                                      {forumActive && (
+                                                          <>
+                                                              <Route path="/Forum" element={<ForumCategoriesComponent />} />
+                                                              <Route path="/categories/:forumCategoryId" element={<TopicComponent />} />
+                                                              <Route path="/topic/:topicId" element={<TopicViewComponente />} />
+                                                          </>
+                                                      )}
                                                       <Route path="" element={Footer} />
                                                     </Route>
 
                                                     {/* Rutas Protegidas PARA ADMINISTRADOR */}
-                                                    <Route element={<ProtectedRoute requiredRole="Admin"/>}>
+                                                    <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor']} />}>
                                                       <Route path="/admin" element={<Dashboard />} />
                                                       <Route path="/Usuarios" element={<Usuarios />} />
                                                       <Route path="/Courses" element={<Courses />} />

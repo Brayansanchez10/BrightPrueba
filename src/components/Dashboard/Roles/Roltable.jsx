@@ -18,6 +18,8 @@ import Navbar from "../../Dashboard/NavBar";
 import { useTranslation } from "react-i18next";
 import "../css/Custom.css";
 import { FaSearch, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useAuth } from "../../../context/auth.context";
+import { useUserContext } from "../../../context/user/user.context";
 
 const { useForm } = Form;
 
@@ -25,9 +27,15 @@ const DataTable = () => {
   const { t } = useTranslation("global");
   const [form] = useForm();
   const [showForm, setShowForm] = useState(false);
+  const { user } = useAuth();
+  const [username, setUsername] = useState("");
+  
+  const { getUserById } = useUserContext();
+ 
 
   const { rolesData, updateRole, deleteRole } = useRoleContext();
-  const { permissionsData } = usePermissionContext();
+  const { permissionsData, rolePermissions, loading, error, getPermissionsByRole } = usePermissionContext();
+  const [ permisosByRol, setPermisosByRol ] = useState("");
 
   const [permissionsUpdated, setPermissionsUpdated] = useState(false);
   const [updatedDataFlag, setUpdatedDataFlag] = useState(false);
@@ -51,6 +59,31 @@ const DataTable = () => {
       setSelectedRole(rolesData.find((role) => role.id === selectedRoleId));
     }
   }, [selectedRoleId, rolesData]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+        if (user && user.data && user.data.id) {
+            try {
+                // Obtener datos del usuario
+                const userData = await getUserById(user.data.id);
+                setUsername(userData.username); // Guarda el nombre de usuario (u otra información)
+                
+                // Si el usuario tiene un roleId, obtener los permisos
+                if (userData.roleId) {
+                    const permisos = await getPermissionsByRole(userData.roleId); // Asegúrate de que esta función retorna los permisos
+                    setPermisosByRol(permisos || []); // Si permisos es undefined, establece un array vacío
+                    console.log("Permisos del rol", permisos);
+                }
+            } catch (error) {
+                console.error("Error al obtener datos del usuario o permisos del rol:", error);
+                setError("Error al obtener datos del usuario o permisos del rol.");
+            }
+        }
+    };
+
+    fetchUserData();
+}, [user]);
+
 
   useEffect(() => {
     form.setFieldsValue({
@@ -239,6 +272,17 @@ const DataTable = () => {
     }
   };
 
+  if (loading) return <p>Cargando permisos del rol...</p>;
+  if (error) return <p>{error}</p>;
+
+  // Ejemplo de cómo ocultar botones según los permisos
+  const canCreate = rolePermissions.some(perm => perm.nombre === "Crear role");
+  const canAssing = rolePermissions.some(perm => perm.nombre === "Asignar permisos");
+  const canShow = rolePermissions.some(perm => perm.nombre === "Ver role");
+  const canDelete = rolePermissions.some(perm => perm.nombre === "Eliminar role");
+  
+  
+
   return (
     <div className="bg-gray-200 overflow-hidden min-h-screen">
       <div className="flex h-full">
@@ -256,14 +300,17 @@ const DataTable = () => {
                   {t("roles.title")}
                 </h2>
                 <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
-                  <Button
-                    type="primary"
-                    style={{ backgroundColor: "#4c1d95" }}
-                    onClick={() => setShowForm(true)}
-                    className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
-                  >
-                    <b>{t("roles.createRole")}</b>
-                  </Button>
+                  {canCreate && 
+                    <Button
+                      type="primary"
+                      style={{ backgroundColor: "#4c1d95" }}
+                      onClick={() => setShowForm(true)}
+                      className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
+                    >
+                      <b>{t("roles.createRole")}</b>
+                    </Button>
+                  }
+                  
                   <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
                     <FaSearch size={"18px"} className="mt-1 mr-2" />
                     <input
@@ -323,21 +370,28 @@ const DataTable = () => {
                           </td>
                           <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
                             <div className="flex justify-center space-x-2">
-                              <Button
-                                className="bg-green-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
-                                icon={<CheckCircleOutlined />}
-                                onClick={() => handleAssignPermissions(role)}
-                              />
-                              <Button
-                                className="bg-purple-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
-                                icon={<InfoCircleOutlined />}
-                                onClick={() => handleViewPermissions(role)}
-                              />
-                              <Button
-                                className="bg-red-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
-                                icon={<DeleteOutlined />}
-                                onClick={() => handleDeleteRole(role.id)}
-                              />
+                              {canAssing &&
+                                <Button
+                                  className="bg-green-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
+                                  icon={<CheckCircleOutlined />}
+                                  onClick={() => handleAssignPermissions(role)}
+                                />
+                              }
+                              {canShow &&
+                                <Button
+                                  className="bg-purple-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
+                                  icon={<InfoCircleOutlined />}
+                                  onClick={() => handleViewPermissions(role)}
+                                />
+                              }
+                              
+                              {canDelete &&
+                                <Button
+                                  className="bg-red-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
+                                  icon={<DeleteOutlined />}
+                                  onClick={() => handleDeleteRole(role.id)}
+                                />
+                              }
                             </div>
                           </td>
                         </tr>
