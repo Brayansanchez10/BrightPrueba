@@ -17,7 +17,6 @@ import Logo from "../../../assets/img/hola.png";
 import Footer from "../../footer.jsx";
 import { getSubCategoryCourseId } from "../../../api/courses/subCategory.requst.js";
 
-
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
 
@@ -246,7 +245,15 @@ export default function AllCourses() {
           title={course.title}
           description={course.description}
           ruta={course.image}
-          creatorName={creator ? creator.username : "Cargando..."}
+          creatorName={
+            creator ? (
+              <Link to={`/profile/${creator.id}`} className="text-blue-500 hover:underline">
+                {creator.username}
+              </Link>
+            ) : (
+              "Cargando..."
+            )
+          }
           courseId={course.id}
           rating={averageRating || 0}
           duration={`${course.duracion} horas`}
@@ -382,7 +389,7 @@ export default function AllCourses() {
       className="min-h-screen flex flex-col pt-16 bg-gray-100"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration:  0.5 }}
     >
       <style>{styles}</style>
       <NavigationBar />
