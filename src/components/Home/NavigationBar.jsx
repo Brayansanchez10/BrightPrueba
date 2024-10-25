@@ -9,6 +9,7 @@ import {
   FaHome,
   FaBook,
   FaGraduationCap,
+  FaUser,
 } from "react-icons/fa";
 import Logo from "../../assets/img/hola.png";
 import { useAuth } from "../../context/auth.context";
@@ -77,6 +78,25 @@ export default function NavigationBar() {
     };
   }, []);
 
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY) {
+        setScrollDirection("down");
+      } else {
+        setScrollDirection("up");
+      }
+      lastScrollY = window.scrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -121,25 +141,6 @@ export default function NavigationBar() {
       </React.Fragment>
     ));
   };
-
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-
-    const handleScroll = () => {
-      if (window.scrollY > lastScrollY) {
-        setScrollDirection("down");
-      } else {
-        setScrollDirection("up");
-      }
-      lastScrollY = window.scrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   return (
     <>
@@ -214,10 +215,17 @@ export default function NavigationBar() {
               <div className="py-2 relative">
                 <div className="absolute right-3 top-0 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-8 border-b-[#200E3E]" />
                 <Link
+                  to={`/profile/${user.data.id}`}
+                  className="flex items-center px-4 py-2 text-white hover:text-black hover:bg-gray-200"
+                >
+                  <FaUser className="mr-2" /> 
+                  Ver mi perfil
+                </Link>
+                <Link
                   to="/Account"
                   className="flex items-center px-4 py-2 text-white hover:text-black hover:bg-gray-200"
                 >
-                  <FaUserCog className="mr-2" />{" "}
+                  <FaUserCog className="mr-2" /> 
                   {t("navigationBar.configProfile")}
                 </Link>
                 <div
@@ -336,6 +344,19 @@ export default function NavigationBar() {
                         <FaGraduationCap className="mr-2 text-[#F9BE0A] h-6 w-6" />
                         <span className="text-2xl font-bungee">
                           {t("navigationBar.myCourses")}
+                        </span>
+                      </div>
+                    </Link>
+
+                    <Link
+                      to={`/profile/${user.data.id}`}
+                      className="flex items-center py-2 w-full justify-center text-white text-2xl font-bold"
+                      onClick={toggleMobileMenu}
+                    >
+                      <div className="flex  items-center justify-center w-[250px] h-[90px] rounded-lg shadow-lg bg-[#512599]">
+                        <FaUser className="mr-2 text-white h-6 w-6" />
+                        <span className="text-2xl font-bungee">
+                          Ver mi perfil
                         </span>
                       </div>
                     </Link>
