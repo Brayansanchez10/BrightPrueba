@@ -169,7 +169,7 @@ export default function HomePage() {
               <h2 className="text-primary text-center text-4xl md:text-5xl lg:text-6xl font-bungee mb-6">
                 {t("home.welcome")}
                 <motion.span
-                  className="text-purple-900"
+                  className="text-purple-900 dark:text-secondary"
                   animate={{
                     scale: [1, 1.05, 1],
                     rotate: [0, 2, -2, 0],
@@ -211,7 +211,7 @@ export default function HomePage() {
               className="w-full lg:w-1/2 xl:w-1/3"
               variants={fadeInFromLeft}
             >
-              <h2 className="text-center text-4xl md:text-5xl lg:text-6xl text-purple-900 font-bungee mb-6">
+              <h2 className="text-center text-4xl md:text-5xl lg:text-6xl text-purple-900 dark:text-secondary font-bungee mb-6">
                 {t("home.mission")}
               </h2>
               <p className="text-primary text-base md:text-lg lg:text-2xl text-justify mb-8">
@@ -223,19 +223,19 @@ export default function HomePage() {
               >
                 {[
                   {
-                    number: "10+",
-                    text1: t("home.experience_y"),
-                    text2: t("home.experience"),
+                    number: <span className="dark:text-secondary">10+</span>,
+                    text1: <span className="text-primary">{t("home.experience_y")}</span>,
+                    text2: <span className="text-primary">{t("home.experience")}</span>,
                   },
                   {
-                    number: "29+",
-                    text1: t("home.total"),
-                    text2: t("home.course"),
+                    number: <span className="dark:text-secondary">29+</span>,
+                    text1: <span className="text-primary">{t("home.total")}</span>,
+                    text2: <span className="text-primary">{t("home.course")}</span>,
                   },
                   {
-                    number: "50k+",
-                    text1: t("home.student"),
-                    text2: t("home.active"),
+                    number: <span className="dark:text-secondary">50k+</span>,
+                    text1: <span className="text-primary">{t("home.student")}</span>,
+                    text2: <span className="text-primary">{t("home.active")}</span>,
                   },
                 ].map((item, index) => (
                   <motion.div
@@ -274,8 +274,8 @@ export default function HomePage() {
               className="text-center text-3xl md:text-4xl lg:text-5xl font-bungee mb-10"
               variants={fadeInFromLeft}
             >
-              <span className="text-purple-900">bringmind </span>
-              {t("home.offert")}
+              <span className="text-purple-900 dark:text-secondary">bringmind </span>
+              <span className="text-primary">{t("home.offert")}</span>
             </motion.h2>
             <motion.div
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto max-w-full"
@@ -309,7 +309,7 @@ export default function HomePage() {
               ].map((item, index) => (
                 <motion.div
                   key={index}
-                  className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105"
+                  className={`bg-secondary rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105`}
                   variants={fadeInFromLeft}
                 >
                   <div className="p-8 text-center">
@@ -327,10 +327,10 @@ export default function HomePage() {
                         <item.icon className="text-white" size={60} />
                       </motion.div>
                     </div>
-                    <h3 className="text-xl lg:text-2xl font-semibold mb-3">
+                    <h3 className="text-xl lg:text-2xl font-semibold mb-3 text-primary">
                       {t(item.title)}
                     </h3>
-                    <p className="text-base lg:text-lg text-gray-600">
+                    <p className="text-base lg:text-lg text-gray-600 dark:text-primary">
                       {t(item.message)}
                     </p>
                   </div>
@@ -358,8 +358,8 @@ export default function HomePage() {
               className="text-center text-3xl md:text-4xl lg:text-5xl font-bungee mb-10"
               variants={fadeInFromLeft}
             >
-              {t("home.feature")}{" "}
-              <span className="text-purple-900">bringmind</span>
+              <span className="text-primary">{t("home.feature")}</span>{" "}
+              <span className="text-purple-900 dark:text-secondary">bringmind</span>
             </motion.h2>
             <motion.div
               className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto max-w-6xl"
@@ -389,7 +389,7 @@ export default function HomePage() {
                       transition={{ duration: 0.3 }}
                     />
                   </div>
-                  <p className="text-purple-900 text-base sm:text-lg font-semibold mt-2 text-center">
+                  <p className="text-purple-900 dark:text-primary text-base sm:text-lg font-semibold mt-2 text-center">
                     {t(item.title)}
                   </p>
                 </motion.div>
@@ -404,8 +404,8 @@ export default function HomePage() {
               className="text-center text-3xl md:text-4xl lg:text-5xl font-bungee mb-10"
               variants={fadeInFromLeft}
             >
-              {t("home.testimonial")}{" "}
-              <span className="text-purple-900">bringmind</span>
+              <span className="text-primary">{t("home.testimonial")}</span>{" "}
+              <span className="text-purple-900 dark:text-secondary">bringmind</span>
             </motion.h2>
             <motion.div variants={fadeInFromLeft}>
               <Testimonials profiles={profiles} />
@@ -416,7 +416,7 @@ export default function HomePage() {
         <AnimatedSection className="py-10 md:py-16 lg:py-20 mb-10 md:mb-16 lg:mb-8">
           <div className="mx-5 md:mx-10 lg:mx-20">
             <motion.h2
-              className="text-center text-3xl md:text-4xl lg:text-5xl font-bungee text-purple-900 mb-10"
+              className="text-center text-3xl md:text-4xl lg:text-5xl font-bungee text-purple-900 dark:text-secondary mb-10"
               variants={fadeInFromLeft}
             >
               {t("home.partners")}
@@ -424,7 +424,7 @@ export default function HomePage() {
             <motion.div className="flex justify-center" variants={fadeInFromLeft}>
               <div className="w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
                 <p className="text-lg md:text-xl text-center mb-6">
-                  {t("home.partners_message")}
+                  <span className="text-primary">{t("home.partners_message")}</span>
                 </p>
                 <motion.div
                   className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"

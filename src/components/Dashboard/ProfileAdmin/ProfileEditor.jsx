@@ -48,7 +48,7 @@ export default function ProfileEditor() {
   };
 
   return (
-    <div className="bg-gray-100 flex min-h-screen overflow-hidden">
+    <div className="bg-primary flex min-h-screen overflow-hidden">
       <LeftBar onVisibilityChange={handleLeftBarVisibilityChange} />
       <div className={`w-full transition-all duration-300 ${isLeftBarVisible ? 'ml-56' : ''}`}>
         <Navbar />

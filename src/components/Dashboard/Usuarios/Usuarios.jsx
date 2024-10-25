@@ -227,7 +227,7 @@ const DataTable = () => {
   const canShow = rolePermissions.some(perm => perm.nombre === "Ver usuario");
 
   return (
-    <div className="bg-gray-200 overflow-hidden min-h-screen">
+    <div className="bg-primary overflow-hidden min-h-screen">
       <div className="flex h-full">
         <LeftBar onVisibilityChange={setIsLeftBarVisible} />
         <div
@@ -239,7 +239,7 @@ const DataTable = () => {
           <div className="flex flex-col mt-14">
             <div className="px-4 md:px-12">
               <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-2">
-                <h2 className="text-3xl text-purple-900 font-bungee mb-4 md:mb-0">
+                <h2 className="text-3xl text-purple-900 dark:text-secondary font-bungee mb-4 md:mb-0">
                   {t("datatable.Users")}
                 </h2>
                 <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
@@ -254,11 +254,11 @@ const DataTable = () => {
                     </Button>
                   }
                   
-                  <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
-                    <FaSearch size={"18px"} className="mt-1 mr-2" />
+                  <div className="flex w-full md:w-auto px-4 py-2 border bg-secondary border-gray-300 dark:border-purple-900 rounded-xl shadow-lg order-1 md:order-2">
+                    <FaSearch size={"18px"} className="text-primary mt-1 mr-2" />
                     <input
                       type="search"
-                      className="outline-none w-full md:w-[280px] lg:w-[360px]"
+                      className="bg-secondary text-primary outline-none w-full md:w-[280px] lg:w-[360px]"
                       placeholder={t("datatable.SearchByName")}
                       value={searchValue}
                       onChange={(e) => setSearchValue(e.target.value)}
@@ -270,12 +270,12 @@ const DataTable = () => {
 
             {/* Tabla */}
             <div className="flex justify-center mt-4 md:mt-2">
-              <div className="overflow-auto w-full px-4 md:px-6 mx-4 md:mx-12 py-6 bg-white rounded-xl shadow-lg shadow-purple-300">
+              <div className="overflow-auto w-full px-4 md:px-6 mx-4 md:mx-12 py-6 bg-secondary rounded-xl shadow-lg shadow-purple-300 dark:shadow-purple-800">
                 <table className="min-w-full overflow-x-auto">
                   <thead>
                     <tr>
                       <th
-                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700"
                         onClick={() => orderBy("id")}
                       >
                         {t("datatable.ID")}{" "}
@@ -287,7 +287,7 @@ const DataTable = () => {
                           ))}
                       </th>
                       <th
-                        className="text-lg py-3  bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3  bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700"
                         onClick={() => orderBy("role")}
                       >
                         {t("datatable.Role")}{" "}
@@ -299,7 +299,7 @@ const DataTable = () => {
                           ))}
                       </th>
                       <th
-                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700"
                         onClick={() => orderBy("username")}
                       >
                         {t("datatable.Name")}{" "}
@@ -311,7 +311,7 @@ const DataTable = () => {
                           ))}
                       </th>
                       <th
-                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700"
                         onClick={() => orderBy("firstNames")}
                       >
                         {t("datatable.FirstNames")}{" "}
@@ -323,7 +323,7 @@ const DataTable = () => {
                           ))}
                       </th>
                       <th
-                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700"
                         onClick={() => orderBy("lastNames")}
                       >
                         {t("datatable.LastNames")}{" "}
@@ -335,7 +335,7 @@ const DataTable = () => {
                           ))}
                       </th>
                       <th
-                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700"
                         onClick={() => orderBy("documentNumber")}
                       >
                         {t("datatable.DocumentNumber")}{" "}
@@ -347,7 +347,7 @@ const DataTable = () => {
                           ))}
                       </th>
                       <th
-                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700"
                         onClick={() => orderBy("email")}
                       >
                         {t("datatable.Email")}{" "}
@@ -359,7 +359,7 @@ const DataTable = () => {
                           ))}
                       </th>
                       <th
-                        className="text-lg py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200"
+                        className="text-lg py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700"
                         onClick={() => orderBy("state")}
                       >
                         {t("datatable.Status")}{" "}
@@ -370,7 +370,7 @@ const DataTable = () => {
                             <CaretDownOutlined />
                           ))}
                       </th>
-                      <th className="py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
+                      <th className="py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                         {t("datatable.Actions")}
                       </th>
                     </tr>
@@ -378,28 +378,28 @@ const DataTable = () => {
                   <tbody>
                     {currentItems.map((item, index) => (
                       <tr key={item.id}>
-                        <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                        <td className="border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg text-center border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                           {item.id}
                         </td>
-                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                           {item.role}
                         </td>
-                        <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                        <td className="border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg text-center border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                           {item.username}
                         </td>
-                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                           {item.firstNames}
                         </td>
-                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                           {item.lastNames}
                         </td>
-                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                           {item.documentNumber}
                         </td>
-                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                           {item.email}
                         </td>
-                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                        <td className="text-center border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                           <div className="flex items-center justify-center">
                             {item.state ? (
                               <FaCircle
@@ -419,7 +419,7 @@ const DataTable = () => {
                             </span>
                           </div>
                         </td>
-                        <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                        <td className="border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg text-center border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                           <div className="flex flex-nowrap justify-center space-x-2">
                             {canActive &&
                               <Button

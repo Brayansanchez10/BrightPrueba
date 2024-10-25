@@ -100,7 +100,7 @@ export default function UserCourses() {
 
   return (
     <motion.div
-      className="flex flex-col min-h-screen bg-gray-100"
+      className="flex flex-col min-h-screen bg-primary"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -122,23 +122,23 @@ export default function UserCourses() {
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <span className="mr-2">{t("coursesComponent.your")}</span>
-                  <span className="text-purple-700">
+                  <span className="text-primary mr-2">{t("coursesComponent.your")}</span>
+                  <span className="text-purple-700 dark:text-secondary">
                     {t("coursesComponent.courses")}
                   </span>
                 </motion.h1>
               </div>
               <div className="w-full md:w-auto mt-4 sm:mt-0">
                 <motion.div
-                  className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md"
+                  className="flex px-4 py-2 border bg-secondary border-gray-300 dark:border-purple-900 rounded-xl shadow-md"
                   initial={{ scale: 0.9 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
-                  <FaSearch size={"18px"} className="mt-1 mr-2" />
+                  <FaSearch size={"18px"} className="text-primary mt-1 mr-2" />
                   <input
                     type="search"
-                    className="outline-none w-full md:w-[280px] lg:w-[360px] xl:w-[420px]"
+                    className="bg-secondary dark:text-primary outline-none w-full md:w-[280px] lg:w-[360px] xl:w-[420px]"
                     placeholder={t("coursesComponent.search_placeholder")}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -156,7 +156,7 @@ export default function UserCourses() {
                 {paginatedCourses.map((course, index) => (
                   <motion.div
                     key={course.id}
-                    className="bg-white sm:p-5 min-h-[320px] rounded-2xl shadow-lg shadow-gray-400 border cursor-pointer transform hover:scale-105 transition-transform relative"
+                    className="bg-secondary sm:p-5 min-h-[320px] rounded-2xl shadow-lg shadow-gray-400 dark:shadow-purple-900 cursor-pointer transform hover:scale-105 transition-transform relative"
                     onClick={() => handleCourseClick(course.id)}
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -179,7 +179,7 @@ export default function UserCourses() {
                         />
                       </div>
                       <div className="flex-grow p-5">
-                        <h3 className="text-xl sm:text-3xl font-bold text-gray-800 mb-2 sm:mb-4 -mt-3 break-words">
+                        <h3 className="text-xl sm:text-3xl font-bold text-primary mb-2 sm:mb-4 -mt-3 break-words">
                           {course.title}
                         </h3>
                         <p className="text-[12px] sm:text-base text-gray-400 font-semibold -mb-12">
@@ -199,11 +199,11 @@ export default function UserCourses() {
                         ></motion.div>
                       </div>
                       <div className="flex mt-2">
-                        <FaFlagCheckered className="text-gray-400 mt-1" />
-                        <p className="text-gray-400 font-semibold ml-2 mr-1">
+                        <FaFlagCheckered className="text-gray-400 dark:text-primary mt-1" />
+                        <p className="text-gray-400 dark:text-primary font-semibold ml-2 mr-1">
                           {"Progreso:"}
                         </p>
-                        <p className="text-green-600 font-semibold">{`${
+                        <p className="text-green-600 dark:text-green-500 font-semibold">{`${
                           courseProgress[course.id] || 0
                         }%`}</p>
                       </div>

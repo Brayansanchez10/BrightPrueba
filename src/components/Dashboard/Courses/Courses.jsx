@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Button, message } from "antd";
 import {
-    ReloadOutlined,
-    InfoCircleOutlined,
-    DeleteOutlined,
-    FileAddOutlined,
-    BellOutlined,
-    QrcodeOutlined,
+  ReloadOutlined,
+  InfoCircleOutlined,
+  DeleteOutlined,
+  FileAddOutlined,
+  BellOutlined,
+  QrcodeOutlined,
 } from "@ant-design/icons";
 import LeftBar from "../../Dashboard/LeftBar";
 import { useUserContext } from "../../../context/user/user.context";
@@ -27,45 +27,45 @@ import { useAuth } from "../../../context/auth.context";
 import { usePermissionContext } from "../../../context/user/permissions.context";
 
 const DataTablete = () => {
-    const { t } = useTranslation("global");
-    const { getUsers, usersData, getUserById } = useUserContext();
-    const {
-        getAllCourses,
-        courses,
-        deleteCourse,
-        updateCourse,
-        crearRecurso,
-        createCourse,
-    } = useCoursesContext();
-    const [searchValue, setSearchValue] = useState("");
-    const [showCreateForm, setShowCreateForm] = useState(false);
-    const [showUpdateForm, setShowUpdateForm] = useState(false);
-    const [selectedCourse, setSelectedCourse] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(0);
-    const [totalPages, setTotalPages] = useState(1);
-    const [totalItems, setTotalItems] = useState(0);
-    const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
-    const [courseToDelete, setCourseToDelete] = useState(null);
-    const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
-    const [selectedCourseDetails, setSelectedCourseDetails] = useState(null);
-    const [isNotifyModalVisible, setIsNotifyModalVisible] = useState(false);
-    const [resourceFile, setResourceFile] = useState(null);
-    const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
-    const [selectedCourseId, setSelectedCourseId] = useState(null);
-    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-    const [dataFlag, setDataFlag] = useState(false);
-    const [subCategoryForm, setSubCategoryForm] = useState(false);
+  const { t } = useTranslation("global");
+  const { getUsers, usersData, getUserById } = useUserContext();
+  const {
+    getAllCourses,
+    courses,
+    deleteCourse,
+    updateCourse,
+    crearRecurso,
+    createCourse,
+  } = useCoursesContext();
+  const [searchValue, setSearchValue] = useState("");
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState(null);
+  const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
+  const [selectedCourseDetails, setSelectedCourseDetails] = useState(null);
+  const [isNotifyModalVisible, setIsNotifyModalVisible] = useState(false);
+  const [resourceFile, setResourceFile] = useState(null);
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [dataFlag, setDataFlag] = useState(false);
+  const [subCategoryForm, setSubCategoryForm] = useState(false);
 
     const { user } = useAuth();
     const [username, setUsername] = useState("");
     const { permissionsData, rolePermissions, loading, error, getPermissionsByRole } = usePermissionContext();
     const [ permisosByRol, setPermisosByRol ] = useState("");
 
-    useEffect(() => {
-        getUsers();
-        getAllCourses();
-    }, []);
+  useEffect(() => {
+    getUsers();
+    getAllCourses();
+  }, []);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -92,193 +92,180 @@ const DataTablete = () => {
     }, [user]);
     
 
-    useEffect(() => {
-        const filteredCourses = courses.filter(
-            (course) =>
-                course.title
-                    .toLowerCase()
-                    .includes(searchValue.toLowerCase()) ||
-                course.category
-                    .toLowerCase()
-                    .includes(searchValue.toLowerCase()) ||
-                course.description
-                    .toLowerCase()
-                    .includes(searchValue.toLowerCase())
-        );
-
-        setTotalItems(filteredCourses.length);
-        setTotalPages(Math.ceil(filteredCourses.length / itemsPerPage));
-    }, [courses, searchValue, itemsPerPage]);
-
-    useEffect(() => {
-        const handleResize = () => {
-            const width = window.innerWidth;
-            if (width < 600) {
-                setItemsPerPage(6);
-            } else if (width < 1024) {
-                setItemsPerPage(8);
-            } else {
-                setItemsPerPage(10);
-            }
-        };
-
-        window.addEventListener("resize", handleResize);
-        handleResize();
-
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, [dataFlag]);
-
-    const handleCreateCourseClick = () => setShowCreateForm(true);
-    const handleCreateFormClose = () => setShowCreateForm(false);
-    const handleUpdateButtonClick = (course) => {
-        setSelectedCourse(course);
-        setShowUpdateForm(true);
-    };
-    const handleUpdateFormClose = () => {
-        setShowUpdateForm(false);
-        setSelectedCourse(null);
-    };
-
-    const handleUpdateCourse = async (updatedCourse) => {
-        if (dataFlag) return;
-        setDataFlag(true);
-        try {
-            await updateCourse(updatedCourse);
-            message.success(t("courses.updateSuccess"));
-        } catch (error) {
-            message.error(t("courses.updateError"));
-        } finally {
-            setDataFlag(false);
-            setShowUpdateForm(false);
-            setSelectedCourse(null);
-        }
-    };
-
-    const handleCreateResourceClick = (course) => {
-        setSelectedCourse(course);
-        setSelectedCourseId(course.id);
-        setIsCreateModalVisible(true);
-    };
-
-    const handleCreateResource = async () => {
-        if (dataFlag) return;
-        setDataFlag(true);
-        if (selectedCourse && selectedCourse.id) {
-            const courseId = selectedCourse.id;
-            try {
-                await crearRecurso(courseId);
-                setIsCreateModalVisible(false);
-            } catch (error) {
-                console.error("Error al crear recurso:", error);
-            } finally {
-                setDataFlag(false);
-            }
-        } else {
-            message.error(t("courses.noCourseSelected"));
-        }
-    };
-
-    const handleCreateCourse = async (course) => {
-        try {
-            await createCourse(course);
-            setShowCreateForm(false);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setDataFlag(false);
-            getAllCourses();
-        }
-    };
-
-    const handleDeleteButtonClick = (course) => {
-        setCourseToDelete(course);
-        setIsDeleteModalVisible(true);
-    };
-
-    const handleDeleteConfirm = async () => {
-        if (dataFlag) return;
-        setDataFlag(true);
-        try {
-            await deleteCourse(courseToDelete.id);
-            message.success(t("courses.deleteSuccess"));
-            window.location.reload();
-        } catch (error) {
-            message.error(t("courses.deleteError"));
-        } finally {
-            setDataFlag(false);
-            setIsDeleteModalVisible(false);
-            setCourseToDelete(null);
-        }
-    };
-
-    const handleDetailsButtonClick = (course) => {
-        setSelectedCourseDetails(course);
-        setIsDetailsModalVisible(true);
-    };
-
-    const handleNotifyButtonClick = (course) => {
-        setSelectedCourse(course);
-        setIsNotifyModalVisible(true);
-    };
-
-    const handleSubCategoryButtonClick = (course) => {
-        setSelectedCourse(course);
-        setSelectedCourseId(course.id);
-        setSubCategoryForm(true);
-    };
-
-    const handleSendNotification = async (recipients) => {
-        try {
-            if (!selectedCourse || !selectedCourse.id) {
-                throw new Error("Course ID is not defined");
-            }
-            const response = await axios.post(
-                `https://apibrightmind.mesadoko.com/PE/courses/${selectedCourse.id}/notify-specific`,
-                { recipients: recipients }
-            );
-            if (
-                response.data.message ===
-                "Course notification emails sent successfully"
-            ) {
-                message.success(t("courses.notificationSent"));
-            } else {
-                throw new Error("Unexpected response");
-            }
-        } catch (error) {
-            console.error("Error sending notification:", error);
-            message.error(t("courses.notificationError"));
-        }
-    };
-
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-    const generateIds = () => {
-        const filteredCourses = courses.filter(
-            (course) =>
-                course.title
-                    .toLowerCase()
-                    .includes(searchValue.toLowerCase()) ||
-                course.category
-                    .toLowerCase()
-                    .includes(searchValue.toLowerCase()) ||
-                course.description
-                    .toLowerCase()
-                    .includes(searchValue.toLowerCase())
-        );
-
-        return filteredCourses
-            .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-            .map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
-    };
-
+  useEffect(() => {
     const filteredCourses = courses.filter(
-        (course) =>
-            course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-            course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
-            course.description.toLowerCase().includes(searchValue.toLowerCase())
+      (course) =>
+        course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+        course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
+        course.description.toLowerCase().includes(searchValue.toLowerCase())
     );
+
+    setTotalItems(filteredCourses.length);
+    setTotalPages(Math.ceil(filteredCourses.length / itemsPerPage));
+  }, [courses, searchValue, itemsPerPage]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 600) {
+        setItemsPerPage(6);
+      } else if (width < 1024) {
+        setItemsPerPage(8);
+      } else {
+        setItemsPerPage(10);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [dataFlag]);
+
+  const handleCreateCourseClick = () => setShowCreateForm(true);
+  const handleCreateFormClose = () => setShowCreateForm(false);
+  const handleUpdateButtonClick = (course) => {
+    setSelectedCourse(course);
+    setShowUpdateForm(true);
+  };
+  const handleUpdateFormClose = () => {
+    setShowUpdateForm(false);
+    setSelectedCourse(null);
+  };
+
+  const handleUpdateCourse = async (updatedCourse) => {
+    if (dataFlag) return;
+    setDataFlag(true);
+    try {
+      await updateCourse(updatedCourse);
+      message.success(t("courses.updateSuccess"));
+    } catch (error) {
+      message.error(t("courses.updateError"));
+    } finally {
+      setDataFlag(false);
+      setShowUpdateForm(false);
+      setSelectedCourse(null);
+    }
+  };
+
+  const handleCreateResourceClick = (course) => {
+    setSelectedCourse(course);
+    setSelectedCourseId(course.id);
+    setIsCreateModalVisible(true);
+  };
+
+  const handleCreateResource = async () => {
+    if (dataFlag) return;
+    setDataFlag(true);
+    if (selectedCourse && selectedCourse.id) {
+      const courseId = selectedCourse.id;
+      try {
+        await crearRecurso(courseId);
+        setIsCreateModalVisible(false);
+      } catch (error) {
+        console.error("Error al crear recurso:", error);
+      } finally {
+        setDataFlag(false);
+      }
+    } else {
+      message.error(t("courses.noCourseSelected"));
+    }
+  };
+
+  const handleCreateCourse = async (course) => {
+    try {
+      await createCourse(course);
+      setShowCreateForm(false);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setDataFlag(false);
+      getAllCourses();
+    }
+  };
+
+  const handleDeleteButtonClick = (course) => {
+    setCourseToDelete(course);
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (dataFlag) return;
+    setDataFlag(true);
+    try {
+      await deleteCourse(courseToDelete.id);
+      message.success(t("courses.deleteSuccess"));
+      window.location.reload();
+    } catch (error) {
+      message.error(t("courses.deleteError"));
+    } finally {
+      setDataFlag(false);
+      setIsDeleteModalVisible(false);
+      setCourseToDelete(null);
+    }
+  };
+
+  const handleDetailsButtonClick = (course) => {
+    setSelectedCourseDetails(course);
+    setIsDetailsModalVisible(true);
+  };
+
+  const handleNotifyButtonClick = (course) => {
+    setSelectedCourse(course);
+    setIsNotifyModalVisible(true);
+  };
+
+  const handleSubCategoryButtonClick = (course) => {
+    setSelectedCourse(course);
+    setSelectedCourseId(course.id);
+    setSubCategoryForm(true);
+  };
+
+  const handleSendNotification = async (recipients) => {
+    try {
+      if (!selectedCourse || !selectedCourse.id) {
+        throw new Error("Course ID is not defined");
+      }
+      const response = await axios.post(
+        `https://apibrightmind.mesadoko.com/PE/courses/${selectedCourse.id}/notify-specific`,
+        { recipients: recipients }
+      );
+      if (
+        response.data.message === "Course notification emails sent successfully"
+      ) {
+        message.success(t("courses.notificationSent"));
+      } else {
+        throw new Error("Unexpected response");
+      }
+    } catch (error) {
+      console.error("Error sending notification:", error);
+      message.error(t("courses.notificationError"));
+    }
+  };
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const generateIds = () => {
+    const filteredCourses = courses.filter(
+      (course) =>
+        course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+        course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
+        course.description.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
+    return filteredCourses
+      .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+      .map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
+  };
+
+  const filteredCourses = courses.filter(
+    (course) =>
+      course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+      course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
+      course.description.toLowerCase().includes(searchValue.toLowerCase())
+  );
 
     if (loading) return <p>Cargando permisos del rol...</p>;
     if (error) return <p>{error}</p>;
@@ -293,7 +280,7 @@ const DataTablete = () => {
     const canDelete = rolePermissions.some(perm => perm.nombre === "Eliminar curso");
 
     return (
-        <div className="bg-gray-200 overflow-hidden min-h-screen">
+        <div className="bg-primary overflow-hidden min-h-screen">
             <div className="flex h-full">
                 <LeftBar onVisibilityChange={setIsLeftBarVisible} />
                 <div
@@ -305,7 +292,7 @@ const DataTablete = () => {
                     <div className="flex flex-col mt-14">
                         <div className="px-4 md:px-12">
                             <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-2">
-                                <h2 className="text-3xl text-purple-900 font-bungee mb-4 md:mb-0">
+                                <h2 className="text-3xl text-purple-900 dark:text-secondary font-bungee mb-4 md:mb-0">
                                     {t("courses.title")}
                                 </h2>
                                 <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
@@ -320,51 +307,47 @@ const DataTablete = () => {
                                         </Button>
                                     }
                                     
-                                    <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
+                                    <div className="flex w-full md:w-auto px-4 py-2 border bg-secondary border-gray-300 dark:border-purple-900 rounded-xl shadow-lg order-1 md:order-2">
                                         <FaSearch
                                             size={"18px"}
-                                            className="mt-1 mr-2"
+                                            className="text-primary mt-1 mr-2"
                                         />
                                         <input
-                                            type="search"
-                                            className="outline-none w-full md:w-[280px] lg:w-[360px]"
-                                            placeholder={t(
-                                                "datatable.SearchByName"
-                                            )}
-                                            value={searchValue}
-                                            onChange={(e) =>
-                                                setSearchValue(e.target.value)
-                                            }
+                                          type="search"
+                                          className="bg-secondary text-primary outline-none w-full md:w-[280px] lg:w-[360px]"
+                                          placeholder={t("datatable.SearchByName")}
+                                          value={searchValue}
+                                          onChange={(e) => setSearchValue(e.target.value)}
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="flex justify-center mt-4 md:mt-2">
-                            <div className="overflow-auto w-full px-4 md:px-6 mx-4 md:mx-12 py-6 bg-white rounded-xl shadow-lg shadow-purple-300">
+                            <div className="overflow-auto w-full px-4 md:px-6 mx-4 md:mx-12 py-6 bg-secondary rounded-xl shadow-lg shadow-purple-300 dark:shadow-purple-800">
                                 <table className="min-w-full overflow-x-auto">
-                                    <thead>
-                                        <tr>
-                                            <th className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
-                                                {t("courses.id")}
-                                            </th>
-                                            <th className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
-                                                {t("courses.category")}
-                                            </th>
-                                            <th className="text-lg px-3 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
-                                                {t("courses.name")}
-                                            </th>
-                                            <th className="text-lg px-20 w-[400px] py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
-                                                {t("courses.description")}
-                                            </th>
-                                            <th className="text-lg px-2 py-3 bg-white border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
-                                                {t("courses.userCount")}
-                                            </th>
-                                            <th className="px-4 py-3 bg-white text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200">
-                                                {t("courses.actions")}
-                                            </th>
-                                        </tr>
-                                    </thead>
+                                  <thead>
+                                    <tr>
+                                      <th className="text-lg px-3 py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
+                                        {t("courses.id")}
+                                      </th>
+                                      <th className="text-lg px-3 py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
+                                        {t("courses.category")}
+                                      </th>
+                                      <th className="text-lg px-3 py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
+                                        {t("courses.name")}
+                                      </th>
+                                      <th className="text-lg px-20 w-[400px] py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
+                                        {t("courses.description")}
+                                      </th>
+                                      <th className="text-lg px-2 py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
+                                        {t("courses.userCount")}
+                                      </th>
+                                      <th className="px-4 py-3 bg-secondary text-primary border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
+                                        {t("courses.actions")}
+                                      </th>
+                                    </tr>
+                                  </thead>
                                     <tbody>
                                         {filteredCourses
                                             .slice(
@@ -374,22 +357,22 @@ const DataTablete = () => {
                                             )
                                             .map((course, index) => (
                                                 <tr key={course.id}>
-                                                    <td className="border-2 border-x-transparent px-1 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                                                    <td className="border-2 border-x-transparent px-1 py-2 bg-secondary text-primary text-center border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                                                         {generateIds()[index]}
                                                     </td>
-                                                    <td className="text-center border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black border-t-transparent border-b-cyan-200">
+                                                    <td className="text-center border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                                                         {course.category}
                                                     </td>
-                                                    <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                                                    <td className="border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg text-center border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                                                         {course.title}
                                                     </td>
-                                                    <td className="border-2 border-x-transparent px-4 py-2 bg-white text-lg text-black text-center max-w-2xl break-words whitespace-normal border-t-transparent border-b-cyan-200">
+                                                    <td className="border-2 border-x-transparent px-4 py-2 bg-secondary text-primary text-lg text-center max-w-2xl break-words whitespace-normal border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                                                         {course.description}
                                                     </td>
-                                                    <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                                                    <td className="border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg text-center border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                                                         {course.enrolledCount}
                                                     </td>
-                                                    <td className="border-2 border-x-transparent px-6 py-2 bg-white text-lg text-black text-center border-t-transparent border-b-cyan-200">
+                                                    <td className="border-2 border-x-transparent px-6 py-2 bg-secondary text-primary text-lg text-center border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                                                         <div className="flex justify-center space-x-4">
                                                             
                                                             {canSection &&
@@ -555,57 +538,57 @@ const DataTablete = () => {
                         </div>
                     </div>
 
-                    <CreateCourseForm
-                        visible={showCreateForm}
-                        onClose={handleCreateFormClose}
-                        onCreate={handleCreateCourse}
-                    />
+          <CreateCourseForm
+            visible={showCreateForm}
+            onClose={handleCreateFormClose}
+            onCreate={handleCreateCourse}
+          />
 
-                    <UpdateCourseForm
-                        visible={showUpdateForm}
-                        onClose={handleUpdateFormClose}
-                        onUpdate={handleUpdateCourse}
-                        courseId={selectedCourse ? selectedCourse.id : null}
-                    />
+          <UpdateCourseForm
+            visible={showUpdateForm}
+            onClose={handleUpdateFormClose}
+            onUpdate={handleUpdateCourse}
+            courseId={selectedCourse ? selectedCourse.id : null}
+          />
 
-                    <CreateResourceModal
-                        isVisible={isCreateModalVisible}
-                        onCancel={() => setIsCreateModalVisible(false)}
-                        courseId={selectedCourse?.id}
-                        onCreate={handleCreateResource}
-                        resourceFile={resourceFile}
-                        onFileChange={(e) => setResourceFile(e.target.files[0])}
-                    />
+          <CreateResourceModal
+            isVisible={isCreateModalVisible}
+            onCancel={() => setIsCreateModalVisible(false)}
+            courseId={selectedCourse?.id}
+            onCreate={handleCreateResource}
+            resourceFile={resourceFile}
+            onFileChange={(e) => setResourceFile(e.target.files[0])}
+          />
 
-                    <CreateSubCategoryForm
-                        isVisible={subCategoryForm}
-                        onCancel={() => setSubCategoryForm(false)}
-                        courseId={selectedCourseId}
-                    />
+          <CreateSubCategoryForm
+            isVisible={subCategoryForm}
+            onCancel={() => setSubCategoryForm(false)}
+            courseId={selectedCourseId}
+          />
 
-                    <DeleteConfirmationModal
-                        visible={isDeleteModalVisible}
-                        onClose={() => setIsDeleteModalVisible(false)}
-                        onConfirm={handleDeleteConfirm}
-                        courseName={courseToDelete?.title}
-                    />
+          <DeleteConfirmationModal
+            visible={isDeleteModalVisible}
+            onClose={() => setIsDeleteModalVisible(false)}
+            onConfirm={handleDeleteConfirm}
+            courseName={courseToDelete?.title}
+          />
 
-                    <CourseDetailsModal
-                        visible={isDetailsModalVisible}
-                        onClose={() => setIsDetailsModalVisible(false)}
-                        course={selectedCourseDetails}
-                    />
+          <CourseDetailsModal
+            visible={isDetailsModalVisible}
+            onClose={() => setIsDetailsModalVisible(false)}
+            course={selectedCourseDetails}
+          />
 
-                    <NotifyCourseModal
-                        visible={isNotifyModalVisible}
-                        onClose={() => setIsNotifyModalVisible(false)}
-                        courseId={selectedCourse?.id}
-                        onSendEmail={handleSendNotification}
-                    />
-                </div>
-            </div>
+          <NotifyCourseModal
+            visible={isNotifyModalVisible}
+            onClose={() => setIsNotifyModalVisible(false)}
+            courseId={selectedCourse?.id}
+            onSendEmail={handleSendNotification}
+          />
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default DataTablete;

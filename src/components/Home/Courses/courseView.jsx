@@ -173,7 +173,7 @@ export default function CourseView() {
 
   return (
     <motion.div 
-      className="bg-gray-100 min-h-screen flex flex-col"
+      className="bg-primary min-h-screen flex flex-col"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -269,14 +269,14 @@ export default function CourseView() {
                 className="md:col-span-2"
                 variants={fadeInUp}
               >
-                <h2 className="text-3xl font-bold text-gray-800 mb-8">
+                <h2 className="text-3xl font-bold text-gray-800 dark:text-primary mb-8">
                   {t("course_user.themes")}
                 </h2>
 
                 {subCategory.length > 0 ? (
                   <Collapse
                     accordion
-                    className="bg-white shadow-lg rounded-lg overflow-hidden"
+                    className="bg-secondary border-none shadow-lg rounded-lg overflow-hidden"
                     expandIconPosition="right"
                   >
                     {subCategory.map((subcategory, index) => {
@@ -291,10 +291,10 @@ export default function CourseView() {
                               className="flex items-center py-3"
                               whileHover={{ x: 5 }}
                             >
-                              <div className="w-8 h-8 bg-purple-800 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                              <div className="w-8 h-8 bg-purple-800 dark:bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
                                 {index + 1}
                               </div>
-                              <span className="text-lg font-medium">
+                              <span className="text-lg font-medium text-primary">
                                 {subcategory.title}
                               </span>
                             </motion.div>
@@ -304,7 +304,7 @@ export default function CourseView() {
                           {filteredResources.length > 0 ? (
                             <Collapse
                               accordion
-                              className="bg-white shadow-lg rounded-lg overflow-hidden"
+                              className="bg-secondary border-none shadow-lg rounded-lg overflow-hidden"
                               expandIconPosition="right"
                             >
                               {filteredResources.map((resource, index) => (
@@ -317,7 +317,7 @@ export default function CourseView() {
                                       <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
                                         {index + 1}
                                       </div>
-                                      <span className="text-lg font-medium">
+                                      <span className="text-lg font-medium text-primary">
                                         {resource.title}
                                       </span>
                                     </motion.div>
@@ -325,12 +325,12 @@ export default function CourseView() {
                                   key={resource.id}
                                 >
                                   <motion.div 
-                                    className="p-4"
+                                    className="p-4 bg-secondary"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ duration: 0.3 }}
                                   >
-                                    <p className="text-gray-600 mb-4">
+                                    <p className="text-gray-600 dark:text-primary mb-2">
                                       {resource.description}
                                     </p>
                                   </motion.div>
@@ -339,7 +339,7 @@ export default function CourseView() {
                             </Collapse>
                           ) : (
                             <motion.p 
-                              className="p-4 text-gray-600"
+                              className="p-4 text-gray-600 dark:text-primary"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ duration: 0.3 }}
@@ -367,11 +367,11 @@ export default function CourseView() {
               </motion.div>
 
               <motion.div variants={fadeInUp}>
-                <h2 className="text-3xl font-bold text-gray-800 mb-8">
+                <h2 className="text-3xl font-bold text-gray-800 dark:text-primary mb-8">
                   {t("course_user.aboutCreator")}
                 </h2>
                 <motion.div 
-                  className="bg-white shadow-lg rounded-lg overflow-hidden sticky top-24"
+                  className="bg-secondary shadow-lg rounded-lg overflow-hidden sticky top-24"
                   whileHover={{ y: -5 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
@@ -392,10 +392,10 @@ export default function CourseView() {
                         transition={{ type: "spring", stiffness: 300 }}
                       />
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-800">
+                        <h3 className="text-xl font-semibold text-gray-800 dark:text-primary">
                           {creator ? creator.username : t("Loading")}
                         </h3>
-                        <div className="flex items-center text-gray-500 mt-1">
+                        <div className="flex items-center text-gray-500 dark:text-primary mt-1">
                           <FaGraduationCap className="mr-2" />
                           <span>
                             {t("course_user.expert")} {course.title}
@@ -410,7 +410,7 @@ export default function CourseView() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.5 }}
-                        className="text-gray-600 mb-4"
+                        className="text-gray-600 dark:text-primary mb-4"
                       >
                         <strong>
                           {creator ? creator.username : t("Loading")}
@@ -424,10 +424,10 @@ export default function CourseView() {
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                      <h5 className="text-md font-semibold text-gray-800 mb-2">
+                      <h5 className="text-md font-semibold text-gray-800 dark:text-primary mb-2">
                         {t("course_user.specialties")}
                       </h5>
-                      <ul className="list-disc list-inside text-gray-600">
+                      <ul className="list-disc list-inside text-gray-600 dark:text-primary">
                         <motion.li whileHover={{ x: 5 }}>{t("course_user.web")}</motion.li>
                         <motion.li whileHover={{ x: 5 }}>{t("course_user.desing")}</motion.li>
                         <motion.li whileHover={{ x: 5 }}>{t("course_user.programming")}</motion.li>

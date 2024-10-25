@@ -202,16 +202,16 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
           {i18n.language === "es" ? "×" : "×"}
         </button>
       </div>
-      <form onSubmit={handleSubmit} className="px-5 py-6">
+      <form onSubmit={handleSubmit} className="bg-secondary px-5 py-6">
         <h1
-          className={`text-center text-[#350b48] text-3xl font-bungee font-extrabold mt-1 mb-5 ${
+          className={`text-center text-[#350b48] dark:text-primary text-3xl font-bungee font-extrabold mt-1 mb-5 ${
             i18n.language === "es" ? "text-shadow-md-es" : "text-shadow-md-en"
           }`}
         >
           {i18n.language === "es" ? "ACTUALIZAR CURSO" : "UPDATE COURSE"}
         </h1>
 
-        <label className="block text-lg font-bold text-black mb-2">
+        <label className="block text-lg font-bold text-primary mb-2">
           {i18n.language === "es" ? "Título del curso:" : "Course Title:"}
         </label>
         <input
@@ -226,7 +226,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
           <p className="text-red-500 text-sm mb-4">{errorMessage.name}</p>
         )}
 
-        <label className="block text-lg font-bold text-black mb-2">
+        <label className="block text-lg font-bold text-primary mb-2">
           {i18n.language === "es" ? "Categoría del curso:" : "Course Category:"}
         </label>
         <Select
@@ -244,7 +244,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
           <p className="text-red-500 text-sm mb-4">{errorMessage.category}</p>
         )}
 
-        <label className="block text-lg font-bold text-black mb-2">
+        <label className="block text-lg font-bold text-primary mb-2">
           {i18n.language === "es"
             ? "Descripción del curso:"
             : "Course Description:"}
@@ -256,7 +256,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
           onChange={handleChange}
           maxLength={150}
         />
-        <div className="text-gray-500 text-sm mb-4">{`${course.description.length}/150`}</div>
+        <div className="text-gray-500 dark:text-gray-300 text-sm mb-4">{`${course.description.length}/150`}</div>
         {errorMessage.description && (
           <p className="text-red-500 text-sm mb-4">
             {errorMessage.description}
@@ -264,7 +264,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
         )}
 
         <div className="flex flex-col items-start mb-6">
-          <label className="block text-lg font-bold text-black mb-2">
+          <label className="block text-lg font-bold text-primary mb-2">
             {i18n.language === "es" ? "Imagen del curso:" : "Course Image:"}
           </label>
           <input

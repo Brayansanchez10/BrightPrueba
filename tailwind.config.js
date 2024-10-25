@@ -12,6 +12,7 @@ module.exports = {
       fontFamily: {
         bungee: ['Bungee', 'sans-serif'],
         satisfy: ['Satisfy', 'sans-serif'],
+        merienda: ['Merienda', 'cursive'],
       },
       screens: {
         'h720': {'raw': '(min-height: 720px)'},

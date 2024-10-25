@@ -140,11 +140,11 @@ function RegisterForm() {
               <p>{t("register.future")}</p>
           </div>
           <div className="bg-white rounded-3xl w-[85%] px-10 py-4 shadow-lg shadow-slate-500 border">
-            <div className="text-2xl w-full mx-auto text-center font-black bg-gradient-to-r from-emerald-400  to-purple-800 bg-clip-text text-transparent font-impact mb-3">
+            <div className="text-2xl w-full mx-auto text-center font-black bg-gradient-to-r from-emerald-400  to-purple-800 bg-clip-text text-transparent font-impact mb-2 -mt-1.5">
                 <p>{t("register.register")}</p>
             </div>
             <img
-              className="h-10 w-15 mx-auto"
+              className="h-8 w-15 mx-auto"
               src={imagen}
               alt="book"
             />
