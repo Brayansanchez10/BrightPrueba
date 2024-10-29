@@ -11,7 +11,7 @@ import "../css/Custom.css";
 
 // Importaciones de Funcionalidades
 import QuizComponent from "./updateFuntions/QuizComponent.jsx";
-import {validateFields, validateQuizzes, ALLOWED_FILE_TYPES} from "./updateFuntions/validation.js";
+import {validateFields, validateQuizzes, ALLOWED_FILE_TYPES} from "./components/resourceUtils.js";
 
 const UpdateResourceForm = ({ isVisible, onCancel, resourceData, onUpdate, courseId,
 }) => {
