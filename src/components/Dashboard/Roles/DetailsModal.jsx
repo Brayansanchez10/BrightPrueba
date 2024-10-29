@@ -3,8 +3,27 @@ import { Modal } from "antd";
 import zorroImage from "../../../assets/img/Zorro.png";
 import { useTranslation } from "react-i18next";
 
-const DetailsModal = ({ visible, onClose, selectedRole }) => {
+const DetailsModal = ({
+  visible,
+  onClose,
+  selectedRole,
+  permissionsData,
+  selectedRoleId,
+  selectedPermissionsMap,
+}) => {
   const { t } = useTranslation("global");
+
+  const groupedPermissions = permissionsData?.info.reduce(
+    (groups, permission) => {
+      const category = permission.nombre.split(" ")[0]; // Toma el primer término (Crear, Editar, Eliminar, Activar)
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+      groups[category].push(permission);
+      return groups;
+    },
+    {}
+  );
 
   return (
     <Modal
@@ -56,20 +75,24 @@ const DetailsModal = ({ visible, onClose, selectedRole }) => {
                   {selectedRole.nombre}
                 </span>
               </p>
-              <div className="col-span-2">
-                <strong className="font-bold text-xl text-black">
-                  {t("roles.permissions")}:
-                </strong>
-                <br />
-                <span className="text-base text-black-600 font-medium">
-                  {selectedRole &&
-                    selectedRole.permisos &&
-                    selectedRole.permisos.map((permiso) => (
-                      <li className="text-sm ml-10" key={permiso}>
-                        <span className="text-black text-lg">-</span> {permiso}
-                      </li>
-                    ))}
-                </span>
+              {/* Permisos agrupados en columnas */}
+              <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                {Object.keys(groupedPermissions).map((category) => (
+                  <div key={category}>
+                    <h2 className="text-xl font-semibold text-[#350B48] mb-2">{category}</h2>
+                    <div className="space-y-2">
+                      {groupedPermissions[category]
+                        .filter((permission) =>
+                          selectedRole.permisos.includes(permission.nombre.trim()) // Usa trim() para evitar problemas con espacios
+                        )
+                        .map((permission) => (
+                          <p key={permission.id} className="text-gray-800 ml-4">
+                            {permission.nombre}
+                          </p>
+                        ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}

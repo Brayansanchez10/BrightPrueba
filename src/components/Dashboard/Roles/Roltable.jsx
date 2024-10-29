@@ -442,6 +442,9 @@ const DataTable = () => {
         visible={showDetailsModal}
         onClose={handleModalClose}
         selectedRole={selectedRole}
+        permissionsData={permissionsData}
+        selectedRoleId={selectedRoleId}
+        selectedPermissionsMap={selectedPermissionsMap}
       />
       <AssignPermissionsModal
         visible={showAssignModal}
