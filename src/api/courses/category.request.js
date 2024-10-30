@@ -8,6 +8,7 @@ export const createCategory = (categoryData) => {
   formData.append('name', categoryData.name);
   formData.append('description', categoryData.description);
   formData.append('image', categoryData.image); // Asegúrate de que la imagen se agregue al FormData con el nombre 'image'
+  formData.append('entityId', categoryData.entityId);
 
   // Realiza la solicitud POST utilizando la instancia de axios
   return axios.post(`/category/createCategory`, formData, {

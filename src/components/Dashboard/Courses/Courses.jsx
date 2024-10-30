@@ -56,11 +56,12 @@ const DataTablete = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [dataFlag, setDataFlag] = useState(false);
   const [subCategoryForm, setSubCategoryForm] = useState(false);
+  const [entityId, setEntityId] = useState(null);
 
-    const { user } = useAuth();
-    const [username, setUsername] = useState("");
-    const { permissionsData, rolePermissions, loading, error, getPermissionsByRole } = usePermissionContext();
-    const [ permisosByRol, setPermisosByRol ] = useState("");
+  const { user } = useAuth();
+  const [username, setUsername] = useState("");
+  const { permissionsData, rolePermissions, loading, error, getPermissionsByRole } = usePermissionContext();
+  const [ permisosByRol, setPermisosByRol ] = useState("");
 
   useEffect(() => {
     getUsers();
@@ -74,6 +75,9 @@ const DataTablete = () => {
                     // Obtener datos del usuario
                     const userData = await getUserById(user.data.id);
                     setUsername(userData.username); // Guarda el nombre de usuario (u otra información)
+
+                    // Guarda el entityId del usuario
+                    setEntityId(userData.entityId); // Asegúrate de tener este estado definido
                     
                     // Si el usuario tiene un roleId, obtener los permisos
                     if (userData.roleId) {
@@ -248,23 +252,37 @@ const DataTablete = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const generateIds = () => {
-    const filteredCourses = courses.filter(
-      (course) =>
-        course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-        course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
-        course.description.toLowerCase().includes(searchValue.toLowerCase())
+    // Filtrado inicial por el valor de búsqueda
+    const searchFilteredCourses = courses.filter(
+        (course) =>
+            course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+            course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
+            course.description.toLowerCase().includes(searchValue.toLowerCase())
     );
 
-    return filteredCourses
-      .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-      .map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
+    // Filtrado adicional por entityId del usuario
+    const entityFilteredCourses = searchFilteredCourses.filter(
+        (course) => entityId === 1 || course.entityId === entityId // Cambia la condición según tu lógica
+    );
+
+    // Paginar los cursos filtrados
+    const paginatedCourses = entityFilteredCourses.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    // Generar los IDs para los cursos paginados
+    return paginatedCourses.map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
   };
 
+  // También actualiza la variable filteredCourses si es necesaria en tu componente
   const filteredCourses = courses.filter(
-    (course) =>
-      course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-      course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
-      course.description.toLowerCase().includes(searchValue.toLowerCase())
+      (course) =>
+          course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+          course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
+          course.description.toLowerCase().includes(searchValue.toLowerCase())
+  ).filter(
+      (course) => entityId === 1 || course.entityId === entityId // Filtrado por entityId
   );
 
     if (loading) return <p>Cargando permisos del rol...</p>;

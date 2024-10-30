@@ -48,6 +48,7 @@ const DataTablete = () => {
 
   const { user } = useAuth();
   const [username, setUsername] = useState("");
+  const [entityId, setEntityId] = useState(null);
   const { getUserById } = useUserContext();
   const { permissionsData, rolePermissions, loading, error, getPermissionsByRole } = usePermissionContext();
   const [ permisosByRol, setPermisosByRol ] = useState("");
@@ -73,6 +74,9 @@ const DataTablete = () => {
                 // Obtener datos del usuario
                 const userData = await getUserById(user.data.id);
                 setUsername(userData.username); // Guarda el nombre de usuario (u otra información)
+
+                // Guarda el entityId del usuario
+                setEntityId(userData.entityId); // Asegúrate de tener este estado definido
                 
                 // Si el usuario tiene un roleId, obtener los permisos
                 if (userData.roleId) {
@@ -261,21 +265,35 @@ const DataTablete = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const generateIds = () => {
-    const filteredCategory = categories.filter(
-      (category) =>
-        category.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-        category.description.toLowerCase().includes(searchValue.toLowerCase())
+    // Filtrado inicial por el valor de búsqueda
+    const searchFilteredCategories = categories.filter(
+        (category) =>
+            category.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+            category.description.toLowerCase().includes(searchValue.toLowerCase())
     );
 
-    return filteredCategory
-      .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-      .map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
-  };
+    // Filtrado adicional por entityId del usuario
+    const entityFilteredCategories = searchFilteredCategories.filter(
+        (category) => entityId === 1 || category.entityId === entityId // Cambia la condición según tu lógica
+    );
 
+    // Paginar las categorías filtradas
+    const paginatedCategories = entityFilteredCategories.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    // Generar los IDs para las categorías paginadas
+    return paginatedCategories.map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
+};
+
+  // También actualiza la variable filteredCategory si es necesaria en tu componente
   const filteredCategory = categories.filter(
-    (category) =>
-      category.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-      category.description.toLowerCase().includes(searchValue.toLowerCase())
+      (category) =>
+          category.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          category.description.toLowerCase().includes(searchValue.toLowerCase())
+  ).filter(
+      (category) => entityId === 1 || category.entityId === entityId // Filtrado por entityId
   );
 
   if (loading) return <p>Cargando permisos del rol...</p>;

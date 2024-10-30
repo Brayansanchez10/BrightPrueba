@@ -10,6 +10,7 @@ export const createForumCategories = async (categoriesData) => {
         const formData = new FormData();
         formData.append('name', categoriesData.name);
         formData.append('description', categoriesData.description);
+        formData.append('entityId', Number(categoriesData.entityId));
 
         //Agregar imagen si existe
         if (categoriesData.image) {
