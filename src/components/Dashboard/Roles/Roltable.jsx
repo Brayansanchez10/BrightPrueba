@@ -370,13 +370,13 @@ const DataTable = () => {
                           </td>
                           <td className="border-2 border-x-transparent px-6 py-2 bg-secondaryAdmin text-primary text-lg text-center border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
                             <div className="flex justify-center space-x-2">
-                              {canAssing &&
+                             
                                 <Button
                                   className="bg-green-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
                                   icon={<CheckCircleOutlined />}
                                   onClick={() => handleAssignPermissions(role)}
                                 />
-                              }
+                      
                               {canShow &&
                                 <Button
                                   className="bg-purple-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"

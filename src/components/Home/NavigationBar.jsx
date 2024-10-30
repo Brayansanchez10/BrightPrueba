@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FaUserCircle,
   FaUserCog,
@@ -9,7 +9,7 @@ import {
   FaHome,
   FaBook,
   FaGraduationCap,
-  FaUser,
+  FaComments,
 } from "react-icons/fa";
 import Logo from "../../assets/img/hola.png";
 import { useAuth } from "../../context/auth.context";
@@ -19,6 +19,7 @@ import "../../css/Style.css";
 import fondoInicio from "../../assets/img/fondo_inicio.png";
 import fondoCursos from "../../assets/img/fondo_cursos.png";
 import fondoMiscursos from "../../assets/img/fondo_miscursos.png";
+import fondoForo from "../../assets/img/fondo_cursos.png";
 import ThemeToggle from '../themes/ThemeToggle';
 
 export default function NavigationBar() {
@@ -30,6 +31,7 @@ export default function NavigationBar() {
   const [username, setUsername] = useState("");
   const [userImage, setUserImage] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
 
   const menuRef = useRef(null);
   const [scrollDirection, setScrollDirection] = useState("up");
@@ -144,6 +146,16 @@ export default function NavigationBar() {
     ));
   };
 
+  const handleAccountClick = () => {
+    navigate("/Account");
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleProfileClick = () => {
+    navigate(`/profile/${user.data.id}`);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <>
       <nav
@@ -183,12 +195,12 @@ export default function NavigationBar() {
             {t("navigationBar.myCourses")}
           </Link>
           {forumActive && (
-                <Link
-                    to="/Forum"
-                    className={`${getActiveClass("/Forum")} font-bold text-lg`}
-                >
-                    {t("Foro")}
-                </Link>
+            <Link
+              to="/Forum"
+              className={`${getActiveClass("/Forum")} font-bold text-lg`}
+            >
+              {t("navigationBar.forum")}
+            </Link>
           )}
         </div>
         <div className="hidden lg:flex items-center">
@@ -222,7 +234,7 @@ export default function NavigationBar() {
                   to={`/profile/${user.data.id}`}
                   className="flex items-center px-4 py-2 text-white hover:text-black hover:bg-gray-200"
                 >
-                  <FaUser className="mr-2" /> 
+                  <FaUserCircle className="mr-2" /> 
                   Ver mi perfil
                 </Link>
                 <Link
@@ -254,9 +266,9 @@ export default function NavigationBar() {
           <div className="fixed inset-0 top-16 bg-gradient-to-r from-[#783CDA] to-[#200E3E] flex flex-col items-center py-4 z-50 overflow-y-auto">
             <div className="flex flex-col items-center justify-between h-full w-full">
               <div className="flex flex-col items-center w-full flex-grow">
-                <Link
-                  to="/Account"
-                  className="p-4 py-6 flex m-auto w-[85%] bg-gradient-to-r from-[#512599] to-[#190736] rounded-xl shadow-[#8f77b6] shadow-[0_10px_20px]"
+                <div
+                  onClick={handleAccountClick}
+                  className="p-4 py-6 flex m-auto w-[85%] bg-gradient-to-r from-[#512599] to-[#190736] rounded-xl shadow-[#8f77b6] shadow-[0_10px_20px] cursor-pointer"
                 >
                   <div className="flex items-center w-full">
                     <div
@@ -281,12 +293,12 @@ export default function NavigationBar() {
                       <span className="text-white font-bungee text-2xl leading-tight">
                         {formatUsername(username)}
                       </span>
-                      <span className="text-white text-lg font-sans truncate">
+                      <span className="text-white text-lg font-sans truncate" onClick={handleProfileClick}>
                         {t("navigationBar.myAccount")}
                       </span>
                     </div>
                   </div>
-                </Link>
+                </div>
                 <div className="my-auto">
                   <div className="flex flex-col items-center w-full space-y-4 mt-4">
                     <Link
@@ -345,25 +357,35 @@ export default function NavigationBar() {
                           backgroundPosition: "center",
                         }}
                       >
-                        <FaGraduationCap className="mr-2 text-[#F9BE0A] h-6 w-6" />
+                        <FaGraduationCap className="mr-2  text-[#F9BE0A] h-6 w-6" />
                         <span className="text-2xl font-bungee">
                           {t("navigationBar.myCourses")}
                         </span>
                       </div>
                     </Link>
 
-                    <Link
-                      to={`/profile/${user.data.id}`}
-                      className="flex items-center py-2 w-full justify-center text-white text-2xl font-bold"
-                      onClick={toggleMobileMenu}
-                    >
-                      <div className="flex  items-center justify-center w-[250px] h-[90px] rounded-lg shadow-lg bg-[#512599]">
-                        <FaUser className="mr-2 text-white h-6 w-6" />
-                        <span className="text-2xl font-bungee">
-                          Ver mi perfil
-                        </span>
-                      </div>
-                    </Link>
+                    {forumActive && (
+                      <Link
+                        to="/Forum"
+                        className="flex items-center py-2 w-full justify-center text-red-500 text-2xl font-bold"
+                        onClick={toggleMobileMenu}
+                      >
+                        <div
+                          className="flex items-center justify-center w-[250px] h-[90px] rounded-lg shadow-lg"
+                          style={{
+                            backgroundImage: `url(${fondoForo})`,
+                            backgroundSize: "cover",
+                            backgroundColor: "white",
+                            backgroundPosition: "center",
+                          }}
+                        >
+                          <FaComments className="mr-2 text-red-500 h-6 w-6" />
+                          <span className="text-2xl font-bungee text-red-500">
+                          {t("navigationBar.forum")}
+                          </span>
+                        </div>
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

@@ -211,7 +211,8 @@
         "logout": "Cerrar Sesión",
         "myCourses": "Mis cursos",
         "myAccount": "Mi cuenta",
-        "configProfile": "Configurar perfil"
+        "configProfile": "Configurar perfil",
+        "forum": "Foro"
     },
     "newPasswordUser": {
         "change_password": "Cambiar Contraseña",

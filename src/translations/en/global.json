@@ -213,7 +213,8 @@
         "logout": "Log Out",
         "myCourses": "My Courses",
         "myAccount": "My account",
-        "configProfile": "Configure Profile"
+        "configProfile": "Configure Profile",
+        "forum": "Forum"
     },
     "newPasswordUser": {
         "change_password": "Change Password",
