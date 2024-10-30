@@ -83,22 +83,6 @@ const DetailsModal = ({
                   {selectedRole.nombre}
                 </span>
               </p>
-<<<<<<< HEAD
-              <div className="col-span-2">
-                <strong className="font-bold text-xl text-black mb-2 block">
-                  {t("roles.permissions")}:
-                </strong>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1 max-h-[200px] overflow-y-auto pr-2">
-                  {selectedRole &&
-                    selectedRole.permisos &&
-                    selectedRole.permisos.map((permiso) => (
-                      <li className="text-sm list-none" key={permiso}>
-                        <span className="text-[#350B48] mr-2 font-bold">•</span>
-                        <span className="text-base text-black-600 font-medium">{permiso}</span>
-                      </li>
-                    ))}
-                </div>
-=======
               {/* Permisos agrupados en columnas */}
               <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                 {Object.keys(groupedPermissions).map((category) => (
@@ -117,7 +101,6 @@ const DetailsModal = ({
                     </div>
                   </div>
                 ))}
->>>>>>> 4400c79f462cbbe238be87262a0eb02dde49d05f
               </div>
             </div>
           )}
