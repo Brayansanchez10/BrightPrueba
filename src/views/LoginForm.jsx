@@ -185,6 +185,24 @@ const LoginForm = () => {
                 </button>
               </div>
             </div>
+            <div className="flex items-center justify-center my-4">
+              <div className="border-t border-gray-300 flex-grow"></div>
+              <span className="px-4 text-gray-500">{t("login.or")}</span>
+              <div className="border-t border-gray-300 flex-grow"></div>
+            </div>
+            <div className="flex justify-center">
+              <a
+                href="http://localhost:3068/PE/google"
+                className="flex items-center justify-center gap-2 w-56 py-2 text-gray-700 rounded-xl font-bold text-lg border-2 border-gray-300 hover:bg-gray-50 transition-all duration-200"
+              >
+                <img 
+                  src="https://www.google.com/favicon.ico" 
+                  alt="Google logo" 
+                  className="w-6 h-6"
+                />
+                {t("login.google")}
+              </a>
+            </div>
             <div className="mb-5 mt-5 text-lg text-center font-semibold">
               <Link
                 to="/register"

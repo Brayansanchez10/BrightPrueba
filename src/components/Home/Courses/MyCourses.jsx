@@ -147,7 +147,7 @@ export default function UserCourses() {
               </div>
             </motion.div>
             <motion.div
-              className="grid grid-cols-1 xl:grid-cols-2 p-4 mx-4 mt-10 gap-5 md:mx-6 lg:mx-10 xl:mx-20 md:gap-y-6 lg:gap-y-8 xl:gap-y-10"
+              className="grid grid-cols-1 xl:grid-cols-2 p-4 mx-4 mt-10 gap-8 md:mx-6 lg:mx-10 xl:mx-20 md:gap-10 lg:gap-12 xl:gap-16"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
@@ -156,20 +156,13 @@ export default function UserCourses() {
                 {paginatedCourses.map((course, index) => (
                   <motion.div
                     key={course.id}
-                    className="bg-secondary sm:p-5 min-h-[320px] rounded-2xl shadow-lg shadow-gray-400 dark:shadow-purple-900 cursor-pointer transform hover:scale-105 transition-transform relative"
+                    className="bg-secondary sm:p-5 min-h-[280px] rounded-2xl shadow-lg shadow-gray-400 dark:shadow-purple-900 cursor-pointer transform hover:scale-105 transition-transform relative"
                     onClick={() => handleCourseClick(course.id)}
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -50 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
-                    <button
-                      onClick={(e) => handleUnregister(e, course)}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors z-10"
-                      aria-label={t("coursesComponent.unregister")}
-                    >
-                      <FaTimes />
-                    </button>
                     <div className="sm:flex sm:flex-row-reverse justify-between">
                       <div className="sm:flex-shrink-0">
                         <img
@@ -187,7 +180,7 @@ export default function UserCourses() {
                         </p>
                       </div>
                     </div>
-                    <div className="text-white mt-14 sm:mt-20 px-5 pb-5">
+                    <div className="text-white mt-4 sm:mt-6 px-5 pb-5">
                       <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
                         <motion.div
                           className="absolute top-0 left-0 h-full bg-green-500 rounded-full"
@@ -198,14 +191,23 @@ export default function UserCourses() {
                           transition={{ duration: 1, delay: 0.5 }}
                         ></motion.div>
                       </div>
-                      <div className="flex mt-2">
-                        <FaFlagCheckered className="text-gray-400 dark:text-primary mt-1" />
-                        <p className="text-gray-400 dark:text-primary font-semibold ml-2 mr-1">
-                          {"Progreso:"}
-                        </p>
-                        <p className="text-green-600 dark:text-green-500 font-semibold">{`${
-                          courseProgress[course.id] || 0
-                        }%`}</p>
+                      <div className="flex justify-between items-center mt-2">
+                        <div className="flex items-center">
+                          <FaFlagCheckered className="text-gray-400 dark:text-primary" />
+                          <p className="text-gray-400 dark:text-primary font-semibold ml-2 mr-1">
+                            {"Progreso:"}
+                          </p>
+                          <p className="text-green-600 dark:text-green-500 font-semibold">{`${
+                            courseProgress[course.id] || 0
+                          }%`}</p>
+                        </div>
+                        <button
+                          onClick={(e) => handleUnregister(e, course)}
+                          className="bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors z-10"
+                          aria-label={t("coursesComponent.unregister")}
+                        >
+                          <FaTimes />
+                        </button>
                       </div>
                     </div>
                   </motion.div>
@@ -306,7 +308,6 @@ export default function UserCourses() {
                   </p>
                   <div className="w-full bg-gray-200 rounded-full h-2.5 mb-1">
                     <div
-                
                       className="bg-green-600 h-2.5 rounded-full"
                       style={{
                         width: `${courseProgress[courseToDelete.id] || 0}%`,

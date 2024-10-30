@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./index.css";
-import "./context/themes/theme.css";
+import "./components/themes/theme.css";
 
 // Context
 import { AuthProvider } from "./context/auth.context";
@@ -25,7 +25,7 @@ import { LikesProvider } from "./context/forum/likes.context.jsx";
 import { ForumCommentProvider } from "./context/forum/forumComments.context.jsx";
 import { AnswersProvider } from "./context/forum/answers.context.jsx";
 import { BookmarkProvider } from "./context/forum/bookmark.context.jsx";
-import { ThemeProvider } from "./context/themes/theme.context.jsx";
+import { ThemeProvider } from "./components/themes/theme.context.jsx";
 import { EntityProvider } from './context/user/entities.context.jsx';
 
 // Pages

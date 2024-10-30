@@ -1,16 +1,20 @@
 :root {
     /* Modo claro (por defecto) */
     --bg-primary: #e5e7eb;
+    --bg-primary-admin: #e5e7eb;
     --text-primary: #000000;
     --bg-secondary: #ffffff;
+    --bg-secondary-admin: #ffffff;
     --text-secondary: #000000; /* Por pensar */
 }
 
 .dark {
     /* Modo oscuro */
     --bg-primary: #200E3E;
+    --bg-primary-admin: #2F3349;
     --text-primary: #ffffff;
     --bg-secondary: #581c87;
+    --bg-secondary-admin: #25293C;
     --text-secondary: #00D8A1; /* Por pensar */
 }
 
