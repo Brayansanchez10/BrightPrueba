@@ -18,7 +18,9 @@
         "hello": "Hello!",
         "welcome_message": "Welcome to your learning space",
         "login_se": "Login",
-        "your_account": "your account"
+        "your_account": "your account",
+        "or": "or",
+        "google": "Login with Google"
     },
     "carousel": {
         "phrases": {

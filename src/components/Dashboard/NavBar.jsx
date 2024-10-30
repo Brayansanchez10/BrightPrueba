@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import LeftBar from "./LeftBar";
 import { useTranslation } from "react-i18next";
 import Logo from "../../assets/img/hola.png";
-import ThemeToggle from '../../context/themes/ThemeToggle';
+import ThemeToggle from '../themes/ThemeToggle.jsx';
 
 const Navbar = () => {
   const { t } = useTranslation("global");
