@@ -4,7 +4,7 @@ import { useRoleContext } from "../../../context/user/role.context";
 import { useUserContext } from "../../../context/user/user.context";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
-import zorroImage from "../../../assets/img/Zorro.png"; 
+import zorroImage from "../../../assets/img/Zorro.png";
 
 const { Option } = Select;
 
@@ -45,21 +45,25 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
       });
 
       form.resetFields();
-      onCancel(); 
+      onCancel();
     } catch (error) {
-      setShake(true); 
-      setTimeout(() => setShake(false), 500); 
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
     }
   };
 
   return (
     <Modal
-      className={`custom w-[544px] h-[600px] rounded-2xl bg-white flex flex-col justify-between ${shake ? "shake" : ""}`} 
+      className={`custom w-[544px] rounded-2xl bg-white flex flex-col justify-between ${
+        shake ? "shake" : ""
+      }`}
       visible={visible}
       closable={false}
-      centered
+      centered={false}
       footer={null}
       onCancel={onCancel}
+      style={{ top: '5%' }}
+      maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.65)' }}
     >
       <div className="relative w-full h-[125px] bg-gradient-to-r from-[#18116A] to-blue-500 rounded-t-2xl flex items-center justify-center">
         <img
@@ -75,11 +79,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
           &times;
         </button>
       </div>
-      <Form
-        className="bg-secondary px-5 py-6"
-        form={form}
-        layout="vertical"
-      >
+      <Form className="bg-secondary px-5 py-6" form={form} layout="vertical">
         <h1 className="text-center text-[#18116A] dark:text-primary text-3xl font-extrabold mt-1 mb-5 text-shadow-md font-bungee">
           {t("CreateUserModal.createUserTitle")}
         </h1>
@@ -90,7 +90,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
           rules={[
             { required: true, message: t("validations.usernameRequired") },
             { min: 5, message: t("validations.usernameMinLength") },
-            { max: 30, message: t("validations.usernameMaxLength") }
+            { max: 30, message: t("validations.usernameMaxLength") },
           ]}
         >
           <Input maxLength={30} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
@@ -126,7 +126,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
           rules={[
             { required: true, message: t("CreateUserModal.emailRequired") },
             { type: "email", message: t("CreateUserModal.emailInvalid") },
-            { max: 80, message: t("validations.maxEmail") }
+            { max: 80, message: t("validations.maxEmail") },
           ]}
         >
           <Input maxLength={80} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />

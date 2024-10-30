@@ -272,7 +272,7 @@ const DataTablete = () => {
 
     // Ejemplo de cómo ocultar botones según los permisos
     const canCreate = rolePermissions.some(perm => perm.nombre === "Crear Curso");
-    const canSection = rolePermissions.some(perm => perm.nombre === "Crear sección");
+    const canSection = rolePermissions.some(perm => perm.nombre === "Crear seccion");
     const canContent = rolePermissions.some(perm => perm.nombre === "Asignar contenido");
     const canEdit = rolePermissions.some(perm => perm.nombre === "Editar curso");
     const canShow = rolePermissions.some(perm => perm.nombre === "Ver curso");
