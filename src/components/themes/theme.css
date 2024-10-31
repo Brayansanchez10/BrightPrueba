@@ -10,10 +10,10 @@
 
 .dark {
     /* Modo oscuro */
-    --bg-primary: #200E3E;
+    --bg-primary: #1E1034;
     --bg-primary-admin: #2F3349;
     --text-primary: #ffffff;
-    --bg-secondary: #581c87;
+    --bg-secondary: #361D5E;
     --bg-secondary-admin: #25293C;
     --text-secondary: #00D8A1; /* Por pensar */
 }

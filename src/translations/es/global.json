@@ -692,6 +692,8 @@
         "viewDetails": "Ver detalles",
         "start": "Comenzar",
         "continue": "Continuar",
+        "downloadPlan": "Descargar plan de estudio",
+        "previewCertificate": "Previsualizar certificado",
         "logoAlt": "Logo",
         "technologyAcquisitionsTitle": "Adquisiciones tecnológicas destacadas 2021",
         "technologyAcquisitionsDescription": "Estas son las mayores adquisiciones tecnológicas empresariales de 2021 hasta ahora, en orden cronológico inverso.",
@@ -713,6 +715,10 @@
         "description3": "es un apasionado del aprendizaje continuo, siempre buscando perfeccionar sus habilidades y compartirlas con los demás.",
         "description4": "es un profesional admirado, con una carrera marcada por logros significativos y un compromiso inquebrantable con la educación.",
         "description5": "es un líder intelectual, dedicado a influir positivamente en su comunidad a través de la enseñanza."
+    },
+    "certificate": {
+        "preview": "Previsualización del certificado",
+        "previewMessage": "Aquí podrás ver cómo se verá tu certificado una vez completado el curso"
     },
     "navigation": {
         "previous": "Atrás",

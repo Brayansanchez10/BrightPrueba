@@ -79,14 +79,14 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
           &times;
         </button>
       </div>
-      <Form className="bg-secondary px-5 py-6" form={form} layout="vertical">
-        <h1 className="text-center text-[#18116A] dark:text-primary text-3xl font-extrabold mt-1 mb-5 text-shadow-md font-bungee">
+      <Form className="bg-white px-5 py-6" form={form} layout="vertical">
+        <h1 className="text-center text-[#18116A] text-3xl font-extrabold mt-1 mb-5 text-shadow-md font-bungee">
           {t("CreateUserModal.createUserTitle")}
         </h1>
         <Form.Item
           className="text-lg font-bold mb-2"
           name="username"
-          label={<span className="text-primary">{t("CreateUserModal.username")}</span>}
+          label={t("CreateUserModal.username")}
           rules={[
             { required: true, message: t("validations.usernameRequired") },
             { min: 5, message: t("validations.usernameMinLength") },
@@ -98,7 +98,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
         <Form.Item
           className="text-lg font-bold mb-2"
           name="firstNames"
-          label={<span className="text-primary">{t("CreateUserModal.firstNames")}</span>}
+          label={t("CreateUserModal.firstNames")}
           rules={[{ required: true, message: t("CreateUserModal.firstNamesRequired") }]}
         >
           <Input minLength={3} maxLength={60} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
@@ -106,7 +106,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
         <Form.Item
           className="text-lg font-bold mb-2"
           name="lastNames"
-          label={<span className="text-primary">{t("CreateUserModal.lastNames")}</span>}
+          label={t("CreateUserModal.lastNames")}
           rules={[{ required: true, message: t("CreateUserModal.lastNamesRequired") }]}
         >
           <Input minLength={3} maxLength={60} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
@@ -114,7 +114,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
         <Form.Item
           className="text-lg font-bold mb-2"
           name="documentNumber"
-          label={<span className="text-primary">{t("CreateUserModal.documentNumber")}</span>}
+          label={t("CreateUserModal.documentNumber")}
           rules={[{ required: true, message: t("CreateUserModal.documentNumberRequired") }]}
         >
           <Input minLength={3} maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
@@ -122,7 +122,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
         <Form.Item
           className="text-lg font-bold mb-2"
           name="email"
-          label={<span className="text-primary">{t("CreateUserModal.email")}</span>}
+          label={t("CreateUserModal.email")}
           rules={[
             { required: true, message: t("CreateUserModal.emailRequired") },
             { type: "email", message: t("CreateUserModal.emailInvalid") },
@@ -134,7 +134,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
         <Form.Item
           className="text-lg font-bold mb-2"
           name="role"
-          label={<span className="text-primary">{t("CreateUserModal.role")}</span>}
+          label={t("CreateUserModal.role")}
           rules={[{ required: true, message: t("CreateUserModal.roleRequired") }]}
         >
           <Select className="w-full h-[34px] rounded-xl bg-white shadow-md text-center">
@@ -148,7 +148,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
         <Form.Item
           className="text-lg font-bold mb-2"
           name="state"
-          label={<span className="text-primary">{t("CreateUserModal.state")}</span>}
+          label={t("CreateUserModal.state")}
           rules={[{ required: true, message: t("CreateUserModal.stateRequired") }]}
         >
           <Select className="w-full h-[34px] rounded-xl bg-white shadow-md text-center">

@@ -8,6 +8,9 @@ import { useAuth } from '../../../context/auth.context';
 import { useTranslation } from "react-i18next";
 import holaImage from "../../../assets/img/hola.png";
 import "../css/Custom.css";
+import { AiOutlineClockCircle } from "react-icons/ai";
+import { MdPlayCircleOutline } from "react-icons/md";
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 const { Option } = Select;
 
@@ -65,7 +68,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setCourse({ ...course, [name]: value });
+        setCourse((prevCourse) => ({ ...prevCourse, [name]: value }));
         validateField(name, value);
     };
 
@@ -232,18 +235,18 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                 }
             }}
         >
-            <div className="absolute top-5 right-8 cursor-pointer" onClick={onClose}>
-                <span className="text-white text-2xl font-bold">X</span>
+        <div className="absolute top-5 right-8 cursor-pointer" onClick={onClose}>
+            <span className="text-white text-2xl font-bold">X</span>
             </div>
             <div className="h-[115px] bg-gradient-to-r from-[#18116A] to-blue-500 flex justify-center items-center">
                 <img src={holaImage} alt="Logo" className="w-[200px] h-[200px] mt-12 object-contain" />
             </div>
-            <form onSubmit={handleSubmit} className="bg-secondary p-5 text-center">
-                <h1 className="text-2xl font-extrabold text-[#18116A] dark:text-primary mt-5 mb-4 font-bungee">
+            <form onSubmit={handleSubmit} className="bg-white p-5 text-center">
+                <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4 font-bungee">
                     {t("createCourseForm.title")}
                 </h1>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.name")}
                     </label>
                     <input
@@ -260,7 +263,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                     )}
                 </div>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.category")}
                     </label>
                     <Select
@@ -283,7 +286,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                     )}
                 </div>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.description")}
                     </label>
                     <textarea
@@ -295,13 +298,13 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                         style={{ minHeight: "80px" }}
                         required
                     />
-                    <div className="text-gray-500 dark:text-gray-300 text-sm">{`${course.description.length}/${MAX_DESCRIPTION_LENGTH}`}</div>
+                    <div className="text-gray-500 text-sm">{`${course.description.length}/${MAX_DESCRIPTION_LENGTH}`}</div>
                     {errorMessage.description && (
                         <p className="text-red-500 text-sm mt-1">{errorMessage.description}</p>
                     )}
                 </div>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.level")}
                     </label>
                     <Select
@@ -320,7 +323,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                     )}
                 </div>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.duration")}
                     </label>
                     <input
@@ -338,7 +341,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                     )}
                 </div>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.image")}
                     </label>
                     <input
@@ -348,12 +351,51 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                         ref={imageRef}
                         className="mt-2"
                     />
-                    {course.imagePreview && (
-                        <img src={course.imagePreview} alt="Imagen previa" className="mt-2 w-32 h-32 object-cover" />
-                    )}
                     {errorMessage.image && (
                         <p className="text-red-500 text-sm mt-1">{errorMessage.image}</p>
                     )}
+                </div>
+                <div className="flex justify-center">
+                    <div className="group rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 mb-4 w-[250px] h-[290px] mr-5 mt-2">
+                        <div className="relative overflow-hidden rounded-t-lg h-[175px]">
+                            <img
+                                src={course.imagePreview || noImg}
+                                alt="Imagen previa del curso"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div className="text-start mt-2">
+                            <div className="mx-2">
+                                <p className="font-bold">{course.name || "Nombre del curso"}</p>
+                                <p>Autor</p>
+                                <div className="flex items-center mt-1 mb-1">
+                                    {[...Array(5)].map((_, index) => (
+                                        <svg
+                                            key={index}
+                                            className="w-4 h-4 text-gray-400 " // Aquí puedes cambiar el color de las estrellas
+                                            fill="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path d="M12 2.2l2.4 4.8 5.2.8-3.8 3.7.9 5.3-4.7-2.5-4.7 2.5.9-5.3-3.8-3.7 5.2-.8L12 2.2z" />
+                                        </svg>
+                                    ))}
+                                    <span className="text-gray-600 dark:text-primary ml-2 text-sm">0/5</span>
+                                </div>
+                            </div>
+                            <hr className="mx-2" />
+                            <div className="flex mx-2">
+                                <div className="flex w-1/2 mt-2 gap-1">
+                                    <AiOutlineClockCircle className="h-5" />
+                                    <p className="text-sm">{course.duracion || "0"} horas</p>
+                                </div>
+                                <div className="flex w-1/2 justify-end mt-2 gap-1">
+                                    <MdPlayCircleOutline className="h-5" />
+                                    <p className="text-sm">0 recursos</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <button
                     type="submit"

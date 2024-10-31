@@ -57,7 +57,7 @@ export default function UserCourses() {
       }
       setCourseProgress(progressData);
     }
-  }, [userCourses, user, getCourseProgress]);
+  }, [userCourses, user]);
 
   useEffect(() => {
     fetchCourseProgress();
@@ -130,15 +130,15 @@ export default function UserCourses() {
               </div>
               <div className="w-full md:w-auto mt-4 sm:mt-0">
                 <motion.div
-                  className="flex px-4 py-2 border bg-secondary border-gray-300 dark:border-purple-900 rounded-xl shadow-md"
+                  className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md"
                   initial={{ scale: 0.9 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
-                  <FaSearch size={"18px"} className="text-primary mt-1 mr-2" />
+                  <FaSearch size={"18px"} className="mt-1 mr-2" />
                   <input
                     type="search"
-                    className="bg-secondary dark:text-primary outline-none w-full md:w-[280px] lg:w-[360px] xl:w-[420px]"
+                    className="bg-white outline-none w-full md:w-[280px] lg:w-[360px] xl:w-[420px]"
                     placeholder={t("coursesComponent.search_placeholder")}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -203,7 +203,7 @@ export default function UserCourses() {
                         </div>
                         <button
                           onClick={(e) => handleUnregister(e, course)}
-                          className="bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors z-10"
+                          className="bg-[#B209EB] text-white rounded-full p-2 hover:bg-[#9908c9] transition-colors z-10"
                           aria-label={t("coursesComponent.unregister")}
                         >
                           <FaTimes />

@@ -5,21 +5,15 @@ import { useResourceContext } from "../../../context/courses/resource.contex";
 import { useCourseProgressContext } from "../../../context/courses/progress.context.jsx";
 import { useAuth } from "../../../context/auth.context";
 import { useUserContext } from "../../../context/user/user.context";
-import { Collapse, Card, Col } from "antd";
+import { Collapse } from "antd";
 import NavigationBar from "../NavigationBar";
-import {
-  FaArrowLeft,
-  FaSadTear,
-  FaPlay,
-  FaUser,
-  FaUsers,
-  FaGraduationCap,
-} from "react-icons/fa";
+import { FaArrowLeft, FaSadTear, FaPlay, FaUser, FaUsers, FaGraduationCap, FaDownload, FaCertificate } from "react-icons/fa";
 import { MdPlayCircleOutline } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import Footer from "../../footer.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSubCategoryCourseId } from "../../../api/courses/subCategory.requst.js";
+import { generateStudyPlanPDF } from "./components/studyPlan";
 
 const { Panel } = Collapse;
 
@@ -141,6 +135,14 @@ export default function CourseView() {
     }
   };
 
+  const handleDownloadStudyPlan = () => {
+    generateStudyPlanPDF(course, courseId, resources, subCategory);
+  };
+
+  const navigateToCertificatePreview = () => {
+    navigate(`/course/${courseId}/certificate-preview`);
+  };
+
   if (isLoading) {
     return (
       <motion.div 
@@ -252,6 +254,24 @@ export default function CourseView() {
               >
                 <FaPlay className="mr-2" />
                 {currentProgress === 0 ? t("course_user.start") : t("course_user.continue")}
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleDownloadStudyPlan}
+                className="flex items-center px-4 py-2 bg-blue-600 text-white font-bold rounded-lg ml-4"
+              >
+                <FaDownload className="mr-2" />
+                {t("course_user.downloadPlan")}
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={navigateToCertificatePreview}
+                className="flex items-center px-4 py-2 bg-green-600 text-white font-bold rounded-lg ml-4"
+              >
+                <FaCertificate className="mr-2" />
+                {t("course_user.previewCertificate")}
               </motion.button>
             </motion.div>
           </div>
