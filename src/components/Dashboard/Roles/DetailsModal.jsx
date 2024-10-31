@@ -15,7 +15,7 @@ const DetailsModal = ({
 
   const groupedPermissions = permissionsData?.info.reduce(
     (groups, permission) => {
-      const category = permission.nombre.split(" ")[0]; // Toma el primer término (Crear, Editar, Eliminar, Activar)
+      const category = permission.nombre.split(" ")[0]; 
       if (!groups[category]) {
         groups[category] = [];
       }
@@ -33,7 +33,7 @@ const DetailsModal = ({
       footer={null}
       closable={false}
       style={{
-        top: '15%',
+        top: '3%',
         padding: 0,
         overflow: "hidden",
         borderRadius: "24px",
@@ -65,7 +65,7 @@ const DetailsModal = ({
           </h1>
           {selectedRole && (
             <div className="grid grid-cols-2 gap-4">
-              <p className="mb-5">
+              <div className="mb-5">
                 <strong className="font-bold text-xl text-black">
                   {t("roles.role")} ID:
                 </strong>
@@ -73,8 +73,8 @@ const DetailsModal = ({
                 <span className="text-lg text-black-500 font-medium">
                   {selectedRole.id}
                 </span>
-              </p>
-              <p className="mb-5">
+              </div>
+              <div className="mb-5">
                 <strong className="font-bold text-xl text-black">
                   {t("roles.name")}:
                 </strong>
@@ -82,20 +82,21 @@ const DetailsModal = ({
                 <span className="text-lg text-black-500 font-medium">
                   {selectedRole.nombre}
                 </span>
-              </p>
-              {/* Permisos agrupados en columnas */}
-              <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+              </div>
+              <div className="col-span-2 grid grid-cols-2 gap-x-6 gap-y-4 mt-4">
                 {Object.keys(groupedPermissions).map((category) => (
                   <div key={category}>
-                    <h2 className="text-xl font-semibold text-[#350B48] mb-2">{category}</h2>
-                    <div className="space-y-2">
+                    <h2 className="text-xl font-semibold text-[#350B48] mb-2">
+                      {category}
+                    </h2>
+                    <div className="space-y-1">
                       {groupedPermissions[category]
                         .filter((permission) =>
-                          selectedRole.permisos.includes(permission.nombre.trim()) // Usa trim() para evitar problemas con espacios
+                          selectedRole.permisos.includes(permission.nombre.trim())
                         )
                         .map((permission) => (
-                          <p key={permission.id} className="text-gray-800 ml-4">
-                            {permission.nombre}
+                          <p key={permission.id} className="text-gray-800 ml-2">
+                            • {permission.nombre}
                           </p>
                         ))}
                     </div>

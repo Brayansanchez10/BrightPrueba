@@ -26,7 +26,7 @@ const DataTablete = () => {
     const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10); // Valor inicial
+    const [itemsPerPage, setItemsPerPage] = useState(10); 
     const [totalItems, setTotalItems] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [form] = Form.useForm();
@@ -36,9 +36,8 @@ const DataTablete = () => {
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    // Modal de creación
     useEffect(() => {
-        getEntity(); // Asegúrate de cargar las categorías al inicio
+        getEntity();
     }, []);
 
     useEffect(() => {
@@ -99,7 +98,6 @@ const DataTablete = () => {
 
     const handleEntityFormClose = async () => {
         try {
-            // Después de crear la categoría, vuelve a cargar todas las categorías.
             await createEntity();
             setShowEntityForm(false);
         } catch (error) {
@@ -146,7 +144,6 @@ const DataTablete = () => {
     
     const handleUpdateModalClose = async () => {
         try {
-            // Después de crear la categoría, vuelve a cargar todas las categorías.
             await getEntity();
             setShowUpdateModal(false);
         } catch (error) {
@@ -177,7 +174,7 @@ const DataTablete = () => {
                         <div className="px-4 md:px-12">
                             <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-2">
                                 <h2 className="text-3xl text-purple-900 dark:text-secondary font-bungee mb-4 md:mb-0">
-                                    {t("Entidades")}
+                                    {t("entities.title")}
                                 </h2>
                                 <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
                                         <Button
@@ -186,7 +183,7 @@ const DataTablete = () => {
                                             className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
                                             onClick={handleCreateEntityClick}
                                         >
-                                            <b>{t("Crear Entidad")}</b>
+                                            <b>{t("entities.createEntity")}</b>
                                         </Button>
                                     
                                     <div className="flex w-full md:w-auto px-4 py-2 border bg-secondary border-gray-300 dark:border-purple-900 rounded-xl shadow-lg order-1 md:order-2">
@@ -214,7 +211,7 @@ const DataTablete = () => {
                                                 {t("categories.name")}
                                             </th>
                                             <th className="text-lg py-3 bg-secondary text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
-                                                {t("type")}
+                                                {t("entities.type")}
                                             </th>
                                             <th className="py-3 bg-secondary text-primary text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-purple-700">
                                                 {t("categories.actions")}
@@ -260,7 +257,7 @@ const DataTablete = () => {
                                                                 <Button
                                                                     className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 shadow-md shadow-gray-400"
                                                                     icon={<DeleteOutlined />}
-                                                                    onClick={() => handleDelete(entities)} // Llama a handleRemove al hacer clic
+                                                                    onClick={() => handleDelete(entities)} 
                                                                     style={{ minWidth: "50px" }}
                                                                 />
                                                             

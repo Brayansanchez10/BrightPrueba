@@ -4,26 +4,23 @@ import { useTranslation } from "react-i18next";
 import zorroImage from "../../../assets/img/Zorro.png";
 import "../css/Custom.css";
 
-
-const DetailsEntityModal = ({ visible, onClose, entities}) => {
+const DetailsEntityModal = ({ visible, onClose, entities }) => {
     const { t } = useTranslation("global");
 
-    if (!entities) return false; 
+    if (!entities) return null; 
 
     return (
         <Modal 
-          className="custom w-[543px] h-[700px] bg-white rounded-3xl"
+          className="custom w-[543px] bg-white rounded-3xl"
           onCancel={onClose} 
           closable={false}
           visible={visible}
           centered
           footer={null}
-          bodyStyle={{
-            overflow: "hidden",
-          }}
+          bodyStyle={{ padding: 0 }}
         >
           <div className="p-0">
-            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350B48] to-[#905BE8] flex items-center justify-center">
+            <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350B48] to-[#905BE8] flex items-center justify-center rounded-t-3xl">
               <img
                 src={zorroImage}
                 alt="Zorro"
@@ -38,26 +35,20 @@ const DetailsEntityModal = ({ visible, onClose, entities}) => {
             </div>
             <div className="px-5 py-6">
               <h1 className="text-center text-[#350B48] text-3xl font-extrabold mt-10 mb-5 overflow-hidden text-ellipsis whitespace-nowrap font-bungee">
-                {t("detailsCategoryModal.title")}
+                {t("detailsEntityModal.title")}
                 <span className="font-extrabold uppercase"></span>
               </h1>
-              <div>
-                <div className="mb-5">
+              <div className="flex justify-between mb-5"> 
+                <div className="w-1/2 text-center"> 
                   <strong className="text-black font-bold text-xl">{t('detailsCategoryModal.name')}</strong>
                   <p className="text-black text-lg">{entities.name}</p>
                 </div>
-                <div className="mb-5">
-                  <strong className="text-black font-bold text-xl">{t('detailsCategoryModal.description')}</strong>
+                <div className="w-1/2 text-center"> 
+                  <strong className="text-black font-bold text-xl">{t("entities.type")}</strong>
                   <p className="text-black text-lg">{entities.type}</p>
                 </div>
               </div>
               <div className="flex justify-center mt-4">
-                <button 
-                  className="px-4 py-2 bg-neutral-700 text-base rounded-lg hover:bg-neutral-600 font-black text-white"
-                  onClick={onClose}
-                >
-                  {t("detailsCategoryModal.closeButton")}
-                </button>
               </div>
             </div>
           </div>

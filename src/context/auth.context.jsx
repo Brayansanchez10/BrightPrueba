@@ -94,7 +94,6 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         setRole(null);
         sessionStorage.clear("videoShown");
-        // Redireccionar a la página de login
         window.location.replace("/");
       };
       

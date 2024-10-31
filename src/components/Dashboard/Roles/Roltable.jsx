@@ -377,13 +377,13 @@ const DataTable = () => {
                                   onClick={() => handleAssignPermissions(role)}
                                 />
                       
-                              {canShow &&
+
                                 <Button
                                   className="bg-purple-500 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
                                   icon={<InfoCircleOutlined />}
                                   onClick={() => handleViewPermissions(role)}
                                 />
-                              }
+                           
                               
                               {canDelete &&
                                 <Button
