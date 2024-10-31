@@ -23,6 +23,8 @@ module.exports = {
       backgroundColor: {
         primary: 'var(--bg-primary)',
         secondary: 'var(--bg-secondary)',
+        primaryAdmin: 'var(--bg-primary-admin)',
+        secondaryAdmin: 'var(--bg-secondary-admin)',
       },
       textColor: {
         primary: 'var(--text-primary)',

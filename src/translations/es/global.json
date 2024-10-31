@@ -18,7 +18,9 @@
         "hello": "¡Hola!",
         "welcome_message": "Bienvenido a tu espacio de aprendizaje",
         "login_se": "Ingresa",
-        "your_account": "a tu cuenta"
+        "your_account": "a tu cuenta",
+        "or": "o",
+        "google": "Ingresa con Google"
     },
     "carousel": {
         "phrases": {
@@ -209,7 +211,8 @@
         "logout": "Cerrar Sesión",
         "myCourses": "Mis cursos",
         "myAccount": "Mi cuenta",
-        "configProfile": "Configurar perfil"
+        "configProfile": "Configurar perfil",
+        "forum": "Foro"
     },
     "newPasswordUser": {
         "change_password": "Cambiar Contraseña",

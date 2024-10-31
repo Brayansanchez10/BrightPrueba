@@ -8,38 +8,12 @@ import { useCourseProgressContext } from "../../../context/courses/progress.cont
 import { useCommentContext } from "../../../context/courses/comment.context";
 import { useRatingsContext } from "../../../context/courses/ratings.context";
 import { useGeneralCommentContext } from "../../../context/courses/generalComment.context";
-import {
-  updateRating,
-  deleteRating,
-} from "../../../api/courses/ratings.request";
+import {updateRating, deleteRating,} from "../../../api/courses/ratings.request";
 import NavigationBar from "../NavigationBar";
-import {
-  updateComment,
-  deleteComment,
-} from "../../../api/courses/comment.request";
+import {updateComment, deleteComment,} from "../../../api/courses/comment.request";
 import axios from "../../../api/axios";
-import {
-  FiMenu,
-  FiX,
-  FiChevronLeft,
-  FiChevronRight,
-  FiSend,
-  FiMoreVertical,
-  FiEdit,
-  FiTrash2,
-  FiCheckCircle,
-  FiPlus,
-  FiEdit2,
-  FiDownload,
-} from "react-icons/fi";
-import {
-  FaCheckCircle,
-  FaTimesCircle,
-  FaQuestionCircle,
-  FaStar,
-  FaComment,
-  FaUser,
-} from "react-icons/fa";
+import {FiMenu,FiX,FiChevronLeft,FiChevronRight,FiSend,FiMoreVertical,FiEdit,FiTrash2,FiCheckCircle,FiPlus,FiEdit2,FiDownload,} from "react-icons/fi";
+import {FaCheckCircle,FaTimesCircle,FaQuestionCircle,FaStar,FaComment,FaUser,} from "react-icons/fa";
 import jsPDF from "jspdf";
 import zorro from "../../../assets/img/Zorro.jpeg";
 import derechaabajo from "../../../assets/img/DerechaAbajo.jpeg";
@@ -56,36 +30,16 @@ import { generateNotesPDF } from "./notesDownload.jsx";
 export default function ResourceView() {
   const { t } = useTranslation("global");
   const { user } = useAuth();
-  const { getCourseProgress, updateCourseProgress } =
-    useCourseProgressContext();
+  const { getCourseProgress, updateCourseProgress } = useCourseProgressContext();
   const [currentProgress, setCurrentProgress] = useState(0);
   const { getUserById } = useUserContext();
   const [username, setUsername] = useState("");
   const { id, courseId } = useParams();
-  const { getResourceUser, getResource, getUserResourceProgress } =
-    useResourceContext();
+  const { getResourceUser, getResource, getUserResourceProgress } = useResourceContext();
   const { getCourse } = useCoursesContext();
-  const {
-    comments,
-    fetchCommentsByResource,
-    addComment,
-    editComment,
-    removeComment,
-  } = useCommentContext();
-  const {
-    ratings,
-    fetchRatingsByResource,
-    addRating,
-    editRating,
-    removeRating,
-  } = useRatingsContext();
-  const {
-    generalComments,
-    fetchGeneralComments,
-    addGeneralComment,
-    editGeneralComment,
-    removeGeneralComment,
-  } = useGeneralCommentContext();
+  const {comments,fetchCommentsByResource,addComment,editComment,removeComment,} = useCommentContext();
+  const {ratings,fetchRatingsByResource, addRating,  editRating,  removeRating,} = useRatingsContext();
+  const {generalComments,  fetchGeneralComments,  addGeneralComment,  editGeneralComment,  removeGeneralComment,} = useGeneralCommentContext();
   const [resource, setResource] = useState(null);
   const [resources, setResources] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -118,18 +72,7 @@ export default function ResourceView() {
   const [showDropdown, setShowDropdown] = useState(null);
   const [userExistingRating, setUserExistingRating] = useState(null);
   const [creator, setCreator] = useState(null);
-  const {
-    notes,
-    resourceNotes,
-    fetchCourseNotes,
-    fetchResourceNotes,
-    addNote,
-    addNoteToResource,
-    editNote,
-    editResourceNote,
-    removeNote,
-    removeResourceNote,
-  } = useNotesContext();
+  const {notes,resourceNotes,fetchCourseNotes,fetchResourceNotes,addNote,addNoteToResource,editNote,editResourceNote,removeNote,removeResourceNote,} = useNotesContext();
   const [userNote, setUserNote] = useState("");
   const [userResourceNote, setUserResourceNote] = useState("");
   const [editingNoteId, setEditingNoteId] = useState(null);
@@ -153,42 +96,20 @@ export default function ResourceView() {
       try {
         const existingComment = generalComments.find(comment => comment.userId === user.data.id);
         if (existingComment) {
-          Swal.fire({
-            icon: "warning",
-            title: "Ya has comentado",
-            text: "Solo puedes hacer un comentario general por curso. Puedes editar tu comentario existente.",
+          Swal.fire({icon: "warning", title: "Ya has comentado",  text: "Solo puedes hacer un comentario general por curso. Puedes editar tu comentario existente.",
           });
           return;
         }
-
-        await addGeneralComment({
-          content: userGeneralComment,
-          userId: user.data.id,
-          courseId: parseInt(courseId),
+        await addGeneralComment({content: userGeneralComment,  userId: user.data.id,  courseId: parseInt(courseId),
         });
         setUserGeneralComment("");
         await fetchGeneralComments(courseId);
-        Swal.fire({
-          icon: "success",
-          title: "Comentario enviado",
-          text: "Tu comentario general ha sido publicado exitosamente.",
-        });
+        Swal.fire({icon: "success",  title: "Comentario enviado",  text: "Tu comentario general ha sido publicado exitosamente.",});
       } catch (error) {
         console.error("Error al enviar comentario general:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Ocurrió un error al enviar el comentario general. Por favor, intenta de nuevo más tarde.",
-        });
-      }
+        Swal.fire({icon: "error",  title: "Error",  text: "Ocurrió un error al enviar el comentario general. Por favor, intenta de nuevo más tarde.",}); }
     } else {
-      Swal.fire({
-        icon: "warning",
-        title: "Advertencia",
-        text: "Por favor, escribe un comentario antes de enviar.",
-      });
-    }
-  };
+      Swal.fire({icon: "warning",  title: "Advertencia",  text: "Por favor, escribe un comentario antes de enviar.", }); }};
 
   const handleEditGeneralComment = (commentId, currentContent) => {
     setEditingGeneralCommentId(commentId);
@@ -202,34 +123,14 @@ export default function ResourceView() {
         await fetchGeneralComments(courseId);
         setEditingGeneralCommentId(null);
         setEditedGeneralCommentContent("");
-        Swal.fire({
-          icon: "success",
-          title: "Comentario general actualizado",
-          text: "Tu comentario general ha sido actualizado exitosamente.",
-        });
+        Swal.fire({icon: "success",  title: "Comentario general actualizado",  text: "Tu comentario general ha sido actualizado exitosamente.",});
       } catch (error) {
         console.error("Error al editar el comentario general:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Ocurrió un error al editar el comentario general. Por favor, intenta de nuevo más tarde.",
-        });
-      }
-    }
-  };
+        Swal.fire({icon: "error",  title: "Error",  text: "Ocurrió un error al editar el comentario general. Por favor, intenta de nuevo más tarde.",});}}};
 
   const handleDeleteGeneralComment = async (commentId) => {
     try {
-      const result = await Swal.fire({
-        title: "¿Estás seguro?",
-        text: "No podrás revertir esta acción",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Sí, eliminar",
-        cancelButtonText: "Cancelar",
-      });
+      const result = await Swal.fire({title: "¿Estás seguro?",  text: "No podrás revertir esta acción",  icon: "warning",  showCancelButton: true,  confirmButtonColor: "#3085d6",  cancelButtonColor: "#d33",  confirmButtonText: "Sí, eliminar",  cancelButtonText: "Cancelar",});
 
       if (result.isConfirmed) {
         await removeGeneralComment(commentId);
@@ -238,13 +139,7 @@ export default function ResourceView() {
       }
     } catch (error) {
       console.error("Error al eliminar el comentario general:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Ocurrió un error al eliminar el comentario general. Por favor, intenta de nuevo más tarde.",
-      });
-    }
-  };
+      Swal.fire({icon: "error",  title: "Error",  text: "Ocurrió un error al eliminar el comentario general. Por favor, intenta de nuevo más tarde.",});}};
 
   useEffect(() => {
     const fetchResource = async () => {
@@ -486,13 +381,7 @@ export default function ResourceView() {
 
   const handleNextQuestion = async () => {
     if (!answers[currentQuestionIndex]) {
-      Swal.fire({
-        icon: "warning",
-        title: "Advertencia",
-        text: "Por favor selecciona una respuesta antes de continuar.",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "OK",
-      });
+      Swal.fire({icon: "warning",  title: "Advertencia",  text: "Por favor selecciona una respuesta antes de continuar.",  confirmButtonColor: "#3085d6",  confirmButtonText: "OK",});
       return;
     }
 
@@ -502,51 +391,30 @@ export default function ResourceView() {
       ).length;
 
       const incorrectCount = Object.keys(answers).length - correctCount;
-
       setCorrectAnswers(correctCount);
       setIncorrectAnswers(incorrectCount);
-
-      // Calcular el porcentaje de respuestas correctas
       const scorePercentage = Math.round(
         (correctCount / resource?.quizzes.length) * 100
       );
-
-      // Guardar el puntaje obtenido
       setCurrentScore(scorePercentage);
-
-      // Esperar a que el bestScore se actualice
       if (scorePercentage > bestScore) {
         setBestScore(scorePercentage);
       }
-
-      // Si es el último intento
       if (attempts + 1 === maxAttempts) {
         setTimeout(() => {
-          setIsQuizStarted(false); // Esto redirige al usuario
-        }, 500); // Agregar un pequeño retraso
+          setIsQuizStarted(false); 
+        }, 500);
       }
 
       try {
         const newAttempts = attempts + 1;
         setAttempts(newAttempts);
 
-        const result = await completeQuiz(
-          user.data.id,
-          resource.id,
-          scorePercentage,
-          newAttempts
-        );
+        const result = await completeQuiz(user.data.id,resource.id,scorePercentage,newAttempts);
         console.log("Resultado del quiz:", result);
       } catch (error) {
         console.error("Error al completar el quiz:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se pudo guardar tu progreso.",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "OK",
-        });
-      }
+        Swal.fire({icon: "error", title: "Error",  text: "No se pudo guardar tu progreso.",  confirmButtonColor: "#3085d6",  confirmButtonText: "OK",});}
 
       setIsQuizCompleted(true);
       setIsContentCompleted(true);
@@ -560,13 +428,7 @@ export default function ResourceView() {
 
   const handleRetakeQuiz = () => {
     if (attempts >= resource?.attempts) {
-      Swal.fire({
-        icon: "error",
-        title: "Límite de intentos alcanzado",
-        text: "Has alcanzado el número máximo de intentos permitidos.",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "OK",
-      });
+      Swal.fire({icon: "error",title: "Límite de intentos alcanzado",text: "Has alcanzado el número máximo de intentos permitidos.",confirmButtonColor: "#3085d6",confirmButtonText: "OK",});
       return;
     }
 
@@ -583,7 +445,7 @@ export default function ResourceView() {
 
   useEffect(() => {
     if (currentScore > bestScore) {
-      setBestScore(currentScore); // Actualizar el bestScore si el puntaje actual es mayor
+      setBestScore(currentScore); 
     }
   }, [currentScore, bestScore]);
 
@@ -802,20 +664,12 @@ export default function ResourceView() {
   const handleNext = async () => {
     if (currentResourceIndex < resources.length - 1) {
       const nextResource = resources[currentResourceIndex + 1];
-
-      // Calcula el porcentaje por recurso basado en la cantidad total de recursos
       const percentagePerResource = 100 / resources.length;
-
-      // El nuevo progreso es el índice actual + 1 multiplicado por el porcentaje por recurso
       const newProgress = (currentResourceIndex + 1) * percentagePerResource;
-
-      // Asegúrate de que el progreso solo suba
       if (newProgress > currentProgress && currentProgress < 100) {
         await updateCourseProgress(user.data.id, courseId, newProgress);
-        setCurrentProgress(newProgress); // Actualiza el progreso en el estado local
+        setCurrentProgress(newProgress);
       }
-
-      // Avanza al siguiente recurso
       setCurrentResourceIndex(currentResourceIndex + 1);
       handleResourceClick(nextResource.id, nextResource.courseId);
     }
@@ -823,12 +677,7 @@ export default function ResourceView() {
 
   const handleFinishCourse = async () => {
     await updateCourseProgress(user.data.id, courseId, 100);
-    generatePremiumCertificatePDF(
-      username,
-      course.title,
-      zorro,
-      derechaabajo,
-      izquierdaarriba
+    generatePremiumCertificatePDF(username,course.title,zorro,derechaabajo,izquierdaarriba
     );
     navigate(`/course/${courseId}`);
   };
@@ -843,19 +692,8 @@ export default function ResourceView() {
     setIsOpen(!isOpen);
   };
 
-  const generatePremiumCertificatePDF = (
-    username,
-    courseTitle,
-    zorroImage,
-    derechaabajo,
-    izquierdaarriba
-  ) => {
-    const doc = new jsPDF({
-      orientation: "landscape",
-      unit: "cm",
-      format: [28, 21.6],
-    });
-
+  const generatePremiumCertificatePDF = (username, courseTitle, zorroImage, derechaabajo, izquierdaarriba) => {
+    const doc = new jsPDF({orientation: "landscape",unit: "cm", format: [28, 21.6],});
     doc.setFillColor(240, 248, 255);
     doc.rect(0, 0, 28, 21.6, "F");
 
@@ -940,26 +778,12 @@ export default function ResourceView() {
         if (result) {
           setUserNote("");
           await fetchCourseNotes(course.id, user.data.id);
-          Swal.fire({
-            icon: "success",
-            title: "Apunte creado",
-            text: "Tu apunte ha sido creado exitosamente.",
-          });
-        }
+          Swal.fire({icon: "success", title: "Apunte creado", text: "Tu apunte ha sido creado exitosamente.",});}
       } catch (error) {
         console.error("Error al añadir nota:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Ocurrió un error al crear el apunte. Por favor, intenta de nuevo más tarde.",
-        });
-      }
+        Swal.fire({icon: "error", title: "Error", text: "Ocurrió un error al crear el apunte. Por favor, intenta de nuevo más tarde.",});}
     } else {
-      Swal.fire({
-        icon: "warning",
-        title: "Advertencia",
-        text: "Por favor, escribe un apunte antes de guardar.",
-      });
+      Swal.fire({icon: "warning",title: "Advertencia", text: "Por favor, escribe un apunte antes de guardar.",});
     }
   };
 
@@ -967,38 +791,23 @@ export default function ResourceView() {
     e.preventDefault();
 
     if (userResourceNote.trim() === "") {
-      Swal.fire({
-        icon: "warning",
-        title: "Advertencia",
-        text: "Por favor, escribe un apunte antes de guardar.",
-      });
+      Swal.fire({icon: "warning", title: "Advertencia",text: "Por favor, escribe un apunte antes de guardar.",});
       return;
     }
 
     try {
-      // Verificar si ya existe una nota para este recurso específico
       const existingResourceNote = resourceNotes.find(
         (note) => note.resourceId === resource.id
       );
       if (existingResourceNote) {
-        Swal.fire({
-          icon: "info",
-          title: "Apunte existente",
-          text: "Ya existe un apunte para este recurso. Puedes editarlo si deseas hacer cambios.",
-        });
+        Swal.fire({icon: "info",title: "Apunte existente",text: "Ya existe un apunte para este recurso. Puedes editarlo si deseas hacer cambios.", });
         return;
       }
-
-      // Buscar la nota general del curso
       const generalNote = notes.find(
         (note) => note.courseId === parseInt(courseId) && !note.resourceId
       );
       if (!generalNote) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "No se encontró una nota general para este curso. Por favor, crea una primero.",
-        });
+        Swal.fire({icon: "error",title: "Error",text: "No se encontró una nota general para este curso. Por favor, crea una primero.",});
         return;
       }
 
@@ -1007,24 +816,13 @@ export default function ResourceView() {
         noteId: generalNote.id,
       });
       console.log("Nueva nota del recurso creada:", newResourceNote);
-
-      // Actualizamos el contexto
       await fetchResourceNotes(course.id, resource.id, user.data.id);
       setUserResourceNote("");
 
-      Swal.fire({
-        icon: "success",
-        title: "Éxito",
-        text: "El apunte del recurso ha sido añadido exitosamente.",
-      });
+      Swal.fire({icon: "success",title: "Éxito",text: "El apunte del recurso ha sido añadido exitosamente.",});
     } catch (error) {
       console.error("Error al añadir el apunte del recurso:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Ocurrió un error al añadir el apunte del recurso. Por favor, intenta de nuevo más tarde.",
-      });
-    }
+      Swal.fire({icon: "error",title: "Error",text: "Ocurrió un error al añadir el apunte del recurso. Por favor, intenta de nuevo más tarde.",});}
   };
 
   const handleEditNote = async (noteId, content) => {
@@ -1035,62 +833,30 @@ export default function ResourceView() {
   const handleSaveEditedNote = async (noteId) => {
     try {
       await editNote(noteId, { content: editedNoteContent });
-      // Actualizar el estado local de las notas
       const updatedNotes = notes.map((note) =>
         note.id === noteId ? { ...note, content: editedNoteContent } : note
       );
-      // Actualizar el estado de las notas
       fetchCourseNotes(course.id, user.data.id);
-      // Resetear el estado de edición
       setEditingNoteId(null);
       setEditedNoteContent("");
-      // Mostrar mensaje de éxito
-      Swal.fire({
-        icon: "success",
-        title: "Apunte actualizado",
-        text: "Tu apunte ha sido actualizado exitosamente.",
-      });
+      Swal.fire({icon: "success",title: "Apunte actualizado",text: "Tu apunte ha sido actualizado exitosamente.",});
     } catch (error) {
       console.error("Error al editar nota:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Ocurrió un error al editar el apunte. Por favor, intenta de nuevo más tarde.",
-      });
-    }
+      Swal.fire({icon: "error", title: "Error",text: "Ocurrió un error al editar el apunte. Por favor, intenta de nuevo más tarde.", });}
   };
 
   const handleDeleteNote = async (noteId) => {
     try {
-      const result = await Swal.fire({
-        title: "¿Estás seguro?",
-        text: "No podrás revertir esta acción",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Sí, eliminar",
-        cancelButtonText: "Cancelar",
-      });
+      const result = await Swal.fire({title: "¿Estás seguro?",text: "No podrás revertir esta acción",icon: "warning",showCancelButton: true,confirmButtonColor: "#3085d6", cancelButtonColor: "#d33", confirmButtonText: "Sí, eliminar",cancelButtonText: "Cancelar", });
 
       if (result.isConfirmed) {
         await removeNote(noteId);
         await fetchCourseNotes(course.id, user.data.id);
         await fetchResourceNotes(course.id, resource.id, user.data.id);
-        Swal.fire(
-          "Eliminado",
-          "Tu apunte ha sido eliminado.",
-          "success"
-        );
-      }
+        Swal.fire("Eliminado","Tu apunte ha sido eliminado.", "success");}
     } catch (error) {
       console.error("Error al eliminar nota:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Ocurrió un error al eliminar el apunte. Por favor, intenta de nuevo más tarde.",
-      });
-    }
+      Swal.fire({icon: "error", title: "Error",text: "Ocurrió un error al eliminar el apunte. Por favor, intenta de nuevo más tarde.", });}
   };
 
   const handleEditResourceNote = (noteId, content) => {
@@ -1104,51 +870,27 @@ export default function ResourceView() {
       await fetchResourceNotes(course.id, resource.id, user.data.id);
       setEditingResourceNoteId(null);
       setEditedResourceNoteContent("");
-      Swal.fire({
-        icon: "success",
-        title: "Apunte actualizado",
-        text: "Tu apunte del recurso ha sido actualizado exitosamente.",
-      });
+      Swal.fire({icon: "success",title: "Apunte actualizado",text: "Tu apunte del recurso ha sido actualizado exitosamente.",});
     } catch (error) {
       console.error("Error al editar el apunte del recurso:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Ocurrió un error al editar el apunte del recurso. Por favor, intenta de nuevo más tarde.",
+      Swal.fire({icon: "error",title: "Error",text: "Ocurrió un error al editar el apunte del recurso. Por favor, intenta de nuevo más tarde.",
       });
     }
   };
 
   const handleDeleteResourceNote = async (noteId) => {
     try {
-      const result = await Swal.fire({
-        title: "¿Estás seguro?",
-        text: "No podrás revertir esta acción",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Sí, eliminar",
-        cancelButtonText: "Cancelar",
+      const result = await Swal.fire({title: "¿Estás seguro?",text: "No podrás revertir esta acción",icon: "warning",showCancelButton: true,confirmButtonColor: "#3085d6",cancelButtonColor: "#d33",confirmButtonText: "Sí, eliminar", cancelButtonText: "Cancelar",
       });
-
       if (result.isConfirmed) {
         await removeResourceNote(noteId);
         await fetchResourceNotes(course.id, resource.id, user.data.id);
-        Swal.fire(
-          "Eliminado",
-          "Tu apunte del recurso ha sido eliminado.",
-          "success"
+        Swal.fire("Eliminado","Tu apunte del recurso ha sido eliminado.","success"
         );
       }
     } catch (error) {
       console.error("Error al eliminar el apunte del recurso:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Ocurrió un error al eliminar el apunte del recurso. Por favor, intenta de nuevo más tarde.",
-      });
-    }
+      Swal.fire({icon: "error",title: "Error",text: "Ocurrió un error al eliminar el apunte del recurso. Por favor, intenta de nuevo más tarde.",});}
   };
 
   const handleCommentSubmit = async (e) => {
@@ -2010,7 +1752,6 @@ export default function ResourceView() {
                           </button>
                         </div>
                       </div>
-                      {/* Si ya hay un apunte para este recurso, mostrar un mensaje */}
                       {resourceNotes && resourceNotes.some(note => note.resourceId === resource.id) ? (
                         <div className="text-white text-sm italic mb-2 mx-1">
                           {t("resource_view.resourceNoteExists")}
@@ -2041,7 +1782,6 @@ export default function ResourceView() {
                           </div>
                         </div>
                       )}
-                      {/* Notas específicas del recurso */}
                       {resourceNotes && resourceNotes.length > 0 ? (
                         resourceNotes
                           .sort((a, b) => a.resourceId - b.resourceId)
@@ -2149,7 +1889,7 @@ export default function ResourceView() {
       </div>
     );
   };
-
+  
   if (error) return <div className="p-4 text-red-500">{error}</div>;
   if (!resource) return <div>Cargando...</div>;
 
@@ -2199,7 +1939,6 @@ export default function ResourceView() {
                 {course?.title}
               </h1>
               <div className="mb-4">
-                {/* Si el recurso tiene quizzes, entonces evaluamos el estado del quiz */}
                 {
                   resource?.quizzes && resource.quizzes.length > 0
                     ? !isQuizStarted // Si hay quizzes, manejamos el estado del quiz
@@ -2210,7 +1949,6 @@ export default function ResourceView() {
                     : renderContent(resource?.files) // Si NO hay quizzes, mostramos el contenido del recurso (imagen, archivo, etc.)
                 }
 
-                {/* Mostrar error si existe */}
                 {error && <p className="text-red-500 text-center">{error}</p>}
               </div>
               <div className="flex justify-between">

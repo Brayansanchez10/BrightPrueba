@@ -22,6 +22,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
     const [username, setUsername] = useState('');
     const { t } = useTranslation("global");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [entityId, setEntityId] = useState(null);
 
     const MAX_DESCRIPTION_LENGTH = 150;
     const MIN_COURSE_NAME_LENGTH = 3;
@@ -33,7 +34,9 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
             if (user && user.data && user.data.id) {
                 try {
                     const userData = await getUserById(user.data.id);
-                    setUsername(userData.id);
+                    setUsername(userData);
+                    // Guarda el entityId del usuario
+                    setEntityId(userData.entityId); // Asegúrate de tener este estado definido
                 } catch (error) {
                     console.error('Error al obtener datos del usuario:', error);
                 }
@@ -156,9 +159,10 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
             category: course.category,
             description: course.description,
             image: course.image,
-            userId: username,
+            userId: username.id,
             nivel: course.nivel,
-            duracion: course.duracion
+            duracion: course.duracion,
+            entityId: username.entityId,
         };
     
         try {
@@ -269,10 +273,12 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                         onChange={(value) => setCourse({ ...course, category: value })}
                         required
                     >
-                        {categories.map((category) => (
-                            <Option key={category.id} value={category.name}>
-                                {category.name}
-                            </Option>
+                        {categories
+                            .filter((category) => entityId === 1 || category.entityId === entityId) // Filtrado por entityId
+                            .map((category) => (
+                                <Option key={category.id} value={category.name}>
+                                    {category.name}
+                                </Option>
                         ))}
                     </Select>
                     {errorMessage.category && (

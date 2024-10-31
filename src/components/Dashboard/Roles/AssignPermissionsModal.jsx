@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Modal, Checkbox } from "antd";
 import holaImage from "../../../assets/img/hola1.png";
 import { useTranslation } from "react-i18next";
@@ -14,14 +14,13 @@ const AssignPermissionsModal = ({
   handleAssignPermissionsSubmit,
 }) => {
   const { t } = useTranslation("global");
-
-  const groupedPermissions = permissionsData?.info.reduce((groups, permission) => {
-    const category = permission.nombre.split(" ")[0]; // Toma el primer término (Crear, Editar, Eliminar, Activar)
-    if (!groups[category]) {
-      groups[category] = [];
+  const groupedPermissions = permissionsData?.info?.reduce((acc, permission) => {
+    const category = permission.category || 'Lista';
+    if (!acc[category]) {
+      acc[category] = [];
     }
-    groups[category].push(permission);
-    return groups;
+    acc[category].push(permission);
+    return acc;
   }, {});
 
 

@@ -14,4 +14,3 @@ export const updateRating = (id, ratingData) =>
 
 export const deleteRating = (id) => 
     axios.delete(`/ratings/${id}`);
-

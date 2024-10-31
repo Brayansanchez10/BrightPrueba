@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'; // Añade use
 import logo from '../../assets/img/hola.png';
 import { useAuth } from '../../context/auth.context.jsx';
 import { useTranslation } from 'react-i18next';
-import { FaBook, FaDiceD20, FaEdit, FaHome, FaSignOutAlt, FaTags, FaUsers, FaUserCircle, FaBars } from 'react-icons/fa';
+import { FaBook, FaDiceD20, FaEdit, FaHome, FaSignOutAlt, FaTags, FaUsers, FaUserCircle, FaBars, FaHeadSideVirus, FaCity } from 'react-icons/fa';
 import { useUserContext } from '../../context/user/user.context.jsx';
 
 const LeftBar = ({ onVisibilityChange }) => {
@@ -161,7 +161,10 @@ const LeftBar = ({ onVisibilityChange }) => {
           <FaTags size="20px" className={`mr-2 h-5 ${location.pathname === '/Categories' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('leftBarComponent.categories')}
         </Link>
         <Link to="/ForumCategories" className={`group flex rounded-xl my-1 py-2 px-4 md:px-6 text-left shadow-lg w-full transition duration-300 ${location.pathname === '/ForumCategories' ? 'shadow-gray-500 bg-white text-purple-700' : 'hover:shadow-gray-500 hover:bg-white hover:text-purple-700'}`}>
-          <FaTags size="20px" className={`mr-2 h-5 ${location.pathname === '/ForumCategories' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('Foro')}
+          <FaHeadSideVirus size="20px" className={`mr-2 h-5 ${location.pathname === '/ForumCategories' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('Foro')}
+        </Link>
+        <Link to="/Entities" className={`group flex rounded-xl my-1 py-2 px-4 md:px-6 text-left shadow-lg w-full transition duration-300 ${location.pathname === '/Entities' ? 'shadow-gray-500 bg-white text-purple-700' : 'hover:shadow-gray-500 hover:bg-white hover:text-purple-700'}`}>
+          <FaCity  size="20px" className={`mr-2 h-5 ${location.pathname === '/Entities' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('Entidades')}
         </Link>
         <Link to="/Roles" className={`group flex rounded-xl my-1 py-2 px-4 md:px-6 text-left shadow-lg w-full transition duration-300 ${location.pathname === '/Roles' ? 'shadow-gray-500 bg-white text-purple-700' : 'hover:shadow-gray-500 hover:bg-white hover:text-purple-700'}`}>
           <FaDiceD20 size="20px" className={`mr-2 h-5 ${location.pathname === '/Roles' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('leftBarComponent.roles')}

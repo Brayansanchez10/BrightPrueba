@@ -19,6 +19,7 @@ const UpdateCategoryModal = ({
       setImagePreview(initialImagePreview); 
     }
   }, [initialImagePreview]);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
@@ -60,8 +61,6 @@ const UpdateCategoryModal = ({
       });
       return;
     }
-
-    // Si no se ha subido una nueva imagen, usar la imagen previa
     onUpdate({ 
       ...values, 
       image: imageFile ? imageFile : initialImagePreview 
@@ -70,10 +69,10 @@ const UpdateCategoryModal = ({
 
   return (
     <Modal
-      className="custom w-[544px] h-[600px] rounded-2xl bg-white flex flex-col justify-between"
+      className="custom w-[544px] rounded-2xl bg-white flex flex-col justify-between overflow-hidden"
       visible={visible}
       closable={false}
-      centered
+      style={{ top: '10%' }}
       footer={null}
       onCancel={onClose}
     >
@@ -93,7 +92,7 @@ const UpdateCategoryModal = ({
       </div>
 
       <Form
-        className="px-5 py-6"
+        className="px-5 py-6 pb-8"
         form={form}
         onFinish={handleSubmit}
         layout="vertical"

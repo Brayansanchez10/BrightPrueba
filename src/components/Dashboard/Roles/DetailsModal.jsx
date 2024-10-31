@@ -27,18 +27,26 @@ const DetailsModal = ({
 
   return (
     <Modal
-      className="custom w-[543px] h-[400px] bg-white rounded-3xl"
-      centered
+      className="custom w-[543px] bg-white rounded-3xl overflow-hidden p-0"
       visible={visible}
       onCancel={onClose}
       footer={null}
       closable={false}
-      bodyStyle={{
+      style={{
+        top: '15%',
+        padding: 0,
         overflow: "hidden",
+        borderRadius: "24px",
+        boxShadow: "none",
+      }}
+      bodyStyle={{
+        padding: 0,
+        margin: 0,
+        borderRadius: "24px",
       }}
     >
-      <div className="p-0">
-        <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350B48] to-[#905BE8] flex items-center justify-center">
+      <div className="p-0 m-0 overflow-hidden rounded-3xl">
+        <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350B48] to-[#905BE8] flex items-center justify-center rounded-t-3xl overflow-hidden">
           <img
             src={zorroImage}
             alt="Zorro"

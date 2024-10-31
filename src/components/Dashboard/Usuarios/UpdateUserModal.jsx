@@ -38,15 +38,13 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
     }
   };
 
-
-
   return (
     <Modal
-      className={`custom w-[544px] h-[600px] rounded-2xl bg-white flex flex-col justify-between ${shake ? "shake" : ""}`} 
+      className={`custom w-[544px] rounded-2xl bg-white flex flex-col justify-between overflow-hidden ${shake ? "shake" : ""}`}
       visible={visible}
       footer={null}
       closable={false}
-      centered
+      style={{ top: '1%' }}
       onCancel={onCancel}
     >
       <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
@@ -66,7 +64,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
 
       <Form
         onFinish={handleFormSubmit}
-        className="bg-secondary px-5 py-6"
+        className="bg-secondary px-5 py-6 pb-8"
         form={form}
         layout="vertical"
       >

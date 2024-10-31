@@ -244,7 +244,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
   return (
     <div className="md:mt-3 mt-5 mx-4 mb-2 flex rounded-lg">
-      <div className="max-w-lg w-full mx-auto bg-secondary rounded-lg shadow-lg overflow-hidden">
+      <div className="max-w-lg w-full mx-auto bg-secondaryAdmin rounded-lg shadow-lg overflow-hidden">
         <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-4 px-6 md:px-10">
           <h1 className="text-center font-black text-white md:text-xl lg:text-2xl">
             {t('userProfileSettings.edit_profile')}
@@ -275,7 +275,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
                 type="file"
                 id="profileImage"
                 accept="image/*"
-                className="w-full border text-sm border-gray-300 dark:border-purple-800 rounded-md p-2 dark:text-primary hover:bg-primary transition-colors duration-300"
+                className="w-full border text-sm border-gray-300 dark:border-gray-500 rounded-md p-2 dark:text-primary hover:bg-primaryAdmin transition-colors duration-300"
                 onChange={handleImageChange}
               />
               {errors.image && (
