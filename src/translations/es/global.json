@@ -873,5 +873,13 @@
         "create": "Crear",
         "cancel": "Cancelar",
         "validateContent": "Minimo de caracteres para el contenido es 8"
-    }
+    },
+    "ForumTable": {
+        "forumTitle": "Foro Categorias",
+        "forumCreate": "Crear Foro",
+        "name": "nombre",
+        "Description": "Descripcion"
+        
+
+    }   
 }

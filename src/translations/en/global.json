@@ -875,5 +875,11 @@
         "create": "Create",
         "cancel": "Cancel",
         "validateContent": "Minimum characters for the content is 8"
+    },
+    "ForumTable": {
+        "forumTitle": "Foro Categorias",
+        "forumCreate": "Crate forum",
+         "Name": "Name",
+        "Description": "Description"
     }
 }

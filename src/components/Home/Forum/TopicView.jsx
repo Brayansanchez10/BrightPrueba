@@ -19,11 +19,9 @@ import CreateAnswersComponents from "./answersComponent.jsx/CreateAnswerForm.jsx
 import UpdateForumCommntsForm from "./CommentComponents/EditComponents.jsx";
 import UpdateAnswersForm from "./answersComponent.jsx/updateAnswerForm.jsx";
 
-
 // Likes y marcador
 import { useLikes } from "../../../context/forum/likes.context.jsx";
 import { useBookMark } from "../../../context/forum/bookmark.context.jsx";
-
 
 import Footer from "../../footer.jsx";
 
@@ -35,22 +33,19 @@ const TopicViewComponente = () => {
     const [comments, setComments] = useState([]);
     const { getTopicById } = useForumTopic();
     const { getCommentsByTopic } = useForumComments();
-    const { getAnswersByComment } = useAnswers(); // Obtén la función de respuestas
-    const [answersByComment, setAnswersByComment] = useState({}); // Para almacenar respuestas por comentario
+    const { getAnswersByComment } = useAnswers();
+    const [answersByComment, setAnswersByComment] = useState({});
     
     const { likes, toggleLikes, loading: likesLoading } = useLikes();
-    const { bookmark, toggleBookmark, loading: bookmarkLoading } = useBookMark(); // Bookmark context
+    const { bookmark, toggleBookmark, loading: bookmarkLoading } = useBookMark();
     
-    //Formulario edición Comentario
-    const [ selectComment, setSelectComment ] =useState(null);
-    const [ updateCommentForm, setUpdateCommentForm ] = useState(false);
-    //Formulario edición Respuesta
-    const [ selectAnswer, setSelectAnswer] = useState(null);
-    const [ updateAnswerForm, setUpdateAnswerForm ] = useState(false);
+    const [selectComment, setSelectComment] = useState(null);
+    const [updateCommentForm, setUpdateCommentForm] = useState(false);
+    const [selectAnswer, setSelectAnswer] = useState(null);
+    const [updateAnswerForm, setUpdateAnswerForm] = useState(false);
   
-    // Modales de creación
-    const [ createComment, setCreateComment ] = useState(false); // Función para abrir el modal de crear Comentario
-    const [ createAnswer, setCreateAnswer ] = useState(false);
+    const [createComment, setCreateComment] = useState(false);
+    const [createAnswer, setCreateAnswer] = useState(false);
 
     const fetchForumTopic = async () => {
         if (user && user.data && user.data.id) {
@@ -58,17 +53,15 @@ const TopicViewComponente = () => {
                 const fetchedTopic = await getTopicById(topicId);
                 setTopic(fetchedTopic);
     
-                // Obtener los comentarios del tema
                 const fetchedComments = await getCommentsByTopic(topicId);
                 setComments(fetchedComments);
     
-                // Obtener respuestas para cada comentario
                 const allAnswers = {};
                 for (const comment of fetchedComments) {
                     const answers = await getAnswersByComment(comment.id);
-                    allAnswers[comment.id] = answers; // Almacenar respuestas por ID de comentario
+                    allAnswers[comment.id] = answers;
                 }
-                setAnswersByComment(allAnswers); // Actualizar estado de respuestas
+                setAnswersByComment(allAnswers);
             } catch (error) {
                 console.error("Error al obtener el tema", error);
             }
@@ -79,7 +72,6 @@ const TopicViewComponente = () => {
         fetchForumTopic(); 
     }, [user, topicId]);
 
-    // Formularios de creación
     const handleCreateFormComments = () => {
         setCreateComment(true);
     };
@@ -87,19 +79,16 @@ const TopicViewComponente = () => {
         setCreateAnswer({ visible: true, commentId });
     };
 
-    //Formularios de Edición
     const openEditCommentsModal = (comment) => {
-      setSelectComment(comment); // Pasar el comentario completo
-      setUpdateCommentForm(true);
+        setSelectComment(comment);
+        setUpdateCommentForm(true);
     };
 
-    //Respuesta
     const openEditAnswersModal = (answer) => {
-      setSelectAnswer(answer); 
-      setUpdateAnswerForm(true);
+        setSelectAnswer(answer);
+        setUpdateAnswerForm(true);
     };
 
-    // Botones de likes y marcador
     const handleLikeToggle = async (commentsId) => {
         await toggleLikes(commentsId);
     };
@@ -108,96 +97,114 @@ const TopicViewComponente = () => {
     };
 
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50">
+        <div className="flex flex-col min-h-screen bg-gray-100">
           <NavigationBar />
-          <div className="flex-grow mt-16 p-6 max-w-screen-lg mx-auto">
-              <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-                  <h1 className="text-2xl font-bold mb-4">{topic.title}</h1>
-                  <p className="text-gray-700">{topic.Content}</p>
+          <div className="flex-grow mt-10 p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-md flex">
+            <div className="flex-grow">
+              <div className="border-b pb-4 mb-4">
+                <h1 className="text-3xl font-bold text-gray-800">{topic.title}</h1>
+                <p className="text-gray-600">{topic.Content}</p>
               </div>
               <Button
-                  className="bg-purple-800 text-white font-bold py-1.5 px-4 rounded-3xl min-w-[120px] shadow-md shadow-gray-400"
+                  className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-blue-700 transition"
                   onClick={() => handleCreateFormComments()}
-                  icon={<FaChevronRight />}
               >
                   {t("topicView.topicComment")}
               </Button>
-  
-              <h2 className="text-xl font-semibold mb-4">{t("topicView.comments")}</h2>
+
+              <h2 className="text-xl font-semibold mt-6 mb-4">{t("topicView.comments")}</h2>
               <div className="comments-section space-y-4">
-                  {Array.isArray(comments) && comments.length > 0 ? (
-                      comments.map((comment) => {
-                          const isLiked = likes.some((like) => like.commentsId === comment.id);
-                          const isBookmarked = bookmark.some((fav) => fav.commentId === comment.id); // Verificar si está en bookmarks
-  
-                          return (
-                              <div key={comment.id} className="comment-card p-4 bg-white rounded-lg shadow">
-                                  <p className="text-gray-800">{comment.content}</p>
-                                  <small className="text-gray-500">{t("Creador")}: {comment.user.username}</small>
-  
-                                  <Button
-                                      onClick={() => handleCreateFormAnswers(comment.id)}
-                                      icon={<BsFillReplyFill />}
-                                  >
-                                  </Button>
-  
-                                  <Button
-                                      onClick={() => handleLikeToggle(comment.id)}
-                                      icon={isLiked ? <AiFillLike color="blue" /> : <AiOutlineLike />}
-                                      disabled={likesLoading}
-                                  >
-                                      {isLiked}
-                                  </Button>
-  
-                                  <Button
-                                      onClick={() => handleBookmarkToggle(comment.id)} // Bookmark toggle
-                                      icon={<FaBookBookmark color={isBookmarked ? "orange" : "gray"} />}
-                                      disabled={bookmarkLoading} // Deshabilitar si está cargando
-                                  >
-                                      {isBookmarked}
-                                  </Button>
-  
-                                  {/* Verificar si el usuario autenticado es el creador del comentario */}
-                                  {user && user.data && user.data.id === comment.userId && (
-                                      <Button
-                                          onClick={() => openEditCommentsModal(comment)}
-                                          icon={<EditOutlined color="red" />}
-                                      >
-                                      </Button>
-                                  )}
-  
-                                  {/* Mostrar respuestas por comentario */}
-                                  {answersByComment[comment.id] && answersByComment[comment.id].length > 0 ? (
-                                      <div className="answers-section mt-2 space-y-2">
-                                          {answersByComment[comment.id].map((answer) => (
-                                              <div key={answer.id} className="answer-card p-2 bg-gray-100 rounded shadow mt-2">
-                                                  <p>{answer.content}</p>
-                                                  <small className="text-gray-500">{t("Creador")}: {answer.user.username}</small>
-                                                  
-                                                  {/* Verificar si el usuario autenticado es el creador de la respuesta */}
-                                                  {user && user.data && user.data.id === answer.userId && (
-                                                      <Button
-                                                          onClick={() => openEditAnswersModal(answer)}
-                                                          icon={<EditOutlined color="red" />}
-                                                      >
-                                                      </Button>
-                                                  )}
-                                              </div>
-                                          ))}
-                                      </div>
-                                  ) : (
-                                      <p className="text-gray-500">{t("No respuestas")}</p>
-                                  )}
-                              </div>
-                          );
-                      })
-                  ) : (
-                      <p className="text-gray-500">{t("noComments")}</p>
-                  )}
+                {Array.isArray(comments) && comments.length > 0 ? (
+                    comments.map((comment) => {
+                        const isLiked = likes.some((like) => like.commentsId === comment.id);
+                        const isBookmarked = bookmark.some((fav) => fav.commentId === comment.id);
+
+                        return (
+                            <div key={comment.id} className="p-4 bg-white border border-gray-300 rounded-lg shadow hover:shadow-lg transition mb-4">
+                                <p className="text-gray-800">{comment.content}</p>
+                                <small className="text-gray-500 block mt-1">{t("Creador")}: {comment.user.username}</small>
+
+                                <div className="flex space-x-2 mt-2">
+                                    <Button
+                                        className="text-blue-500 hover:underline"
+                                        onClick={() => handleCreateFormAnswers(comment.id)}
+                                        icon={<BsFillReplyFill />}
+                                    >
+                                        Responder
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleLikeToggle(comment.id)}
+                                        className="flex items-center"
+                                        icon={isLiked ? <AiFillLike color="blue" /> : <AiOutlineLike />}
+                                        disabled={likesLoading}
+                                    >
+                                        {isLiked ? 'Me gusta' : 'Me gusta'}
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleBookmarkToggle(comment.id)}
+                                        className="flex items-center"
+                                        icon={<FaBookBookmark color={isBookmarked ? "orange" : "gray"} />}
+                                        disabled={bookmarkLoading}
+                                    >
+                                        {isBookmarked ? 'Guardado' : 'Guardar'}
+                                    </Button>
+
+                                    {user && user.data && user.data.id === comment.userId && (
+                                        <Button
+                                            onClick={() => openEditCommentsModal(comment)}
+                                            className="text-red-600"
+                                        >
+                                            Editar
+                                        </Button>
+                                    )}
+                                </div>
+
+                                {answersByComment[comment.id] && answersByComment[comment.id].length > 0 ? (
+                                    <div className="answers-section mt-4 ml-4 space-y-2">
+                                        {answersByComment[comment.id].map((answer) => (
+                                            <div key={answer.id} className="p-2 bg-gray-100 border-l-4 border-blue-500 rounded-lg shadow mt-2">
+                                                <p>{answer.content}</p>
+                                                <small className="text-gray-500">{t("Creador")}: {answer.user.username}</small>
+
+                                                {user && user.data && user.data.id === answer.userId && (
+                                                    <Button
+                                                        onClick={() => openEditAnswersModal(answer)}
+                                                        className="text-red-600"
+                                                    >
+                                                        Editar
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-500">{t("No respuestas")}</p>
+                                )}
+                            </div>
+                        );
+                    })
+                ) : (
+                    <p className="text-gray-500">{t("noComments")}</p>
+                )}
               </div>
+            </div>
+
+            {/* Nuevo contenedor para el usuario más activo y botón de compartir */}
+            <div className="w-1/4 p-4 bg-gray-100 rounded-lg shadow-lg ml-4">
+                <h2 className="text-xl font-semibold mb-2">Usuario Más Activo</h2>
+                <p className="text-gray-700">Usuario: <strong>{/* Nombre del usuario */}</strong></p>
+                <p className="text-gray-500">Comentarios: <strong>{/* Número de comentarios */}</strong></p>
+                <Button
+                    className="bg-green-500 text-white mt-2 py-1 px-3 rounded hover:bg-green-600"
+                    onClick={() => {/* Lógica para compartir */}}
+                >
+                    Compartir
+                </Button>
+            </div>
           </div>
+
           <Footer />
-  
+
           <CreateCommentsComponent
               visible={createComment}
               onClose={() => setCreateComment(false)}
@@ -207,40 +214,40 @@ const TopicViewComponente = () => {
                   fetchForumTopic();
               }}
           />
-          
+
           <CreateAnswersComponents
               visible={createAnswer.visible}
               commentId={createAnswer.commentId}
               onClose={() => setCreateAnswer({ visible: false, commentId: null })}
               onCreate={() => {
-                setCreateAnswer({ visible: false, commentId: null })
-                fetchForumTopic();
-            }}
+                  setCreateAnswer({ visible: false, commentId: null });
+                  fetchForumTopic();
+              }}
           />
-  
+
           <UpdateForumCommntsForm 
               visible={updateCommentForm}
               onClose={() => setUpdateCommentForm(false)}
               topicId={topicId}
-              topicData={selectComment} // Asegúrate de pasar el comentario completo
+              topicData={selectComment}
               onUpdate={() => {
-                setUpdateCommentForm(false)
-                fetchForumTopic();
+                  setUpdateCommentForm(false);
+                  fetchForumTopic();
               }}
           />
-  
+
           <UpdateAnswersForm 
               visible={updateAnswerForm}
               onClose={() => setUpdateAnswerForm(false)}
               answerData={selectAnswer}
               commentsId={comments.id}
               onUpdate={() => {
-                setUpdateAnswerForm(false)
-                fetchForumTopic();
-            }}
+                  setUpdateAnswerForm(false);
+                  fetchForumTopic();
+              }}
           />
-      </div>
-  );
+        </div>
+    );
 };
 
 export default TopicViewComponente;
