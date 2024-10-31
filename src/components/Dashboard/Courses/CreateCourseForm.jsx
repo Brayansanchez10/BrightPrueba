@@ -238,12 +238,12 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
             <div className="h-[115px] bg-gradient-to-r from-[#18116A] to-blue-500 flex justify-center items-center">
                 <img src={holaImage} alt="Logo" className="w-[200px] h-[200px] mt-12 object-contain" />
             </div>
-            <form onSubmit={handleSubmit} className="bg-secondary p-5 text-center">
-                <h1 className="text-2xl font-extrabold text-[#18116A] dark:text-primary mt-5 mb-4 font-bungee">
+            <form onSubmit={handleSubmit} className="bg-white p-5 text-center">
+                <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4 font-bungee">
                     {t("createCourseForm.title")}
                 </h1>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.name")}
                     </label>
                     <input
@@ -260,7 +260,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                     )}
                 </div>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.category")}
                     </label>
                     <Select
@@ -283,7 +283,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                     )}
                 </div>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.description")}
                     </label>
                     <textarea
@@ -295,13 +295,13 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                         style={{ minHeight: "80px" }}
                         required
                     />
-                    <div className="text-gray-500 dark:text-gray-300 text-sm">{`${course.description.length}/${MAX_DESCRIPTION_LENGTH}`}</div>
+                    <div className="text-gray-500 text-sm">{`${course.description.length}/${MAX_DESCRIPTION_LENGTH}`}</div>
                     {errorMessage.description && (
                         <p className="text-red-500 text-sm mt-1">{errorMessage.description}</p>
                     )}
                 </div>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.level")}
                     </label>
                     <Select
@@ -320,7 +320,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                     )}
                 </div>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.duration")}
                     </label>
                     <input
@@ -338,7 +338,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                     )}
                 </div>
                 <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-primary block">
+                    <label className="text-lg font-bold block">
                         {t("createCourseForm.image")}
                     </label>
                     <input

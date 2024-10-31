@@ -407,14 +407,14 @@ export default function AllCourses() {
         </div>
         <div className="w-full md:w-auto">
           <motion.div
-            className="flex px-4 py-2 border bg-secondary border-gray-300 dark:border-purple-900 rounded-xl shadow-md"
+            className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <FaSearch size={"18px"} className="text-primary mt-1 mr-2" />
+            <FaSearch size={"18px"} className="mt-1 mr-2" />
             <input
               type="search"
-              className="bg-secondary dark:text-primary outline-none w-full md:w-[280px] lg:w-[360px] xl:w-[420px]"
+              className="bg-white outline-none w-full md:w-[280px] lg:w-[360px] xl:w-[420px]"
               placeholder={t("coursesComponent.search_placeholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -506,8 +506,8 @@ export default function AllCourses() {
         error={null}
         isRegistered={false}
       >
-        <h2 className="text-center font-bold text-lg mb-4">{t('courseComponent.modalA')}</h2>
-        <p className="text-center">
+        <h2 className="text-center text-primary font-bold text-lg mb-4">{t('courseComponent.modalA')}</h2>
+        <p className="text-center text-primary">
           {t('courseComponent.modalM')}
         </p>
       </Modal>
