@@ -38,15 +38,13 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
     }
   };
 
-
-
   return (
     <Modal
-      className={`custom w-[544px] h-[600px] rounded-2xl bg-white flex flex-col justify-between ${shake ? "shake" : ""}`} 
+      className={`custom w-[544px] rounded-2xl bg-white flex flex-col justify-between overflow-hidden ${shake ? "shake" : ""}`}
       visible={visible}
       footer={null}
       closable={false}
-      centered
+      style={{ top: '1%' }}
       onCancel={onCancel}
     >
       <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
@@ -66,7 +64,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
 
       <Form
         onFinish={handleFormSubmit}
-        className="px-5 py-6"
+        className="bg-white px-5 py-6 pb-8"
         form={form}
         layout="vertical"
       >
@@ -77,7 +75,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         <Form.Item
           className="mb-4"
           name="username"
-          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.username')}</span>}
+          label={<span className="text-lg font-bold">{t('UpdateUserModal.username')}</span>}
           rules={[
             { required: true, message: t("validations.usernameRequired") },
             { min: 5, message: t("validations.usernameMinLength") },
@@ -90,7 +88,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         <Form.Item
           className="mb-4"
           name="firstNames"
-          label={<span className="text-lg font-bold text-black">{t('CreateUserModal.firstNames')}</span>}
+          label={<span className="text-lg font-bold">{t('CreateUserModal.firstNames')}</span>}
           rules={[{ required: true, message: t("CreateUserModal.firstNamesRequired") }]}
         >
           <Input minLength={3} maxLength={60} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
@@ -98,7 +96,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         <Form.Item
           className="mb-4"
           name="lastNames"
-          label={<span className="text-lg font-bold text-black">{t('CreateUserModal.lastNames')}</span>}
+          label={<span className="text-lg font-bold">{t('CreateUserModal.lastNames')}</span>}
           rules={[{ required: true, message: t("CreateUserModal.lastNamesRequired") }]}
         >
           <Input minLength={3} maxLength={60} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
@@ -106,7 +104,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         <Form.Item
           className="mb-4"
           name="documentNumber"
-          label={<span className="text-lg font-bold text-black">{t('CreateUserModal.documentNumber')}</span>}
+          label={<span className="text-lg font-bold">{t('CreateUserModal.documentNumber')}</span>}
           rules={[{ required: true, message: t("CreateUserModal.documentNumberRequired") }]}
         >
           <Input minLength={3} maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
@@ -115,7 +113,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         <Form.Item
           className="mb-4"
           name="email"
-          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.email')}</span>}
+          label={<span className="text-lg font-bold">{t('UpdateUserModal.email')}</span>}
           rules={[
             { required: true, message: t("CreateUserModal.emailRequired") },
             { type: "email", message: t("CreateUserModal.emailInvalid") },
@@ -128,7 +126,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         <Form.Item
           className="mb-4"
           name="role"
-          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.role')}</span>}
+          label={<span className="text-lg font-bold">{t('UpdateUserModal.role')}</span>}
           rules={[{ required: true, message: t('UpdateUserModal.roleRequired') }]}
         >
           <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">
@@ -143,7 +141,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         <Form.Item
           className="mb-4"
           name="state"
-          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.state')}</span>}
+          label={<span className="text-lg font-bold">{t('UpdateUserModal.state')}</span>}
           rules={[{ required: true, message: t('UpdateUserModal.stateRequired') }]}
         >
           <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">

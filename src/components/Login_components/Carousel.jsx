@@ -75,12 +75,12 @@ function Carousel() {
       <div className="bg-gradient-to-r from-purple-600 to-emerald-500 w-full sm:w-auto rounded-tl-3xl rounded-bl-3xl p-8">
         <div className="text-center text-white">
           <img
-            className="h-60 w-60 sm:h-64 sm:w-64 lg:h-80 lg:w-80 mx-auto mb-0 mt-0"
+            className="h-60 w-60 sm:h-64 sm:w-64 lg:h-96 lg:w-96 mx-auto mb-0 mt-0"
             src={imagen}
             alt="Logo"
           />
-          <div className="h-48 lg:h-56 block items-center justify-center">
-            <p className={`text-xl sm:text-xl lg:text-2xl italic text-center font-bungee transition-opacity duration-500 ease-in-out ${fade ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="h-48 lg:h-56 block items-center justify-center mt-8">
+            <p className={`text-xl sm:text-xl lg:text-3xl text-center font-merienda font-semibold transition-opacity duration-500 ease-in-out ${fade ? 'opacity-100' : 'opacity-0'}`}>
               "{phrases[currentPhraseIndex].text}"
             </p>
             <br />
@@ -89,7 +89,7 @@ function Carousel() {
             </p>
           </div>
 
-          <div className="text-lg mt-16 sm:text-sm text-gray-300 text-opacity-90 sm:mt-28 lg:mt-32 font-bold mb-16 sm:mb-32 lg:mb-8">
+          <div className="text-lg sm:text-sm text-gray-300 text-opacity-90 sm:mt-28 lg:mt-32 font-bold mb-16 sm:mb-32 lg:mb-8">
             {t("footer.description")}
             <p className="text-sm">{t("footer.copy_right")}</p>
           </div>

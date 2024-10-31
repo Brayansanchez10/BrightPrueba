@@ -12,6 +12,7 @@ module.exports = {
       fontFamily: {
         bungee: ['Bungee', 'sans-serif'],
         satisfy: ['Satisfy', 'sans-serif'],
+        merienda: ['Merienda', 'cursive'],
       },
       screens: {
         'h720': {'raw': '(min-height: 720px)'},
@@ -22,6 +23,8 @@ module.exports = {
       backgroundColor: {
         primary: 'var(--bg-primary)',
         secondary: 'var(--bg-secondary)',
+        primaryAdmin: 'var(--bg-primary-admin)',
+        secondaryAdmin: 'var(--bg-secondary-admin)',
       },
       textColor: {
         primary: 'var(--text-primary)',

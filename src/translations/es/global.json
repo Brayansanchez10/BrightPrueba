@@ -15,10 +15,12 @@
         "forgot_password": "¿Has olvidado tu contraseña?",
         "login_successful": "Inicio de sesión exitoso",
         "error_occurred": "Ocurrió un error",
-        "hello": "¡HOLA!",
-        "welcome_message": "BIENVENIDO A TU ESPACIO DE APRENDIZAJE",
-        "login_se": "INGRESA",
-        "your_account": "A TU CUENTA"
+        "hello": "¡Hola!",
+        "welcome_message": "Bienvenido a tu espacio de aprendizaje",
+        "login_se": "Ingresa",
+        "your_account": "a tu cuenta",
+        "or": "o",
+        "google": "Ingresa con Google"
     },
     "carousel": {
         "phrases": {
@@ -43,7 +45,7 @@
         "username_min_length": "El nombre de usuario debe tener al menos 4 caracteres",
         "email_requires_at": "El correo debe contener un '@'",
         "email_requires_com": "El correo debe terminar en' .com'",
-        "register": "REGISTRARSE",
+        "register": "Registrarse",
         "already_registered": "¿Ya estás registrado? ",
         "login": "Iniciar sesión",
         "username": "Nombre de usuario",
@@ -70,10 +72,13 @@
         "user_created": "Usuario creado exitosamente, Por favor revisa tu correo para activar la cuenta",
         "email_exists": "El correo electrónico ya existe, por favor ingrese uno distinto",
         "username_exists": "El nombre de usuario ya existe, por favor ingrese uno distinto",
-        "register_now": "REGÍSTRESE AHORA",
-        "future": "SE PARTE DEL FUTURO",
+        "register_now": "Regístrese ahora",
+        "future": "Se parte del futuro",
         "ready": "PREPARADO!",
-        "AlertPasswordCorro": "La contraseña no puede ser un correo electrónico"
+        "AlertPasswordCorro": "La contraseña no puede ser un correo electrónico",
+        "entity_type": "Tipo de entidad",
+        "select_entity_type": "Selecciona tu entidad",
+        "entity_required": "Requerido"
     },
     "reset_password": {
         "invalid_email": "Correo electrónico no válido",
@@ -209,7 +214,8 @@
         "logout": "Cerrar Sesión",
         "myCourses": "Mis cursos",
         "myAccount": "Mi cuenta",
-        "configProfile": "Configurar perfil"
+        "configProfile": "Configurar perfil",
+        "forum": "Foro"
     },
     "newPasswordUser": {
         "change_password": "Cambiar Contraseña",
@@ -246,7 +252,8 @@
         "no_courses_available": "Próximamente",
         "check_back_later": "No hay cursos disponibles en este momento. ¡Próximamente, nuevos cursos estarán disponibles! Por favor, vuelve más tarde.",
         "no_courses_enrolled": "No estás inscrito en ningún curso aún.", 
-
+        "modalA": "¡Éxito!",
+        "modalM": "Te has registrado exitosamente",
         "title": "Cursos",
         "favorites": "Tus favoritos",
         "desFavorites": "Aquí se mostrarán tus cursos favoritos"
@@ -438,7 +445,9 @@
         "title": "ELIMINAR CURSO",
         "confirmationMessage": "¿Estás seguro que deseas eliminar el curso de {{courseName}}?",
         "irreversibleMessage": "Esta acción no se podrá revertir.",
-        "confirmButton": "Eliminar"
+        "confirmButton": "Eliminar",
+        "loseProgressMessage": "Perderas el progreso del curso",
+        "currentProgress": "Progreso actual:"
     },
     "deleteConfirmation": {
         "confirmDeletion": "Confirmar Eliminación",
@@ -683,6 +692,8 @@
         "viewDetails": "Ver detalles",
         "start": "Comenzar",
         "continue": "Continuar",
+        "downloadPlan": "Descargar plan de estudio",
+        "previewCertificate": "Previsualizar certificado",
         "logoAlt": "Logo",
         "technologyAcquisitionsTitle": "Adquisiciones tecnológicas destacadas 2021",
         "technologyAcquisitionsDescription": "Estas son las mayores adquisiciones tecnológicas empresariales de 2021 hasta ahora, en orden cronológico inverso.",
@@ -704,6 +715,10 @@
         "description3": "es un apasionado del aprendizaje continuo, siempre buscando perfeccionar sus habilidades y compartirlas con los demás.",
         "description4": "es un profesional admirado, con una carrera marcada por logros significativos y un compromiso inquebrantable con la educación.",
         "description5": "es un líder intelectual, dedicado a influir positivamente en su comunidad a través de la enseñanza."
+    },
+    "certificate": {
+        "preview": "Previsualización del certificado",
+        "previewMessage": "Aquí podrás ver cómo se verá tu certificado una vez completado el curso"
     },
     "navigation": {
         "previous": "Atrás",
@@ -874,6 +889,7 @@
         "cancel": "Cancelar",
         "validateContent": "Minimo de caracteres para el contenido es 8"
     },
+<<<<<<< HEAD
     "ForumTable": {
         "forumTitle": "Foro Categorias",
         "forumCreate": "Crear Foro",
@@ -882,4 +898,79 @@
         
 
     }   
+=======
+    "entities": {
+        "title": "Entidades",
+        "createEntity": "Crear Entidad",
+        "searchPlaceholder": "Buscar por Nombre",
+        "id": "ID",
+        "name": "Nombre",
+        "type": "Tipo",
+        "actions": "Acciones",
+        "createSuccess": "Entidad creada con éxito",
+        "createError": "Error al crear entidad",
+        "updateSuccess": "Entidad actualizada con éxito",
+        "updateError": "Error al actualizar entidad",
+        "deleteSuccess": "Entidad eliminada con éxito",
+        "deleteError": "Error al eliminar entidad",
+        "assign": "Asignar",
+        "cancel": "Cancelar",
+        "resource": "Recurso",
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "details": "Detalles",
+        "update": "Actualizar",
+        "delete": "Eliminar",
+        "noEntities": "No hay entidades disponibles",
+        "addContent": "Agregar Contenido A",
+        "invalidFileType": "Tipo de archivo no válido."
+    },
+    "createEntityForm": {
+        "title": "Crear Entidad",
+        "minName": "Minimo 3 caracteres",
+        "maxName": "Maximo 30 caracteres",
+        "namePlaceholder": "Ingresa aca el nombre",
+        "nameLabel": "Nombre:",
+        "typeLabel": "Tipo:",
+        "errorMessage": "Todos los campos son obligatorios.",
+        "successMessage": "Entidad creada con éxito!",
+        "errorToastMessage": "Error al crear la entidad. Inténtalo de nuevo.",
+        "cancelButton": "Cancelar",
+        "nameTooShort": "El nombre de la entidad debe tener al menos 3 caracteres.",
+        "createButton": "Crear",
+        "createSuccess": "¡Entidad creada exitosamente!",
+        "createFailure": "No se pudo crear la entidad. Por favor, intenta de nuevo.",
+        "nameRequired": "Por favor, ingresa el nombre de la entidad",
+        "typeRequired": "Por favor, selecciona el tipo de entidad",
+        "nameTooLong": "El nombre de la entidad debe tener un máximo de 30 caracteres",
+        "nameExists": "El nombre de esta entidad ya existe",
+        "selectType": "Selecciona un tipo",
+        "person": "Persona",
+        "company": "Empresa"
+    },
+    "deleteEntity": {
+        "confirmDeletion": "Eliminar entidad",
+        "confirmMessage": "¿Quieres eliminar esta entidad?",
+        "warningMessage": "Esta acción no se puede deshacer.",
+        "confirmButton": "Sí",
+        "cancelButton": "Cancelar"
+    },
+    "detailsEntityModal": {
+        "title": "Detalles de la entidad",
+        "name": "Nombre",
+        "type": "Tipo",
+        "closeButton": "Cerrar"
+    },
+    "updateEntityModal": {
+        "title": "Actualizar Entidad",
+        "nameLabel": "Nombre",
+        "namePlaceholder": "¡Por favor ingrese el nombre de la entidad!",
+        "nameShort": "El nombre de la entidad debe tener al menos 3 caracteres.",
+        "nameLong": "El nombre de la entidad debe llevar máximo 30 caracteres.",
+        "typeLabel": "Tipo",
+        "typePlaceholder": "¡Por favor seleccione el tipo de entidad!",
+        "updateButton": "Actualizar",
+        "cancelButton": "Cancelar"
+    }
+>>>>>>> ac9d8e93fd7b01a6584581c846f7e161e8ff2549
 }

@@ -76,7 +76,7 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
         </button>
       </div>
 
-      <div className="p-8 bg-white text-center">
+      <div className="p-8 bg-white text-center h-full">
         <h1 className="text-2xl font-extrabold text-[#350B48]">{t('notifyCourse.notificationCourse')}</h1>
         <p className="text-xl font-bold text-black mt-5">
           {t('notifyCourse.selectNotificationMethod')}

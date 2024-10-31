@@ -16,11 +16,11 @@ function PublicRoute({ redirectToUser = "/Home", redirectToAdmin = "/admin" }) {
     }
 
     if (isAuthenticated()) {
-        if (role === "usuario") {
-            return <Navigate to={redirectToUser} />;
-        } else if (role === "Admin") {
-            return <Navigate to={redirectToAdmin} />;
-        }
+      if (role === "usuario") {
+          return <Navigate to={redirectToUser} />;
+      } else if (role === "Admin" || role === "instructor") {  // Añade la verificación del rol 'instructor'
+          return <Navigate to={redirectToAdmin} />;
+      }
     }
 
     // Si no está autenticado, renderizar el componente hijo

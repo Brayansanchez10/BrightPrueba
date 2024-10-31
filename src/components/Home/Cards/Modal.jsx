@@ -31,7 +31,7 @@ const Modal = ({
         exit={{ opacity: 0 }}
       >
         <motion.div
-          className="bg-white rounded-lg shadow-lg w-[300px] p-4 relative"
+          className="bg-secondary rounded-lg shadow-lg w-[300px] p-4 relative"
           onClick={(e) => e.stopPropagation()}
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -40,7 +40,7 @@ const Modal = ({
         >
           <button
             onClick={onClose}
-            className="absolute top-2 right-2 text-black hover:text-gray-600"
+            className="absolute top-2 right-2 text-primary hover:text-gray-500"
           >
             X
           </button>
@@ -53,7 +53,7 @@ const Modal = ({
                   className="w-[38px] h-[39.63px] rounded-lg shadow-sm"
                 />
                 <div className="ml-2">
-                  <h2 className="font-bold text-[#272C33] text-[15px]">
+                  <h2 className="font-bold text-[#272C33] dark:text-primary text-[15px]">
                     {course.title}
                   </h2>
                   <p className="text-[#939599] text-[11px]">
@@ -61,19 +61,19 @@ const Modal = ({
                   </p>
                 </div>
               </div>
-              <p className="text-[#676B70] text-[15px] font-regular mb-2">
+              <p className="text-[#676B70] dark:text-primary text-[15px] font-regular mb-2">
                 {course.description}
               </p>
               <div className="mb-4 text-[14px] mt-3">
                 {subCategories && subCategories.map((subCategory, index) => (
                   <div key={index} className="flex items-center mb-1">
-                    <span className="text-[#939599] mr-2">✓</span>
-                    <span className="text-[#939599]">{subCategory.title}</span>
+                    <span className="text-[#939599] dark:text-primary mr-2">✓</span>
+                    <span className="text-[#939599] dark:text-primary">{subCategory.title}</span>
                   </div>
                 ))}
               </div>
               <div className="flex justify-between mt-8">
-                <div className="flex flex-col text-[#939599] text-[12px]">
+                <div className="flex flex-col text-[#939599] dark:text-primary text-[12px]">
                   <div className="flex items-center mt-1">
                     <AiOutlineClockCircle className="mr-1" />
                     <span>{course.duracion} horas</span>

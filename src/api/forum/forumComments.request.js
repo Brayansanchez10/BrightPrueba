@@ -1,13 +1,6 @@
-import axios from "axios";
+import axios from "../axios";
 
-const api = `http://localhost:3068/PE/forumComments/`;
-
-const forumCommentRequest = axios.create({
-    baseURL: api,
-    withCredentials: true,
-});
-
-export const getCommentsByTopic = (topicId) =>  forumCommentRequest.get(`/comments/${topicId}`);
+export const getCommentsByTopic = (topicId) =>  axios.get(`/forumComments/comments/${topicId}`);
 
 // Función para crear un curso
 export const createForumComments = async (commentData) => {
@@ -19,7 +12,7 @@ export const createForumComments = async (commentData) => {
   
 
       // Realizar la solicitud POST utilizando Axios
-      return forumCommentRequest.post('/comments', formData, {
+      return axios.post('/forumComments/comments', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -40,7 +33,7 @@ export const updateForumComments = async (id, commentData) => {
   
   
       // Realizar la solicitud PUT utilizando Axios
-      return forumCommentRequest.put(`/comments/${id}`, formData, {
+      return axios.put(`/forumComments/comments/${id}`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -52,8 +45,5 @@ export const updateForumComments = async (id, commentData) => {
 };
 
 // Función para eliminar un curso
-export const deleteForumComments = (id) => forumCommentRequest.delete(`/delete/${id}`);
+export const deleteForumComments = (id) => axios.delete(`/forumComments/delete/${id}`);
 
-
-
-export default forumCommentRequest;

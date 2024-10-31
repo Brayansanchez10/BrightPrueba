@@ -34,12 +34,13 @@ export const ForumCategoriesProvider = ({ children }) => {
         }
     };
 
-    const createForumCategories = async ({ name, description, image }) => {
+    const createForumCategories = async ({ name, description, image, entityId }) => {
         try {
             const newCategory = {
                 name, 
                 description,
-                image
+                image,
+                entityId: Number(entityId),
             };
             console.log(newCategory);
             const res = await createForumCategoriesApi(newCategory);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '../context/themes/theme.context.jsx';
+import { useTheme } from './theme.context.jsx';
 import { motion } from 'framer-motion';
 import { RiMoonFill } from "react-icons/ri";
 import { IoSunny } from "react-icons/io5";

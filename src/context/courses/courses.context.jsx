@@ -56,7 +56,7 @@ export const CoursesProvider = ({ children }) => {
         }
     };
 
-    const createCourse = async ({ title, description, category, userId, image, nivel, duracion }) => {
+    const createCourse = async ({ title, description, category, userId, image, nivel, duracion, entityId }) => {
         try {
             const newCourseData = {
                 title,
@@ -65,7 +65,8 @@ export const CoursesProvider = ({ children }) => {
                 userId,  
                 image,
                 nivel,
-                duracion: Number(duracion)
+                duracion: Number(duracion),
+                entityId: Number(entityId),
             };
             console.log('Datos del nuevo curso:', newCourseData);
 

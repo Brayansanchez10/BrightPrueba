@@ -6,7 +6,7 @@ const courseRequest = axios.create({
   baseURL: api,
   withCredentials: true,
 });
-export const unregisterFromCourse = (userId, courseId) => courseRequest.post(`/unregisterFromCourse/${userId}/${courseId}`);
+export const unregisterFromCourse = (userId, courseId) => courseRequest.post(`/unregisterFromCourse/${userId}/${courseId}`); 
 export const getAllCourses = () => courseRequest.get('/getAllCourses');
 
 export const asignarContenido = (id, contentFile) => {
@@ -43,6 +43,7 @@ export const createCourse = async (courseData) => {
     formData.append('userId', courseData.userId);
     formData.append('nivel', courseData.nivel); 
     formData.append('duracion', Number(courseData.duracion));
+    formData.append('entityId', Number(courseData.entityId));
 
     if (courseData.image) {
       formData.append('image', courseData.image);

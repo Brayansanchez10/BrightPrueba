@@ -1,14 +1,22 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Modal } from "antd";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import { useForumCategories } from "../../../context/forum/forumCategories.context";
 import holaImage from "../../../assets/img/hola.png";
 
+import { useAuth } from "../../../context/auth.context";
+import { useUserContext } from "../../../context/user/user.context";
+
 const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
     const { createForumCategories } = useForumCategories();
     const { t } = useTranslation("global");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { user } = useAuth();
+    const [username, setUsername] = useState("");
+    const { getUserById } = useUserContext();
+    const [entityId, setEntityId] = useState(null);
+
     const MAX_DESCRIPTION_LENGTH = 150;
     const MIN_COURSE_NAME_LENGTH = 3;
     const MAX_COURSE_NAME_LENGTH = 30;
@@ -25,6 +33,23 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
         description: "",
         image: "",
     });
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (user && user.data && user.data.id) {
+                try {
+                    const userData = await getUserById(user.data.id);
+                    setUsername(userData);
+                    // Guarda el entityId del usuario
+                    setEntityId(userData.entityId); // Asegúrate de tener este estado definido
+                } catch (error) {
+                    console.error('Error al obtener datos del usuario:', error);
+                }
+            }
+        };
+        fetchUserData();
+    }, [user, getUserById]);
+
 
     const imageRef = useRef(null);
 
@@ -104,6 +129,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
             name: categories.name,
             description: categories.description,
             image: categories.image,
+            entityId: username.entityId,
         };
 
         try {
