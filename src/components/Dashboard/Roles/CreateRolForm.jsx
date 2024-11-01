@@ -113,7 +113,7 @@ const CreateRolForm = ({ visible, onClose, isVisible }) => {
 
   return (
     <Modal
-      className="custom"
+      className="custom-modal"
       centered
       visible={visible}
       footer={null}

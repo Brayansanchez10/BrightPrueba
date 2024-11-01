@@ -1,25 +1,16 @@
-import axios from "axios";
-
-const api = 'https://apibrightmind.mesadoko.com/PE/';
-
-const commentRequest = axios.create({
-    baseURL: api,
-    withCredentials: true,
-});
+import axios from "../axios";
 
 export const createComment = (courseId, resourceId, commentData) => 
-    commentRequest.post(`comments/course/${courseId}/resource/${resourceId}`, commentData);
+    axios.post(`/comments/course/${courseId}/resource/${resourceId}`, commentData);
 
 export const getCommentsByResource = (resourceId) => 
-    commentRequest.get(`comments/resource/${resourceId}`);
+    axios.get(`/comments/resource/${resourceId}`);
 
 export const updateComment = (id, commentData) => 
-    commentRequest.put(`comments/comment/${id}`, commentData);
+    axios.put(`/comments/comment/${id}`, commentData);
 
 export const deleteComment = (id) => 
-    commentRequest.delete(`comments/comment/${id}`);
+    axios.delete(`/comments/comment/${id}`);
 
 export const getCommentsByCourse = (courseId) => 
-    commentRequest.get(`comments/course/${courseId}`);
-
-export default commentRequest;
+    axios.get(`/comments/course/${courseId}`);

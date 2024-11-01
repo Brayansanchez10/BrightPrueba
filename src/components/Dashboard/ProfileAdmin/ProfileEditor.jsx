@@ -11,10 +11,14 @@ export default function ProfileEditor() {
   const [userData, setUserData] = useState({
     name: '',
     email: '',
-    profileImage: null
+    firstNames: '',
+    lastNames: '',
+    profileImage: null,
+    entityId: "",
   });
   const { getUserById } = useUserContext();
   const { user } = useAuth();
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -24,7 +28,10 @@ export default function ProfileEditor() {
           setUserData({
             name: fetchedUserData.username,
             email: fetchedUserData.email,
-            profileImage: fetchedUserData.userImage
+            firstNames: fetchedUserData.firstNames,
+            lastNames: fetchedUserData.lastNames,
+            profileImage: fetchedUserData.userImage,
+            entityId: fetchedUserData.entityId
           });
         } catch (error) {
           console.error("Failed to fetch user data:", error);
@@ -44,7 +51,7 @@ export default function ProfileEditor() {
   };
 
   return (
-    <div className="bg-gray-100 flex min-h-screen overflow-hidden">
+    <div className="bg-primaryAdmin flex min-h-screen overflow-hidden">
       <LeftBar onVisibilityChange={handleLeftBarVisibilityChange} />
       <div className={`w-full transition-all duration-300 ${isLeftBarVisible ? 'ml-56' : ''}`}>
         <Navbar />
@@ -53,7 +60,10 @@ export default function ProfileEditor() {
             <ProfileForm
               name={userData.name}
               email={userData.email}
+              firstNames={userData.firstNames}
+              lastNames={userData.lastNames}
               profileImage={userData.profileImage}
+              entityId={userData.entityId}
               onUserDataChange={handleUserDataChange}
             />
             <SettingsBar />

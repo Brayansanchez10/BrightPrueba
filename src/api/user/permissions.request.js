@@ -1,4 +1,5 @@
-import axios from 'axios'
-const api = `https://apibrightmind.mesadoko.com/PE`
+import axios from '../axios';
 
-export const getAllPermissions = () => axios.get(`${api}/permissions/getPermissions`)
+export const getAllPermissions = () => axios.get(`/permissions/getPermissions`);
+
+export const getPermissionsByRole = (roleId) => axios.get(`/permissions/permissionByRol/${roleId}`);

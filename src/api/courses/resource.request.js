@@ -1,27 +1,19 @@
-// Resource.request.js
-import axios from "axios";
-
-const api = `https://apibrightmind.mesadoko.com/PE/resource/`;
-
-const resourceRequest = axios.create({
-    baseURL: api,
-    withCredentials: true,
-});
+import axios from "../axios";
 
 // Funcipon para obtener todos los recursos
-export const getAllResources = () => resourceRequest.get('/getAllResources');
+export const getAllResources = () => axios.get('/resource/getAllResources');
 // Función para obtener los recursos
-export const getResource = (courseId) => resourceRequest.get(`/getResource/${courseId}`);
+export const getResource = (courseId) => axios.get(`/resource/getResource/${courseId}`);
 
 //Función obtenere Recursos vista Usuario
-export const getResourceUser = (id) => resourceRequest.get(`/getResourceUser/${id}`);
+export const getResourceUser = (id) => axios.get(`/resource/getResourceUser/${id}`);
 
 
 // Función para obtener un recurso con sus quizzes
-export const getResourceWithQuizzes = (id) => resourceRequest.get(`/getResourceWithQuizzes/${id}`);
+export const getResourceWithQuizzes = (id) => axios.get(`/resource/getResourceWithQuizzes/${id}`);
 
 // Nueva función para obtener el progreso del usuario en un recurso
-export const getUserResourceProgress = (userId, resourceId) => resourceRequest.get(`/user/${userId}/resource/${resourceId}/progress`);
+export const getUserResourceProgress = (userId, resourceId) => axios.get(`/resource/user/${userId}/resource/${resourceId}/progress`);
 
 // Función para crear un recurso
 export const createResource = async (resourceData) => {
@@ -46,7 +38,7 @@ export const createResource = async (resourceData) => {
 
         console.log([...formData]);  // Verifica qué datos estás enviando
 
-        return resourceRequest.post('/createResource', formData, {
+        return axios.post('/resource/createResource', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -80,7 +72,7 @@ export const updateResource = async (id, resourceData) => {
         // Verifica qué datos estás enviando
         console.log([...formData]);
 
-        return resourceRequest.put(`/updateResource/${id}`, formData, {
+        return axios.put(`/resource/updateResource/${id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -91,12 +83,12 @@ export const updateResource = async (id, resourceData) => {
     }
 };
 // Función para eliminar un recurso
-export const deleteResource = (id) => resourceRequest.delete(`/deleteResource/${id}`);
+export const deleteResource = (id) => axios.delete(`/resource/deleteResource/${id}`);
 
 // Función para completar un quiz y actualizar el progreso del usuario
 export const completeQuiz = async (userId, resourceId, score) => {
     try {
-        const response = await resourceRequest.post('/complete-quiz', {
+        const response = await axios.post('/resource/complete-quiz', {
             userId,
             resourceId,
             score,
@@ -108,4 +100,3 @@ export const completeQuiz = async (userId, resourceId, score) => {
     }
 };
 
-export default resourceRequest;

@@ -1,13 +1,6 @@
-import axios from "axios";
+import axios from "../axios";
 
-const api = 'https://apibrightmind.mesadoko.com/PE/answers/';
-
-const answersRequest = axios.create({
-    baseURL: api,
-    withCredentials: true,
-});
-
-export const getAnswersByComment = (commentsId) => answersRequest.get(`/comments/${commentsId}/answers`);
+export const getAnswersByComment = (commentsId) => axios.get(`/answers/comments/${commentsId}/answers`);
 
 export const createAnswer = async (answerData) => {
     try {
@@ -17,7 +10,7 @@ export const createAnswer = async (answerData) => {
         formData.append('commentsId', answerData.commentsId);
 
         // Realizar la solicitud POST utilizando Axios
-      return answersRequest.post('/create', formData, {
+      return axios.post('/answers/create', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -36,7 +29,7 @@ export const updateAnswer = async (id, answerData) => {
         formData.append('commentsId', answerData.commentsId);
 
       // Realizar la solicitud PUT utilizando Axios
-      return answersRequest.put(`/update/${id}`, formData, {
+      return axios.put(`/answers/update/${id}`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -48,6 +41,4 @@ export const updateAnswer = async (id, answerData) => {
 };
 
 // Función para eliminar un curso
-export const deleteAnswer = (id) => answersRequest.delete(`/delete/${id}`);
-
-export default answersRequest;
+export const deleteAnswer = (id) => axios.delete(`/answers/delete/${id}`);

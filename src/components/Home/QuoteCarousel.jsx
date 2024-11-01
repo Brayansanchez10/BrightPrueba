@@ -18,7 +18,7 @@ function QuoteCarousel({ phrases }) {
 
     return (
         <div 
-            className="flex justify-center my-8 mx-4 sm:my-12 sm:mx-6 md:my-16 md:mx-10 lg:my-20 lg:mx-16 border rounded-3xl bg-cover bg-center bg-no-repeat"
+            className="flex justify-center my-8 mx-4 sm:my-12 sm:mx-6 md:my-16 md:mx-10 lg:my-20 lg:mx-16 rounded-3xl bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: `url(${fondo})` }}
         >
             <Slider {...settings} className="w-full my-5 sm:my-10 md:my-20 lg:my-40">

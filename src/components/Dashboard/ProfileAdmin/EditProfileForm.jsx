@@ -4,6 +4,7 @@ import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from "react-i18next";
 import Swal from 'sweetalert2';
 import { Trash2 } from 'lucide-react';
+import { getEntity } from "../../../api/user/entities.request";
 
 const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   const { updateUserPartial, getUserById } = useUserContext();
@@ -12,11 +13,17 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
   const [name, setName] = useState(initialName);
   const [email, setEmail] = useState(initialEmail);
+  const [firstNames, setFirstNames] = useState("");
+  const [lastNames, setLastNames] = useState("");
   const [userId, setUserId] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [previewProfileImage, setPreviewProfileImage] = useState(null);
   const [deleteProfileImage, setDeleteProfileImage] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const [entityId, setEntityId] = useState("");
+  const [entities, setEntities] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -26,6 +33,9 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           setUserId(userData.id);
           setName(userData.username);
           setEmail(userData.email);
+          setFirstNames(userData.firstNames);
+          setLastNames(userData.lastNames);
+          setEntityId(userData.entityId);
 
           if (userData.userImage && userData.userImage !== "null") {
             setPreviewProfileImage(userData.userImage);
@@ -38,6 +48,20 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
     fetchUserId();
   }, [getUserById, user]);
+
+  useEffect(() => {
+    async function loadEntities() {
+      try {
+        const response = await getEntity(); // Llama a tu API para obtener las entidades
+        setEntities(response.data);
+        console.log("Entidades obtenidas; ", response);
+      } catch (error) {
+        console.error("Error loading entities:", error);
+        setError("Failed to load entities");
+      }
+    }
+    loadEntities();
+  }, []);
 
   const validateName = (name) => {
     if (name.length < 5 || name.length > 30) {
@@ -57,6 +81,20 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
     return "";
   };
 
+  const validateFirstNames = (firstNames) => {
+    if (firstNames.length < 3 || firstNames.length > 60) {
+      return t('userProfileSettings.firstNames_length_invalid');
+    }
+    return "";
+  };
+
+  const validateLastNames = (lastNames) => {
+    if (lastNames.length < 3 || lastNames.length > 60) {
+      return t('userProfileSettings.lastNames_length_invalid');
+    }
+    return "";
+  };
+
   const validateImage = (file) => {
     if (file.size > 5 * 1024 * 1024) {
       return t('userProfileSettings.image_too_large');
@@ -71,9 +109,11 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
     const newErrors = {
       name: validateName(name),
       email: validateEmail(email),
+      firstNames: validateFirstNames(firstNames),
+      lastNames: validateLastNames(lastNames),
     };
     setErrors(newErrors);
-    return !newErrors.name && !newErrors.email;
+    return !Object.values(newErrors).some(error => error !== "");
   };
 
   const handleSubmit = async (e) => {
@@ -84,7 +124,10 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           const userData = {
             username: name,
             email,
+            firstNames,
+            lastNames,
             userImage: deleteProfileImage ? null : (profileImage || previewProfileImage),
+            entityId,
           };
 
           await updateUserPartial(userId, userData);
@@ -138,6 +181,24 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
     }));
   };
 
+  const handleFirstNamesChange = (e) => {
+    const newFirstNames = e.target.value;
+    setFirstNames(newFirstNames);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      firstNames: validateFirstNames(newFirstNames),
+    }));
+  };
+
+  const handleLastNamesChange = (e) => {
+    const newLastNames = e.target.value;
+    setLastNames(newLastNames);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      lastNames: validateLastNames(newLastNames),
+    }));
+  };
+
   const handleImageChange = (e) => {
     const imageFile = e.target.files[0];
     if (imageFile) {
@@ -174,7 +235,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
       if (result.isConfirmed) {
         try {
-          await updateUserPartial(userId, { username: name, email, userImage: null });
+          await updateUserPartial(userId, { username: name, email, firstNames, lastNames, userImage: null });
 
           Swal.fire({
             icon: 'success',
@@ -204,7 +265,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
   return (
     <div className="md:mt-3 mt-5 mx-4 mb-2 flex rounded-lg">
-      <div className="max-w-lg w-full mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+      <div className="max-w-lg w-full mx-auto bg-secondaryAdmin rounded-lg shadow-lg overflow-hidden">
         <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-4 px-6 md:px-10">
           <h1 className="text-center font-black text-white md:text-xl lg:text-2xl">
             {t('userProfileSettings.edit_profile')}
@@ -235,7 +296,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
                 type="file"
                 id="profileImage"
                 accept="image/*"
-                className="w-full border text-sm border-gray-300 rounded-md p-2 hover:bg-gray-100"
+                className="w-full border text-sm border-gray-300 dark:border-gray-500 rounded-md p-2 dark:text-primary hover:bg-primaryAdmin transition-colors duration-300"
                 onChange={handleImageChange}
               />
               {errors.image && (
@@ -245,7 +306,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           </div>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="name" className="text-base font-bold text-black block mb-2">
+              <label htmlFor="name" className="text-base font-bold text-primary block mb-2">
                 {t('userProfileSettings.name')}
               </label>
               <input
@@ -261,7 +322,39 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
               )}
             </div>
             <div className="mb-4">
-              <label htmlFor="email" className="text-base font-bold text-black block mb-2">
+              <label htmlFor="firstNames" className="text-base font-bold text-primary block mb-2">
+                {t('userProfileSettings.firstNames')}
+              </label>
+              <input
+                type="text"
+                id="firstNames"
+                className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                value={firstNames}
+                onChange={handleFirstNamesChange}
+                maxLength={50}
+              />
+              {errors.firstNames && (
+                <p className="text-red-500 text-sm mt-1">{errors.firstNames}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="lastNames" className="text-base font-bold text-primary block mb-2">
+                {t('userProfileSettings.lastNames')}
+              </label>
+              <input
+                type="text"
+                id="lastNames"
+                className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                value={lastNames}
+                onChange={handleLastNamesChange}
+                maxLength={50}
+              />
+              {errors.lastNames && (
+                <p className="text-red-500 text-sm mt-1">{errors.lastNames}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="email" className="text-base font-bold text-primary block mb-2">
                 {t('userProfileSettings.email')}
               </label>
               <input
@@ -275,6 +368,38 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>
               )}
+            </div>
+            <div className="mb-4">
+                  <label
+                    htmlFor="entityId"
+                    className="text-base font-bold text-primary block mb-2"
+                  >
+                    {t("userProfileSettings.entities")}
+                  </label>
+                  <select
+                    name="entityId"
+                    value={entityId}
+                    onChange={(e) => setEntityId(e.target.value)}
+                    className={`mt-2 p-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100 ${
+                      entityId && errors.entityId ? "border-white" : "border-white-300"
+                    }`}
+                  >
+                    <option value="" label={t("register.choose_entity")} />
+                    {entities &&
+                      entities.length > 0 &&
+                      entities
+                        .filter((entity) => entity.id !== 1) // Filtra la entidad con id 1
+                        .map((entity) => (
+                          <option key={entity.id} value={entity.id}>
+                            {entity.name}
+                          </option>
+                        ))}
+                  </select>
+                  {entityId && errors.entityId && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.entityId}
+                    </p>
+                  )}
             </div>
             <div className="flex justify-between items-center mt-6">
               <button

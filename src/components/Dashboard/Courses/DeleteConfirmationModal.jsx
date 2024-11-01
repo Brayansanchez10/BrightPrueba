@@ -9,7 +9,7 @@ const DeleteConfirmationModal = ({ visible, onClose, onConfirm, courseName }) =>
 
   return (
     <Modal
-      className="custom"
+      className="custom-modal"
       centered
       visible={visible}
       onCancel={onClose}
@@ -31,7 +31,7 @@ const DeleteConfirmationModal = ({ visible, onClose, onConfirm, courseName }) =>
         <img src={pulpoImage} alt="Pulpo" className="w-[162px] h-[148px] mt-6 object-contain" />
       </div>
 
-      <div className="p-5 text-center">
+      <div className="bg-white p-5 text-center">
         <h1 className="text-2xl font-extrabold text-[#D84545] mt-5 mb-4">
           {t('deleteCourse.title')}
         </h1>

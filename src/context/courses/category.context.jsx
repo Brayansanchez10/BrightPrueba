@@ -14,12 +14,13 @@ export const useCategoryContext = () => {
 export const CategoryProvider = ({ children }) => {
     const [categories, setCategories] = useState([]);
 
-    const createCategory = async ({ name, description, image }) => {
+    const createCategory = async ({ name, description, image, entityId }) => {
         try {
             const newCategoryData = {
                 name,
                 description,
-                image
+                image,
+                entityId,
             };
             const res = await createCategoryApi(newCategoryData);
             setCategories([...categories, res.data]);

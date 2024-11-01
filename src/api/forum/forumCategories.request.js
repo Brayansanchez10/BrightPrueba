@@ -1,15 +1,8 @@
-import axios from "axios";
-
-const api = 'https://apibrightmind.mesadoko.com/PE/forumCategory/';
-
-const categoryRequest = axios.create({
-    baseURL: api,
-    withCredentials: true,
-});
+import axios from "../axios";
 
 // Función para obtnr todos las categorias
 
-export const getAllForumCategories = () => categoryRequest.get('/getAll');
+export const getAllForumCategories = () => axios.get('/forumCategory/getAll');
 
 // Función para crear un Forum Categories
 export const createForumCategories = async (categoriesData) => {
@@ -17,6 +10,7 @@ export const createForumCategories = async (categoriesData) => {
         const formData = new FormData();
         formData.append('name', categoriesData.name);
         formData.append('description', categoriesData.description);
+        formData.append('entityId', Number(categoriesData.entityId));
 
         //Agregar imagen si existe
         if (categoriesData.image) {
@@ -24,7 +18,7 @@ export const createForumCategories = async (categoriesData) => {
         }
 
         // Realizar la solicitud POST
-        return categoryRequest.post('/create', formData, {
+        return axios.post('/forumCategory/create', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -48,7 +42,7 @@ export const updateForumCategories = async (id, categoriesData) => {
         }
 
         //Realizar solicitud PUT
-        return categoryRequest.put(`/update/${id}`, formData, {
+        return axios.put(`/forumCategory/update/${id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -60,7 +54,5 @@ export const updateForumCategories = async (id, categoriesData) => {
 };
 
 // Función para eliminar 
-export const deleteForumCategory = (id) => categoryRequest.delete(`/delete/${id}`);
+export const deleteForumCategory = (id) => axios.delete(`/forumCategory/delete/${id}`);
 
-
-export default categoryRequest;

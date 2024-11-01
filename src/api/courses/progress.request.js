@@ -1,11 +1,9 @@
-import axios from 'axios';
-
-const api = `https://apibrightmind.mesadoko.com/PE/progress`;
+import axios from '../axios';
 
 // Función para obtener el progreso de un curso para un usuario específico
 export const getCourseProgress = async (userId, courseId) => {
   try {
-    const response = await axios.get(`${api}/getProgress/${userId}/${courseId}`, {
+    const response = await axios.get(`/progress/getProgress/${userId}/${courseId}`, {
       withCredentials: true,
     });
     return response.data;
@@ -18,7 +16,7 @@ export const getCourseProgress = async (userId, courseId) => {
 // Función para actualizar el progreso de un curso para un usuario específico
 export const updateCourseProgress = async (userId, courseId, progress) => {
   try {
-    const response = await axios.post(`${api}/updateProgress`, {
+    const response = await axios.post(`/progress/updateProgress`, {
       userId,
       courseId,
       progress,

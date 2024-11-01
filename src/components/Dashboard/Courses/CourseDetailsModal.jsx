@@ -9,7 +9,7 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
 
   return (
     <Modal
-      className="custom w-[543px] h-[700px] bg-white rounded-3xl"
+      className="custom-modal w-[543px] h-[700px] bg-white rounded-3xl"
       centered
       visible={visible}
       onCancel={onClose}
@@ -34,7 +34,7 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
           </button>
         </div>
         {course ? (
-          <div className="px-5 py-6">
+          <div className="bg-white px-5 py-6">
             <h1 className="text-center text-[#350B48] text-2xl font-extrabold mt-4 mb-5 overflow-hidden text-ellipsis whitespace-nowrap font-bungee">
               {t('courseDetails.courseTitle')}
               <br />
@@ -42,23 +42,23 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
             </h1>
             <div className="grid grid-cols-2 gap-4">
               <div className="mb-5">
-                <strong className="text-black font-bold text-xl">{t('courseDetails.id')}</strong>
+                <strong className="font-bold text-xl">{t('courseDetails.id')}</strong>
                 <p className="text-black text-lg">{course.id}</p>
               </div>
               <div className="mb-5">
-                <strong className="text-black font-bold text-xl">{t('courseDetails.category')}</strong>
+                <strong className="font-bold text-xl">{t('courseDetails.category')}</strong>
                 <p className="text-black text-lg">{course.category}</p>
               </div>
               <div className="mb-5">
-                <strong className="text-black font-bold text-xl">{t('courseDetails.name')}</strong>
+                <strong className="font-bold text-xl">{t('courseDetails.name')}</strong>
                 <p className="text-black text-lg">{course.title}</p>
               </div>
               <div className="mb-5">
-                <strong className="text-black font-bold text-xl">{t('courseDetails.description')}</strong>
+                <strong className="font-bold text-xl">{t('courseDetails.description')}</strong>
                 <p className="text-black text-lg">{course.description}</p>
               </div>
               <div className="mb-5">
-                <strong className="text-black font-bold text-xl">{t('courseDetails.userCount')}</strong>
+                <strong className="font-bold text-xl">{t('courseDetails.userCount')}</strong>
                 <p className="text-black text-lg">{course.enrolledCount}</p>
               </div>
             </div>
@@ -73,7 +73,7 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
             </div>
           </div>
         ) : (
-          <p>{t('courseDetails.noCourseSelected')}</p>
+          <p className="text-black">{t('courseDetails.noCourseSelected')}</p>
         )}
       </div>
     </Modal>

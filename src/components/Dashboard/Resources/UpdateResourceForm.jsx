@@ -1,25 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Modal, Button, notification } from "antd";
-import { toast } from "react-toastify";
+import { Modal, Button } from "antd";
+// Importaciones de request: 
 import { updateResource, getResource } from "../../../api/courses/resource.request";
 import { getSubCategoryCourseId } from "../../../api/courses/subCategory.requst.js";
+
+// ALERTAS y Traducciones
 import Swal from "sweetalert2"; //Importamos SweetAlert
 import { useTranslation } from "react-i18next";
 import "../css/Custom.css";
 
-const ALLOWED_FILE_TYPES = [".mov", ".docx", ".pdf", ".jpg", ".png"];
-const YOUTUBE_URL_REGEX =
-  /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
-const VIMEO_URL_REGEX = /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)$/i;
-const GOOGLE_DRIVE_URL_REGEX =
-  /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
+// Importaciones de Funcionalidades
+import QuizComponent from "./updateFuntions/QuizComponent.jsx";
+import {validateFields, validateQuizzes, ALLOWED_FILE_TYPES} from "./components/resourceUtils.js";
 
-const UpdateResourceForm = ({
-  isVisible,
-  onCancel,
-  resourceData,
-  onUpdate,
-  courseId,
+const UpdateResourceForm = ({ isVisible, onCancel, resourceData, onUpdate, courseId,
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -27,83 +21,39 @@ const UpdateResourceForm = ({
   const [link, setLink] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [existingFileName, setExistingFileName] = useState("");
-  const [quizzes, setQuizzes] = useState([]);
   const [errors, setErrors] = useState({});
   const { t } = useTranslation("global");
   const [selection, setSelection] = useState("file"); // Estado para seleccionar entre archivo y enlace
   const [resources, setResources] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [subcategoryId, setSubcategoryId] = useState("");
+  const [quizzes, setQuizzes] = useState([  { question: "", options: ["", ""], correctAnswer: "" }, ]);
 
-  const validateFields = () => {
-    const newErrors = {};
-
-    // Validación del título (mínimo 3 caracteres)
-    if (!title || title.length < 3) {
-      newErrors.title = t("UpdateResource.ValidateTitle");
+  useEffect(() => {
+    if (isVisible && courseId) {
+      fetchResourcesAndSubCategories(courseId);
+    } else {
+      setResources([]); // Limpiar los recursos al cerrar la modal
+      setSubCategory([]);
     }
-
-    // Validación de la descripción (mínimo 8 caracteres)
-    if (!description || description.length < 8) {
-      newErrors.description = t("UpdateResource.ValidateDescription");
+  }, [isVisible, courseId]);
+  
+  // Función encargada de obtener ambos recursos al mismo tiempo
+  const fetchResourcesAndSubCategories = async (courseId) => {
+    try {
+      const [resourcesResponse, subCategoriesResponse] = await Promise.all([
+        getResource(courseId),
+        getSubCategoryCourseId(courseId)
+      ]);
+  
+      setResources(resourcesResponse.data);
+      setSubCategory(subCategoriesResponse.data);
+      
+    } catch (err) {
+      console.error("Error al obtener los recursos o subcategorías:", err);
     }
-
-    // Validación de enlaces si es que se proporcionan
-    if (link && !isValidLink(link)) {
-      newErrors.link = t("UpdateResource.Validatelink");
-    }
-
-    setErrors(newErrors);
-
-    // Si no hay errores, retorna true, de lo contrario false
-    return Object.keys(newErrors).length === 0;
   };
-
-  const validateQuizzes = () => {
-    // Función para validar QUIZ
-    const newErrors = {};
-
-    quizzes.forEach((quiz, index) => {
-      const quizErrors = {};
-
-      // Validación de la pregunta
-      if (!quiz.question || quiz.question.length < 3) {
-        quizErrors.question = t("UpdateResource.ValidateQuestion");
-      }
-
-      // Validación de las opciones
-      if (quiz.options.length < 2) {
-        quizErrors.options = t("UpdateResource.ValidateOptions");
-      } else {
-        quiz.options.forEach((option, optIndex) => {
-          if (!option || option.trim() === "") {
-            if (!quizErrors.options) {
-              quizErrors.options = {};
-            }
-            quizErrors.options[optIndex] = t("UpdateResource.Option");
-          }
-        });
-      }
-
-      // Validación de la respuesta correcta
-      if (!quiz.correctAnswer || !quiz.options.includes(quiz.correctAnswer)) {
-        quizErrors.correctAnswer = t("UpdateResource.ValidationAnswer");
-      }
-
-      if (Object.keys(quizErrors).length > 0) {
-        newErrors[index] = quizErrors;
-      }
-    });
-
-    setErrors(newErrors);
-
-    // Si no hay errores, retorna true, de lo contrario false
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Usar useRef para guardar el estado inicial del recurso
-  const initialResourceDataRef = useRef();
-
+  // Este useEffect llama todos los campos del formulario a editar
   useEffect(() => {
     if (resourceData) {
       // Actualizar el estado con los datos iniciales
@@ -118,37 +68,7 @@ const UpdateResourceForm = ({
     }
   }, [resourceData]);
 
-  useEffect(() => {
-    if (isVisible && courseId) {
-      fetchResources(courseId);
-      fetchSubCategories(courseId);
-    } else {
-      setResources([]); // Limpiar los recursos al cerrar la modal
-      setSubCategory([]);
-    }
-  }, [isVisible, courseId]); // Ahora depende de courseId también
-
-  const fetchResources = async (courseId) => {
-    try {
-      const response = await getResource(courseId);
-      setResources(response.data);
-    } catch (err) {
-      console.error("Error al obtener los recursos:", err);
-      toast.error("Error al obtener los recursos");
-    }
-  };
-
-  // Función para obtener los subCategories por CourseId
-  const fetchSubCategories = async (courseId) => {
-    try {
-      const response = await getSubCategoryCourseId(courseId);
-      console.log("SubCategory data:", response.data);
-      setSubCategory(response.data);
-    } catch (error) {
-      console.error("Error al obtener los Sub Categories By CourseId", error);
-    }
-  };
-
+  // Función que valida el campo de Archivo
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -169,6 +89,7 @@ const UpdateResourceForm = ({
     }
   };
 
+  // Funciones encargadas de manejar todo lo relacionado al quizz
   const handleQuizChange = (index, event) => {
     const { name, value } = event.target;
     const updatedQuizzes = [...quizzes];
@@ -183,7 +104,6 @@ const UpdateResourceForm = ({
 
   const addOption = (quizIndex) => {
     const updatedQuizzes = [...quizzes];
-
     // Verificar si el número de opciones es menor a 6
     if (updatedQuizzes[quizIndex].options.length < 6) {
       updatedQuizzes[quizIndex].options.push(""); // Añadir una opción vacía
@@ -198,7 +118,7 @@ const UpdateResourceForm = ({
       });
     }
   };
-
+  // Remover una opción del quizz
   const removeOption = (quizIndex, optionIndex) => {
     const updatedQuizzes = [...quizzes];
     if (updatedQuizzes[quizIndex].options.length > 2) {
@@ -215,25 +135,25 @@ const UpdateResourceForm = ({
       { question: "", options: ["", ""], correctAnswer: "" },
     ]);
   };
-
+  // Remueve un pregunta del quizz
   const removeQuiz = (index) => {
     setQuizzes((prevState) =>
       prevState.filter((_, quizIndex) => quizIndex !== index)
     );
   };
 
-  const isValidLink = (url) => {
-    return (
-      YOUTUBE_URL_REGEX.test(url) ||
-      VIMEO_URL_REGEX.test(url) ||
-      GOOGLE_DRIVE_URL_REGEX.test(url)
-    );
-  };
-
+  // Función para actualizar un recurso
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    if (!validateFields() || !validateQuizzes()) return;
+    const fieldErrors = validateFields(title, description, link, t);
+    const quizErrors = validateQuizzes(quizzes, t);
+
+    const allErrors = { ...fieldErrors, ...quizErrors };
+    setErrors(allErrors);
+
+    // Si hay errores, no continúes
+    if (Object.keys(allErrors).length > 0) return;
 
     const updatedData = {
       title,
@@ -276,6 +196,10 @@ const UpdateResourceForm = ({
     }
   };
 
+  // Usar useRef para guardar el estado inicial del recurso
+  const initialResourceDataRef = useRef();
+
+  // Función para restablecer todos los campos al original 
   const handleCancel = () => {
     // Restablece el estado al inicial desde la referencia
     if (initialResourceDataRef.current) {
@@ -288,7 +212,6 @@ const UpdateResourceForm = ({
       setAttempts(initialResourceDataRef.current.attempts);
       setQuizzes(initialResourceDataRef.current.quizzes);
     }
-
     // Llama a la función onCancel para cerrar el modal
     onCancel();
   };
@@ -298,11 +221,7 @@ const UpdateResourceForm = ({
 
   return (
     <Modal
-      title={
-        <h2 className="custom text-2xl font-semibold text-gray-800">
-          {t("UpdateResource.ModalTitle")}
-        </h2>
-      }
+      title={ <h2 className="custom text-2xl font-semibold text-gray-800"> {t("UpdateResource.ModalTitle")} </h2> }
       visible={isVisible}
       onCancel={handleCancel}
       footer={null}
@@ -315,11 +234,7 @@ const UpdateResourceForm = ({
         borderRadius: "10px",
         background: "linear-gradient(to bottom, #f0f4f8, #fff)",
       }}
-      closeIcon={
-        <span className="text-gray-600 hover:text-gray-800">
-          &#x2715; {/* Icono de cierre personalizado */}
-        </span>
-      }
+      closeIcon={ <span className="text-gray-600 hover:text-gray-800"> &#x2715; {/* Icono de cierre personalizado */} </span> }
     >
       <form onSubmit={handleUpdate} className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
@@ -477,112 +392,29 @@ const UpdateResourceForm = ({
         )}
 
         {/* Sección de quizzes */}
-        {quizzes.map((quiz, index) => (
-          <div
-            key={index}
-            className="p-4 border border-gray-300 rounded-lg shadow-sm mb-6"
-          >
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t("UpdateResource.Question")}
-            </label>
-            <input
-              type="text"
-              name="question"
-              value={quiz.question}
-              onChange={(e) => handleQuizChange(index, e)}
-              placeholder={t("UpdateResource.Question")}
-              className={`mb-2 block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 ${
-                errors[index]?.question ? "border-red-500" : "border-gray-300"
-              } shadow-sm`}
+        <div>
+          {quizzes.map((quiz, index) => (
+            <QuizComponent
+              key={index}
+              quiz={quiz}
+              index={index}
+              handleQuizChange={handleQuizChange}
+              addOption={addOption}
+              removeOption={removeOption}
+              removeQuiz={removeQuiz}
+              addQuiz={addQuiz}
+              errors={errors}
+              t={t}
             />
-            {errors[index]?.question && (
-              <p className="text-red-500 text-sm">{errors[index].question}</p>
-            )}
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t("UpdateResource.labelOption")}
-            </label>
-            {quiz.options.map((option, optIndex) => (
-              <div key={optIndex} className="flex items-center mb-2">
-                <input
-                  type="text"
-                  name={`options[${optIndex}]`}
-                  value={option}
-                  onChange={(e) => handleQuizChange(index, e)}
-                  placeholder={t("UpdateResource.OptionIndex", {
-                    optionNumber: optIndex + 1,
-                  })}
-                  className={`mr-2 px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 w-full ${
-                    errors[index]?.options?.[optIndex]
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  } shadow-sm`}
-                />
-                {errors[index]?.options?.[optIndex] && (
-                  <p className="text-red-500 text-sm">
-                    {errors[index].options[optIndex]}
-                  </p>
-                )}
-                <button
-                  type="button"
-                  onClick={() => removeOption(index, optIndex)}
-                  className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
-                >
-                  {t("UpdateResource.DeleteOption")}
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => addOption(index)}
-              className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
-            >
-              {t("UpdateResource.AddOption")}
-            </button>
-            <div className="mt-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t("UpdateResource.CorrectAnswer")}
-              </label>
-              <select
-                name="correctAnswer"
-                value={quiz.correctAnswer || ""}
-                onChange={(e) => handleQuizChange(index, e)}
-                className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
-                  errors[index]?.correctAnswer
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
-              >
-                <option value="">{t("UpdateResource.SelectOption")}</option>
-                {quiz.options.map((option, optIndex) => (
-                  <option key={optIndex} value={option}>
-                    {`${String.fromCharCode(65 + optIndex)}) ${option}`}
-                  </option>
-                ))}
-              </select>
-              {errors[index]?.correctAnswer && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors[index].correctAnswer}
-                </p>
-              )}
-              {/* Mostrar botón "Eliminar pregunta" solo si hay más de una pregunta */}
-              {quizzes.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeQuiz(index)}
-                  className="mt-2 text-red-500 hover:text-red-700"
-                >
-                  {t("CreateResource.DeleteQuestion")}
-                </button>
-              )}
-            </div>
-            <Button type="dashed" onClick={addQuiz} className="w-full mt-4">
-              {t("CreateResource.AddQuestion")}
-            </Button>
-          </div>
-        ))}
+          ))}
+        </div>
 
         {quizzes.length > 0 && (
           <div>
+            <Button type="dashed" onClick={addQuiz} className="w-full mt-4 bg-blue-500 text-white">
+                {t("CreateResource.AddQuestion")}
+            </Button>
+
             <label
               htmlFor="attempts"
               className="block text-sm font-medium text-gray-700"
@@ -595,7 +427,6 @@ const UpdateResourceForm = ({
               value={attempts}
               onChange={(e) => {
                 const value = parseInt(e.target.value, 10);
-          
                 // Validar que el valor esté dentro del rango permitido
                 if (value >= 1 && value <= 10) {
                   setAttempts(value);

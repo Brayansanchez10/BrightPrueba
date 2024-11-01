@@ -82,17 +82,17 @@ function ProfileCarousel({ profiles }) {
                 <Slider {...settings} className="w-full">
                     {profiles.map((profile, index) => (
                         <div key={index} className="p-4">
-                            <div className="bg-white p-6 rounded-xl shadow-lg flex items-center space-x-6 max-w-[340px] mx-auto md:max-w-[400px] lg:max-w-none">
+                            <div className="bg-secondary p-6 rounded-xl shadow-lg flex items-center space-x-6 max-w-[340px] mx-auto md:max-w-[400px] lg:max-w-none">
                                 <img
                                     className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full object-cover"
                                     src={profile.imageUrl}
                                     alt={`Profile ${index + 1}`}
                                 />
                                 <div>
-                                    <h2 className="text-lg font-bold text-purple-700 mb-2">
+                                    <h2 className="text-lg font-bold text-purple-700 dark:text-primary mb-2">
                                         {profile.name}
                                     </h2>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-gray-500 dark:text-primary">
                                         {profile.description}
                                     </p>
                                 </div>
@@ -105,17 +105,17 @@ function ProfileCarousel({ profiles }) {
                 <Slider {...SecondSettings} className="w-full">
                     {profiles.map((profile, index) => (
                         <div key={index} className="p-4">
-                            <div className="bg-white p-6 rounded-xl shadow-lg flex items-center space-x-6 max-w-[340px] mx-auto md:max-w-[400px] lg:max-w-none">
+                            <div className="bg-secondary p-6 rounded-xl shadow-lg flex items-center space-x-6 max-w-[340px] mx-auto md:max-w-[400px] lg:max-w-none">
                                 <img
                                     className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full object-cover"
                                     src={profile.imageUrl}
                                     alt={`Profile ${index + 1}`}
                                 />
                                 <div>
-                                    <h2 className="text-lg font-bold text-purple-700 mb-2">
+                                    <h2 className="text-lg font-bold text-purple-700 dark:text-primary mb-2">
                                         {profile.name}
                                     </h2>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-gray-500 dark:text-primary">
                                         {profile.description}
                                     </p>
                                 </div>

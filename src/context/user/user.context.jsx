@@ -70,16 +70,20 @@ export const UserProvider = ({ children }) => {
         }
     };
 
-    const updateUserPartial = async (_id, { username, email, userImage }) => {
+    const updateUserPartial = async (_id, { username, firstNames, lastNames, documentNumber, email, userImage, entityId }) => {
         try {
             const { data: currentUserData } = await getUser(_id);
     
             const updatedUserData = {
                 username: username || currentUserData.username,
+                firstNames: firstNames || currentUserData.firstNames,
+                lastNames: lastNames || currentUserData.lastNames,
+                documentNumber: documentNumber || currentUserData.documentNumber,
                 email: email || currentUserData.email,
                 state: currentUserData.state,
                 role: currentUserData.role,
-                userImage: userImage !== undefined ? userImage : currentUserData.userImage, // Manejando la eliminación
+                userImage: userImage !== undefined ? userImage : currentUserData.userImage,
+                entityId: entityId || currentUserData.entityId,
             };
     
             const formData = new FormData();
@@ -151,7 +155,7 @@ export const UserProvider = ({ children }) => {
             value={{
                 usersData,
                 getUsers,
-                checkIfUserExists, // Añadir la función al contexto
+                checkIfUserExists,
                 activateAccount,
                 getUserById,
                 updateUser,
@@ -160,8 +164,8 @@ export const UserProvider = ({ children }) => {
                 deleteUser,
                 deleteUserConfirmation,
                 registerToCourse,
-                getUserCourses, // Agregar la función al contexto
-                changePassword, // Agregar la nueva función al contexto
+                getUserCourses,
+                changePassword,
             }}
         >
             {children}

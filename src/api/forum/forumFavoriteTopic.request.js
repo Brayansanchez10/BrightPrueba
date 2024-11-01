@@ -1,19 +1,11 @@
-import axios from "axios";
-
-const api = 'https://apibrightmind.mesadoko.com/PE/';
-
-const forumFavoriteRequest = axios.create({
-    baseURL: api,
-    withCredentials: true,
-});
+import axios from "../axios";
 
 export const addForumFavorite = (userId, topicId) =>
-    forumFavoriteRequest.post(`favoritesTopic`, {userId, topicId});
+    axios.post(`/favoritesTopic`, {userId, topicId});
 
 export const removeForumTopic = (userId, topicId) =>
-    forumFavoriteRequest.delete(`favoritesTopic/${userId}/${topicId}`);
+    axios.delete(`/favoritesTopic/${userId}/${topicId}`);
 
 export const getUserForumFavorites = (userId) =>
-    forumFavoriteRequest.get(`favoritesTopic/user/${userId}`);
+    axios.get(`/favoritesTopic/user/${userId}`);
 
-export default forumFavoriteRequest;

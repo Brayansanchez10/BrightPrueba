@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { useTranslation } from 'react-i18next';
 import zorroImage from "../../../assets/img/imagen1.png"; 
 import "../css/Custom.css";
+import { getEntity } from "../../../api/user/entities.request.js";
 
 const { Option } = Select;
 
@@ -15,6 +16,20 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
   const [form] = Form.useForm();
   const { t } = useTranslation("global");
   const [shake, setShake] = useState(false);
+  const [entities, setEntities] = useState([]);
+
+  useEffect(() => {
+    async function loadEntities() {
+      try {
+        const response = await getEntity();
+        setEntities(response.data);
+      } catch (error) {
+        console.error("Error loading entities:", error);
+        setError("Failed to load entities");
+      }
+    } 
+    loadEntities();
+  }, []);
 
   useEffect(() => {
     if (visible) {
@@ -26,6 +41,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
     try {
       const values = await form.validateFields();
       onUpdate(values);
+      console.log("Datos enviados del update:", values);
       Swal.fire({
         icon: 'success',
         title: t('UpdateUserModal.userUpdatedSuccess'),
@@ -38,15 +54,13 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
     }
   };
 
-
-
   return (
     <Modal
-      className={`custom w-[544px] h-[600px] rounded-2xl bg-white flex flex-col justify-between ${shake ? "shake" : ""}`} 
+      className={`custom-modal w-[544px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden ${shake ? "shake" : ""}`}
       visible={visible}
       footer={null}
       closable={false}
-      centered
+      style={{ top: '1%' }}
       onCancel={onCancel}
     >
       <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
@@ -66,7 +80,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
 
       <Form
         onFinish={handleFormSubmit}
-        className="px-5 py-6"
+        className="bg-white px-5 py-6 pb-8"
         form={form}
         layout="vertical"
       >
@@ -77,7 +91,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         <Form.Item
           className="mb-4"
           name="username"
-          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.username')}</span>}
+          label={<span className="text-lg font-bold">{t('UpdateUserModal.username')}</span>}
           rules={[
             { required: true, message: t("validations.usernameRequired") },
             { min: 5, message: t("validations.usernameMinLength") },
@@ -89,8 +103,33 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
 
         <Form.Item
           className="mb-4"
+          name="firstNames"
+          label={<span className="text-lg font-bold">{t('CreateUserModal.firstNames')}</span>}
+          rules={[{ required: true, message: t("CreateUserModal.firstNamesRequired") }]}
+        >
+          <Input minLength={3} maxLength={60} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+        </Form.Item>
+        <Form.Item
+          className="mb-4"
+          name="lastNames"
+          label={<span className="text-lg font-bold">{t('CreateUserModal.lastNames')}</span>}
+          rules={[{ required: true, message: t("CreateUserModal.lastNamesRequired") }]}
+        >
+          <Input minLength={3} maxLength={60} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+        </Form.Item>
+        <Form.Item
+          className="mb-4"
+          name="documentNumber"
+          label={<span className="text-lg font-bold">{t('CreateUserModal.documentNumber')}</span>}
+          rules={[{ required: true, message: t("CreateUserModal.documentNumberRequired") }]}
+        >
+          <Input minLength={3} maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+        </Form.Item>
+
+        <Form.Item
+          className="mb-4"
           name="email"
-          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.email')}</span>}
+          label={<span className="text-lg font-bold">{t('UpdateUserModal.email')}</span>}
           rules={[
             { required: true, message: t("CreateUserModal.emailRequired") },
             { type: "email", message: t("CreateUserModal.emailInvalid") },
@@ -103,7 +142,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         <Form.Item
           className="mb-4"
           name="role"
-          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.role')}</span>}
+          label={<span className="text-lg font-bold">{t('UpdateUserModal.role')}</span>}
           rules={[{ required: true, message: t('UpdateUserModal.roleRequired') }]}
         >
           <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">
@@ -114,16 +153,34 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
             ))}
           </Select>
         </Form.Item>
+        
 
         <Form.Item
           className="mb-4"
           name="state"
-          label={<span className="text-lg font-bold text-black">{t('UpdateUserModal.state')}</span>}
+          label={<span className="text-lg font-bold">{t('UpdateUserModal.state')}</span>}
           rules={[{ required: true, message: t('UpdateUserModal.stateRequired') }]}
         >
           <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">
             <Option value={true}>{t('UpdateUserModal.active')}</Option>
             <Option value={false}>{t('UpdateUserModal.inactive')}</Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          className="mb-4"
+          name="entityId"
+          label={<span className="text-lg font-bold text-primary">{t('Seleccione Una Entidad')}</span>}
+          rules={[{ required: true, message: t('Entidad necesaria') }]}
+        >
+          <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">
+            {entities
+              .filter((entity) => entity.id !== 1) // Filtra la entidad con id 1
+              .map((entity) => (
+                <Option key={entity.id} value={entity.id}>
+                  {entity.name}
+                </Option>
+              ))}
           </Select>
         </Form.Item>
 

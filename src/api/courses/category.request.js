@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const api = `https://apibrightmind.mesadoko.com/PE`; // Reemplaza la URL base con la correcta
+import axios from '../axios';
 
 // Función para crear una categoría
 export const createCategory = (categoryData) => {
@@ -10,10 +8,10 @@ export const createCategory = (categoryData) => {
   formData.append('name', categoryData.name);
   formData.append('description', categoryData.description);
   formData.append('image', categoryData.image); // Asegúrate de que la imagen se agregue al FormData con el nombre 'image'
+  formData.append('entityId', categoryData.entityId);
 
-  // Realiza la solicitud POST utilizando Axios
-  return axios.post(`${api}/category/createCategory`, formData, {
-    withCredentials: true,
+  // Realiza la solicitud POST utilizando la instancia de axios
+  return axios.post(`/category/createCategory`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -21,7 +19,7 @@ export const createCategory = (categoryData) => {
 };
 
 // Función para obtener todas las categorías
-export const getCategories = () => axios.get(`${api}/category/getCategories`, { withCredentials: true });
+export const getCategories = () => axios.get(`/category/getCategories`);
 
 // Función para actualizar una categoría
 export const updateCategory = (id, categoryData) => {
@@ -32,9 +30,8 @@ export const updateCategory = (id, categoryData) => {
   formData.append('description', categoryData.description);
   formData.append('image', categoryData.image); // Asegúrate de que la imagen se agregue al FormData con el nombre 'image'
 
-  // Realiza la solicitud PUT utilizando Axios
-  return axios.put(`${api}/category/updateCategory/${id}`, formData, {
-    withCredentials: true,
+  // Realiza la solicitud PUT utilizando la instancia de axios
+  return axios.put(`/category/updateCategory/${id}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -42,7 +39,7 @@ export const updateCategory = (id, categoryData) => {
 };
 
 // Función para eliminar una categoría
-export const deleteCategory = (id) => axios.delete(`${api}/category/deleteCategory/${id}`, { withCredentials: true });
+export const deleteCategory = (id) => axios.delete(`/category/deleteCategory/${id}`);
 
 // Función para eliminar solo la categoría
-export const deleteOnlyCategory = (id) => axios.delete(`${api}/category/deleteOnlyCategory/${id}`, { withCredentials: true });
+export const deleteOnlyCategory = (id) => axios.delete(`/category/deleteOnlyCategory/${id}`);

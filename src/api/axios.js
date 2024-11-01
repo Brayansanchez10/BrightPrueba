@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: `https://apibrightmind.mesadoko.com/PE`,
+    baseURL: `https://brightmind.mesadoko.com`,
     withCredentials: true
 })
 
-export default instance
+export default instance;

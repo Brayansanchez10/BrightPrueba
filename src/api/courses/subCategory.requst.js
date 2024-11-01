@@ -1,20 +1,13 @@
-import axios from "axios";
-
-const api = `https://apibrightmind.mesadoko.com/PE/subCategory/`;
-
-const subCategoryRequest = axios.create({
-    baseURL: api,
-    withCredentials: true,
-});
+import axios from "../axios";
 
 // Funcion para obtener todas las subCategories
-export const getAllSubcategories = () => subCategoryRequest.get('/getAllSubCategory');
+export const getAllSubcategories = () => axios.get('/subCategory/getAllSubCategory');
 
 // Función para obtener una SubCategory por el id
-export const getSubcategoryById = () => subCategoryRequest.get(`/getSubCategoryId/${id}`);
+export const getSubcategoryById = () => axios.get(`/subCategory/getSubCategoryId/${id}`);
 
 // Función para obtener SubCatgories relacionadas con el courseId
-export const getSubCategoryCourseId = (courseId) => subCategoryRequest.get(`/getSubCategoryCourseId/${courseId}`);
+export const getSubCategoryCourseId = (courseId) => axios.get(`/subCategory/getSubCategoryCourseId/${courseId}`);
 
 
 // Función para crear un sub Category
@@ -27,7 +20,7 @@ export const createSubCategory = async (subCategoryData) => {
 
         console.log([...formData]); //Verifica qué datos estás enviando
 
-        return subCategoryRequest.post('/createSubCategory', formData, {
+        return axios.post('/subCategory/createSubCategory', formData, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -48,7 +41,7 @@ export const updateSubCategory = async (id, subCategoryData) => {
 
         console.log([...formData]); //Verifica qué datos estás enviando
 
-        return subCategoryRequest.put(`/updateSubCategory/${id}`, formData, {
+        return axios.put(`/subCategory/updateSubCategory/${id}`, formData, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -60,6 +53,6 @@ export const updateSubCategory = async (id, subCategoryData) => {
 };
 
 // Función para eliminar una SubCategory
-export const deleteSubcategory = (id) => subCategoryRequest.delete(`/DeleteSubCategory/${id}`);
+export const deleteSubcategory = (id) => axios.delete(`/subCategory/DeleteSubCategory/${id}`);
 
-export default subCategoryRequest;
+export default axios;

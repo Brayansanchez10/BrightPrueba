@@ -2,18 +2,24 @@ import React, { useState, useRef, useEffect } from "react";
 import { Modal, Input, message } from "antd";
 import { useCategoryContext } from "../../../context/courses/category.context";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../../context/auth.context";
+import { useUserContext } from "../../../context/user/user.context";
 import holaImage from "../../../assets/img/hola.png";
 
 const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
   const { t } = useTranslation("global");
   const { createCategory, categories } = useCategoryContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
+  const { getUserById } = useUserContext();
+  const [username, setUsername] = useState('');
 
   const [category, setCategory] = useState({
     name: "",
     description: "",
     image: null,
   });
+
   const [imagePreview, setImagePreview] = useState(null);
   const [errorMessage, setErrorMessage] = useState({
     name: "",
@@ -23,6 +29,20 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
   const MAX_DESCRIPTION_LENGTH = 100;
 
   const imageRef = useRef(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+        if (user && user.data && user.data.id) {
+            try {
+                const userData = await getUserById(user.data.id);
+                setUsername(userData);
+            } catch (error) {
+                console.error('Error al obtener datos del usuario:', error);
+            }
+        }
+    };
+    fetchUserData();
+}, [user, getUserById]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -105,9 +125,18 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
       return;
     }
 
+    const categoryData = {
+      name: category.name,
+      description: category.description,
+      image: category.image,
+      entityId: username.entityId,
+    };
+
+    console.log("Datos enviados", category);
+
     try {
-      await createCategory(category);
-      onCreate(category);
+      await createCategory(categoryData);
+      onCreate(categoryData);
       onClose();
       setIsSubmitting(false); // Habilitar nuevamente al cerrar modal
     } catch (error) {
@@ -134,7 +163,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
 
   return (
     <Modal
-      className="custom"
+      className="custom-modal"
       centered
       visible={visible}
       footer={null}
