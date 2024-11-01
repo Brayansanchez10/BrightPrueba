@@ -46,6 +46,8 @@
         "email_requires_at": "El correo debe contener un '@'",
         "email_requires_com": "El correo debe terminar en' .com'",
         "register": "Registrarse",
+        "select_entity": "Selecciona tu entidad",
+        "choose_entity": "Seleccionar",
         "already_registered": "¿Ya estás registrado? ",
         "login": "Iniciar sesión",
         "username": "Nombre de usuario",
