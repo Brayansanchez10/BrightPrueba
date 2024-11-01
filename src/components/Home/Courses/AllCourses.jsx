@@ -107,6 +107,7 @@ export default function AllCourses() {
   const [subCategories, setSubCategories] = useState({});
   const [creators, setCreators] = useState({});
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [entityId, setEntityId] = useState(null);
 
   const sliderRefs = useRef({});
 
@@ -163,21 +164,23 @@ export default function AllCourses() {
   };
 
   useEffect(() => {
-    const fetchUserCourses = async () => {
+    const fetchUserData = async () => {
       if (user && user.data && user.data.id) {
         try {
+          const userData = await getUserById(user.data.id);
+          setEntityId(userData.entityId);
           const courses = await getUserCourses(user.data.id);
           setUserCourses(courses);
         } catch (error) {
-          console.error("Error fetching user courses:", error);
+          console.error("Error fetching user data or courses:", error);
           setError(
-            "No se pudieron cargar tus cursos. Por favor, intenta de nuevo más tarde."
+            "No se pudieron cargar tus datos o cursos. Por favor, intenta de nuevo más tarde."
           );
         }
       }
     };
-    fetchUserCourses();
-  }, [user, getUserCourses]);
+    fetchUserData();
+  }, [user, getUserById, getUserCourses]);
 
   const handleCardClick = (course) => {
     setSelectedCourse(course);
@@ -224,8 +227,10 @@ export default function AllCourses() {
 
   const filteredCourses = courses.filter(
     (course) =>
-      course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.category.toLowerCase().includes(searchTerm.toLowerCase())
+      (course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+       course.category.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (entityId === 1 || course.entityId === entityId) &&
+      course.categoryId !== 1
   );
 
   const renderCourseCard = (course) => {
@@ -389,6 +394,7 @@ export default function AllCourses() {
       className="min-h-screen flex flex-col pt-16 bg-primary"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      
       transition={{ duration:  0.5 }}
     >
       <style>{styles}</style>
