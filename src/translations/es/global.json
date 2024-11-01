@@ -75,10 +75,7 @@
         "register_now": "Regístrese ahora",
         "future": "Se parte del futuro",
         "ready": "PREPARADO!",
-        "AlertPasswordCorro": "La contraseña no puede ser un correo electrónico",
-        "entity_type": "Tipo de entidad",
-        "select_entity_type": "Selecciona tu entidad",
-        "entity_required": "Requerido"
+        "AlertPasswordCorro": "La contraseña no puede ser un correo electrónico"
     },
     "reset_password": {
         "invalid_email": "Correo electrónico no válido",

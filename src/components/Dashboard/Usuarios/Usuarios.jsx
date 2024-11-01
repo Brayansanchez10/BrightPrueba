@@ -123,6 +123,7 @@ const DataTable = () => {
       documentNumber: selectedUser?.documentNumber,
       role: selectedUser?.role,
       state: selectedUser?.state ? true : false,
+      entityId: selectedUser?.entityId,
     });
   }, [selectedUser, form]);
 
@@ -208,8 +209,8 @@ const DataTable = () => {
   };
 
   const handleUpdateUser = (values) => {
-    const { username, firstNames, lastNames, email, documentNumber, role, state } = values;
-    updateUser(selectedUser.id, { username, firstNames, lastNames, email, documentNumber, role, state });
+    const { username, firstNames, lastNames, email, documentNumber, role, state, entityId } = values;
+    updateUser(selectedUser.id, { username, firstNames, lastNames, email, documentNumber, role, state, entityId });
     setShowUpdateModal(false);
     setUpdatedDataFlag(true);
     setSelectedUser(null);
