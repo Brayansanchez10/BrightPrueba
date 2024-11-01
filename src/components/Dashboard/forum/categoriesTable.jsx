@@ -45,6 +45,8 @@ const DataTablete = () => {
     const { permissionsData, rolePermissions, loading, error, getPermissionsByRole } = usePermissionContext();
     const [ permisosByRol, setPermisosByRol ] = useState("");
 
+    const [entityId, setEntityId] = useState(null);
+
     const [forumActive, setForumActive] = useState(true);
 
     // Modal de creación
@@ -81,6 +83,9 @@ const DataTablete = () => {
                     // Obtener datos del usuario
                     const userData = await getUserById(user.data.id);
                     setUsername(userData.username); // Guarda el nombre de usuario (u otra información)
+
+                    // Guarda el entityId del usuario
+                    setEntityId(userData.entityId); // Asegúrate de tener este estado definido
                     
                     // Si el usuario tiene un roleId, obtener los permisos
                     if (userData.roleId) {
@@ -121,21 +126,35 @@ const DataTablete = () => {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const generateIds = () => {
-        const filteredCategory = categories.filter(
+        // Filtrado inicial por el valor de búsqueda
+        const searchFiltered = categories.filter(
             (category) =>
                 (category.name && category.name.toLowerCase().includes(searchValue.toLowerCase())) ||
                 (category.description && category.description.toLowerCase().includes(searchValue.toLowerCase()))
         );
     
-        return filteredCategory
-            .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-            .map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
-    };
+        // Filtrado adicional por entityId del usuario
+        const entityFiltered = searchFiltered.filter(
+            (category) => entityId === 1 || category.entityId === entityId // Cambia la condición según tu lógica
+        );
     
+        // Paginar los cursos filtrados
+        const paginatedCourses = entityFiltered.slice(
+            (currentPage - 1) * itemsPerPage,
+            currentPage * itemsPerPage
+        );
+    
+        // Generar los IDs para los cursos paginados
+        return paginatedCourses.map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
+      };
+
+      // También actualiza la variable filteredCourses si es necesaria en tu componente
     const filteredCategory = categories.filter(
         (category) =>
             (category.name && category.name.toLowerCase().includes(searchValue.toLowerCase())) ||
             (category.description && category.description.toLowerCase().includes(searchValue.toLowerCase()))
+    ).filter(
+        (category) => entityId === 1 || category.entityId === entityId // Filtrado por entityId
     );
 
 

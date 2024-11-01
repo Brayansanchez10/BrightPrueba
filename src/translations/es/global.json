@@ -718,7 +718,12 @@
     },
     "certificate": {
         "preview": "Previsualización del certificado",
-        "previewMessage": "Aquí podrás ver cómo se verá tu certificado una vez completado el curso"
+        "previewMessage": "Aquí podrás ver cómo se verá tu certificado una vez completado el curso",
+        "menuOptions": "MENU DE OPCIONES",
+        "download": "DESCARGAR",
+        "print": "IMPRIMIR",
+        "backToCourse": "VOLVER AL CURSO",
+        "share": "COMPARTIR EN REDES"
     },
     "navigation": {
         "previous": "Atrás",

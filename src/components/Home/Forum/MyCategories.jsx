@@ -41,7 +41,7 @@ const ForumCategoriesComponent = () => {
                     {categories.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 m-2">
                             {categories.map((category) => (
-                                <div key={category._id} className="bg-purple-800 rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 cursor-pointer" onClick={() => handleTopicClick(category.id)}>
+                                <div key={category._id} className="bg-secondary rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 cursor-pointer" onClick={() => handleTopicClick(category.id)}>
                                     <div className="flex items-center">
                                         <img src={image} className="w-2/6"/>
                                         <h2 className="text-xl font-semibold mb-2 text-white h-full flex items-center justify-center text-center">

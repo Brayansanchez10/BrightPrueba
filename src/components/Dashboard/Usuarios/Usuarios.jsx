@@ -53,6 +53,9 @@ const DataTable = () => {
   const { permissionsData, rolePermissions, loading, error, getPermissionsByRole } = usePermissionContext();
   const [ permisosByRol, setPermisosByRol ] = useState("");
 
+  const [entityId, setEntityId] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
+
   useEffect(() => {
     getUsers();
   }, [updatedDataFlag]);
@@ -64,6 +67,9 @@ const DataTable = () => {
                 // Obtener datos del usuario
                 const userData = await getUserById(user.data.id);
                 setUsername(userData.username); // Guarda el nombre de usuario (u otra información)
+
+                // Guarda el entityId del usuario
+                setEntityId(userData.entityId); // Asegúrate de tener este estado definido
                 
                 // Si el usuario tiene un roleId, obtener los permisos
                 if (userData.roleId) {
@@ -81,6 +87,21 @@ const DataTable = () => {
     fetchUserData();
   }, [user]);
 
+  useEffect(() => {
+    const filteredUser = usersData.filter(
+      (item) =>
+        item.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.password.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.role.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.documentNumber.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.firstNames.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.lastNames.toLowerCase().includes(searchValue.toLowerCase()) 
+    );
+
+    setTotalItems(filteredUser.length);
+    setTotalPages(Math.ceil(filteredUser.length / itemsPerPage));
+  }, [usersData, searchValue, itemsPerPage]);
 
   useEffect(() => {
     if (updatedDataFlag) {
@@ -202,12 +223,42 @@ const DataTable = () => {
     }
   };
 
+  // Lógica de filtrado y paginación
   const generateIds = () => {
-    return currentItems.map(
-      (_, index) => index + 1 + (currentPage - 1) * itemsPerPage
+    const searchFiltered = usersData.filter((item) => 
+      item.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+      item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
+      item.role.toLowerCase().includes(searchValue.toLowerCase()) ||
+      item.documentNumber.toLowerCase().includes(searchValue.toLowerCase()) ||
+      item.firstNames.toLowerCase().includes(searchValue.toLowerCase()) ||
+      item.lastNames.toLowerCase().includes(searchValue.toLowerCase())
     );
+
+    // Filtrado por `entityId`, solo si `entityId` es distinto de `1`
+    const entityFilteredCourses = entityId !== 1 
+      ? searchFiltered.filter((item) => item.entityId === entityId) 
+      : searchFiltered;
+
+    // Paginación
+    const paginated = entityFilteredCourses.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
+
+    return paginated.map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
   };
 
+  // Filtrado general de usuarios
+  const filteredUser = usersData.filter((item) => 
+    (item.username && item.username.toLowerCase().includes(searchValue.toLowerCase())) ||
+    (item.email && item.email.toLowerCase().includes(searchValue.toLowerCase())) ||
+    (item.role && item.role.toLowerCase().includes(searchValue.toLowerCase())) ||
+    (item.documentNumber && item.documentNumber.toLowerCase().includes(searchValue.toLowerCase())) ||
+    (item.firstNames && item.firstNames.toLowerCase().includes(searchValue.toLowerCase())) ||
+    (item.lastNames && item.lastNames.toLowerCase().includes(searchValue.toLowerCase()))
+  ).filter((item) => 
+    entityId === 1 || item.entityId === entityId
+  );
   const handleUpdateUser = (values) => {
     const { username, firstNames, lastNames, email, documentNumber, role, state, entityId } = values;
     updateUser(selectedUser.id, { username, firstNames, lastNames, email, documentNumber, role, state, entityId });
@@ -216,7 +267,6 @@ const DataTable = () => {
     setSelectedUser(null);
   };
 
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
   if (loading) return <p>Cargando permisos del rol...</p>;
   if (error) return <p>{error}</p>;
@@ -377,7 +427,9 @@ const DataTable = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentItems.map((item, index) => (
+                  {filteredUser
+                      .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+                      .map((item, index) => (
                       <tr key={item.id}>
                         <td className="border-2 border-x-transparent px-6 py-2 bg-secondaryAdmin text-primary text-lg text-center border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
                           {item.id}

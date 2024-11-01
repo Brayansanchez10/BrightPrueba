@@ -252,7 +252,7 @@ export default function AllCourses() {
           ruta={course.image}
           creatorName={
             creator ? (
-              <Link to={`/profile/${creator.id}`} className="text-blue-500 hover:underline">
+              <Link to={`/profile/${creator.id}`} className="text-primary">
                 {creator.username}
               </Link>
             ) : (
