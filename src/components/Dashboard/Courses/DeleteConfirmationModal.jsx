@@ -9,7 +9,7 @@ const DeleteConfirmationModal = ({ visible, onClose, onConfirm, courseName }) =>
 
   return (
     <Modal
-      className="custom"
+      className="custom-modal"
       centered
       visible={visible}
       onCancel={onClose}

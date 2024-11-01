@@ -70,7 +70,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
 
   return (
     <Modal
-      className={`custom w-[544px] rounded-2xl bg-white flex flex-col justify-between ${
+      className={`custom-modal w-[544px] rounded-3xl bg-white flex flex-col justify-between ${
         shake ? "shake" : ""
       }`}
       visible={visible}
@@ -175,7 +175,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
         <Form.Item
           className="text-lg font-bold mb-2"
           name="entityId"
-          label={<span className="text-primary">{t("Seleccione Una Entidad")}</span>}
+          label={t("Seleccione Una Entidad")}
           rules={[{ required: true, message: t("Entidad necesaria") }]}
         >
           <Select className="w-full h-[34px] rounded-xl bg-white shadow-md text-center">

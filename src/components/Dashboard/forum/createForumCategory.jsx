@@ -179,7 +179,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
             open={visible}
             footer={null}
             closable={false}
-            className="custom"
+            className="custom-modal"
             centered
             onCancel={onClose}
             bodyStyle={{

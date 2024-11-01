@@ -46,7 +46,7 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
 
   return (
     <Modal
-      className="custom"
+      className="custom-modal"
       centered
       visible={visible}
       onCancel={onClose}

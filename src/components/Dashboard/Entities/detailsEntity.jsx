@@ -11,7 +11,7 @@ const DetailsEntityModal = ({ visible, onClose, entities }) => {
 
     return (
         <Modal 
-          className="custom w-[543px] bg-white rounded-3xl"
+          className="custom-modal w-[543px] bg-white rounded-3xl"
           onCancel={onClose} 
           closable={false}
           visible={visible}

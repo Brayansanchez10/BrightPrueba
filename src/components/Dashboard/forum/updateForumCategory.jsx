@@ -69,7 +69,7 @@ const UpdateCategoriesForum = ({ visible, onClose, onUpdate, imagePreview: initi
     
     return (
         <Modal
-        className="custom w-[544px] h-[600px] rounded-2xl bg-white flex flex-col justify-between"
+        className="custom-modal w-[544px] h-[600px] rounded-3xl bg-white flex flex-col justify-between"
         visible={visible}
         closable={false}
         centered

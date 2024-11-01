@@ -127,7 +127,7 @@ const CreateEntityModal = ({ visible, onClose, isVisible }) => {
 
   return (
     <Modal
-      className="custom"
+      className="custom-modal"
       centered
       open={visible}
       footer={null}

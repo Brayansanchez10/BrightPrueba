@@ -163,7 +163,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
 
   return (
     <Modal
-      className="custom"
+      className="custom-modal"
       centered
       visible={visible}
       footer={null}

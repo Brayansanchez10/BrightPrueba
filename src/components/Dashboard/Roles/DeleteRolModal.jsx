@@ -54,7 +54,7 @@ const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => 
 
   return (
     <Modal
-      className="custom w-[543px] h-[350px] bg-white rounded-3xl"
+      className="custom-modal w-[543px] h-[350px] bg-white rounded-3xl"
       centered
       visible={visible}
       onCancel={onClose}
