@@ -63,6 +63,7 @@ import PublicRoute from "./publicRoutes";
 import ActivationComponent from "./components/Activate";
 import DeleteAccountConfirmation from "./components/Dashboard/ProfileAdmin/eliminatedCode";
 import Entities from "./components/Dashboard/Entities/EntitiesTable.jsx";
+import CertificatePreview from "./components/Home/Courses/CertificatePreview";
 
 function App() {
   const forumActive = localStorage.getItem("forumActive") === "true";
@@ -105,6 +106,7 @@ function App() {
                                                     <Route path="/MyCourses" element={<MyCourses />} />
                                                     <Route path="/CoursesHome" element={<CoursesHome />} />
                                                     <Route path="/course/:courseId" element={<CourseView />} />
+                                                    <Route path="/course/:courseId/certificate-preview" element={<CertificatePreview />} />
                                                     <Route path="/course/:courseId/resource/:id" element={<ResourceView />} />
                                                     <Route path="/Account" element={<ProfileUser />} />
                                                     <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />

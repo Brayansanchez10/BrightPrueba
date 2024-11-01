@@ -31,11 +31,11 @@ const DeleteConfirmationModal = ({ visible, onClose, onConfirm, courseName }) =>
         <img src={pulpoImage} alt="Pulpo" className="w-[162px] h-[148px] mt-6 object-contain" />
       </div>
 
-      <div className="bg-secondary p-5 text-center">
-        <h1 className="text-2xl font-extrabold text-[#D84545] dark:text-primary mt-5 mb-4">
+      <div className="bg-white p-5 text-center">
+        <h1 className="text-2xl font-extrabold text-[#D84545] mt-5 mb-4">
           {t('deleteCourse.title')}
         </h1>
-        <p className="text-lg font-semibold mb-3 dark:text-primary">
+        <p className="text-lg font-semibold mb-3">
           {t('deleteCourse.confirmationMessage', { courseName })}
         </p>
         <p className="text-sm font-extrabold text-red-500 mb-6">

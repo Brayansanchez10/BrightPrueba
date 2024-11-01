@@ -188,7 +188,7 @@ export default function HomePage() {
               </p>
             </motion.div>
             <motion.div
-              className="bg-purple-900 rounded-t-full rounded-b-3xl w-1/3 items-center hidden xl:flex mx-auto"
+              className="bg-purple-900 dark:bg-secondary rounded-t-full rounded-b-3xl w-1/3 items-center hidden xl:flex mx-auto"
               variants={fadeInFromLeft}
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}

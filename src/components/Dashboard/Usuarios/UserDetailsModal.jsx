@@ -33,51 +33,51 @@ const DetailsUserModal = ({ visible, onCancel, user }) => {
             ×
           </button>
         </div>
-        <div className="bg-secondary px-5 py-6">
-          <h1 className="text-center text-[#350B48] dark:text-primary text-3xl font-extrabold mt-12 mb-5 overflow-hidden text-ellipsis whitespace-nowrap font-bungee">
+        <div className="bg-white px-5 py-6">
+          <h1 className="text-center text-[#350B48] text-3xl font-extrabold mt-12 mb-5 overflow-hidden text-ellipsis whitespace-nowrap font-bungee">
             {t('userDetails.title')}
           </h1>
           {user && (
             <div className="grid grid-cols-2 gap-4">
               <p className="mb-5">
-                <strong className="font-bold text-xl text-primary">{t('userDetails.id')}:</strong>
+                <strong className="font-bold text-xl">{t('userDetails.id')}:</strong>
                 <br />
-                <span className="text-lg dark:text-gray-300">{user.id}</span>
+                <span className="text-lg">{user.id}</span>
               </p>
               <p className="mb-5">
-                <strong className="font-bold text-xl text-primary">{t('userDetails.name')}:</strong>
+                <strong className="font-bold text-xl">{t('userDetails.name')}:</strong>
                 <br />
-                <span className="text-lg dark:text-gray-300">{user.username}</span>
+                <span className="text-lg">{user.username}</span>
               </p>
               <p className="mb-5">
-                <strong className="font-bold text-xl text-primary">{t('userDetails.firstNames')}:</strong>
+                <strong className="font-bold text-xl">{t('userDetails.firstNames')}:</strong>
                 <br />
-                <span className="text-lg dark:text-gray-300">{user.firstNames}</span>
+                <span className="text-lg">{user.firstNames}</span>
               </p>
               <p className="mb-5">
-                <strong className="font-bold text-xl text-primary">{t('userDetails.lastNames')}:</strong>
+                <strong className="font-bold text-xl">{t('userDetails.lastNames')}:</strong>
                 <br />
-                <span className="text-lg dark:text-gray-300">{user.lastNames}</span>
+                <span className="text-lg">{user.lastNames}</span>
               </p>
               <p className="mb-5">
-                <strong className="font-bold text-xl text-primary">{t('userDetails.documentNumber')}:</strong>
+                <strong className="font-bold text-xl">{t('userDetails.documentNumber')}:</strong>
                 <br />
-                <span className="text-lg dark:text-gray-300">{user.documentNumber}</span>
+                <span className="text-lg">{user.documentNumber}</span>
               </p>
               <p className="mb-5">
-                <strong className="font-bold text-xl text-primary">{t('userDetails.email')}:</strong>
+                <strong className="font-bold text-xl">{t('userDetails.email')}:</strong>
                 <br />
-                <span className="text-lg dark:text-gray-300">{user.email}</span>
+                <span className="text-lg">{user.email}</span>
               </p>
               <p className="mb-5">
-                <strong className="font-bold text-xl text-primary">{t('userDetails.role')}:</strong>
+                <strong className="font-bold text-xl">{t('userDetails.role')}:</strong>
                 <br />
-                <span className="text-lg dark:text-gray-300">{user.role}</span>
+                <span className="text-lg">{user.role}</span>
               </p>
               <p className="mb-5">
-                <strong className="font-bold text-xl text-primary">{t('userDetails.status')}:</strong>
+                <strong className="font-bold text-xl">{t('userDetails.status')}:</strong>
                 <br />
-                <span className="text-lg dark:text-gray-300">{user.state ? t('userDetails.active') : t('userDetails.inactive')}</span>
+                <span className="text-lg">{user.state ? t('userDetails.active') : t('userDetails.inactive')}</span>
               </p>
             </div>
           )}

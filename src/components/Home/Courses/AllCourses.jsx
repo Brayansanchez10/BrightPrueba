@@ -107,6 +107,7 @@ export default function AllCourses() {
   const [subCategories, setSubCategories] = useState({});
   const [creators, setCreators] = useState({});
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [entityId, setEntityId] = useState(null);
 
   const sliderRefs = useRef({});
 
@@ -163,21 +164,23 @@ export default function AllCourses() {
   };
 
   useEffect(() => {
-    const fetchUserCourses = async () => {
+    const fetchUserData = async () => {
       if (user && user.data && user.data.id) {
         try {
+          const userData = await getUserById(user.data.id);
+          setEntityId(userData.entityId);
           const courses = await getUserCourses(user.data.id);
           setUserCourses(courses);
         } catch (error) {
-          console.error("Error fetching user courses:", error);
+          console.error("Error fetching user data or courses:", error);
           setError(
-            "No se pudieron cargar tus cursos. Por favor, intenta de nuevo más tarde."
+            "No se pudieron cargar tus datos o cursos. Por favor, intenta de nuevo más tarde."
           );
         }
       }
     };
-    fetchUserCourses();
-  }, [user, getUserCourses]);
+    fetchUserData();
+  }, [user, getUserById, getUserCourses]);
 
   const handleCardClick = (course) => {
     setSelectedCourse(course);
@@ -224,8 +227,10 @@ export default function AllCourses() {
 
   const filteredCourses = courses.filter(
     (course) =>
-      course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.category.toLowerCase().includes(searchTerm.toLowerCase())
+      (course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+       course.category.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (entityId === 1 || course.entityId === entityId) &&
+      course.categoryId !== 1
   );
 
   const renderCourseCard = (course) => {
@@ -389,6 +394,7 @@ export default function AllCourses() {
       className="min-h-screen flex flex-col pt-16 bg-primary"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      
       transition={{ duration:  0.5 }}
     >
       <style>{styles}</style>
@@ -407,14 +413,14 @@ export default function AllCourses() {
         </div>
         <div className="w-full md:w-auto">
           <motion.div
-            className="flex px-4 py-2 border bg-secondary border-gray-300 dark:border-purple-900 rounded-xl shadow-md"
+            className="flex px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <FaSearch size={"18px"} className="text-primary mt-1 mr-2" />
+            <FaSearch size={"18px"} className="mt-1 mr-2" />
             <input
               type="search"
-              className="bg-secondary dark:text-primary outline-none w-full md:w-[280px] lg:w-[360px] xl:w-[420px]"
+              className="bg-white outline-none w-full md:w-[280px] lg:w-[360px] xl:w-[420px]"
               placeholder={t("coursesComponent.search_placeholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -506,8 +512,8 @@ export default function AllCourses() {
         error={null}
         isRegistered={false}
       >
-        <h2 className="text-center font-bold text-lg mb-4">{t('courseComponent.modalA')}</h2>
-        <p className="text-center">
+        <h2 className="text-center text-primary font-bold text-lg mb-4">{t('courseComponent.modalA')}</h2>
+        <p className="text-center text-primary">
           {t('courseComponent.modalM')}
         </p>
       </Modal>

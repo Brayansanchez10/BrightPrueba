@@ -183,6 +183,7 @@
         "name": "Username",
         "firstNames": "First Names",
         "lastNames": "Last Names",
+        "documentNumber": "Document Number",
         "invalid_email": "Invalid Email",
         "name_invalid": "Name must be at least 4 characters long",
         "email": "Email",
@@ -694,6 +695,8 @@
         "viewDetails": "View Details",
         "start": "Start",
         "continue": "Continue",
+        "downloadPlan": "Download study plan",
+        "previewCertificate": "Preview certificate",
         "logoAlt": "Logo",
         "technologyAcquisitionsTitle": "Noteworthy technology acquisitions 2021",
         "technologyAcquisitionsDescription": "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
@@ -715,6 +718,10 @@
         "description3": "is passionate about continuous learning, always seeking to refine their skills and share them with others.",
         "description4": "is an admired professional, with a career marked by significant achievements and an unwavering commitment to education.",
         "description5": "is an intellectual leader, dedicated to positively influencing their community through teaching."
+    },
+    "certificate": {
+        "preview": "Certificate Preview",
+        "previewMessage": "Here you can see how your certificate will look once you complete the course"
     },
     "navigation": {
         "previous": "Previous",
@@ -885,7 +892,13 @@
         "cancel": "Cancel",
         "validateContent": "Minimum characters for the content is 8"
     },
-        "entities": {
+    "ForumTable": {
+        "forumTitle": "Foro Categorias",
+        "forumCreate": "Crate forum",
+         "Name": "Name",
+        "Description": "Description"
+    },
+    "entities": {
             "title": "Entities",
             "createEntity": "Create Entity",
             "searchPlaceholder": "Search by Name",

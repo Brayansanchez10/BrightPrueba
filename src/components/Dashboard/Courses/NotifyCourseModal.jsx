@@ -76,9 +76,9 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
         </button>
       </div>
 
-      <div className="p-8 bg-secondary text-center h-full">
-        <h1 className="text-2xl font-extrabold text-[#350B48] dark:text-primary">{t('notifyCourse.notificationCourse')}</h1>
-        <p className="text-xl font-bold text-black dark:text-gray-300 mt-5">
+      <div className="p-8 bg-white text-center h-full">
+        <h1 className="text-2xl font-extrabold text-[#350B48]">{t('notifyCourse.notificationCourse')}</h1>
+        <p className="text-xl font-bold text-black mt-5">
           {t('notifyCourse.selectNotificationMethod')}
         </p>
 
@@ -119,7 +119,7 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
               onChange={handleEmailChange}
               className="w-[239px] h-[38px] rounded-lg mt-5"
             />
-            <p className="text-xs text-black dark:text-gray-300 mt-5" dangerouslySetInnerHTML={{ __html: t('notifyCourse.emailInstructions') }} />
+            <p className="text-xs text-black mt-5" dangerouslySetInnerHTML={{ __html: t('notifyCourse.emailInstructions') }} />
           </>
         )}
 

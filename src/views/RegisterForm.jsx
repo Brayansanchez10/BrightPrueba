@@ -43,11 +43,7 @@ function RegisterForm() {
       .string()
       .required(t("register.firstNames_required")),
     lastNames: yup
-      .string()
-      .required(t("register.lastNames_required")),
-    documentNumber: yup
-      .string()
-      .required(t("register.documentNumber_required")),
+      .string(),
     username: yup
       .string()
       .min(4, t("register.username_min_length"))
@@ -76,7 +72,6 @@ function RegisterForm() {
     initialValues: {
       firstNames: "",
       lastNames: "",
-      documentNumber: "",
       username: "",
       email: "",
       password: "",
@@ -222,7 +217,7 @@ function RegisterForm() {
               </div>
               
               <div className="flex space-x-3">
-                <div className="w-1/2">
+                <div className="w-full">
                   <label className="text-lg font-bold text-gray-600 block">
                     {t("register.username")}
                   </label>
@@ -242,29 +237,6 @@ function RegisterForm() {
                   {formik.touched.username && formik.errors.username ? (
                     <div className="text-red-500 mt-1">
                       {formik.errors.username}
-                    </div>
-                  ) : null}
-                </div>
-                <div className="w-1/2">
-                  <label className="text-lg font-bold text-gray-600 block">
-                    {t("register.documentNumber")}
-                  </label>
-                  <input
-                    type="text"
-                    name="documentNumber"
-                    value={formik.values.documentNumber}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
-                      formik.touched.documentNumber && formik.errors.documentNumber
-                        ? "border-red-500"
-                        : "border-purple-300"
-                    }`}
-                    placeholder={t("register.enter_documentNumber")}
-                  />
-                  {formik.touched.documentNumber && formik.errors.documentNumber ? (
-                    <div className="text-red-500 mt-1">
-                      {formik.errors.documentNumber}
                     </div>
                   ) : null}
                 </div>

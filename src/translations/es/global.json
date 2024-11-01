@@ -181,6 +181,7 @@
         "name": "Nombre de usuario",
         "firstNames": "Nombres",
         "lastNames": "Apellidos",
+        "documentNumber": "Número de documento",
         "invalid_email": "Email Inválido",
         "name_invalid": "El nombre debe tener al menos 4 caracteres",
         "email": "Correo Electrónico",
@@ -692,6 +693,8 @@
         "viewDetails": "Ver detalles",
         "start": "Comenzar",
         "continue": "Continuar",
+        "downloadPlan": "Descargar plan de estudio",
+        "previewCertificate": "Previsualizar certificado",
         "logoAlt": "Logo",
         "technologyAcquisitionsTitle": "Adquisiciones tecnológicas destacadas 2021",
         "technologyAcquisitionsDescription": "Estas son las mayores adquisiciones tecnológicas empresariales de 2021 hasta ahora, en orden cronológico inverso.",
@@ -713,6 +716,10 @@
         "description3": "es un apasionado del aprendizaje continuo, siempre buscando perfeccionar sus habilidades y compartirlas con los demás.",
         "description4": "es un profesional admirado, con una carrera marcada por logros significativos y un compromiso inquebrantable con la educación.",
         "description5": "es un líder intelectual, dedicado a influir positivamente en su comunidad a través de la enseñanza."
+    },
+    "certificate": {
+        "preview": "Previsualización del certificado",
+        "previewMessage": "Aquí podrás ver cómo se verá tu certificado una vez completado el curso"
     },
     "navigation": {
         "previous": "Atrás",
@@ -882,78 +889,5 @@
         "create": "Crear",
         "cancel": "Cancelar",
         "validateContent": "Minimo de caracteres para el contenido es 8"
-    },
-    "entities": {
-        "title": "Entidades",
-        "createEntity": "Crear Entidad",
-        "searchPlaceholder": "Buscar por Nombre",
-        "id": "ID",
-        "name": "Nombre",
-        "type": "Tipo",
-        "actions": "Acciones",
-        "createSuccess": "Entidad creada con éxito",
-        "createError": "Error al crear entidad",
-        "updateSuccess": "Entidad actualizada con éxito",
-        "updateError": "Error al actualizar entidad",
-        "deleteSuccess": "Entidad eliminada con éxito",
-        "deleteError": "Error al eliminar entidad",
-        "assign": "Asignar",
-        "cancel": "Cancelar",
-        "resource": "Recurso",
-        "previous": "Anterior",
-        "next": "Siguiente",
-        "details": "Detalles",
-        "update": "Actualizar",
-        "delete": "Eliminar",
-        "noEntities": "No hay entidades disponibles",
-        "addContent": "Agregar Contenido A",
-        "invalidFileType": "Tipo de archivo no válido."
-    },
-    "createEntityForm": {
-        "title": "Crear Entidad",
-        "minName": "Minimo 3 caracteres",
-        "maxName": "Maximo 30 caracteres",
-        "namePlaceholder": "Ingresa aca el nombre",
-        "nameLabel": "Nombre:",
-        "typeLabel": "Tipo:",
-        "errorMessage": "Todos los campos son obligatorios.",
-        "successMessage": "Entidad creada con éxito!",
-        "errorToastMessage": "Error al crear la entidad. Inténtalo de nuevo.",
-        "cancelButton": "Cancelar",
-        "nameTooShort": "El nombre de la entidad debe tener al menos 3 caracteres.",
-        "createButton": "Crear",
-        "createSuccess": "¡Entidad creada exitosamente!",
-        "createFailure": "No se pudo crear la entidad. Por favor, intenta de nuevo.",
-        "nameRequired": "Por favor, ingresa el nombre de la entidad",
-        "typeRequired": "Por favor, selecciona el tipo de entidad",
-        "nameTooLong": "El nombre de la entidad debe tener un máximo de 30 caracteres",
-        "nameExists": "El nombre de esta entidad ya existe",
-        "selectType": "Selecciona un tipo",
-        "person": "Persona",
-        "company": "Empresa"
-    },
-    "deleteEntity": {
-        "confirmDeletion": "Eliminar entidad",
-        "confirmMessage": "¿Quieres eliminar esta entidad?",
-        "warningMessage": "Esta acción no se puede deshacer.",
-        "confirmButton": "Sí",
-        "cancelButton": "Cancelar"
-    },
-    "detailsEntityModal": {
-        "title": "Detalles de la entidad",
-        "name": "Nombre",
-        "type": "Tipo",
-        "closeButton": "Cerrar"
-    },
-    "updateEntityModal": {
-        "title": "Actualizar Entidad",
-        "nameLabel": "Nombre",
-        "namePlaceholder": "¡Por favor ingrese el nombre de la entidad!",
-        "nameShort": "El nombre de la entidad debe tener al menos 3 caracteres.",
-        "nameLong": "El nombre de la entidad debe llevar máximo 30 caracteres.",
-        "typeLabel": "Tipo",
-        "typePlaceholder": "¡Por favor seleccione el tipo de entidad!",
-        "updateButton": "Actualizar",
-        "cancelButton": "Cancelar"
     }
 }
