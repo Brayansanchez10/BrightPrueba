@@ -222,16 +222,16 @@ export default function UserCourses() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full">
+            <div className="bg-secondary p-6 rounded-lg shadow-lg max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full">
               <img
                 className="h-20 mb-4 mx-auto sm:h-24 md:h-36 lg:h-48"
                 src={Logo}
                 alt="Logo"
               />
-              <h2 className="text-xl font-bold mb-4 text-center text-gray-800 sm:text-2xl md:text-3xl lg:text-4xl">
+              <h2 className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-primary sm:text-2xl md:text-3xl lg:text-4xl">
                 {t("courseComponent.no_courses_enrolled")}
               </h2>
-              <p className="text-center text-gray-600 text-sm sm:text-base md:text-lg lg:text-xl">
+              <p className="text-center text-gray-600 dark:text-primary text-sm sm:text-base md:text-lg lg:text-xl">
                 {t("courseComponent.check_back_later")}
               </p>
             </div>

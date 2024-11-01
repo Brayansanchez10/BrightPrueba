@@ -185,11 +185,11 @@ const TopicComponent = () => {
                     {t("CREAR FORO")}
                 </Button>
             )}
-            <div className="flex items-center px-4 py-2 border bg-secondary border-gray-300 dark:border-purple-900 rounded-xl shadow-md">
-                <FaSearch size={"18px"} className="text-primary mr-2" />
+            <div className="flex items-center px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md">
+                <FaSearch size={"18px"} className="mr-2" />
                 <input
                     type="search"
-                    className="bg-secondary text-primary outline-none w-full sm:w-[220px] md:w-[280px] lg:w-[360px] xl:w-[420px]"
+                    className="bg-white outline-none w-full sm:w-[220px] md:w-[280px] lg:w-[360px] xl:w-[420px]"
                     placeholder={t("coursesComponent.search_placeholder")}
                     value="Titulo"
                 />
