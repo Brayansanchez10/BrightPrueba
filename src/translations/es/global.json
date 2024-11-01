@@ -178,6 +178,7 @@
         "name": "Nombre de usuario",
         "firstNames": "Nombres",
         "lastNames": "Apellidos",
+        "documentNumber": "Número de documento",
         "invalid_email": "Email Inválido",
         "name_invalid": "El nombre debe tener al menos 4 caracteres",
         "email": "Correo Electrónico",

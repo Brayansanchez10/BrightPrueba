@@ -21,6 +21,7 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
   const [previewProfileImage, setPreviewProfileImage] = useState(null);
   const [deleteProfileImage, setDeleteProfileImage] = useState(false);
   const [errors, setErrors] = useState({});
+  const [documentNumber, setDocumentNumber] = useState("");
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -32,6 +33,7 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
           setEmail(userData.email);
           setFirstNames(userData.firstNames);
           setLastNames(userData.lastNames);
+          setDocumentNumber(userData.documentNumber || "");
 
           if (userData.userImage && userData.userImage !== "null") {
             setPreviewProfileImage(userData.userImage);
@@ -84,6 +86,9 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
       lastNames: lastNames.length < 3 || lastNames.length > 60
         ? t("userProfileSettings.lastNames_length_invalid")
         : "",
+      documentNumber: documentNumber && documentNumber.length > 20 
+        ? t("userProfileSettings.document_too_long")
+        : "",
     };
     setErrors(newErrors);
     return !Object.values(newErrors).some(error => error !== "");
@@ -99,6 +104,7 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
           email,
           firstNames,
           lastNames,
+          documentNumber,
           userImage: deleteProfileImage
             ? null
             : profileImage || previewProfileImage,
@@ -243,6 +249,24 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
                   />
                   {errors.name && (
                     <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                  )}
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="documentNumber"
+                    className="text-base font-bold text-primary block mb-2"
+                  >
+                    {t("userProfileSettings.documentNumber")}
+                  </label>
+                  <input
+                    type="text"
+                    id="documentNumber"
+                    className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                    value={documentNumber}
+                    onChange={(e) => setDocumentNumber(e.target.value)}
+                  />
+                  {errors.documentNumber && (
+                    <p className="text-red-500 text-sm mt-1">{errors.documentNumber}</p>
                   )}
                 </div>
                 <div className="mb-4">

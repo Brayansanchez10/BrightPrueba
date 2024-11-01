@@ -11,6 +11,7 @@ import "../css/Custom.css";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdPlayCircleOutline } from "react-icons/md";
 import noImg from "../../../assets/img/Imagenvacia.jpg";
+import { motion, AnimatePresence } from 'framer-motion';
 
 const { Option } = Select;
 
@@ -221,190 +222,276 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
     };
 
     return (
-        <Modal
-            open={visible}
-            footer={null}
-            closable={false}
-            className="custom"
-            centered
-            onCancel={onClose}
-            styles={{
-                body: {
-                    borderRadius: "20px",
-                    overflow: "hidden",
-                }
-            }}
-        >
-        <div className="absolute top-5 right-8 cursor-pointer" onClick={onClose}>
-            <span className="text-white text-2xl font-bold">X</span>
-            </div>
-            <div className="h-[115px] bg-gradient-to-r from-[#18116A] to-blue-500 flex justify-center items-center">
-                <img src={holaImage} alt="Logo" className="w-[200px] h-[200px] mt-12 object-contain" />
-            </div>
-            <form onSubmit={handleSubmit} className="bg-white p-5 text-center">
-                <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4 font-bungee">
-                    {t("createCourseForm.title")}
-                </h1>
-                <div className="text-left mb-4">
-                    <label className="text-lg font-bold block">
-                        {t("createCourseForm.name")}
-                    </label>
-                    <input
-                        className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-                        type="text"
-                        name="name"
-                        value={course.name}
-                        onChange={handleChange}
-                        maxLength={30}
-                        required
-                    />
-                    {errorMessage.name && (
-                        <p className="text-red-500 text-sm mt-1">{errorMessage.name}</p>
-                    )}
+        <>
+            <Modal
+                open={visible}
+                footer={null}
+                closable={false}
+                className="custom-modal"
+                centered
+                onCancel={onClose}
+                width={500}
+                styles={{
+                    mask: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.45)',
+                        zIndex: 1000
+                    },
+                    wrapper: {
+                        zIndex: 1000
+                    },
+                    content: {
+                        padding: 0,
+                        borderRadius: "20px",
+                        overflow: "hidden"
+                    }
+                }}
+            >
+                <div className="absolute top-5 right-8 cursor-pointer z-10" onClick={onClose}>
+                    <span className="text-white text-2xl font-bold">X</span>
                 </div>
-                <div className="text-left mb-4">
-                    <label className="text-lg font-bold block">
-                        {t("createCourseForm.category")}
-                    </label>
-                    <Select
-                        className="w-full mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-                        style={{ borderRadius: "0.375rem" }}
-                        value={course.category}
-                        onChange={(value) => setCourse({ ...course, category: value })}
-                        required
-                    >
-                        {categories
-                            .filter((category) => entityId === 1 || category.entityId === entityId) // Filtrado por entityId
-                            .map((category) => (
-                                <Option key={category.id} value={category.name}>
-                                    {category.name}
-                                </Option>
-                        ))}
-                    </Select>
-                    {errorMessage.category && (
-                        <p className="text-red-500 text-sm mt-1">{errorMessage.category}</p>
-                    )}
+                
+                <div className="h-[115px] bg-gradient-to-r from-[#18116A] to-blue-500 flex justify-center items-center">
+                    <img src={holaImage} alt="Logo" className="w-[200px] h-[200px] mt-12 object-contain" />
                 </div>
-                <div className="text-left mb-4">
-                    <label className="text-lg font-bold block">
-                        {t("createCourseForm.description")}
-                    </label>
-                    <textarea
-                        className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200 resize-none"
-                        name="description"
-                        value={course.description}
-                        onChange={handleChange}
-                        maxLength={MAX_DESCRIPTION_LENGTH}
-                        style={{ minHeight: "80px" }}
-                        required
-                    />
-                    <div className="text-gray-500 text-sm">{`${course.description.length}/${MAX_DESCRIPTION_LENGTH}`}</div>
-                    {errorMessage.description && (
-                        <p className="text-red-500 text-sm mt-1">{errorMessage.description}</p>
-                    )}
-                </div>
-                <div className="text-left mb-4">
-                    <label className="text-lg font-bold block">
-                        {t("createCourseForm.level")}
-                    </label>
-                    <Select
-                        className="w-full mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-                        style={{ borderRadius: "0.375rem" }}
-                        value={course.nivel}
-                        onChange={(value) => setCourse({ ...course, nivel: value })}
-                        required
-                    >
-                        <Option value="Principiante">{t("createCourseForm.beginner")}</Option>
-                        <Option value="Intermedio">{t("createCourseForm.intermediate")}</Option>
-                        <Option value="Avanzado">{t("createCourseForm.advanced")}</Option>
-                    </Select>
-                    {errorMessage.nivel && (
-                        <p className="text-red-500 text-sm mt-1">{errorMessage.nivel}</p>
-                    )}
-                </div>
-                <div className="text-left mb-4">
-                    <label className="text-lg font-bold block">
-                        {t("createCourseForm.duration")}
-                    </label>
-                    <input
-                        className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-                        type="number"
-                        name="duracion"
-                        value={course.duracion}
-                        onChange={handleChange}
-                        min="0"
-                        max="99"
-                        required
-                    />
-                    {errorMessage.duracion && (
-                        <p className="text-red-500 text-sm mt-1">{errorMessage.duracion}</p>
-                    )}
-                </div>
-                <div className="text-left mb-4">
-                    <label className="text-lg font-bold block">
-                        {t("createCourseForm.image")}
-                    </label>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        ref={imageRef}
-                        className="mt-2"
-                    />
-                    {errorMessage.image && (
-                        <p className="text-red-500 text-sm mt-1">{errorMessage.image}</p>
-                    )}
-                </div>
-                <div className="flex justify-center">
-                    <div className="group rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 mb-4 w-[250px] h-[290px] mr-5 mt-2">
-                        <div className="relative overflow-hidden rounded-t-lg h-[175px]">
-                            <img
-                                src={course.imagePreview || noImg}
-                                alt="Imagen previa del curso"
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                        <div className="text-start mt-2">
-                            <div className="mx-2">
-                                <p className="font-bold">{course.name || "Nombre del curso"}</p>
-                                <p>Autor</p>
-                                <div className="flex items-center mt-1 mb-1">
+
+                <form onSubmit={handleSubmit} className="bg-white p-5 text-center">
+                    <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4 font-bungee">
+                        {t("createCourseForm.title")}
+                    </h1>
+                    
+                    {/* Todos los inputs del formulario */}
+                    <div className="text-left mb-4">
+                        <label className="text-lg font-bold block">
+                            {t("createCourseForm.name")}
+                        </label>
+                        <input
+                            className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                            type="text"
+                            name="name"
+                            value={course.name}
+                            onChange={handleChange}
+                            maxLength={30}
+                            required
+                        />
+                        {errorMessage.name && (
+                            <p className="text-red-500 text-sm mt-1">{errorMessage.name}</p>
+                        )}
+                    </div>
+                    <div className="text-left mb-4">
+                        <label className="text-lg font-bold block">
+                            {t("createCourseForm.category")}
+                        </label>
+                        <Select
+                            className="w-full mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                            style={{ borderRadius: "0.375rem" }}
+                            value={course.category}
+                            onChange={(value) => setCourse({ ...course, category: value })}
+                            required
+                        >
+                            {categories
+                                .filter((category) => entityId === 1 || category.entityId === entityId) // Filtrado por entityId
+                                .map((category) => (
+                                    <Option key={category.id} value={category.name}>
+                                        {category.name}
+                                    </Option>
+                            ))}
+                        </Select>
+                        {errorMessage.category && (
+                            <p className="text-red-500 text-sm mt-1">{errorMessage.category}</p>
+                        )}
+                    </div>
+                    <div className="text-left mb-4">
+                        <label className="text-lg font-bold block">
+                            {t("createCourseForm.description")}
+                        </label>
+                        <textarea
+                            className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200 resize-none"
+                            name="description"
+                            value={course.description}
+                            onChange={handleChange}
+                            maxLength={MAX_DESCRIPTION_LENGTH}
+                            style={{ minHeight: "80px" }}
+                            required
+                        />
+                        <div className="text-gray-500 text-sm">{`${course.description.length}/${MAX_DESCRIPTION_LENGTH}`}</div>
+                        {errorMessage.description && (
+                            <p className="text-red-500 text-sm mt-1">{errorMessage.description}</p>
+                        )}
+                    </div>
+                    <div className="text-left mb-4">
+                        <label className="text-lg font-bold block">
+                            {t("createCourseForm.level")}
+                        </label>
+                        <Select
+                            className="w-full mt-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                            style={{ borderRadius: "0.375rem" }}
+                            value={course.nivel}
+                            onChange={(value) => setCourse({ ...course, nivel: value })}
+                            required
+                        >
+                            <Option value="Principiante">{t("createCourseForm.beginner")}</Option>
+                            <Option value="Intermedio">{t("createCourseForm.intermediate")}</Option>
+                            <Option value="Avanzado">{t("createCourseForm.advanced")}</Option>
+                        </Select>
+                        {errorMessage.nivel && (
+                            <p className="text-red-500 text-sm mt-1">{errorMessage.nivel}</p>
+                        )}
+                    </div>
+                    <div className="text-left mb-4">
+                        <label className="text-lg font-bold block">
+                            {t("createCourseForm.duration")}
+                        </label>
+                        <input
+                            className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                            type="number"
+                            name="duracion"
+                            value={course.duracion}
+                            onChange={handleChange}
+                            min="0"
+                            max="99"
+                            required
+                        />
+                        {errorMessage.duracion && (
+                            <p className="text-red-500 text-sm mt-1">{errorMessage.duracion}</p>
+                        )}
+                    </div>
+                    <div className="text-left mb-4">
+                        <label className="text-lg font-bold block">
+                            {t("createCourseForm.image")}
+                        </label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            ref={imageRef}
+                            className="mt-2"
+                        />
+                        {errorMessage.image && (
+                            <p className="text-red-500 text-sm mt-1">{errorMessage.image}</p>
+                        )}
+                    </div>
+
+                    {/* Preview para móviles antes del botón */}
+                    <div className="md:hidden mb-6 mt-8">
+                        <p className="text-lg font-bold text-gray-700 mb-4">Vista previa del curso:</p>
+                        <div className="bg-white rounded-lg shadow-lg w-full max-w-[280px] mx-auto">
+                            <div className="h-[180px] overflow-hidden rounded-t-lg">
+                                <img
+                                    src={course.imagePreview || noImg}
+                                    alt="Vista previa del curso"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                            <div className="p-4">
+                                <h3 className="font-bold text-lg text-left truncate">
+                                    {course.name || "Nombre del curso"}
+                                </h3>
+                                <p className="text-gray-600 text-left text-sm mb-2">Autor</p>
+                                
+                                <div className="flex items-center mb-2">
                                     {[...Array(5)].map((_, index) => (
                                         <svg
                                             key={index}
-                                            className="w-4 h-4 text-gray-400 " // Aquí puedes cambiar el color de las estrellas
+                                            className="w-4 h-4 text-gray-400"
                                             fill="currentColor"
                                             viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
                                         >
                                             <path d="M12 2.2l2.4 4.8 5.2.8-3.8 3.7.9 5.3-4.7-2.5-4.7 2.5.9-5.3-3.8-3.7 5.2-.8L12 2.2z" />
                                         </svg>
                                     ))}
-                                    <span className="text-gray-600 dark:text-primary ml-2 text-sm">0/5</span>
+                                    <span className="text-gray-600 ml-2 text-sm">0/5</span>
                                 </div>
-                            </div>
-                            <hr className="mx-2" />
-                            <div className="flex mx-2">
-                                <div className="flex w-1/2 mt-2 gap-1">
-                                    <AiOutlineClockCircle className="h-5" />
-                                    <p className="text-sm">{course.duracion || "0"} horas</p>
-                                </div>
-                                <div className="flex w-1/2 justify-end mt-2 gap-1">
-                                    <MdPlayCircleOutline className="h-5" />
-                                    <p className="text-sm">0 recursos</p>
+                                
+                                <hr className="my-2" />
+                                
+                                <div className="flex justify-between items-center">
+                                    <div className="flex items-center">
+                                        <AiOutlineClockCircle className="text-gray-600 mr-1" />
+                                        <span className="text-sm text-gray-600">
+                                            {course.duracion || "0"} horas
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <MdPlayCircleOutline className="text-gray-600 mr-1" />
+                                        <span className="text-sm text-gray-600">0 recursos</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-2 bg-[#18116A] text-white font-bold rounded-lg shadow-md hover:bg-blue-500 transition duration-200"
-                >
-                    {t("createCourseForm.createButton")}
-                </button>
-            </form>
-        </Modal>
+
+                    {/* Botón de submit */}
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full py-2 bg-[#18116A] text-white font-bold rounded-lg shadow-md hover:bg-blue-500 transition duration-200"
+                    >
+                        {t("createCourseForm.createButton")}
+                    </button>
+                </form>
+            </Modal>
+
+            {/* Preview flotante para desktop */}
+            <AnimatePresence>
+                {visible && (
+                    <motion.div 
+                        className="hidden md:block fixed top-1/2 left-1/2 z-[1001]"
+                        initial={{ y: "-50%", opacity: 0, x: 320 }}
+                        animate={{ y: "-50%", opacity: 1, x: 300 }}
+                        exit={{ y: "-50%", opacity: 0, x: 320 }}
+                        transition={{ 
+                            duration: 0.3,
+                            ease: "easeInOut",
+                            exit: { duration: 0.2 }
+                        }}
+                    >
+                        <div className="bg-white rounded-lg shadow-lg w-[280px] transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div className="h-[180px] overflow-hidden rounded-t-lg">
+                                <img
+                                    src={course.imagePreview || noImg}
+                                    alt="Vista previa del curso"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                            <div className="p-4">
+                                <h3 className="font-bold text-lg truncate">
+                                    {course.name || "Nombre del curso"}
+                                </h3>
+                                <p className="text-gray-600 text-sm mb-2">Autor</p>
+                                
+                                <div className="flex items-center mb-2">
+                                    {[...Array(5)].map((_, index) => (
+                                        <svg
+                                            key={index}
+                                            className="w-4 h-4 text-gray-400"
+                                            fill="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path d="M12 2.2l2.4 4.8 5.2.8-3.8 3.7.9 5.3-4.7-2.5-4.7 2.5.9-5.3-3.8-3.7 5.2-.8L12 2.2z" />
+                                        </svg>
+                                    ))}
+                                    <span className="text-gray-600 ml-2 text-sm">0/5</span>
+                                </div>
+                                
+                                <hr className="my-2" />
+                                
+                                <div className="flex justify-between items-center">
+                                    <div className="flex items-center">
+                                        <AiOutlineClockCircle className="text-gray-600 mr-1" />
+                                        <span className="text-sm text-gray-600">
+                                            {course.duracion || "0"} horas
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <MdPlayCircleOutline className="text-gray-600 mr-1" />
+                                        <span className="text-sm text-gray-600">0 recursos</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 }

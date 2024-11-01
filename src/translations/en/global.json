@@ -180,6 +180,7 @@
         "name": "Username",
         "firstNames": "First Names",
         "lastNames": "Last Names",
+        "documentNumber": "Document Number",
         "invalid_email": "Invalid Email",
         "name_invalid": "Name must be at least 4 characters long",
         "email": "Email",

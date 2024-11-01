@@ -43,7 +43,7 @@ export default function CertificatePreview() {
 
   // Generar la vista previa del certificado
   useEffect(() => {
-    const generatePreview = async () => {
+    const handleGeneratePreview = async () => {
       setIsLoading(true);
       setError(null);
       try {
@@ -53,7 +53,8 @@ export default function CertificatePreview() {
             course.title,
             zorro,
             derechaabajo,
-            izquierdaarriba
+            izquierdaarriba,
+            currentProgress === 100
           );
           
           const blob = new Blob([pdfOutput], { type: 'application/pdf' });
@@ -69,7 +70,7 @@ export default function CertificatePreview() {
     };
 
     if (course && user) {
-      generatePreview();
+      handleGeneratePreview();
     }
 
     return () => {
@@ -145,7 +146,7 @@ export default function CertificatePreview() {
           </h1>
           
           <div className="min-h-[500px] h-[70vh] bg-gray-100 rounded-lg flex">
-            <div className="w-[70%] bg-white m-2 flex items-center justify-center">
+            <div className="w-[70%] bg-white m-2 flex items-center justify-center relative certificate-preview-container">
               {isLoading ? (
                 <div className="animate-pulse flex items-center justify-center">
                   <p className="text-gray-500">Generando vista previa...</p>
@@ -155,13 +156,16 @@ export default function CertificatePreview() {
                   {error}
                 </div>
               ) : certificatePreview ? (
-                <div className="w-full h-full flex items-center justify-center bg-white">
+                <div className="w-full h-full flex items-center justify-center bg-white relative">
                   <iframe
                     src={`${certificatePreview}#toolbar=0&navpanes=0&scrollbar=0&view=FitV`}
                     className="w-full h-full"
                     style={{
                       border: 'none',
                       overflow: 'hidden',
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                      resize: 'none',
                     }}
                     frameBorder="0"
                     title="Vista previa del certificado"
