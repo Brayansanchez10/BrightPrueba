@@ -69,7 +69,7 @@ export default function CertificatePreview() {
       }
     };
 
-    if (course && user) {
+    if (course && user && currentProgress !== null) {
       handleGeneratePreview();
     }
 
@@ -78,7 +78,7 @@ export default function CertificatePreview() {
         URL.revokeObjectURL(certificatePreview);
       }
     };
-  }, [course, user]);
+  }, [course, user, currentProgress]);
 
   // Obtener el progreso del curso
   useEffect(() => {
@@ -153,8 +153,8 @@ export default function CertificatePreview() {
             {t("certificate.preview")}
           </h1>
           
-          <div className="min-h-[500px] h-[70vh] bg-primary rounded-lg flex">
-            <div className="w-[70%] bg-white m-2 flex items-center justify-center relative certificate-preview-container">
+          <div className="min-h-[500px] h-[70vh] bg-primary rounded-lg flex flex-col md:flex-row overflow-hidden p-2">
+            <div className="w-full md:w-[69%] h-[60vh] md:h-auto bg-white rounded-lg flex items-center justify-center relative certificate-preview-container overflow-hidden">
               {isLoading ? (
                 <div className="animate-pulse flex items-center justify-center">
                   <p className="text-gray-500">Generando vista previa...</p>
@@ -164,7 +164,7 @@ export default function CertificatePreview() {
                   {error}
                 </div>
               ) : certificatePreview ? (
-                <div className="w-full h-full flex items-center justify-center bg-white relative">
+                <div className="w-full h-full flex items-center justify-center bg-white relative overflow-hidden">
                   <iframe
                     src={`${certificatePreview}#toolbar=0&navpanes=0&scrollbar=0&view=FitV`}
                     className="w-full h-full certificate-iframe"
@@ -174,6 +174,7 @@ export default function CertificatePreview() {
                       maxWidth: '100%',
                       maxHeight: '100%',
                       resize: 'none',
+                      display: 'block'
                     }}
                     frameBorder="0"
                     title="Vista previa del certificado"
@@ -187,7 +188,7 @@ export default function CertificatePreview() {
               )}
             </div>
             
-            <div className="w-[30%] bg-purple-950 dark:bg-secondary m-2 p-3 rounded-lg">
+            <div className="w-full md:w-[29%] bg-purple-950 dark:bg-secondary mt-2 md:mt-0 md:ml-2 p-3 rounded-lg">
               <h3 className="text-white font-bold mb-3">{t("certificate.menuOptions")}</h3>
               <div className="space-y-2">
                 {currentProgress === 100 && (
