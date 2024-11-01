@@ -889,6 +889,16 @@
         "cancel": "Cancelar",
         "validateContent": "Minimo de caracteres para el contenido es 8"
     },
+<<<<<<< HEAD
+    "ForumTable": {
+        "forumTitle": "Foro Categorias",
+        "forumCreate": "Crear Foro",
+        "name": "nombre",
+        "Description": "Descripcion"
+        
+
+    }   
+=======
     "entities": {
         "title": "Entidades",
         "createEntity": "Crear Entidad",
@@ -962,4 +972,5 @@
         "updateButton": "Actualizar",
         "cancelButton": "Cancelar"
     }
+>>>>>>> ac9d8e93fd7b01a6584581c846f7e161e8ff2549
 }
