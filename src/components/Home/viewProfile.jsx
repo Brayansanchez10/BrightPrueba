@@ -215,7 +215,7 @@ export default function ViewProfile() {
             disabled={currentSlide <= 1}
           >
             <ChevronLeft className="w-5 h-5 mr-1" />
-            <span>PREV</span>
+            <span className="hidden sm:inline">PREV</span>
           </button>
           <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
             <span className="text-white font-bold">
@@ -235,7 +235,7 @@ export default function ViewProfile() {
             }`}
             disabled={currentSlide >= maxSlide}
           >
-            <span>NEXT</span>
+            <span className="hidden sm:inline">NEXT</span>
             <ChevronRight className="w-5 h-5 ml-1" />
           </button>
         </div>
@@ -247,7 +247,7 @@ export default function ViewProfile() {
     <div className="min-h-screen mt-16">
       <NavigationBar />
       <motion.div 
-        className="w-full py-12 mb-8"
+        className="w-full py-8 md:py-12 mb-8"
         variants={fadeInFromLeft}
         initial="hidden"
         animate="visible"
@@ -261,35 +261,35 @@ export default function ViewProfile() {
       >
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center">
-            <div className="flex items-start justify-center w-full mb-6">
-              <div className="relative mr-8">
-                <div className="w-48 h-48 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center border-4 border-white shadow-lg">
+            <div className="flex flex-col md:flex-row items-center md:items-start justify-center w-full mb-6 space-y-6 md:space-y-0 md:space-x-8">
+              <div className="relative">
+                <div className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center border-4 border-white shadow-lg">
                   {user.userImage ? (
                     <img src={user.userImage} alt={user.username} className="w-full h-full object-cover" />
                   ) : (
-                    <FaUser className="text-purple-900 text-6xl" />
+                    <FaUser className="text-purple-900 text-4xl md:text-6xl" />
                   )}
                 </div>
-                <div className="absolute bottom-0 right-0 bg-green-500 rounded-full w-6 h-6 border-2 border-white"></div>
+                <div className="absolute bottom-0 right-0 bg-green-500 rounded-full w-4 h-4 md:w-6 md:h-6 border-2 border-white"></div>
               </div>
-              <div className="flex flex-col items-start">
-                <h1 className="text-4xl md:text-5xl font-bungee mb-2 tracking-wider" style={{ color: '#00D8A1', textShadow: '2px 2px 0 #FFFFFF, -2px -2px 0 #FFFFFF, 2px -2px 0 #FFFFFF, -2px 2px 0 #FFFFFF' }}>
+              <div className="flex flex-col items-center md:items-start text-center md:text-left">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bungee mb-2 tracking-wider" style={{ color: '#00D8A1', textShadow: '2px 2px 0 #FFFFFF, -2px -2px 0 #FFFFFF, 2px -2px 0 #FFFFFF, -2px 2px 0 #FFFFFF' }}>
                   {user.username}
                 </h1>
-                <p className="text-xl text-purple-200 mb-4">{user.firstNames} {user.lastNames}</p>
-                <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                <p className="text-lg md:text-xl text-purple-200 mb-4">{user.firstNames} {user.lastNames}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-x-8 md:gap-y-4">
                   {[
                     { icon: FaEnvelope, label: "Correo", value: user.email },
                     { icon: FaGraduationCap, label: "Rol", value: user.role },
                     { icon: FaMapMarkerAlt, label: "Ubicación", value: "Colombia" },
                     { icon: FaCalendar, label: "Fecha de registro", value: new Date(user.createdAt).toLocaleDateString() }
                   ].map(({ icon: Icon, label, value }) => (
-                    <div key={label} className="flex flex-col items-start">
+                    <div key={label} className="flex flex-col items-center md:items-start">
                       <div className="flex items-center gap-2">
                         <Icon className="text-[#00D8A1] text-xl" />
                         <span className="text-white font-roboto text-base">{label}</span>
                       </div>
-                      <span className="text-[#BBBBBB] font-roboto mt-1">{value}</span>
+                      <span className="text-[#BBBBBB] font-roboto mt-1 text-sm md:text-base">{value}</span>
                     </div>
                   ))}
                 </div>
@@ -300,7 +300,7 @@ export default function ViewProfile() {
       </motion.div>
 
       <motion.div 
-        className="container mx-auto px-4"
+        className="container mx-auto px-4 md:px-8 lg:px-16"
         initial="hidden"
         animate="visible"
         variants={staggerChildren}
@@ -309,28 +309,32 @@ export default function ViewProfile() {
           className="mt-8"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold">CURSOS REGISTRADOS</h2>
-          {courses.length > 0 ? (
-            renderCourseCards(courses, sliderRef, currentSlide, maxSlide, handlePrev, handleNext)
-          ) : (
-            <p className="text-lg text-gray-600">No esta registrado en ningún curso aún.</p>
-          )}
+          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">CURSOS REGISTRADOS</h2>
+          <div className="max-w-7xl mx-auto">
+            {courses.length > 0 ? 
+              renderCourseCards(courses, sliderRef, currentSlide, maxSlide, handlePrev, handleNext)
+              :
+              <p className="text-lg text-gray-600 text-center">No está registrado en ningún curso aún.</p>
+            }
+          </div>
         </motion.div>
 
         <motion.div 
           className="mt-16"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold">CURSOS TERMINADOS</h2>
-          {completedCourses.length > 0 ? (
-            renderCourseCards(completedCourses, completedSliderRef, currentCompletedSlide, maxCompletedSlide, handleCompletedPrev, handleCompletedNext)
-          ) : (
-            <p  className="text-lg text-gray-600">No ha completado ningún curso aún.</p>
-          )}
+          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">CURSOS TERMINADOS</h2>
+          <div className="max-w-7xl mx-auto">
+            {completedCourses.length > 0 ?
+              renderCourseCards(completedCourses, completedSliderRef, currentCompletedSlide, maxCompletedSlide, handleCompletedPrev, handleCompletedNext)
+              :
+              <p className="text-lg text-gray-600 text-center">No ha completado ningún curso aún.</p>
+            }
+          </div>
         </motion.div>
       </motion.div>
       <div className="mt-12">
-      <Footer />
+        <Footer />
       </div>
       <Modal
         isOpen={isModalOpen}

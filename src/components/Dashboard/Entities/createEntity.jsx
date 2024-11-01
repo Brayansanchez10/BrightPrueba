@@ -1,197 +1,203 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
-import Swal from "sweetalert2";
-import { useTranslation } from "react-i18next";
 import { useEntity } from "../../../context/user/entities.context";
+import Swal from "sweetalert2";
+import { useTranslation } from 'react-i18next';
+import "../css/Custom.css";
 import holaImage from "../../../assets/img/hola.png";
 
-const CreateEntityModal = ({visible, onClose, onCreate }) => {
-    const {createEntity} = useEntity();
-    const { t } = useTranslation("global");
-    const [isSubmitting, setIsSubmitting] = useState(false);
+const CreateEntityModal = ({ visible, onClose, isVisible }) => {
+  const { createEntity, entity, getEntity } = useEntity();
+  const { t } = useTranslation("global");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [newEntity, setNewEntity] = useState({ name: "", type: "" });
+  const [error, setError] = useState({
+    name: "",
+    type: ""
+  });
 
-    const MAX_DESCRIPTION_LENGTH = 30;
-    const MIN_COURSE_NAME_LENGTH = 3;
-    const MAX_COURSE_NAME_LENGTH = 25;
-    const MIN_DESCRIPTION_LENGTH = 6;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewEntity({ ...newEntity, [name]: value });
+    validateField(name, value);
+  };
 
-    const [entities, setEntities] = useState({
-        name: "",
-        type: "",
-    });
+  const validateField = (name, value) => {
+    switch (name) {
+      case "name":
+        if (value.length < 3) {  
+          setError((prev) => ({ ...prev, name: t("createEntityForm.minName") }));
+        } else if (value.length > 30) {  
+          setError((prev) => ({ ...prev, name: t("createEntityForm.maxName") }));
+        } else {
+          setError((prev) => ({ ...prev, name: "" }));
+        }
+        break;
+      case "type":
+        if (!value) {
+          setError((prev) => ({ ...prev, type: t("createEntityForm.typeRequired") }));
+        } else {
+          setError((prev) => ({ ...prev, type: "" }));
+        }
+        break;
+      default:
+        break;
+    }
+  };
 
-    const [errorMessage, setErrorMessage] = useState({
-        name: "",
-        type: "",
-    });
+  useEffect(() => {
+    if (isVisible) {
+      fetchEntities();
+    } else {
+      setNewEntity({ name: "", type: "" });
+    }
+  }, [isVisible]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setEntities({ ...entities, [name]: value });
-        validateField(name, value);
+  const fetchEntities = async () => {
+    try {
+      await getEntity();
+    } catch (err) {
+      console.error("Error al obtener todas las entidades:", err);
+      Swal.fire({
+        icon: "error",
+        title: t("Error al obtener todas las entidades"),
+        timer: 3000,
+        showConfirmButton: false,
+      });
+    } 
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const errors = {
+      name: "",
+      type: "",
     };
 
-    const validateField = (name, value) => {
-        switch (name) {
-            case "name":
-                if (value.length < MIN_COURSE_NAME_LENGTH || value.length > MAX_COURSE_NAME_LENGTH) {
-                    setErrorMessage((prev) => ({ ...prev, name: t("createCourseForm.nameInvalidLength") }));
-                } else {
-                    setErrorMessage((prev) => ({ ...prev, name: "" }));
-                }
-                break;
-            case "type":
-                if (value.length < MIN_DESCRIPTION_LENGTH) {
-                    setErrorMessage((prev) => ({ ...prev, description: t("createCourseForm.descriptionTooShort") }));
-                } else {
-                    setErrorMessage((prev) => ({ ...prev, description: "" }));
-                }
-                break;
-            default:
-                break;
-        }
-    };
+    if (!newEntity.name || newEntity.name.length < 3 || newEntity.name.length > 30) {
+      errors.name = t("createEntityForm.nameInvalid");
+    }
+    if (!newEntity.type) {
+      errors.type = t("createEntityForm.typeRequired");
+    }
 
-    const vibrate = () => {
-        if (navigator.vibrate) {
-            navigator.vibrate(200); // Vibrar durante 200 ms
-        }
-    };
+    if (entity.some((existingEntity) => existingEntity.name === newEntity.name)) {
+      errors.name = t("createEntityForm.entityExists");
+    }
 
-    const handleSubmit = async (e) => {
-        e.preventDefaul();
-        setIsSubmitting(true);
+    if (Object.values(errors).some((error) => error)) {
+      setError(errors);
+      setIsSubmitting(false);
+      return;
+    }
 
-        const errors = {
-            name: "",
-            type: "",
-        };
+    try {
+      await createEntity(newEntity);
 
-        if (!entities.name || entities.name.length < MIN_COURSE_NAME_LENGTH || entities.name.length > MAX_COURSE_NAME_LENGTH) {
-            errors.name = t("createCourseForm.nameInvalidLength");
-        }
-        if (!entities.type || entities.type.length < MIN_DESCRIPTION_LENGTH) {
-            errors.type = t("createCourseForm.descriptionTooShort");
-        }
+      Swal.fire({
+        icon: "success",
+        title: t('createEntityForm.entityCreated'),
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        handleModalClose();
+        setIsSubmitting(false);
+      })
+      fetchEntities();
+    } catch (error) {
+      console.error("Error creating entity:", error);
+      setIsSubmitting(false);
+      Swal.fire({
+        icon: "error",
+        title: t("Error al crear la entidad"),
+        text: error.message,
+        timer: 3000,
+        showConfirmButton: true,
+      });
+    }
+  };
 
-        if (Object.values(errors).some((error) => error)) {
-            setErrorMessage(errors);
-            setIsSubmitting(false); // Habilitar el botón nuevamente si hay errores
-            vibrate();
-            return;
-        }
+  const handleModalClose = () => {
+    setNewEntity({ name: "", type: "" });
+    setError({ name: "", type: "" });
+    onClose();
+  };
 
-        const entitiesData = {
-            name: entities.name,
-            type: entities.type,
-        };
+  return (
+    <Modal
+      className="custom"
+      centered
+      open={visible}
+      footer={null}
+      closable={false}
+      onCancel={handleModalClose}
+      styles={{
+        body: {
+          borderRadius: "20px",
+          overflow: "hidden",
+        },
+      }}
+    >
+      <div className="absolute top-5 right-8 cursor-pointer" onClick={handleModalClose}>
+        <span className="text-white text-2xl font-bold">X</span>
+      </div>
+      <div className="h-[115px] bg-gradient-to-r from-[#18116A] to-blue-500 flex justify-center items-center">
+        <img src={holaImage}
+        alt="Logo" 
+        className="w-[200px] h-[200px] mt-12 object-contain" />
+      </div>
+      <form onSubmit={handleSubmit} className="p-5 text-center">
+        <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4 font-bungee">
+          {t('createEntityForm.title')}
+        </h1>
+        <div className="mt-4 text-left"> 
+          <label className="text-lg font-bold text-[#000000] block">{t('createEntityForm.nameLabel')}</label>
+          <input
+            name="name"
+            value={newEntity.name}
+            onChange={handleChange}
+            className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+            placeholder={t('createEntityForm.namePlaceholder')}
+            maxLength={30}
+            required
+          />
+          {error.name && (
+            <p className="text-red-500 text-sm mt-1">{error.name}</p>
+          )}
+        </div>
 
-        try {
-            await createEntity(entitiesData);
-            Swal.fire({
-                icon: "success",
-                title: t("Entidad creada exitosamente"),
-                timer: 1000,
-                showConfirmButton: false,
-            }).then(() => {
-                onCreate(categoriesData);
-                resetForm();
-                onClose();
-            });
-        } catch (error) {
-            console.error(error);
-            Swal.fire({
-                icon: "error",
-                title: t("Error al crear entidad"),
-                timer: 3000,
-                showConfirmButton: true,
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+        <div className="mt-4 text-left">
+          <label className="text-lg font-bold text-[#000000] block">{t('createEntityForm.typeLabel')}</label>
+          <select
+            name="type"
+            value={newEntity.type}
+            onChange={handleChange}
+            className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+            required
+          >
+            <option value="">{t('createEntityForm.selectType')}</option>
+            <option value="Empresa">{t('createEntityForm.company')}</option>
+            <option value="Persona">{t('createEntityForm.person')}</option>
+          </select>
+          {error.type && (
+            <p className="text-red-500 text-sm mt-1">{error.type}</p>
+          )}
+        </div>
 
-    const resetForm = () => {
-        setEntities({
-            name: "",
-            type: "",
-        });
-        setErrorMessage({
-            name: "",
-            type: "",
-        });
-    };
-
-
-    return (
-        <Modal
-            open={visible}
-            footer={null}
-            closable={false}
-            className="custom"
-            centered
-            onCancel={onClose}
-            bodyStyle={{
-                borderRadius: "20px",
-                overflow: "hidden",
-            }}
-        >
-            <div className="absolute top-5 right-8 cursor-pointer" onClick={onClose}>
-                <span className="text-white text-2xl font-bold">X</span>
-            </div>
-            <div className="h-[115px] bg-gradient-to-r from-[#18116A] to-blue-500 flex justify-center items-center">
-                <img src={holaImage} alt="Logo" className="w-[200px] h-[200px] mt-12 object-contain" />
-            </div>
-            <form onSubmit={handleSubmit} className="p-5 text-center">
-                <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4 font-bungee">
-                    {t("Crear Entidad")}
-                </h1>
-                <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-[#000000] block">
-                        {t("createCourseForm.name")}
-                    </label>
-                    <input
-                        className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-                        type="text"
-                        name="name"
-                        value={entities.name}
-                        onChange={handleChange}
-                        maxLength={MAX_COURSE_NAME_LENGTH}
-                        required
-                    />
-                    <div className="text-gray-500 text-sm">{`${entities.name.length}/${MAX_COURSE_NAME_LENGTH}`}</div>
-                    {errorMessage.name && (
-                        <p className="text-red-500 text-sm mt-1">{errorMessage.name}</p>
-                    )}
-                </div>
-                <div className="text-left mb-4">
-                    <label className="text-lg font-bold text-[#000000] block">
-                        {t("Type")}
-                    </label>
-                    <textarea
-                        className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200 resize-none"
-                        name="type"
-                        value={entities.type}
-                        onChange={handleChange}
-                        maxLength={MAX_DESCRIPTION_LENGTH}
-                        style={{ minHeight: "80px" }}
-                        required
-                    />
-                    <div className="text-gray-500 text-sm">{`${entities.type.length}/${MAX_DESCRIPTION_LENGTH}`}</div>
-                    {errorMessage.type && (
-                        <p className="text-red-500 text-sm mt-1">{errorMessage.type}</p>
-                    )}
-                </div>
-                <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-2 bg-[#18116A] text-white font-bold rounded-lg shadow-md hover:bg-blue-500 transition duration-200"
-                >
-                    {t("createCourseForm.createButton")}
-                </button>
-            </form>
-        </Modal>
-    );
+        <div className="flex justify-center space-x-4 mt-6">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="bg-[#18116A] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#140e5b] transition-all duration-300"
+          >
+            {t('createEntityForm.createButton')}
+          </button>
+        </div>
+      </form>
+    </Modal>
+  );
 };
 
 export default CreateEntityModal;

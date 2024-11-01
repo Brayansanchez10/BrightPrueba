@@ -76,11 +76,11 @@ const DeleteEntityModal = ({ visible, onClose, entities, deleteEntity }) => {
             </button>
           </div>
           <div className="p-5 text-center">
-            <h1 className="text-2xl font-extrabold text-[#D84545] mt-5 mb-4">
-              {t("roles.confirmDeleteRole")}
+            <h1 className="text-2xl font-extrabold text-[#D84545] mt-5 mb-4 font-bungee">
+              {t("deleteEntity.confirmDeletion")}
             </h1>
             <p className="text-lg font-semibold mb-3">
-              {t("roles.deleteConfirmation")}
+              {t("deleteEntity.confirmMessage")}
             </p>
             <p className="text-sm font-extrabold text-red-500 mb-6">
               <b>{t("roles.deleteCannot")}</b>

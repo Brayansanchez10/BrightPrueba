@@ -183,7 +183,6 @@
         "name": "Username",
         "firstNames": "First Names",
         "lastNames": "Last Names",
-        "documentNumber": "Document Number",
         "invalid_email": "Invalid Email",
         "name_invalid": "Name must be at least 4 characters long",
         "email": "Email",
@@ -892,15 +891,6 @@
         "cancel": "Cancel",
         "validateContent": "Minimum characters for the content is 8"
     },
-<<<<<<< HEAD
-    "ForumTable": {
-        "forumTitle": "Foro Categorias",
-        "forumCreate": "Crate forum",
-         "Name": "Name",
-        "Description": "Description"
-    }
-}
-=======
         "entities": {
             "title": "Entities",
             "createEntity": "Create Entity",
@@ -975,4 +965,3 @@
             "cancelButton": "Cancel"
         }
     }
->>>>>>> ac9d8e93fd7b01a6584581c846f7e161e8ff2549
