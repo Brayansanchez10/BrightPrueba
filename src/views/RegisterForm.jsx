@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import Swal from "sweetalert2";
@@ -11,6 +11,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import imagen from "../assets/img/book.png";
 import LoginFond from "../assets/img/Login.png"
 import "../css/animations.css";
+import { getEntity } from "../api/user/entities.request.js";
 
 function RegisterForm() {
   const [error, setError] = useState(null);
@@ -18,6 +19,21 @@ function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [entities, setEntities] = useState([]);
+
+  useEffect(() => {
+    async function loadEntities() {
+      try {
+        const response = await getEntity(); // Llama a tu API para obtener las entidades
+        setEntities(response.data);
+        console.log("Entidades obtenidas; ", response);
+      } catch (error) {
+        console.error("Error loading entities:", error);
+        setError("Failed to load entities");
+      }
+    }
+    loadEntities();
+  }, []);
 
   const navigate = useNavigate();
   const { t } = useTranslation("global");
@@ -52,7 +68,8 @@ function RegisterForm() {
     confirmPassword: yup
       .string()
       .oneOf([yup.ref("password"), null], t("register.passwords_match"))
-      .required(t("register.repeat_password")),
+      .required(t("register.repeat_password")
+    ),
   });
 
   const formik = useFormik({
@@ -64,13 +81,16 @@ function RegisterForm() {
       email: "",
       password: "",
       confirmPassword: "",
+      entityId: "",
     },
     validationSchema: validationSchema,
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values) => {
       try {
-        const { confirmPassword, ...userData } = values;
+        const { confirmPassword, entityId, ...userData } = values;
+        userData.entityId = Number(entityId);
+        console.log(userData);
 
         setIsSubmitting(true);
 
@@ -337,6 +357,32 @@ function RegisterForm() {
                   <div className="text-red-500 mt-1">
                     {formik.errors.confirmPassword}
                   </div>
+                ) : null}
+              </div>
+              <div>
+                <label className="text-lg font-bold text-gray-600 block">
+                  {t("register.select_entity")}
+                </label>
+                <select
+                  name="entityId"
+                  value={formik.values.entityId}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                    formik.touched.entityId && formik.errors.entityId
+                      ? "border-red-500"
+                      : "border-purple-300"
+                  }`}
+                >
+                  <option value="" label={t("register.choose_entity")} />
+                  {entities && entities.length > 0 && entities.map((entity) => (
+                    <option key={entity.id} value={entity.id}>
+                      {entity.name} {/* Reemplaza 'name' por el campo adecuado */}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.entityId && formik.errors.entityId ? (
+                  <div className="text-red-500 mt-1">{formik.errors.entityId}</div>
                 ) : null}
               </div>
               <div className="flex justify-center">

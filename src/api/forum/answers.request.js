@@ -10,7 +10,7 @@ export const createAnswer = async (answerData) => {
         formData.append('commentsId', answerData.commentsId);
 
         // Realizar la solicitud POST utilizando Axios
-      return axios.post('/create', formData, {
+      return axios.post('/answers/create', formData, {
         headers: {
           'Content-Type': 'application/json',
         },

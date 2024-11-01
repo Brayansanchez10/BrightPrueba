@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { useTranslation } from 'react-i18next';
 import zorroImage from "../../../assets/img/imagen1.png"; 
 import "../css/Custom.css";
+import { getEntity } from "../../../api/user/entities.request.js";
 
 const { Option } = Select;
 
@@ -15,6 +16,20 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
   const [form] = Form.useForm();
   const { t } = useTranslation("global");
   const [shake, setShake] = useState(false);
+  const [entities, setEntities] = useState([]);
+
+  useEffect(() => {
+    async function loadEntities() {
+      try {
+        const response = await getEntity();
+        setEntities(response.data);
+      } catch (error) {
+        console.error("Error loading entities:", error);
+        setError("Failed to load entities");
+      }
+    } 
+    loadEntities();
+  }, []);
 
   useEffect(() => {
     if (visible) {
@@ -26,6 +41,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
     try {
       const values = await form.validateFields();
       onUpdate(values);
+      console.log("Datos enviados del update:", values);
       Swal.fire({
         icon: 'success',
         title: t('UpdateUserModal.userUpdatedSuccess'),
@@ -137,6 +153,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
             ))}
           </Select>
         </Form.Item>
+        
 
         <Form.Item
           className="mb-4"
@@ -147,6 +164,21 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
           <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">
             <Option value={true}>{t('UpdateUserModal.active')}</Option>
             <Option value={false}>{t('UpdateUserModal.inactive')}</Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          className="mb-4"
+          name="entityId"
+          label={<span className="text-lg font-bold text-primary">{t('Seleccione Una Entidad')}</span>}
+          rules={[{ required: true, message: t('Entidad necesaria') }]}
+        >
+          <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">
+            {entities.map((entity) => (
+              <Option key={entity.id} value={entity.id}>
+                {entity.name}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
 

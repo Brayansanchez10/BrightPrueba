@@ -1,16 +1,19 @@
-import jsPDF from "jspdf";
-import zorro from "../../../assets/img/Zorro.jpeg";
-import derechaabajo from "../../../assets/img/DerechaAbajo.jpeg";
-import izquierdaarriba from "../../../assets/img/IzquierdaArriba.jpeg";
-import { Anothershabby_trial } from "../../../Tipografy/Anothershabby_trial-normal";
+// CertificateGenerator.js
+import { jsPDF } from "jspdf";
+import { Anothershabby_trial } from "../../../../Tipografy/Anothershabby_trial-normal";
 
-export const generatePremiumCertificatePDF = (username, courseTitle) => {
+export const generatePremiumCertificatePDF = (
+  username,
+  courseTitle,
+  zorroImage,
+  derechaabajo,
+  izquierdaarriba
+) => {
   const doc = new jsPDF({
     orientation: "landscape",
     unit: "cm",
     format: [28, 21.6],
   });
-  
   doc.setFillColor(240, 248, 255);
   doc.rect(0, 0, 28, 21.6, "F");
 
@@ -25,26 +28,21 @@ export const generatePremiumCertificatePDF = (username, courseTitle) => {
   doc.addFont("Anothershabby.ttf", "AnotherShabby", "normal");
   doc.setFont("AnotherShabby");
 
-  doc.setFont("AnotherShabby", "normal");
-  doc.setTextColor(0, 0, 0);
   doc.setFontSize(70);
+  doc.setTextColor(0, 0, 0);
   doc.text("CONSTANCIA", 14, 4.5, { align: "center" });
 
   doc.setFontSize(25);
-  doc.setFont("AnotherShabby", "normal");
-  doc.setTextColor(0, 0, 0);
   doc.text("De aprendizaje", 18, 5.5, { align: "center" });
 
-  if (zorro) {
-    doc.addImage(zorro, "JPEG", 12, 7, 4, 4);
+  if (zorroImage) {
+    doc.addImage(zorroImage, "JPEG", 12, 7, 4, 4);
   }
 
   doc.setFont("times", "bold");
-  doc.setTextColor(0, 0, 0);
   doc.setFontSize(18);
   doc.text("ESTE CERTIFICADO SE OTORGA A", 14, 13.0, { align: "center" });
 
-  doc.setTextColor(0, 0, 0);
   doc.setFontSize(65);
   doc.setFont("AnotherShabby", "normal");
   doc.text(`${username}`, 14, 15.5, { align: "center" });
@@ -53,8 +51,6 @@ export const generatePremiumCertificatePDF = (username, courseTitle) => {
   doc.setDrawColor(0, 0, 0);
   doc.line(6, 16, 22, 16);
 
-  doc.setFont("times", "normal");
-  doc.setTextColor(0, 0, 0);
   doc.setFontSize(14);
   doc.text(
     `Por completar exitosamente el curso "${courseTitle}". `,
@@ -63,13 +59,9 @@ export const generatePremiumCertificatePDF = (username, courseTitle) => {
     { align: "center" }
   );
 
-  doc.setFont("times", "normal");
-  doc.setFontSize(14);
-  doc.setTextColor(0, 0, 0);
   doc.text("Gracias por tu dedicación y", 19, 17.5, { align: "center" });
 
   doc.setFontSize(14);
-  doc.setTextColor(0, 0, 0);
   doc.text("esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 18.0, {
     align: "center",
   });

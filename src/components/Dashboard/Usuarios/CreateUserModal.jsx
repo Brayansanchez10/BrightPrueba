@@ -5,6 +5,7 @@ import { useUserContext } from "../../../context/user/user.context";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import zorroImage from "../../../assets/img/Zorro.png";
+import { getEntity } from "../../../api/user/entities.request.js";
 
 const { Option } = Select;
 
@@ -14,6 +15,20 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
   const [form] = Form.useForm();
   const { t } = useTranslation("global");
   const [shake, setShake] = useState(false);
+  const [entities, setEntities] = useState([]);
+
+  useEffect(() => {
+    async function loadEntities() {
+      try {
+        const response = await getEntity();
+        setEntities(response.data);
+      } catch (error) {
+        console.error("Error loading entities:", error);
+        setError("Failed to load entities");
+      }
+    } 
+    loadEntities();
+  }, []);
 
   useEffect(() => {
     if (visible) {
@@ -36,6 +51,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
       }
 
       onCreate(values);
+      console.log("Datos enviados", values);
 
       Swal.fire({
         icon: "success",
@@ -154,6 +170,20 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
           <Select className="w-full h-[34px] rounded-xl bg-white shadow-md text-center">
             <Option value="active">{t("CreateUserModal.active")}</Option>
             <Option value="inactive">{t("CreateUserModal.inactive")}</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          className="text-lg font-bold mb-2"
+          name="entityId"
+          label={<span className="text-primary">{t("Seleccione Una Entidad")}</span>}
+          rules={[{ required: true, message: t("Entidad necesaria") }]}
+        >
+          <Select className="w-full h-[34px] rounded-xl bg-white shadow-md text-center">
+            {entities.map((entity) => (
+               <Option key={entity.id} value={entity.id}>
+               {entity.name}
+             </Option>
+            ))}
           </Select>
         </Form.Item>
         <div className="flex justify-center mt-6 space-x-4">

@@ -88,7 +88,7 @@ export const deleteResource = (id) => axios.delete(`/resource/deleteResource/${i
 // Función para completar un quiz y actualizar el progreso del usuario
 export const completeQuiz = async (userId, resourceId, score) => {
     try {
-        const response = await axios.post('/complete-quiz', {
+        const response = await axios.post('/resource/complete-quiz', {
             userId,
             resourceId,
             score,
