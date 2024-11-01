@@ -347,11 +347,15 @@ function RegisterForm() {
                   }`}
                 >
                   <option value="" label={t("register.choose_entity")} />
-                  {entities && entities.length > 0 && entities.map((entity) => (
-                    <option key={entity.id} value={entity.id}>
-                      {entity.name} {/* Reemplaza 'name' por el campo adecuado */}
-                    </option>
-                  ))}
+                  {entities &&
+                    entities.length > 0 &&
+                    entities
+                      .filter((entity) => entity.id !== 1) // Filtra la entidad con id 1
+                      .map((entity) => (
+                        <option key={entity.id} value={entity.id}>
+                          {entity.name} {/* Reemplaza 'name' por el campo adecuado */}
+                        </option>
+                      ))}
                 </select>
                 {formik.touched.entityId && formik.errors.entityId ? (
                   <div className="text-red-500 mt-1">{formik.errors.entityId}</div>

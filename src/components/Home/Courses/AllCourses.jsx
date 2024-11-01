@@ -180,7 +180,7 @@ export default function AllCourses() {
       }
     };
     fetchUserData();
-  }, [user, getUserById, getUserCourses]);
+  }, [user]);
 
   const handleCardClick = (course) => {
     setSelectedCourse(course);
