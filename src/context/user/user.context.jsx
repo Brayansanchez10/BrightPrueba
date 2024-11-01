@@ -82,7 +82,7 @@ export const UserProvider = ({ children }) => {
                 email: email || currentUserData.email,
                 state: currentUserData.state,
                 role: currentUserData.role,
-                userImage: userImage !== undefined ? userImage : currentUserData.userImage, // Manejando la eliminación
+                userImage: userImage !== undefined ? userImage : currentUserData.userImage,
                 entityId: entityId || currentUserData.entityId,
             };
     
