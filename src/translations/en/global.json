@@ -134,9 +134,9 @@
         "davis": "The road to success and the road to failure are almost exactly the same.",
         "einstein_knowledge": "The only source of knowledge is experience."
         },
-        "bringmind": "bringmind",
+        "bringmind": "brightmind",
         "welcome": "Welcome to ",
-        "welcome_message": "Welcome to BRIGMIND! We are an educational platform that brings technological knowledge to everyone, regardless of location or resources. We offer accessible courses in programming, artificial intelligence, and more, from any device, with in-person workshops and mentoring programs. Join our community and transform your future with the power of education.",
+        "welcome_message": "Welcome to BRIGHTMIND! We are an educational platform that brings technological knowledge to everyone, regardless of location or resources. We offer accessible courses in programming, artificial intelligence, and more, from any device, with in-person workshops and mentoring programs. Join our community and transform your future with the power of education.",
         "mission": "our mission",
         "mission_message": "Our mission is to democratize technological education, providing inclusive and practical access to children, youth, and adults in rural and low-resource areas. At Didáctica, we empower individuals with digital skills for their personal and professional development.",
         "experience_y": "Year",
@@ -723,7 +723,12 @@
     },
     "certificate": {
         "preview": "Certificate Preview",
-        "previewMessage": "Here you can see how your certificate will look once you complete the course"
+        "previewMessage": "Here you can see how your certificate will look once you complete the course",
+        "menuOptions": "OPTIONS MENU",
+        "download": "DOWNLOAD",
+        "print": "PRINT",
+        "backToCourse": "BACK TO COURSE",
+        "share": "SHARE ON NETWORKS"
     },
     "navigation": {
         "previous": "Previous",
@@ -972,78 +977,5 @@
             "typePlaceholder": "Please select the entity type!",
             "updateButton": "Update",
             "cancelButton": "Cancel"
-        },
-        "entities": {
-            "title": "Entities",
-            "createEntity": "Create Entity",
-            "searchPlaceholder": "Search by Name",
-            "id": "ID",
-            "name": "Name",
-            "type": "Type",
-            "actions": "Actions",
-            "createSuccess": "Entity created successfully",
-            "createError": "Error creating entity",
-            "updateSuccess": "Entity updated successfully",
-            "updateError": "Error updating entity",
-            "deleteSuccess": "Entity deleted successfully",
-            "deleteError": "Error deleting entity",
-            "assign": "Assign",
-            "cancel": "Cancel",
-            "resource": "Resource",
-            "previous": "Previous",
-            "next": "Next",
-            "details": "Details",
-            "update": "Update",
-            "delete": "Delete",
-            "noEntities": "No entities available",
-            "addContent": "Add Content To",
-            "invalidFileType": "Invalid file type."
-        },
-        "createEntityForm": {
-            "title": "Create Entity",
-            "nameLabel": "Name:",
-            "minName": "Minimum 3 characters",
-            "maxName": "Maximum 30 characters",
-            "namePlaceholder": "Enter the name here",
-            "typeLabel": "Type:",
-            "errorMessage": "All fields are required.",
-            "successMessage": "Entity created successfully!",
-            "errorToastMessage": "Error creating the entity. Please try again.",
-            "cancelButton": "Cancel",
-            "nameTooShort": "Entity name must be at least 3 characters long.",
-            "createButton": "Create",
-            "createSuccess": "Entity created successfully!",
-            "createFailure": "Failed to create entity. Please try again.",
-            "nameRequired": "Please enter the entity name",
-            "typeRequired": "Please select the entity type",
-            "nameTooLong": "Entity name must be no more than 30 characters long",
-            "nameExists": "An entity with this name already exists",
-            "selectType": "Select a type",
-            "person": "Person",
-            "company": "Company"
-        },
-        "deleteEntity": {
-            "confirmDeletion": "Delete entity",
-            "confirmMessage": "Do you want to delete this entity?",
-            "warningMessage": "This action cannot be undone.",
-            "confirmButton": "Yes",
-            "cancelButton": "Cancel"
-        },
-        "detailsEntityModal": {
-            "title": "Entity Details",
-            "name": "Name",
-            "type": "Type",
-            "closeButton": "Close"
-        },
-        "updateEntityModal": {
-            "title": "Update Entity",
-            "nameLabel": "Name",
-            "namePlaceholder": "Please enter the entity name!",
-            "nameShort": "Entity name must be at least 3 characters long.",
-            "nameLong": "Entity name must be no more than 30 characters long.",
-            "typeLabel": "Type",
-            "typePlaceholder": "Please select the entity type!",
-            "updateButton": "Update",
-            "cancelButton": "Cancel"
         }
-    }
+}

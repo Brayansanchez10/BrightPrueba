@@ -132,7 +132,7 @@
             "einstein_knowledge": "La única fuente de conocimiento es la experiencia."
         },
         "welcome": "Bienvenido a ",
-        "welcome_message": "¡Bienvenido a BRIGMIND! Somos una plataforma educativa que lleva el conocimiento tecnológico a todos, sin importar la ubicación o los recursos. Ofrecemos cursos accesibles en programación, inteligencia artificial y más, desde cualquier dispositivo, con talleres presenciales y programas de mentoría. Únete a nuestra comunidad y transforma tu futuro con el poder de la educación.",
+        "welcome_message": "¡Bienvenido a BRIGHTMIND! Somos una plataforma educativa que lleva el conocimiento tecnológico a todos, sin importar la ubicación o los recursos. Ofrecemos cursos accesibles en programación, inteligencia artificial y más, desde cualquier dispositivo, con talleres presenciales y programas de mentoría. Únete a nuestra comunidad y transforma tu futuro con el poder de la educación.",
         "mission": "nuestra misión",
         "mission_message": "Nuestra misión es democratizar la educación tecnológica, brindando acceso inclusivo y práctico a niños, jóvenes y adultos en zonas rurales y de bajos recursos. En Didáctica, capacitamos a las personas con habilidades digitales para su desarrollo personal y profesional.",
         "experience_y": "Años de",
@@ -718,7 +718,12 @@
     },
     "certificate": {
         "preview": "Previsualización del certificado",
-        "previewMessage": "Aquí podrás ver cómo se verá tu certificado una vez completado el curso"
+        "previewMessage": "Aquí podrás ver cómo se verá tu certificado una vez completado el curso",
+        "menuOptions": "MENU DE OPCIONES",
+        "download": "DESCARGAR",
+        "print": "IMPRIMIR",
+        "backToCourse": "VOLVER AL CURSO",
+        "share": "COMPARTIR EN REDES"
     },
     "navigation": {
         "previous": "Atrás",

@@ -69,7 +69,7 @@ export default function CertificatePreview() {
       }
     };
 
-    if (course && user) {
+    if (course && user && currentProgress !== null) {
       handleGeneratePreview();
     }
 
@@ -78,7 +78,7 @@ export default function CertificatePreview() {
         URL.revokeObjectURL(certificatePreview);
       }
     };
-  }, [course, user]);
+  }, [course, user, currentProgress]);
 
   // Obtener el progreso del curso
   useEffect(() => {
@@ -115,6 +115,14 @@ export default function CertificatePreview() {
     );
   };
 
+  const handlePrint = () => {
+    const iframe = document.querySelector('.certificate-iframe');
+    if (iframe) {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }
+  };
+
   return (
     <motion.div
       className="bg-primary min-h-screen pt-14"
@@ -136,17 +144,17 @@ export default function CertificatePreview() {
         </motion.button>
 
         <motion.div
-          className="bg-white p-4 rounded-lg shadow-lg"
+          className="bg-secondary p-4 rounded-lg shadow-lg"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-3xl font-bold text-center mb-4">
+          <h1 className="text-3xl text-primary font-bold text-center mb-4">
             {t("certificate.preview")}
           </h1>
           
-          <div className="min-h-[500px] h-[70vh] bg-gray-100 rounded-lg flex">
-            <div className="w-[70%] bg-white m-2 flex items-center justify-center relative certificate-preview-container">
+          <div className="min-h-[500px] h-[70vh] bg-primary rounded-lg flex flex-col md:flex-row overflow-hidden p-2">
+            <div className="w-full md:w-[69%] h-[60vh] md:h-auto bg-white rounded-lg flex items-center justify-center relative certificate-preview-container overflow-hidden">
               {isLoading ? (
                 <div className="animate-pulse flex items-center justify-center">
                   <p className="text-gray-500">Generando vista previa...</p>
@@ -156,19 +164,21 @@ export default function CertificatePreview() {
                   {error}
                 </div>
               ) : certificatePreview ? (
-                <div className="w-full h-full flex items-center justify-center bg-white relative">
+                <div className="w-full h-full flex items-center justify-center bg-white relative overflow-hidden">
                   <iframe
                     src={`${certificatePreview}#toolbar=0&navpanes=0&scrollbar=0&view=FitV`}
-                    className="w-full h-full"
+                    className="w-full h-full certificate-iframe"
                     style={{
                       border: 'none',
                       overflow: 'hidden',
                       maxWidth: '100%',
                       maxHeight: '100%',
                       resize: 'none',
+                      display: 'block'
                     }}
                     frameBorder="0"
                     title="Vista previa del certificado"
+                    allowFullScreen
                   />
                 </div>
               ) : (
@@ -178,8 +188,8 @@ export default function CertificatePreview() {
               )}
             </div>
             
-            <div className="w-[30%] bg-purple-800 m-2 p-3 rounded-lg">
-              <h3 className="text-white font-bold mb-3">MENU DE OPCIONES</h3>
+            <div className="w-full md:w-[29%] bg-purple-950 dark:bg-secondary mt-2 md:mt-0 md:ml-2 p-3 rounded-lg">
+              <h3 className="text-white font-bold mb-3">{t("certificate.menuOptions")}</h3>
               <div className="space-y-2">
                 {currentProgress === 100 && (
                   <>
@@ -191,7 +201,7 @@ export default function CertificatePreview() {
                       animate={{ x: 0, opacity: 1 }}
                       onClick={handleDownload}
                     >
-                      DESCARGAR
+                      {t("certificate.download")}
                     </motion.button>
 
                     <motion.button 
@@ -200,8 +210,9 @@ export default function CertificatePreview() {
                       whileTap={{ scale: 0.98 }}
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
+                      onClick={handlePrint}
                     >
-                      IMPRIMIR
+                      {t("certificate.print")}
                     </motion.button>
                   </>
                 )}
@@ -214,7 +225,7 @@ export default function CertificatePreview() {
                   animate={{ x: 0, opacity: 1 }}
                   onClick={() => navigate(`/course/${courseId}`)}
                 >
-                  IR AL CURSO
+                  {t("certificate.backToCourse")}
                 </motion.button>
 
                 {currentProgress === 100 && (
@@ -225,7 +236,7 @@ export default function CertificatePreview() {
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                   >
-                    COMPARTIR EN REDES
+                    {t("certificate.share")}
                   </motion.button>
                 )}
               </div>

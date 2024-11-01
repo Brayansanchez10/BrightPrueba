@@ -103,7 +103,7 @@ export default function ViewProfile() {
     } finally {
       setLoading(false);
     }
-  }, [id, authUser, getUserById, getUserCourses, getCourseProgress]);
+  }, [id, authUser, getUserById, getUserCourses]);
 
   useEffect(() => {
     fetchUserData();
@@ -244,7 +244,7 @@ export default function ViewProfile() {
   );
 
   return (
-    <div className="min-h-screen mt-16">
+    <div className="bg-primary min-h-screen pt-16">
       <NavigationBar />
       <motion.div 
         className="w-full py-8 md:py-12 mb-8"
@@ -309,12 +309,12 @@ export default function ViewProfile() {
           className="mt-8"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">CURSOS REGISTRADOS</h2>
+          <h2 className="text-2xl font-roboto text-[#303956] dark:text-primary mb-6 font-bold text-center sm:text-left">CURSOS REGISTRADOS</h2>
           <div className="max-w-7xl mx-auto">
             {courses.length > 0 ? 
               renderCourseCards(courses, sliderRef, currentSlide, maxSlide, handlePrev, handleNext)
               :
-              <p className="text-lg text-gray-600 text-center">No está registrado en ningún curso aún.</p>
+              <p className="text-lg text-gray-600 dark:text-primary text-center">No está registrado en ningún curso aún.</p>
             }
           </div>
         </motion.div>
@@ -323,17 +323,17 @@ export default function ViewProfile() {
           className="mt-16"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">CURSOS TERMINADOS</h2>
+          <h2 className="text-2xl font-roboto text-[#303956] dark:text-primary mb-6 font-bold text-center sm:text-left">CURSOS TERMINADOS</h2>
           <div className="max-w-7xl mx-auto">
             {completedCourses.length > 0 ?
               renderCourseCards(completedCourses, completedSliderRef, currentCompletedSlide, maxCompletedSlide, handleCompletedPrev, handleCompletedNext)
               :
-              <p className="text-lg text-gray-600 text-center">No ha completado ningún curso aún.</p>
+              <p className="text-lg text-gray-600 dark:text-primary text-center">No ha completado ningún curso aún.</p>
             }
           </div>
         </motion.div>
       </motion.div>
-      <div className="mt-12">
+      <div className="pt-12">
         <Footer />
       </div>
       <Modal
