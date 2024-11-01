@@ -56,7 +56,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
 
   return (
     <Modal
-      className={`custom w-[544px] rounded-2xl bg-white flex flex-col justify-between overflow-hidden ${shake ? "shake" : ""}`}
+      className={`custom-modal w-[544px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden ${shake ? "shake" : ""}`}
       visible={visible}
       footer={null}
       closable={false}

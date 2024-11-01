@@ -49,7 +49,7 @@ const DeleteCategory = ({ visible, onClose, onConfirm, onConfirmOnly }) => {
 
   return (
     <Modal
-      className="custom rounded-2xl"
+      className="custom-modal rounded-2xl"
       centered
       closable={false}
       visible={visible}

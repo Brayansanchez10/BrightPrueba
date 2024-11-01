@@ -27,7 +27,7 @@ const DetailsModal = ({
 
   return (
     <Modal
-      className="custom w-[543px] bg-white rounded-3xl overflow-hidden p-0"
+      className="custom-modal w-[543px] bg-white rounded-3xl overflow-hidden p-0"
       visible={visible}
       onCancel={onClose}
       footer={null}

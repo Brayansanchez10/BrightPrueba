@@ -69,7 +69,7 @@ const UpdateCategoryModal = ({
 
   return (
     <Modal
-      className="custom w-[544px] rounded-2xl bg-white flex flex-col justify-between overflow-hidden"
+      className="custom-modal w-[544px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden"
       visible={visible}
       closable={false}
       style={{ top: '10%' }}

@@ -47,7 +47,7 @@ const AssignPermissionsModal = ({
 
   return (
     <Modal
-      className="custom"
+      className="custom-modal"
       centered
       visible={visible}
       onCancel={onCancel}

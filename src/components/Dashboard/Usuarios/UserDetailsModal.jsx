@@ -9,7 +9,7 @@ const DetailsUserModal = ({ visible, onCancel, user }) => {
 
   return (
     <Modal 
-      className="custom w-[543px] bg-white rounded-3xl"
+      className="custom-modal w-[543px] bg-white rounded-3xl"
       centered
       visible={visible}
       closable={false}

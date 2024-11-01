@@ -11,7 +11,7 @@ const DetailsCategoryForumModal = ({ visible, onClose, category }) => {
 
     return (
         <Modal 
-          className="custom w-[543px] h-[700px] bg-white rounded-3xl"
+          className="custom-modal w-[543px] h-[700px] bg-white rounded-3xl"
           onCancel={onClose} 
           closable={false}
           visible={visible}

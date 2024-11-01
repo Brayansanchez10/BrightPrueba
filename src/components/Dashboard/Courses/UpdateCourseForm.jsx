@@ -182,7 +182,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
       visible={visible}
       footer={null}
       closable={false}
-      className={`custom w-[544px] h-[800px] rounded-2xl bg-white flex flex-col justify-between ${
+      className={`custom-modal w-[544px] h-[800px] rounded-3xl bg-white flex flex-col justify-between ${
         i18n.language === "es" ? "bg-gradient-es" : "bg-gradient-en"
       }`}
       centered
