@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: `http://localhost:3068/PE`,
+    baseURL: `https://brightmind.mesadoko.com`,
     withCredentials: true
 })
 
