@@ -200,7 +200,8 @@
         "name_length_invalid": "El nombre debe tener entre 5 y 30 caracteres",
         "email_too_long": "El correo electrónico no debe exceder los 30 caracteres",
         "image_too_large": "El tamaño de la imagen no debe exceder los 5MB",
-        "invalid_image_format": "Formato de imagen inválido. Por favor, use JPEG o PNG"
+        "invalid_image_format": "Formato de imagen inválido. Por favor, use JPEG o PNG",
+        "entities": "Selecciona la entidad a la que pertenecen"
         },
     "navigationBar": {
         "home": "INICIO",
