@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 // Contextos
 import { useResourceContext } from "../../../context/courses/resource.contex";
@@ -13,7 +13,7 @@ import {updateRating, deleteRating,} from "../../../api/courses/ratings.request"
 // Importaciones
 import NavigationBar from "../NavigationBar";
 import {updateComment, deleteComment,} from "../../../api/courses/comment.request";
-import {FiMenu,FiX,FiChevronLeft,FiChevronRight,FiSend,FiMoreVertical,FiEdit,FiTrash2,FiCheckCircle,FiPlus,FiEdit2,FiDownload,} from "react-icons/fi";
+import {FiMenu,FiX,FiChevronLeft,FiChevronRight,FiSend,FiMoreVertical,FiEdit,FiTrash2,FiCheckCircle,FiPlus,FiEdit2,FiDownload,FiLock} from "react-icons/fi";
 import {FaCheckCircle,FaTimesCircle,FaQuestionCircle,FaStar,FaComment,FaUser,} from "react-icons/fa";
 import zorro from "../../../assets/img/Zorro.jpeg";
 import derechaabajo from "../../../assets/img/DerechaAbajo.jpeg";
@@ -97,6 +97,16 @@ export default function ResourceView() {
   const { handleDeleteComment, handleEditComment, handleSaveEditedComment, handleCommentSubmit } = CommentActions ({editedCommentContent, setEditedCommentContent, setEditingCommentId, updateComment, fetchCommentsByResource, id, deleteComment, addComment, userComment, user, setUserComment, courseId });
   const { handleAddNote, handleAddResourceNote, handleEditNote, handleSaveEditedNote, handleDeleteNote, handleSaveEditedResourceNote, handleDeleteResourceNote, handleEditResourceNote} = CourseNotesHandler ({notes, editingNoteId, userNote, editedNoteContent, resourceNotes, userResourceNote, resources, resource, course, user, setEditingNoteId, setUserNote, setEditedNoteContent, editedResourceNoteContent, setEditedResourceNoteContent, setEditingResourceNoteId, editingResourceNoteId, setUserResourceNote, removeResourceNote, fetchResourceNotes, removeNote, fetchCourseNotes, addNote, courseId, addNoteToResource, editNote, editResourceNote});
   const { handleGeneralCommentSubmit, handleEditGeneralComment, handleSaveEditedGeneralComment, handleDeleteGeneralComment} = GeneralCommentsActions ({generalComments, userGeneralComment, setUserGeneralComment, setEditingGeneralCommentId, editedGeneralCommentContent, setEditedGeneralCommentContent, user, courseId,addGeneralComment, editGeneralComment, fetchGeneralComments, removeGeneralComment });
+
+  const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(false);
+
+  useEffect(() => {
+    if (resource?.quizzes && resource.quizzes.length > 0) {
+      setIsNextButtonDisabled(!isQuizCompleted && attempts === 0);
+    } else {
+      setIsNextButtonDisabled(false);
+    }
+  }, [resource, isQuizCompleted, attempts]);
 
   useEffect(() => {
     if (courseId) {
@@ -267,7 +277,7 @@ export default function ResourceView() {
     if (url.includes("youtu.be/") || url.includes("youtube.com/watch")) {
       if (url.includes("youtu.be/")) {
         const videoId = url.split("youtu.be/")[1];
-        return `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1&enablejsapi=1`;
+        return  `https://www.youtube.com/embed/${videoId}?controls=1&rel=0&modestbranding=1&enablejsapi=1`;
       }
       const urlParams = new URLSearchParams(new URL(url).search);
       const videoId = urlParams.get("v");
@@ -627,6 +637,17 @@ export default function ResourceView() {
   };
 
   const handleNext = async () => {
+    if (isNextButtonDisabled) {
+      Swal.fire({
+        icon: "warning",
+        title: t("resource_view.warningTitle"),
+        text: t("resource_view.warningText"),
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
     if (currentResourceIndex < resources.length - 1) {
       const nextResource = resources[currentResourceIndex + 1];
       const percentagePerResource = 100 / resources.length;
@@ -665,14 +686,14 @@ export default function ResourceView() {
   
   const renderResourceList = () => {
     const totalResources = resources.length;
-    const percentagePerResource = 100 / totalResources; // Porcentaje que representa cada recurso
+    const percentagePerResource = 100 / totalResources;
 
     return resources.map((res, index) => {
-      // Progreso requerido para desbloquear este recurso
       const requiredProgress = Math.floor(index * percentagePerResource);
-
-      // Desbloquear si el progreso actual es mayor o igual al progreso requerido
       const isUnlocked = currentProgress >= requiredProgress;
+      const currentResource = resources[currentResourceIndex];
+      const isCurrentResourceQuiz = currentResource?.quizzes && currentResource.quizzes.length > 0;
+      const canAdvance = !isCurrentResourceQuiz || isQuizCompleted || attempts > 0;
 
       return (
         <div
@@ -680,9 +701,7 @@ export default function ResourceView() {
           className={`flex items-start mb-6 cursor-pointer ${
             isOpen ? "pr-4" : "justify-center"
           }`}
-          onClick={() =>
-            isUnlocked && handleResourceClick(res.id, res.courseId)
-          } // Solo permitir clic si está desbloqueado
+          onClick={() => isUnlocked && canAdvance && handleResourceClick(res.id, res.courseId)}
         >
           <div className="relative mr-2.5">
             <div
@@ -690,19 +709,19 @@ export default function ResourceView() {
                 flex items-center justify-center
                 w-10 h-10 rounded-full 
                 ${
-                  isUnlocked
+                  isUnlocked && canAdvance
                     ? "bg-white text-[#6D4F9E]"
                     : "bg-gray-500 text-gray-300 cursor-not-allowed"
                 }
                 text-sm font-bold
               `}
             >
-              {index + 1}
+              {isUnlocked && canAdvance ? index + 1 : <FiLock />}
             </div>
             {index < resources.length - 1 && (
               <div
                 className={`absolute left-[19px] top-8 w-0.5 h-10 ${
-                  isUnlocked ? "bg-white" : "bg-gray-500"
+                  isUnlocked && canAdvance ? "bg-white" : "bg-gray-500"
                 }`}
               />
             )}
@@ -710,7 +729,7 @@ export default function ResourceView() {
           {isOpen && (
             <span
               className={`mt-2 text-xs ${
-                isUnlocked ? "text-white font-bold" : "text-gray-500"
+                isUnlocked && canAdvance ? "text-white font-bold" : "text-gray-500"
               }`}
             >
               {res.title}
@@ -930,12 +949,12 @@ export default function ResourceView() {
               <div className="mb-4">
                 {
                   resource?.quizzes && resource.quizzes.length > 0
-                    ? !isQuizStarted // Si hay quizzes, manejamos el estado del quiz
-                      ? renderStartQuizView() // Mostrar la vista de inicio del quiz
+                    ? !isQuizStarted
+                      ? renderStartQuizView()
                       : isQuizCompleted
-                      ? renderQuizSummary() // Mostrar resumen del quiz completado
-                      : renderQuiz() // Mostrar el quiz en progreso
-                    : renderContent(resource?.files) // Si NO hay quizzes, mostramos el contenido del recurso (imagen, archivo, etc.)
+                      ? renderQuizSummary()
+                      : renderQuiz()
+                    : renderContent(resource?.files)
                 }
 
                 {error && <p className="text-red-500 text-center">{error}</p>}
@@ -974,16 +993,18 @@ export default function ResourceView() {
                         ? handleFinishCourse
                         : handleNext
                     }
+                    disabled={isNextButtonDisabled}
                     className={`p-2.5 ml-2 rounded-full transition-colors ${
-                      currentResourceIndex === resources.length - 1
+                      isNextButtonDisabled
+                        ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                        : currentResourceIndex === resources.length - 1
                         ? "bg-[#9869E3] text-white hover:bg-[#8A5CD6]"
                         : "bg-[#9869E3] text-white hover:bg-[#8A5CD6]"
                     }`}
+                    title={isNextButtonDisabled ? t("resource_view.completeQuizTooltip") : ""}
                   >
                     {currentResourceIndex === resources.length - 1 ? (
-                      <>
-                        <FiCheckCircle size={24} />
-                      </>
+                      <FiCheckCircle size={24} />
                     ) : (
                       <FiChevronRight size={24} />
                     )}

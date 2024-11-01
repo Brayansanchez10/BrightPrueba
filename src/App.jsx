@@ -130,7 +130,9 @@ function App() {
                                                     <Route path="/Courses" element={<Courses />} />
                                                     <Route path="/Categories" element={<Categories />} />
                                                     <Route path="/ForumCategories" element={<ForumCategories />} />
-                                                    <Route path='/Entities' element={<Entities /> } />
+                                                    <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+                                                      <Route path='/Entities' element={<Entities />} />
+                                                    </Route>
                                                     <Route path="/roles" element={<Roles />} />
                                                     <Route path="/ProfileEditor" element={<ProfileEditor />} />
                                                     <Route path="/ChangePassword" element={<ChangePassword />} />

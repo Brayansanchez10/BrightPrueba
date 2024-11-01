@@ -46,6 +46,8 @@
         "email_requires_at": "Email must contain '@'",
         "email_requires_com": "Email must end with '.com'",
         "register": "Register",
+        "select_entity": "Select your entity",
+        "choose_entity": "Select",
         "already_registered": "Already registered? ",
         "login": "Login",
         "username": "Username",
