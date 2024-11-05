@@ -43,7 +43,6 @@ const DataTablete = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(null);
   const [form] = Form.useForm();
-  const [imagePreview, setImagePreview] = useState(null);
   const [dataFlag, setDataFlag] = useState(false);
 
   const { user } = useAuth();
@@ -241,7 +240,6 @@ const DataTablete = () => {
       name: category.name,
       description: category.description,
     });
-    setImagePreview(category.image);
     setShowUpdateModal(true);
   };
 
@@ -249,7 +247,6 @@ const DataTablete = () => {
     setShowUpdateModal(false);
     setSelectedCategory(null);
     form.resetFields();
-    setImagePreview(null);
   };
 
   const handleDeleteButtonClick = (category) => {
@@ -490,7 +487,6 @@ const DataTablete = () => {
             onUpdate={handleUpdateSubmit}
             category={selectedCategory}
             form={form}
-            imagePreview={imagePreview}  // Aquí estaba mal escrito
           />
         </div>
       </div>

@@ -3,6 +3,7 @@ import { Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import zorroImage from "../../../assets/img/Zorro.png";
 import "../css/Custom.css";
+import * as BsIcons from 'react-icons/ai';
 
 const DetailsCategoryForumModal = ({ visible, onClose, category }) => {
     const { t } = useTranslation("global");
@@ -11,12 +12,13 @@ const DetailsCategoryForumModal = ({ visible, onClose, category }) => {
 
     return (
         <Modal 
-          className="custom-modal w-[543px] h-[700px] bg-white rounded-3xl"
+          className="custom-modal w-[543px] h-[60%] bg-white rounded-3xl"
           onCancel={onClose} 
           closable={false}
           visible={visible}
           centered
           footer={null}
+          style={{ top: '-10%' }}
           bodyStyle={{
             overflow: "hidden",
           }}
@@ -50,13 +52,11 @@ const DetailsCategoryForumModal = ({ visible, onClose, category }) => {
                   <p className="text-black text-lg">{category.description}</p>
                 </div>
                 <div className="flex justify-center mt-8">
-                  {category.image && (
-                    <img
-                      className="max-w-full rounded-lg"
-                      src={category.image}
-                      alt={t('detailsCategoryModal.imagePreview')}
-                    />
-                  )}
+                {category.icons && BsIcons[category.icons] ? (
+                  React.createElement(BsIcons[category.icons], { style: { width: "150px", height: "150px" } })
+                ) : (
+                  <span>No icon</span>
+                )}
                 </div>
               </div>
               <div className="flex justify-center mt-4">

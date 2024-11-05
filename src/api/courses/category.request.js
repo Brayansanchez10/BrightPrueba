@@ -7,13 +7,12 @@ export const createCategory = (categoryData) => {
   // Agrega los datos de la categoría al FormData
   formData.append('name', categoryData.name);
   formData.append('description', categoryData.description);
-  formData.append('image', categoryData.image); // Asegúrate de que la imagen se agregue al FormData con el nombre 'image'
   formData.append('entityId', categoryData.entityId);
 
   // Realiza la solicitud POST utilizando la instancia de axios
   return axios.post(`/category/createCategory`, formData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
     },
   });
 };
@@ -28,12 +27,11 @@ export const updateCategory = (id, categoryData) => {
   // Agrega los datos de la categoría al FormData
   formData.append('name', categoryData.name);
   formData.append('description', categoryData.description);
-  formData.append('image', categoryData.image); // Asegúrate de que la imagen se agregue al FormData con el nombre 'image'
 
   // Realiza la solicitud PUT utilizando la instancia de axios
   return axios.put(`/category/updateCategory/${id}`, formData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
     },
   });
 };

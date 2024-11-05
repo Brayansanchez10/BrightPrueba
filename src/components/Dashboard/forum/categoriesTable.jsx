@@ -17,6 +17,7 @@ import DeleteForumCategory from "./deleteForumCategories.jsx";
 import { useAuth } from "../../../context/auth.context.jsx";
 import { useUserContext } from "../../../context/user/user.context.jsx";
 import { usePermissionContext } from "../../../context/user/permissions.context.jsx";
+import * as BsIcons from 'react-icons/ai';
 
 const DataTablete = () => {
     const { t } = useTranslation("global");
@@ -32,7 +33,6 @@ const DataTablete = () => {
     const [totalPages, setTotalPages] = useState(1);
 
     const [form] = Form.useForm();
-    const [imagePreview, setImagePreview] = useState(null);
 
     const [showCategoryForm, setShowCategoryForm] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(null);
@@ -208,8 +208,8 @@ const DataTablete = () => {
         form.setFieldsValue({
           name: category.name,
           description: category.description,
+          icons: category.icons,
         });
-        setImagePreview(category.image);
         setShowUpdateModal(true);
       };
     
@@ -256,7 +256,7 @@ const DataTablete = () => {
                         <div className="px-4 md:px-12">
                             <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-2">
                                 <h2 className="text-3xl text-purple-900 dark:text-primary font-bungee mb-4 md:mb-0">
-                                    {t("Foro Categorias")}
+                                    {t("forumCategory.forumTitle")}
                                 </h2>
                                 <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
                                     {canActivate &&
@@ -266,10 +266,10 @@ const DataTablete = () => {
                                             onClick={toggleForumStatus}
                                             style={{
                                                 backgroundColor: forumActive ? "#f00" : "#0f0",
-                                                color: "Black",
+                                                color: "White",
                                             }}
                                         >
-                                            {forumActive ? t("Desactivar Foro") : t("Activar Foro")}
+                                            {forumActive ? t("forumCategory.forumDesactivate") : t("forumCategory.forumActivate")}
                                         </Button>
                                     }
                                     
@@ -281,7 +281,7 @@ const DataTablete = () => {
                                             className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
                                             onClick={handleCreateCategoryClick}
                                         >
-                                            <b>{t("Crear Categoria")}</b>
+                                            <b>{t("forumCategory.buttonCreate")}</b>
                                         </Button>
                                     }
                                     
@@ -312,6 +312,9 @@ const DataTablete = () => {
                                             <th className="text-lg py-3 bg-secondaryAdmin text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
                                                 {t("categories.description")}
                                             </th>
+                                            <th className="text-lg py-3 bg-secondaryAdmin text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
+                                                {t("forumCategory.tableIcons")}
+                                            </th>
                                             <th className="py-3 bg-secondaryAdmin text-primary text-lg border-2 border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
                                                 {t("categories.actions")}
                                             </th>
@@ -333,6 +336,13 @@ const DataTablete = () => {
                                                     </td>
                                                     <td className="border-2 border-x-transparent px-6 py-2 bg-secondaryAdmin text-primary text-lg text-center border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
                                                         {category.description}
+                                                    </td>
+                                                    <td className="border-2 border-x-transparent px-6 py-2 bg-secondaryAdmin text-primary text-lg text-center border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257] flex items-center justify-center">
+                                                        {category.icons && BsIcons[category.icons] ? (
+                                                            React.createElement(BsIcons[category.icons], { style: { width: "50px", height: "50px" } })
+                                                        ) : (
+                                                            <span>No icon</span>
+                                                        )}
                                                     </td>
                                                     <td className="border-2 border-x-transparent px-6 py-2 bg-secondaryAdmin text-primary text-lg text-center border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
                                                         <div className="flex justify-center space-x-4">
@@ -425,7 +435,6 @@ const DataTablete = () => {
                         onUpdate={handleUpdateSubmit}
                         category={selectedCategory}
                         form={form}
-                        imagePreview={imagePreview}  // Aquí estaba mal escrito
                         categories={categories}
                     />
                     <DetailsCategoryForumModal

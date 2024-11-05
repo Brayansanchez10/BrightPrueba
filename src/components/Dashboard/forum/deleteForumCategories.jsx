@@ -33,7 +33,7 @@ const DeleteForumCategory = ({ isVisible, visible, onClose, category, deleteForu
           await deleteForumCategory(category);
           Swal.fire({
             icon: "success",
-            title: "Rol eliminado exitosamente",
+            title: t("forumCategory.AlertDelete"),
             timer: 2000,
             showConfirmButton: false,
           }).then(() => {
@@ -43,7 +43,7 @@ const DeleteForumCategory = ({ isVisible, visible, onClose, category, deleteForu
         } catch (error) {
           Swal.fire({
             icon: "error",
-            title: "Error al eliminar el rol",
+            title: t("forumCategory.AertError"),
             text: error.message || "An error occurred while deleting the role.",
             timer: 3000,
             showConfirmButton: true,
@@ -79,10 +79,10 @@ const DeleteForumCategory = ({ isVisible, visible, onClose, category, deleteForu
           </div>
           <div className="p-5 text-center">
             <h1 className="text-2xl font-extrabold text-[#D84545] mt-5 mb-4">
-              {t("roles.confirmDeleteRole")}
+              {t("forumCategory.deleteTitle")}
             </h1>
             <p className="text-lg font-semibold mb-3">
-              {t("roles.deleteConfirmation")}
+              {t("forumCategory.deleteText")}
             </p>
             <p className="text-sm font-extrabold text-red-500 mb-6">
               <b>{t("roles.deleteCannot")}</b>

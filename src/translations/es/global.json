@@ -586,7 +586,7 @@
         "onlyButton": "Solo la categoría"
     },
     "detailsCategoryModal": {
-        "title": "Detalles de la categoría",
+        "title": "Detalles",
         "name": "Nombre",
         "description": "Descripción",
         "imagePreview": "Vista previa de la imagen",
@@ -820,7 +820,19 @@
         "NumerQuizz": "Numero de intentos"
     },
     "forumCategory": {
-        "noCategory": "No hay categorias creadas"
+        "noCategory": "No hay categorias creadas",
+        "tableIcons": "iconos",
+        "buttonCreate": "Crear Categoría",
+        "forumTitle": "Categoría De Foro",
+        "forumDesactivate": "Desactivar Foro",
+        "forumActivate": "Activar Foro",
+        "deleteTitle": "Eliminar Categoría",
+        "deleteText": "¿Estás seguro de que deseas eliminar esta Categoría?",
+        "AlertDelete": "Categoría eliminada exitosamente",
+        "AertError": "Error al eliminar",
+        "AlertCreate": "Categoría creada exitosamente",
+        "AertErrorCreate": "Error al crear",
+        "modalCreate": "Crear Categoría"
     },
     "Topic": {
         "topicDelete": "Tema eliminado exitosamente",

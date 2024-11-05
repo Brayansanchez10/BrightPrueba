@@ -2,29 +2,37 @@ import React, { useState, useEffect, useRef } from "react";
 import { Modal, Select, Form, Input} from "antd";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
-import { useForumCategories } from "../../../context/forum/forumCategories.context";
+import IconSelector from "./IconSelector";
 
 const { Option } = Select;
 
-const UpdateCategoriesForum = ({ visible, onClose, onUpdate, imagePreview: initialImagePreview, form }) => {
+const UpdateCategoriesForum = ({ visible, onClose, onUpdate, form, currentCategory }) => {
     const { t } = useTranslation("global");
-    const [imagePreview, setImagePreview] = useState(null);
-    const [imageFile, setImageFile] = useState(null); 
     const MAX_COURSE_NAME_LENGTH = 30;
     const MIN_DESCRIPTION_LENGTH = 30;
-
+    const [selectedIcon, setSelectedIcon] = useState(currentCategory?.icons || "");
+    
     useEffect(() => {
-        if (initialImagePreview) {
-          setImagePreview(initialImagePreview); 
-        }
-      }, [initialImagePreview]);
-      const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file && file.type.startsWith("image/")) {
-          setImageFile(file); 
-          setImagePreview(URL.createObjectURL(file)); 
-        }
-    };
+      if (currentCategory) {
+          // Configura los valores del formulario
+          form.setFieldsValue({
+              name: currentCategory.name,
+              description: currentCategory.description,
+              icons: currentCategory.icons, // Valor inicial del icono actual
+          });
+          // Reinicia el icono seleccionado
+          setSelectedIcon(currentCategory.icons);
+      } else {
+          // Si no hay categoría actual, limpia el icono seleccionado
+          setSelectedIcon("");
+      }
+  }, [currentCategory, form]);
+
+  const handleIconSelect = (iconName) => {
+    setSelectedIcon(iconName); // Actualiza el icono seleccionado
+    form.setFieldsValue({ icons: iconName }); // Actualiza el campo del formulario
+  };
+
 
     const validateFields = (values) => {
         const errors = {};
@@ -43,11 +51,10 @@ const UpdateCategoriesForum = ({ visible, onClose, onUpdate, imagePreview: initi
         } else if (values.description.length > 150) {
           errors.description = t('updateCategoryModal.descriptionLong'); 
         }
-    
-        if (!imagePreview && !imageFile) {
-          errors.image = t('updateCategoryModal.imageRequired');
+
+        if (!values.icons) {
+          errors.icons = t("seleccione un icono");
         }
-    
         return errors;
     };
 
@@ -61,10 +68,7 @@ const UpdateCategoriesForum = ({ visible, onClose, onUpdate, imagePreview: initi
         }
     
         // Si no se ha subido una nueva imagen, usar la imagen previa
-        onUpdate({ 
-          ...values, 
-          image: imageFile ? imageFile : initialImagePreview 
-        }); 
+        onUpdate({ ...values }); 
     };
     
     return (
@@ -117,27 +121,17 @@ const UpdateCategoriesForum = ({ visible, onClose, onUpdate, imagePreview: initi
             >
             <Input.TextArea rows={3} maxLength={100} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
             </Form.Item>
-            <div className="mb-4">
-            <label className="block text-lg font-bold text-black mb-2">
-                {t('updateCategoryModal.imagePreview')}
-            </label>
-            <input
-                type="file"
-                accept="image/*"
-                className="w-full h-[44px] rounded-xl bg-white shadow-md px-3 py-2"
-                onChange={handleImageChange}
-            />
-            <span className="text-red-500">{imageFile || imagePreview ? '' : t('updateCategoryModal.imageRequired')}</span>
-            </div>
-            {imagePreview && (
-            <div className="flex justify-center mt-2">
-                <img
-                src={imagePreview}
-                alt={t('updateCategoryModal.imagePreview')}
-                className="w-[189.69px] h-[148px] object-contain rounded-lg border border-gray-300"
-                />
-            </div>
-            )}
+
+            <Form.Item
+                    className="text-left mb-4"
+                    name="icons"
+                    label={t("Icons")}
+                    rules={[{ required: true, message: t('seleccione un icono') }]}
+                >
+                   <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-lg mb-2">
+                        <IconSelector onSelectIcon={handleIconSelect} selectedIcon={selectedIcon} />
+                    </div>
+            </Form.Item>
 
             <div className="flex justify-center space-x-4 mt-6">
             <button

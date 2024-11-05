@@ -11,16 +11,12 @@ export const createForumCategories = async (categoriesData) => {
         formData.append('name', categoriesData.name);
         formData.append('description', categoriesData.description);
         formData.append('entityId', Number(categoriesData.entityId));
-
-        //Agregar imagen si existe
-        if (categoriesData.image) {
-            formData.append('image', categoriesData.image);
-        }
+        formData.append('icons', categoriesData.icons);
 
         // Realizar la solicitud POST
         return axios.post('/forumCategory/create', formData, {
             headers: {
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
             },
         });
     } catch (error) {
@@ -35,16 +31,12 @@ export const updateForumCategories = async (id, categoriesData) => {
         const formData = new FormData();
         formData.append('name', categoriesData.name);
         formData.append('description', categoriesData.description);
-
-         //Agregar imagen si existe
-         if (categoriesData.image) {
-            formData.append('image', categoriesData.image);
-        }
+        formData.append('icons', categoriesData.icons);
 
         //Realizar solicitud PUT
         return axios.put(`/forumCategory/update/${id}`, formData, {
             headers: {
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
             },
         });
     } catch (error) {

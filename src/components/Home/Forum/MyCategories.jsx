@@ -7,6 +7,7 @@ import { useForumCategories } from "../../../context/forum/forumCategories.conte
 import { useUserContext } from "../../../context/user/user.context.jsx";
 import Footer from "../../footer.jsx";
 import image from "../../../assets/img/hola.png"
+import * as BsIcons from 'react-icons/ai';
 
 const ForumCategoriesComponent = () => {
     const { t } = useTranslation("global");
@@ -60,7 +61,11 @@ const ForumCategoriesComponent = () => {
                                     onClick={() => handleTopicClick(category.id)}
                                 >
                                     <div className="flex items-center">
-                                        <img src={image} className="w-2/6" alt={category.name} />
+                                        {category.icons && BsIcons[category.icons] ? (
+                                        React.createElement(BsIcons[category.icons], { style: { width: "100px", height: "100px", color: "white" } })
+                                        ) : (
+                                        <span>No icon</span>
+                                        )}
                                         <h2 className="text-xl font-semibold mb-2 text-white h-full flex items-center justify-center text-center">
                                             {category.name}
                                         </h2>
