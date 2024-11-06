@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./index.css";
 import "./components/themes/theme.css";
@@ -66,7 +66,13 @@ import Entities from "./components/Dashboard/Entities/EntitiesTable.jsx";
 import CertificatePreview from "./components/Home/Courses/CertificatePreview";
 
 function App() {
-  const forumActive = localStorage.getItem("forumActive") === "true";
+  const [forumActive, setForumActive] = useState(true); // Activado por defecto
+
+  useEffect(() => {
+    const forumState = localStorage.getItem("forumActive");
+    // Si hay un valor en localStorage, actualizamos el estado; si no, queda en `true`
+    setForumActive(forumState === null ? true : forumState === "true");
+  }, []);
 
   return (
     <ThemeProvider>

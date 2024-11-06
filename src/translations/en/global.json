@@ -222,7 +222,8 @@
         "myAccount": "My account",
         "configProfile": "Configure Profile",
         "forum": "Forum",
-        "theme": "Theme"
+        "theme": "Theme",
+        "view_profile": "View my profile"
     },
     "newPasswordUser": {
         "change_password": "Change Password",
@@ -1040,14 +1041,32 @@
             "title": "Error sending notification"
     }
   },
-  "viewProfile": {
-    "email": "Email",
-    "rol": "Role",
-    "location": "Location",
-    "date": "Registration date",
-    "registration": "REGISTERED COURSES",
-    "registrationM": "You are not registered for any course yet.",
-    "complete": "COMPLETED COURSES",
-    "completeM": "You have not completed any courses yet."
-  }
+    "viewProfile": {
+        "email": "Email",
+        "rol": "Role",
+        "location": "Location",
+        "date": "Registration date",
+        "registration": "REGISTERED COURSES",
+        "registrationM": "You are not registered for any course yet.",
+        "complete": "COMPLETED COURSES",
+        "completeM": "You have not completed any courses yet."
+    }, 
+    "Mytopic": {
+        "favorites": "My favorites",
+        "forums": "My forums",
+        "forums_plural": "Forums",
+        "forum": "Forum",
+        "knowledge": "of knowledge",
+        "open": "Open",
+        "title": "Title",
+        "image_alt": "Forum image",
+        "create_forum": "CREATE FORUM"
+    },
+
+    "categoriesTable": {
+        "foroCategorias": "Forum Categories",
+        "deactivateForum": "Deactivate Forum",
+        "activateForum": "Activate Forum",
+        "createCategory": "Create Category"
+    }
 }
