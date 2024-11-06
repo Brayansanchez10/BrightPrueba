@@ -175,7 +175,7 @@ export default function UserCourses() {
                         <h3 className="text-xl sm:text-3xl font-bold text-primary mb-2 sm:mb-4 -mt-3 break-words">
                           {course.title}
                         </h3>
-                        <p className="text-[12px] sm:text-base text-gray-400 font-semibold -mb-12">
+                        <p className="text-[12px] sm:text-base text-gray-400 font-semibold">
                           {course.description}
                         </p>
                       </div>
@@ -306,7 +306,7 @@ export default function UserCourses() {
                   <p className="text-sm mb-2">
                     {t("deleteCourse.currentProgress")}
                   </p>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+                  <div className="w-full bg-gray-200 rounded-full  h-2.5 mb-1">
                     <div
                       className="bg-green-600 h-2.5 rounded-full"
                       style={{

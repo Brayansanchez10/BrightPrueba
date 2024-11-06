@@ -50,7 +50,7 @@ export const BookmarkProvider = ({ children }) => {
         setLoading(false);
       }
     };
-  
+
     return (
       <BookmarkContext.Provider value={{ bookmark, loading, toggleBookmark }}>
         {children}

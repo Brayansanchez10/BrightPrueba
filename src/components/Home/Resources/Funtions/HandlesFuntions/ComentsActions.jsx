@@ -97,7 +97,6 @@ const CommentActions = ({
         handleEditComment,
         handleSaveEditedComment,
         handleCommentSubmit,
-        handleSaveEditedComment,
     };
 };
 

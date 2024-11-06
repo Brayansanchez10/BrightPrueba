@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 import zorroImage from "../../../assets/img/imagen1.png"; 
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 const UpdateCategoryModal = ({
   visible,
@@ -47,7 +48,7 @@ const UpdateCategoryModal = ({
 
   return (
     <Modal
-      className="custom-modal w-[544px] h-[500px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden"
+      className="custom-modal w-[544px] h-[495px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden"
       visible={visible}
       closable={false}
       style={{ top: '10%' }}
@@ -70,7 +71,7 @@ const UpdateCategoryModal = ({
       </div>
 
       <Form
-        className="px-5 py-6 pb-8"
+        className="px-5 py-6"
         form={form}
         onFinish={handleSubmit}
         layout="vertical"

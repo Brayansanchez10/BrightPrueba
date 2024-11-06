@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import "../css/Custom.css";
 import zorroImage from "../../../assets/img/imagen1.png"; 
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 const { Option } = Select;
 
@@ -182,7 +183,7 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
       visible={visible}
       footer={null}
       closable={false}
-      className={`custom-modal w-[544px] h-[800px] rounded-3xl bg-white flex flex-col justify-between ${
+      className={`custom-modal w-[544px] h-auto rounded-3xl bg-white ${
         i18n.language === "es" ? "bg-gradient-es" : "bg-gradient-en"
       }`}
       centered
@@ -280,19 +281,11 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
         </div>
 
         <div className="flex justify-center mb-6">
-          {imagePreview && (
-            <div className="w-[100px] h-[100px] border border-[#ddd] rounded-md flex items-center justify-center bg-[#f0f0f0] overflow-hidden">
-              <img
-                src={
-                  course.image instanceof File
-                    ? URL.createObjectURL(course.image)
-                    : imagePreview
-                }
-                alt="Vista previa de la imagen"
-                className="object-contain"
-              />
-            </div>
-          )}
+          <img
+            src={imagePreview || noImg}
+            alt="Vista previa de la imagen"
+            className="max-w-full h-[185px] rounded-lg object-contain"
+          />
         </div>
 
         <button

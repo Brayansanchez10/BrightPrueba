@@ -216,7 +216,8 @@
         "myCourses": "Mis cursos",
         "myAccount": "Mi cuenta",
         "configProfile": "Configurar perfil",
-        "forum": "Foro"
+        "forum": "Foro",
+        "theme": "Tema"
     },
     "newPasswordUser": {
         "change_password": "Cambiar Contraseña",
@@ -235,7 +236,7 @@
     "coursesComponent": {
         "your": "TUS",
         "courses": "CURSOS",
-        "search_placeholder": "Buscar cursos...",
+        "search_placeholder": "Buscar...",
         "previous": "Anterior",
         "next": "Siguiente"
     },
@@ -821,6 +822,8 @@
     },
     "forumCategory": {
         "noCategory": "No hay categorias creadas",
+        "title": "Foros",
+        "title2": "Disponibles",
         "tableIcons": "iconos",
         "buttonCreate": "Crear Categoría",
         "forumTitle": "Categoría De Foro",
@@ -979,5 +982,16 @@
         "typePlaceholder": "¡Por favor seleccione el tipo de entidad!",
         "updateButton": "Actualizar",
         "cancelButton": "Cancelar"
+    },
+
+    "forumCrud": {
+        "button": "Crear foro",
+        "title": "Categorias de foros",
+        "createTitle": "Crear categoria de foro",
+        "updateTitle": "Actualizar foro",
+        "detailsTitle": "Detalles del foro",
+        "deleteTitle": "Eliminar foro",
+        "deleteMessage": "¿Estás seguro de que quieres eliminar este foro?",
+        "notify": "Foro creado exitosamente"
     }
 }

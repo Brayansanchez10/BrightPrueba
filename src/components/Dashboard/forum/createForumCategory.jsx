@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import { useForumCategories } from "../../../context/forum/forumCategories.context";
 import holaImage from "../../../assets/img/hola.png";
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 import { useAuth } from "../../../context/auth.context";
 import { useUserContext } from "../../../context/user/user.context";
@@ -131,7 +132,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
             await createForumCategories(categoriesData);
             Swal.fire({
                 icon: "success",
-                title: t("forumCategory.AlertCreate"),
+                title: t("forumCrud.notify"),
                 timer: 1000,
                 showConfirmButton: false,
             }).then(() => {
@@ -144,7 +145,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
             console.error(error);
             Swal.fire({
                 icon: "error",
-                title: t("forumCategory.AertErrorCreate"),
+                title: t("Error"),
                 timer: 3000,
                 showConfirmButton: true,
             });
@@ -187,7 +188,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
             </div>
             <form onSubmit={handleSubmit} className="p-5 text-center">
                 <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4 font-bungee">
-                    {t("forumCategory.modalCreate")}
+                    {t("forumCrud.createTitle")}
                 </h1>
                 <div className="text-left mb-4">
                     <label className="text-lg font-bold text-[#000000] block">
