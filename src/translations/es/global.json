@@ -1029,14 +1029,22 @@
         "title": "Error al enviar la notificación"
     }
   },
-  "viewProfile": {
-    "email": "Correo",
-    "rol": "Rol",
-    "location": "Ubicacion",
-    "date": "Fecha de registro",
-    "registration": "CURSOS REGISTRADOS",
-    "registrationM": "No está registrado en ningún curso aún.",
-    "complete": "CURSOS TERMINADOS",
-    "completeM": "No ha completado ningún curso aún."
-  }
+    "viewProfile": {
+        "email": "Correo",
+        "rol": "Rol",
+        "location": "Ubicacion",
+        "date": "Fecha de registro",
+        "registration": "CURSOS REGISTRADOS",
+        "registrationM": "No está registrado en ningún curso aún.",
+        "complete": "CURSOS TERMINADOS",
+        "completeM": "No ha completado ningún curso aún."
+  },
+    "modalForum": {
+        "title": "¿Estás seguro de que quieres eliminar este comentario?",
+        "title2": "¿Estás seguro de que quieres eliminar esta respuesta?",
+        "message": "Esta acción eliminará el comentario y todas sus respuestas asociadas. No se puede deshacer.",
+        "message2": "Esta acción no se puede deshacer.",
+        "confirm": "Si, eliminar",
+        "cancel": "No, cancelar"
+} 
 }

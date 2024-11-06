@@ -1040,14 +1040,22 @@
             "title": "Error sending notification"
     }
   },
-  "viewProfile": {
-    "email": "Email",
-    "rol": "Role",
-    "location": "Location",
-    "date": "Registration date",
-    "registration": "REGISTERED COURSES",
-    "registrationM": "You are not registered for any course yet.",
-    "complete": "COMPLETED COURSES",
-    "completeM": "You have not completed any courses yet."
-  }
+        "viewProfile": {
+            "email": "Email",
+            "rol": "Role",
+            "location": "Location",
+            "date": "Registration date",
+            "registration": "REGISTERED COURSES",
+            "registrationM": "You are not registered for any course yet.",
+            "complete": "COMPLETED COURSES",
+            "completeM": "You have not completed any courses yet."
+  },
+        "modalForum": {
+            "title": "Are you sure you want to delete this comment?",
+            "title2": "Are you sure you want to delete this answer?",
+            "message": "This action will delete the comment and all its associated replies. It can't be undone.",
+            "message2": "Esta acción no se puede deshacer.",
+            "confirm": "Yes, delete",
+            "cancel": "No, cancel"
+}
 }
