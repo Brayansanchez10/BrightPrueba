@@ -221,7 +221,8 @@
         "myCourses": "My Courses",
         "myAccount": "My account",
         "configProfile": "Configure Profile",
-        "forum": "Forum"
+        "forum": "Forum",
+         "view_profile": "View my profile"
     },
     "newPasswordUser": {
         "change_password": "Change Password",
@@ -978,5 +979,24 @@
             "typePlaceholder": "Please select the entity type!",
             "updateButton": "Update",
             "cancelButton": "Cancel"
-        }
-}
+        },
+        
+            "Mytopic": {
+              "favorites": "My favorites",
+              "forums": "My forums",
+              "forums_plural": "Forums",
+              "forum": "Forum",
+              "knowledge": "of knowledge",
+              "open": "Open",
+              "title": "Title",
+              "image_alt": "Forum image",
+              "create_forum": "CREATE FORUM"
+            },
+            
+                "categoriesTable": {
+                  "foroCategorias": "Forum Categories",
+                  "activateForum": "Activate Forum",
+                  "deactivateForum": "Deactivate Forum",
+                   "crearCategoria": "Create Category"
+                }
+              }

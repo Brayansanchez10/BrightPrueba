@@ -235,7 +235,7 @@ export default function NavigationBar() {
                   className="flex items-center px-4 py-2 text-white hover:text-black hover:bg-gray-200"
                 >
                   <FaUserCircle className="mr-2" /> 
-                  Ver mi perfil
+                  <a href="/profile">{t('navigationBar.view_profile')}</a>
                 </Link>
                 <Link
                   to="/Account"

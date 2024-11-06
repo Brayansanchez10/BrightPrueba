@@ -256,7 +256,7 @@ const DataTablete = () => {
                         <div className="px-4 md:px-12">
                             <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-2">
                                 <h2 className="text-3xl text-purple-900 dark:text-primary font-bungee mb-4 md:mb-0">
-                                    {t("Foro Categorias")}
+                                <h1>{t("categoriesTable.foroCategorias")}</h1>
                                 </h2>
                                 <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
                                     {canActivate &&

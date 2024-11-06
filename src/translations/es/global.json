@@ -216,7 +216,8 @@
         "myCourses": "Mis cursos",
         "myAccount": "Mi cuenta",
         "configProfile": "Configurar perfil",
-        "forum": "Foro"
+        "forum": "Foro",
+        "view_profile": "Ver mi perfil"
     },
     "newPasswordUser": {
         "change_password": "Cambiar Contraseña",
@@ -967,5 +968,31 @@
         "typePlaceholder": "¡Por favor seleccione el tipo de entidad!",
         "updateButton": "Actualizar",
         "cancelButton": "Cancelar"
-    }
-}
+    },
+        "Mytopic": {
+          "favorites": "Mis favoritos",
+          "forums": "Mis foros",
+           "forums_plural": "Foros",
+           "forum": "Foro",
+            "knowledge": "de conocimiento",
+            "open": "Abierto",
+            "title": "Titulo",
+            "image_alt": "Imagen del foro",
+            "create_forum": "CREAR FORO"
+
+        },
+        
+            "categoriesTable":{
+                "foroCategorias": "Categorías del Foro",
+                "activarForo": "Activar Foro",
+                "desactivarForo": "Desactivar Foro",
+                "crearCategoria": "Crear Categoría"
+
+
+
+
+            }
+
+
+        
+      }
