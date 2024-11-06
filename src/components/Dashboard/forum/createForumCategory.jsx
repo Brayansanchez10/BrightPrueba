@@ -136,7 +136,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
             await createForumCategories(categoriesData);
             Swal.fire({
                 icon: "success",
-                title: t("createCourseForm.createSuccess"),
+                title: t("forumCrud.notify"),
                 timer: 1000,
                 showConfirmButton: false,
             }).then(() => {
@@ -148,7 +148,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
             console.error(error);
             Swal.fire({
                 icon: "error",
-                title: t("createCourseForm.createFailure"),
+                title: t("Error"),
                 timer: 3000,
                 showConfirmButton: true,
             });
@@ -195,7 +195,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
             </div>
             <form onSubmit={handleSubmit} className="p-5 text-center">
                 <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4 font-bungee">
-                    {t("createCourseForm.title")}
+                    {t("forumCrud.createTitle")}
                 </h1>
                 <div className="text-left mb-4">
                     <label className="text-lg font-bold text-[#000000] block">
