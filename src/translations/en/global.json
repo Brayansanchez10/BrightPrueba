@@ -1040,15 +1040,6 @@
             "title": "Error sending notification"
     }
   },
-        "notifyCourse": {
-            "notificationCourse": "Course Notification",
-            "selectNotificationMethod": "Select notification method",
-            "sendToAll": "Send to all",
-            "sendToSpecific": "Send to specific users",
-            "emailPlaceholder": "Enter email addresses",
-            "emailInstructions": "Enter email addresses separated by commas (,)"
-  },
-
   "viewProfile": {
     "email": "Email",
     "rol": "Role",
