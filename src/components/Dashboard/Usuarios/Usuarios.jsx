@@ -488,7 +488,7 @@ const DataTable = () => {
                                   <>
                                     <FaUserTimes
                                       size="16px"
-                                      className="inline-block mr-1.5 -mt-1"
+                                      className="inline-block mr-2.5 -mt-0"
                                     />
                                     {t("datatable.Desactivate")}
                                   </>

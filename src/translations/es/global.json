@@ -217,7 +217,8 @@
         "myAccount": "Mi cuenta",
         "configProfile": "Configurar perfil",
         "forum": "Foro",
-        "theme": "Tema"
+        "theme": "Tema",
+        "view_profile": "Ver mi perfil"
     },
     "newPasswordUser": {
         "change_password": "Cambiar Contraseña",
@@ -1039,6 +1040,24 @@
         "complete": "CURSOS TERMINADOS",
         "completeM": "No ha completado ningún curso aún."
   },
+  "Mytopic": {
+        "favorites": "Mis favoritos",
+        "forums": "Mis foros",
+        "forums_plural": "Foros",
+        "forum": "Foro",
+        "knowledge": "de conocimiento",
+        "open": "Abierto",
+        "title": "Titulo",
+        "image_alt": "Imagen del foro",
+        "create_forum": "CREAR FORO"
+    },
+
+    "categoriesTable":{
+        "foroCategorias": "Categorías del Foro",
+        "deactivateForum": "Desactivar Foro",
+        "activateForum": "Activar Foro",
+        "createCategory": "Crear Categoría"
+    },
     "modalForum": {
         "title": "¿Estás seguro de que quieres eliminar este comentario?",
         "title2": "¿Estás seguro de que quieres eliminar esta respuesta?",
