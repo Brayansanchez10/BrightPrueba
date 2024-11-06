@@ -76,6 +76,7 @@ const UpdateCategoriesForum = ({ visible, onClose, onUpdate, imagePreview: initi
         centered
         footer={null}
         onCancel={onClose}
+        style={{ marginTop: "-8%"}}
         >
         <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
             <img 
@@ -99,7 +100,7 @@ const UpdateCategoriesForum = ({ visible, onClose, onUpdate, imagePreview: initi
             layout="vertical"
         >
             <h1 className="text-center text-[#350b48] text-3xl font-extrabold mt-1 mb-5 text-shadow-md font-bungee">
-            {t('updateCategoryModal.title')}
+            {t('forumCrud.updateTitle')}
             </h1>
             <Form.Item
             className="text-lg font-bold text-black mb-2"

@@ -27,7 +27,7 @@ const DataTablete = () => {
 
     const [searchValue, setSearchValue] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10); // Valor inicial
+    const [itemsPerPage, setItemsPerPage] = useState(10); 
     const [totalItems, setTotalItems] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
 
@@ -256,7 +256,7 @@ const DataTablete = () => {
                         <div className="px-4 md:px-12">
                             <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-2">
                                 <h2 className="text-3xl text-purple-900 dark:text-primary font-bungee mb-4 md:mb-0">
-                                    {t("Foro Categorias")}
+                                    {t("forumCrud.title")}
                                 </h2>
                                 <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
                                     {canActivate &&
@@ -281,7 +281,7 @@ const DataTablete = () => {
                                             className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
                                             onClick={handleCreateCategoryClick}
                                         >
-                                            <b>{t("Crear Categoria")}</b>
+                                            <b>{t("forumCrud.button")}</b>
                                         </Button>
                                     }
                                     

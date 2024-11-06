@@ -221,7 +221,8 @@
         "myCourses": "My Courses",
         "myAccount": "My account",
         "configProfile": "Configure Profile",
-        "forum": "Forum"
+        "forum": "Forum",
+        "theme": "Theme"
     },
     "newPasswordUser": {
         "change_password": "Change Password",
@@ -240,7 +241,7 @@
     "coursesComponent": {
         "your": "YOUR",
         "courses": "COURSES",
-        "search_placeholder": "Search courses...",
+        "search_placeholder": "Search...",
         "previous": "Previous",
         "next": "Next"
     },
@@ -825,7 +826,9 @@
     "NumerQuizz": "Number of attempts"
     },
     "forumCategory": {
-        "noCategory": "No categories created"
+        "noCategory": "No categories created",
+        "title": "Available",
+        "title2": "Forums"
     },
     "Topic": {
         "topicDelete": "Topic successfully deleted",
@@ -978,5 +981,16 @@
             "typePlaceholder": "Please select the entity type!",
             "updateButton": "Update",
             "cancelButton": "Cancel"
+        },
+
+        "forumCrud": {
+            "button": "Create forum",
+            "title": "Forum Categories",
+            "createTitle": "Create forum category",
+            "updateTitle": "Update forum",
+            "detailsTitle": "Forum details",
+            "deleteTitle": "Delete forum",
+            "deleteMessage": "Are you sure you want to delete this forum?",
+            "notify": "Forum created successfully"
         }
-}
+    }

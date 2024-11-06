@@ -293,9 +293,15 @@ export default function NavigationBar() {
                       <span className="text-white font-bungee text-2xl leading-tight">
                         {formatUsername(username)}
                       </span>
-                      <span className="text-white text-lg font-sans truncate" onClick={handleProfileClick}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleProfileClick();
+                        }}
+                        className="text-white text-lg font-sans truncate bg-gradient-to-r from-[#512599] to-[#190736] hover:from-[#6B35C3] hover:to-[#2D1259] py-1 px-3 rounded-md mt-1 transition-colors duration-300 shadow-[#8f77b6] shadow-[0_5px_10px]"
+                      >
                         {t("navigationBar.myAccount")}
-                      </span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -339,6 +345,7 @@ export default function NavigationBar() {
                         <FaBook className="mr-2 text-[#00D8A1] h-6 w-6" />
                         <span className="text-2xl font-bungee">
                           {t("navigationBar.courses")}
+                        
                         </span>
                       </div>
                     </Link>
@@ -390,17 +397,23 @@ export default function NavigationBar() {
                 </div>
               </div>
 
-              <div
-                onClick={() => {
-                  handleLogout();
-                  toggleMobileMenu();
-                }}
-                className="flex items-center justify-center w-full p-4 cursor-pointer text-red-500 hover:opacity-80 mt-8"
-              >
-                <FaSignOutAlt className="mr-2 text-xl sm:text-2xl" />
-                <span className="text-white text-xl sm:text-2xl font-bold font-bungee">
-                  {t("navigationBar.logout")}
-                </span>
+              <div className="flex flex-col items-center justify-center w-full p-4 mt-8 space-y-4">
+                <div className="flex items-center">
+                  <ThemeToggle />
+                  <span className="text-white text-xl sm:text-2xl font-bold font-bungee ml-2">{t("navigationBar.theme")}</span>
+                </div>
+                <div
+                  onClick={() => {
+                    handleLogout();
+                    toggleMobileMenu();
+                  }}
+                  className="flex items-center cursor-pointer text-red-500 hover:opacity-80"
+                >
+                  <FaSignOutAlt className="mr-2 text-xl sm:text-2xl" />
+                  <span className="text-white text-xl sm:text-2xl font-bold font-bungee">
+                    {t("navigationBar.logout")}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
