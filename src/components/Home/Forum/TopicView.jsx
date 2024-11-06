@@ -4,7 +4,7 @@ import { BsFillReplyFill } from "react-icons/bs";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { EditOutlined, DeleteFilled } from "@ant-design/icons";
 import { FaBookBookmark } from "react-icons/fa6";
-import { Button } from "antd";
+import { Button, Modal } from "antd";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/auth.context.jsx";
 import NavigationBar from "../NavigationBar.jsx";
@@ -12,21 +12,18 @@ import { useTranslation } from "react-i18next";
 import { useForumTopic } from "../../../context/forum/topic.context.jsx";
 import { useForumComments } from "../../../context/forum/forumComments.context.jsx";
 import { useAnswers } from "../../../context/forum/answers.context.jsx";
-// Importamos modales de creación
 import CreateCommentsComponent from "./CommentComponents/CreateComponents.jsx";
 import CreateAnswersComponents from "./answersComponent.jsx/CreateAnswerForm.jsx";
-// Modales de edición
 import UpdateForumCommntsForm from "./CommentComponents/EditComponents.jsx";
 import UpdateAnswersForm from "./answersComponent.jsx/updateAnswerForm.jsx";
-
-// Likes y marcador
 import { useLikes } from "../../../context/forum/likes.context.jsx";
 import { useBookMark } from "../../../context/forum/bookmark.context.jsx";
 import { useForumFavorite } from "../../../context/forum/forumFavorite.context.jsx";
-
 import Footer from "../../footer.jsx";
 import Logo from "../../../assets/img/hola.png";
-import "../Resources/resourceView.css"
+import "../Resources/resourceView.css";
+import { deleteAnswer } from "../../../api/forum/answers.request.js";
+import { deleteForumComments } from "../../../api/forum/forumComments.request.js";
 
 const TopicViewComponente = () => {
   const { t } = useTranslation("global");
@@ -52,22 +49,20 @@ const TopicViewComponente = () => {
   const [createAnswer, setCreateAnswer] = useState(false);
 
   const [bookmarkedComments, setBookmarkedComments] = useState([]);
-  const { favorites, loading, toggleForumFavorites } = useForumFavorite(); // Accede al contexto
+  const { favorites, loading, toggleForumFavorites } = useForumFavorite();
   const [topics, setTopics] = useState([]);
 
   useEffect(() => {
     if (favorites.length > 0) {
-      // Obtener los detalles completos de cada foro favorito
       const fetchForumDetails = async () => {
         try {
           const fetchedTopics = await Promise.all(
             favorites.map(async (fav) => {
-              // Aquí deberías obtener los detalles completos del foro
               const topicDetails = await getTopicById(fav.topicId);
               return topicDetails;
             })
           );
-          setTopics(fetchedTopics); // Guarda los foros completos
+          setTopics(fetchedTopics);
         } catch (error) {
           console.error("Error fetching forums:", error);
         }
@@ -104,6 +99,7 @@ const TopicViewComponente = () => {
   const handleCreateFormComments = () => {
     setCreateComment(true);
   };
+
   const handleCreateFormAnswers = (commentId) => {
     setCreateAnswer({ visible: true, commentId });
   };
@@ -121,22 +117,66 @@ const TopicViewComponente = () => {
   const handleLikeToggle = async (commentsId) => {
     await toggleLikes(commentsId);
   };
+
   const handleBookmarkToggle = async (commentId) => {
     await toggleBookmark(commentId);
-    // Actualiza el estado de comentarios marcados
-    const updatedBookmarks = bookmark.map((fav) => fav.commentId); // Asegúrate de obtener todos los comentarios marcados
+    const updatedBookmarks = bookmark.map((fav) => fav.commentId);
     setBookmarkedComments(updatedBookmarks);
   };
 
   const handleFavoriteToggle = async (topicId) => {
     await toggleForumFavorites(topicId);
     const fetchedTopics = favorites.map((fav) => fav.topicId);
-    setTopics(fetchedTopics); // Asegúrate de que los topics se actualicen
+    setTopics(fetchedTopics);
   };
 
   const handleTopicClick = (topicId) => {
-    console.log("Tema ID", topicId); // Esto es solo para verificar el ID
-    navigate(`/topic/${topicId}`); // Redirige a la página del foro con el ID
+    console.log("Tema ID", topicId);
+    navigate(`/topic/${topicId}`);
+  };
+
+  const handleDeleteAnswer = async (answerId) => {
+    Modal.confirm({
+      title: '¿Estás seguro de que quieres eliminar esta respuesta?',
+      content: 'Esta acción no se puede deshacer.',
+      okText: 'Sí, eliminar',
+      okType: 'danger',
+      cancelText: 'No, cancelar',
+      onOk: async () => {
+        try {
+          await deleteAnswer(answerId);
+          fetchForumTopic();
+        } catch (error) {
+          console.error("Error al eliminar la respuesta:", error);
+          Modal.error({
+            title: 'Error',
+            content: 'No se pudo eliminar la respuesta. Por favor, inténtalo de nuevo.',
+          });
+        }
+      },
+    });
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    Modal.confirm({
+      title: '¿Estás seguro de que quieres eliminar este comentario?',
+      content: 'Esta acción eliminará el comentario y todas sus respuestas asociadas. No se puede deshacer.',
+      okText: 'Sí, eliminar',
+      okType: 'danger',
+      cancelText: 'No, cancelar',
+      onOk: async () => {
+        try {
+          await deleteForumComments(commentId);
+          fetchForumTopic();
+        } catch (error) {
+          console.error("Error al eliminar el comentario:", error);
+          Modal.error({
+            title: 'Error',
+            content: 'No se pudo eliminar el comentario. Por favor, inténtalo de nuevo.',
+          });
+        }
+      },
+    });
   };
 
   const useWindowSize = () => {
@@ -245,12 +285,22 @@ const TopicViewComponente = () => {
                         {user &&
                           user.data &&
                           user.data.id === comment.userId && (
-                            <Button
-                              onClick={() => openEditCommentsModal(comment)}
-                              className="bg-secondary text-red-600 dark:text-primary dark:border-[#1E1034]"
-                            >
-                              Editar
-                            </Button>
+                            <>
+                              <Button
+                                onClick={() => openEditCommentsModal(comment)}
+                                className="bg-secondary text-blue-600 dark:text-primary dark:border-[#1E1034]"
+                                icon={<EditOutlined />}
+                              >
+                                Editar
+                              </Button>
+                              <Button
+                                onClick={() => handleDeleteComment(comment.id)}
+                                className="bg-secondary text-red-600 dark:text-primary dark:border-[#1E1034]"
+                                icon={<DeleteFilled />}
+                              >
+                                Eliminar
+                              </Button>
+                            </>
                           )}
                       </div>
 
@@ -270,12 +320,22 @@ const TopicViewComponente = () => {
                               {user &&
                                 user.data &&
                                 user.data.id === answer.userId && (
-                                  <Button
-                                    onClick={() => openEditAnswersModal(answer)}
-                                    className="dark:bg-primary text-red-600 dark:text-primary dark:border-none block"
-                                  >
-                                    Editar
-                                  </Button>
+                                  <div className="mt-2 space-x-2">
+                                    <Button
+                                      onClick={() => openEditAnswersModal(answer)}
+                                      className="dark:bg-primary text-blue-600 dark:text-primary dark:border-none"
+                                      icon={<EditOutlined />}
+                                    >
+                                      Editar
+                                    </Button>
+                                    <Button
+                                      onClick={() => handleDeleteAnswer(answer.id)}
+                                      className="dark:bg-primary text-red-600 dark:text-primary dark:border-none"
+                                      icon={<DeleteFilled />}
+                                    >
+                                      Eliminar
+                                    </Button>
+                                  </div>
                                 )}
                             </div>
                           ))}
@@ -291,11 +351,9 @@ const TopicViewComponente = () => {
               )}
             </div>
           </div>
-
         </div>
 
         <div className="w-1/4 m-5 bg-secondary rounded-lg shadow-md hidden xl:block" style={{ height: `${containerHeight}px` }}>
-
           <div className="dark:bg-primary m-4 rounded-md shadow-md h-2/5 overflow-y-auto custom-scrollbar-x">
             <h2 className="text-xl text-primary font-semibold mx-3">Comentarios marcados</h2>
             {bookmark.length > 0 ? (
