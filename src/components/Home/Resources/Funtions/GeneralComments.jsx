@@ -1,6 +1,8 @@
 import React from "react";
 import { FiSend, FiMoreVertical, FiEdit, FiTrash2 } from "react-icons/fi";
 import { FaUser } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+
 
 const GeneralComments = ({
   generalComments,
@@ -19,10 +21,11 @@ const GeneralComments = ({
   user,
   formatDate,
 }) => {
+  const { t } = useTranslation("global");
   return (
     <div className="bg-[#200E3E] p-4 rounded-lg shadow-md">
       <h3 className="text-lg font-roboto text-white mb-4">
-        {generalComments.length} comentarios generales
+        {generalComments.length} {t('courses.generalComments')}
       </h3>
       <div className="mb-4">
         <div className="flex items-center">
@@ -39,7 +42,7 @@ const GeneralComments = ({
             onClick={handleGeneralCommentSubmit}
             className="px-4 py-2 bg-[#4B2F7A] text-white rounded-md hover:bg-blue-600 transition-colors flex items-center text-sm font-bungee"
           >
-            <FiSend className="mr-2" /> Comentar
+            <FiSend className="mr-2" /> {t('courses.comment')}
           </button>
         </div>
       </div>

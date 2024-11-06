@@ -32,44 +32,44 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
     
     if (isAll) {
       confirmResult = await Swal.fire({
-        title: '¿Quieres enviar el correo a todos los usuarios registrados?',
-        text: 'Esta acción enviará una notificación a todos los usuarios del curso.',
+        title: t('alerts.sendEmailToAll.title'),
+        text: t('alerts.sendEmailToAll.text'),
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Enviar',
-        cancelButtonText: 'Cancelar'
+        confirmButtonText: t('alerts.sendEmailToAll.confirmButtonText'),
+        cancelButtonText: t('alerts.sendEmailToAll.cancelButtonText')
       });
     } else {
       if (!emailList.trim()) {
         Swal.fire({
           icon: "error",
-          title: "El campo de correo electrónico está vacío",
+          title: t('alerts.emptyEmailField.title'),
           timer: 3000,
           showConfirmButton: true,
         });
         return;
       }
       confirmResult = await Swal.fire({
-        title: '¿Escribiste bien los correos y deseas enviarlos?',
-        text: 'Asegúrate de que los correos electrónicos estén escritos correctamente.',
+        title: t('alerts.confirmEmailSend.title'),
+        text: t('alerts.confirmEmailSend.text'),
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Enviar',
-        cancelButtonText: 'Cancelar'
+        confirmButtonText: t('alerts.confirmEmailSend.confirmButtonText'),
+        cancelButtonText: t('alerts.confirmEmailSend.cancelButtonText')
       });
     }
-
+  
     if (confirmResult.isConfirmed) {
       try {
         if (isAll) {
           await notifyAllUsersInCourse(courseId);
           Swal.fire({
             icon: "success",
-            title: "Notificación enviada a todos los usuarios con éxito",
+            title: t('alerts.notificationSentAll.title'),
             timer: 1000,
             showConfirmButton: false,
           });
@@ -77,7 +77,7 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
           await notifySpecificUser(courseId, emailList.trim());
           Swal.fire({
             icon: "success",
-            title: "Notificación enviada a los usuarios específicos con éxito",
+            title: t('alerts.notificationSentSpecific.title'),
             timer: 1000,
             showConfirmButton: false,
           });
@@ -87,7 +87,7 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
         console.error(error);
         Swal.fire({
           icon: "error",
-          title: "Error al enviar la notificación",
+          title: t('alerts.errorSendingNotification.title'),
           timer: 3000,
           showConfirmButton: true,
         });

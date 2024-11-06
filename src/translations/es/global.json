@@ -267,7 +267,8 @@
         "categories": "Categorías",
         "roles": "Roles",
         "profileEditor": "Editor de Perfil",
-        "sign_off": "Cerrar sesión"
+        "sign_off": "Cerrar sesión",
+        "forum": "Foro"
     },
     "cardsComponent": {
         "activeUsers": "USUARIOS ACTIVADOS",
@@ -326,7 +327,8 @@
         "status": "Estado",
         "active": "Activo",
         "inactive": "Inactivo",
-        "close": "Cerrar"
+        "close": "Cerrar",
+        "entity": "Entidad"
     },
     "UpdateUserModal": {
         "updateUserTitle": "Actualizar usuario",
@@ -429,7 +431,12 @@
         "removeResourceError": "Error al eliminar el recurso",
         "newCourse": "Nuevo curso",
         "assignedContent": "Contenido asignado",
-        "ButtonUpContent": "Asignar Contenido"
+        "ButtonUpContent": "Asignar Contenido",
+        "resource": "Recursos",
+        "crear": "Crear",
+        "section": "Seccion",
+        "generalComments": "comentarios generales",
+        "comment": "Comentar"
     },
     "courseDetails": {
         "detailsOfCourse": "Detalles del curso:",
@@ -492,7 +499,8 @@
           "beginner": "Principiante",
           "intermediate": "Intermedio",
           "advanced": "Avanzado",
-          "durationInvalid": "La duración debe ser un número entre 0 y 99"
+          "durationInvalid": "La duración debe ser un número entre 0 y 99",
+          "nameExists": "El nombre ya existe"
         },
     "assignContentModal": {
         "title": "Agregar Contenido A",
@@ -993,5 +1001,51 @@
         "deleteTitle": "Eliminar foro",
         "deleteMessage": "¿Estás seguro de que quieres eliminar este foro?",
         "notify": "Foro creado exitosamente"
+    },
+
+    "alerts": {
+        "sendEmailToAll": {
+        "title": "¿Quieres enviar el correo a todos los usuarios registrados?",
+        "text": "Esta acción enviará una notificación a todos los usuarios del curso.",
+        "confirmButtonText": "Enviar",
+        "cancelButtonText": "Cancelar"
+    },
+    "emptyEmailField": {
+        "title": "El campo de correo electrónico está vacío"
+    },
+    "confirmEmailSend": {
+        "title": "¿Escribiste bien los correos y deseas enviarlos?",
+        "text": "Asegúrate de que los correos electrónicos estén escritos correctamente.",
+        "confirmButtonText": "Enviar",
+        "cancelButtonText": "Cancelar"
+    },
+    "notificationSentAll": {
+        "title": "Notificación enviada a todos los usuarios con éxito"
+    },
+    "notificationSentSpecific": {
+        "title": "Notificación enviada a los usuarios específicos con éxito"
+    },
+    "errorSendingNotification": {
+        "title": "Error al enviar la notificación"
     }
+  },
+  "notifyCourse": {
+    "notificationCourse": "Notificación del Curso",
+    "selectNotificationMethod": "Selecciona el método de notificación",
+    "sendToAll": "Enviar a todos",
+    "sendToSpecific": "Usuarios específicos",
+    "emailPlaceholder": "Ingresa los correos electrónicos",
+    "emailInstructions": "Ingresa los correos electrónicos separados por comas (,)"
+  },
+
+  "viewProfile": {
+    "email": "Correo",
+    "rol": "Rol",
+    "location": "Ubicacion",
+    "date": "Fecha de registro",
+    "registration": "CURSOS REGISTRADOS",
+    "registrationM": "No está registrado en ningún curso aún.",
+    "complete": "CURSOS TERMINADOS",
+    "completeM": "No ha completado ningún curso aún."
+  }
 }

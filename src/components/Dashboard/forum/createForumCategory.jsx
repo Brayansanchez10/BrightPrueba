@@ -10,6 +10,7 @@ import { useAuth } from "../../../context/auth.context";
 import { useUserContext } from "../../../context/user/user.context";
 import IconSelector from "./IconSelector";
 
+
 const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
     const { createForumCategories } = useForumCategories();
     const { t } = useTranslation("global");
