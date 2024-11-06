@@ -1,6 +1,6 @@
 import axios from '../axios';
 
-export const unregisterFromCourse = (userId, courseId) => axios.post(`/unregisterFromCourse/${userId}/${courseId}`); 
+export const unregisterFromCourse = (userId, courseId) => axios.post(`/courses/unregisterFromCourse/${userId}/${courseId}`); 
 export const getAllCourses = () => axios.get('/courses/getAllCourses');
 
 export const asignarContenido = (id, contentFile) => {

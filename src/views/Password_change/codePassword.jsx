@@ -66,7 +66,6 @@ const ResetPasswordVerifyForm = () => {
             Swal.fire({
                 icon: 'error',
                 title: t('reset_password_verify.invalid_code'),
-                text: t('reset_password_verify.try_again'),
             });
         }
     };

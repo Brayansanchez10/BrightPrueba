@@ -138,6 +138,8 @@ function RegisterForm() {
     },
   });
 
+  const personaNatural = entities?.find((entity) => entity.name === "Persona Natural");
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-cover bg-center"
       style={{ backgroundImage: `url(${LoginFond})` }}
@@ -346,11 +348,11 @@ function RegisterForm() {
                       : "border-purple-300"
                   }`}
                 >
-                  <option value="" label={t("register.choose_entity")} />
+                 <option value="" label={personaNatural ? personaNatural.name : t("register.choose_entity")} />
                   {entities &&
                     entities.length > 0 &&
                     entities
-                      .filter((entity) => entity.id !== 1) // Filtra la entidad con id 1
+                      .filter((entity) => entity.id !== 1) // Excluye la entidad con id 1
                       .map((entity) => (
                         <option key={entity.id} value={entity.id}>
                           {entity.name} {/* Reemplaza 'name' por el campo adecuado */}

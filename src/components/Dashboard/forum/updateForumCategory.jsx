@@ -3,6 +3,7 @@ import { Modal, Select, Form, Input} from "antd";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import IconSelector from "./IconSelector";
+import zorroImage from "../../../assets/img/imagen1.png"; 
 
 const { Option } = Select;
 
@@ -83,7 +84,7 @@ const UpdateCategoriesForum = ({ visible, onClose, onUpdate, form, currentCatego
         >
         <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
             <img 
-            src="/src/assets/img/imagen1.png" 
+            src={zorroImage} 
             alt="Imagen de la cabecera"
             className="w-[189.69px] h-[148px] object-contain mt-8" 
             />
