@@ -108,7 +108,7 @@ export default function ForumCategoriesComponent() {
                 {paginatedCategories.map((category, index) => (
                   <motion.div
                     key={category._id}
-                    className="bg-[#783CDA] rounded-[14px] p-4 cursor-pointer hover:shadow-lg transition-shadow duration-300 transform hover:scale-105"
+                    className="bg-[#783CDA] dark:bg-secondary rounded-[14px] p-4 cursor-pointer hover:shadow-lg transition-shadow duration-300 transform hover:scale-105"
                     onClick={() => handleTopicClick(category.id)}
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}

@@ -165,17 +165,17 @@ const TopicViewComponente = () => {
   const containerHeight = size.height ? size.height * 0.82 : "auto";
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-primary">
       <NavigationBar />
 
       <div className="py-16 inline-flex">
-        <div className="flex-grow m-5 bg-white rounded-lg shadow-md w-2/3 overflow-y-auto custom-scrollbar-x" style={{ height: `${containerHeight}px` }}>
+        <div className="flex-grow m-5 bg-secondary rounded-lg shadow-md w-2/3 overflow-y-auto custom-scrollbar-x" style={{ height: `${containerHeight}px` }}>
           <div className="flex-grow m-5">
             <div className="border-b pb-4 mb-4">
-              <h1 className="text-3xl font-bold text-gray-800">
+              <h1 className="text-3xl font-bold text-gray-800 dark:text-primary">
                 {topic.title}
               </h1>
-              <p className="text-gray-600">{topic.Content}</p>
+              <p className="text-gray-600 dark:text-primary">{topic.Content}</p>
             </div>
             <Button
               className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-blue-700 transition"
@@ -184,7 +184,7 @@ const TopicViewComponente = () => {
               {t("topicView.topicComment")}
             </Button>
 
-            <h2 className="text-xl font-semibold mt-6 mb-4">
+            <h2 className="text-xl font-semibold mt-6 mb-4 dark:text-primary">
               {t("topicView.comments")}
             </h2>
             <div className="comments-section space-y-4">
@@ -200,16 +200,16 @@ const TopicViewComponente = () => {
                   return (
                     <div
                       key={comment.id}
-                      className="p-4 bg-white border border-gray-300 rounded-lg shadow hover:shadow-lg transition mb-4"
+                      className="p-4 bg-white dark:bg-primary border border-gray-300 dark:border-[#1E1034] rounded-lg shadow hover:shadow-lg transition mb-4"
                     >
-                      <p className="text-gray-800">{comment.content}</p>
-                      <small className="text-gray-500 block mt-1">
+                      <p className="text-gray-800 dark:text-primary">{comment.content}</p>
+                      <small className="text-gray-400 block mt-1">
                         {t("Creador")}: {comment.user.username}
                       </small>
 
                       <div className="flex space-x-2 mt-2">
                         <Button
-                          className="text-blue-500 hover:underline"
+                          className="bg-secondary text-blue-500 dark:text-primary dark:border-[#1E1034] hover:underline"
                           onClick={() => handleCreateFormAnswers(comment.id)}
                           icon={<BsFillReplyFill />}
                         >
@@ -217,10 +217,10 @@ const TopicViewComponente = () => {
                         </Button>
                         <Button
                           onClick={() => handleLikeToggle(comment.id)}
-                          className="flex items-center"
+                          className="flex bg-secondary items-center dark:text-primary dark:border-[#1E1034]"
                           icon={
                             isLiked ? (
-                              <AiFillLike color="blue" />
+                              <AiFillLike className="text-blue-500" />
                             ) : (
                               <AiOutlineLike />
                             )
@@ -231,7 +231,7 @@ const TopicViewComponente = () => {
                         </Button>
                         <Button
                           onClick={() => handleBookmarkToggle(comment.id)}
-                          className="flex items-center"
+                          className="flex bg-secondary items-center dark:text-primary dark:border-[#1E1034]"
                           icon={
                             <FaBookBookmark
                               color={isBookmarked ? "orange" : "gray"}
@@ -247,7 +247,7 @@ const TopicViewComponente = () => {
                           user.data.id === comment.userId && (
                             <Button
                               onClick={() => openEditCommentsModal(comment)}
-                              className="text-red-600"
+                              className="bg-secondary text-red-600 dark:text-primary dark:border-[#1E1034]"
                             >
                               Editar
                             </Button>
@@ -260,10 +260,10 @@ const TopicViewComponente = () => {
                           {answersByComment[comment.id].map((answer) => (
                             <div
                               key={answer.id}
-                              className="p-2 bg-gray-100 border-l-4 border-purple-700 rounded-lg shadow mt-2"
+                              className="p-2 bg-gray-100 dark:bg-secondary border-l-4 border-purple-700 rounded-lg shadow mt-2"
                             >
-                              <p>{answer.content}</p>
-                              <small className="text-gray-500">
+                              <p className="text-primary">{answer.content}</p>
+                              <small className="text-gray-400">
                                 {t("Creador")}: {answer.user.username}
                               </small>
 
@@ -272,7 +272,7 @@ const TopicViewComponente = () => {
                                 user.data.id === answer.userId && (
                                   <Button
                                     onClick={() => openEditAnswersModal(answer)}
-                                    className="text-red-600 block"
+                                    className="dark:bg-primary text-red-600 dark:text-primary dark:border-none block"
                                   >
                                     Editar
                                   </Button>
@@ -281,23 +281,23 @@ const TopicViewComponente = () => {
                           ))}
                         </div>
                       ) : (
-                        <p className="text-gray-500">{t("No respuestas")}</p>
+                        <p className="text-gray-500 dark:text-primary">{t("No respuestas")}</p>
                       )}
                     </div>
                   );
                 })
               ) : (
-                <p className="text-gray-500">{t("noComments")}</p>
+                <p className="text-gray-500 dark:text-primary">{t("noComments")}</p>
               )}
             </div>
           </div>
 
         </div>
 
-        <div className="w-1/4 m-5 bg-white rounded-lg shadow-md hidden xl:block" style={{ height: `${containerHeight}px` }}>
+        <div className="w-1/4 m-5 bg-secondary rounded-lg shadow-md hidden xl:block" style={{ height: `${containerHeight}px` }}>
 
-          <div className="m-4 rounded-md shadow-md h-2/5 overflow-y-auto custom-scrollbar-x">
-            <h2 className="text-xl mx-3">Comentarios marcados</h2>
+          <div className="dark:bg-primary m-4 rounded-md shadow-md h-2/5 overflow-y-auto custom-scrollbar-x">
+            <h2 className="text-xl text-primary font-semibold mx-3">Comentarios marcados</h2>
             {bookmark.length > 0 ? (
               <div className="space-y-2 mx-3 pb-2">
                 {bookmark.map((fav) => {
@@ -305,10 +305,10 @@ const TopicViewComponente = () => {
                   return comment ? (
                     <div
                       key={comment.id}
-                      className="p-2 bg-gray-100 border-l-4 border-purple-700 rounded-lg shadow mt-2"
+                      className="p-2 bg-gray-100 dark:bg-secondary border-l-4 border-purple-700 rounded-lg shadow mt-2"
                     >
-                      <p>{comment.content}</p>
-                      <small className="text-gray-500">
+                      <p className="text-primary">{comment.content}</p>
+                      <small className="text-gray-400">
                         {t("Creador")}: {comment.user.username}
                       </small>
                     </div>
@@ -317,7 +317,7 @@ const TopicViewComponente = () => {
               </div>
             ) : (
               <div className="pb-3">
-                <div className="bg-secondary p-3 rounded-lg shadow-lg mx-12">
+                <div className="dark:bg-primary p-3 rounded-lg mx-12">
                   <img className="h-28 mb-4 mx-auto" src={Logo} alt="Logo" />
                   <h2 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-primary">
                     No tienes ningun comentario marcado
@@ -330,26 +330,26 @@ const TopicViewComponente = () => {
             )}
           </div>
 
-          <div className="m-4 rounded-md shadow-md h-1/2 overflow-y-auto custom-scrollbar-x">
-            <h2 className="text-xl mx-3">Foros favoritos</h2>
+          <div className="dark:bg-primary m-4 rounded-md shadow-md h-1/2 overflow-y-auto custom-scrollbar-x">
+            <h2 className="text-xl text-primary font-semibold mx-3">Foros favoritos</h2>
 
             {topics.length > 0 ? (
               <div className="space-y-2 mx-3 pb-2">
                 {topics.map((topic) => (
                   <div
                     key={topic.id}
-                    className="p-2 bg-gray-100 border-l-4 border-purple-700 rounded-lg shadow mt-2 cursor-pointer"
+                    className="p-2 bg-gray-100 dark:bg-secondary border-l-4 border-purple-700 rounded-lg shadow mt-2 cursor-pointer"
                     onClick={() => handleTopicClick(topic.id)}
                   >
-                    <p>{topic.title}</p>
-                    <small className="text-gray-500">
+                    <p className="text-primary">{topic.title}</p>
+                    <small className="text-gray-400 dark:text-gray-300">
                       {topic.Content}
                     </small>{" "}
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="bg-secondary p-6 rounded-lg shadow-lg mx-12">
+              <div className="dark:bg-primary p-6 rounded-lg mx-12">
                 <img className="h-28 mb-4 mx-auto" src={Logo} alt="Logo" />
                 <h2 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-primary">
                   No tienes foros favoritos establecidos
