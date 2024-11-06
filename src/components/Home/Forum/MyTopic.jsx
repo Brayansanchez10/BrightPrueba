@@ -154,8 +154,12 @@ export default function TopicComponent() {
       <div className="flex flex-col sm:flex-row justify-between items-center mt-6 mx-4 sm:mx-6">
         <div className="w-full sm:w-auto mb-4 sm:mb-0">
           <h1 className="text-3xl sm:text-4xl font-bold text-black text-center sm:text-left font-bungee">
-            <span className="text-purple-800 dark:text-secondary">Foro</span>{" "}
-            <span className="text-primary">de conocimiento</span>
+          <span className="text-purple-800 dark:text-secondary">
+            {t('Mytopic.forum')}
+          </span>{" "}
+          <span className="text-primary">
+        {t('Mytopic.knowledge')}
+      </span>{" "}
           </h1>
         </div>
         <div className="block flex-col sm:flex-row items-center w-full sm:w-auto space-y-4 sm:space-y-0 sm:space-x-4 mt-8 sm:mt-0 lg:flex">
@@ -164,7 +168,7 @@ export default function TopicComponent() {
               className="bg-purple-800 text-white font-bold text-xl py-5 px-6 rounded-1xl min-w-[160px] shadow-md shadow-gray-400 font-bungee hidden lg:flex"
               onClick={handleCreateTopicForm}
             >
-              {t("CREAR FORO")}
+              {t('Mytopic.create_forum')} {/* Aquí se usa la clave 'Mytopic.create_forum' */}
             </Button>
           )}
           <div className="flex items-center px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md">
@@ -173,7 +177,7 @@ export default function TopicComponent() {
               type="search"
               className="outline-none w-full sm:w-[220px] md:w-[280px] lg:w-[360px] xl:w-[420px]"
               placeholder={t("coursesComponent.search_placeholder")}
-              defaultValue="Titulo"
+              defaultValue={t('Mytopic.title')}
             />
           </div>
           {activeTab === "myForums" && (
@@ -199,7 +203,7 @@ export default function TopicComponent() {
             }`}
             onClick={() => setActiveTab("forums")}
           >
-            Foros
+            <h3>{t('Mytopic.forums_plural')}</h3>
           </button>
           <button
             className={`px-6 sm:px-10 py-2 rounded-xl sm:rounded-t-xl sm:rounded-b-xl md:rounded-b-none md:rounded-t-2xl font-bungee ${
@@ -209,7 +213,7 @@ export default function TopicComponent() {
             }`}
             onClick={() => setActiveTab("myFavorites")}
           >
-            Mis favoritos
+           <h1>{t('Mytopic.favorites')}</h1>
           </button>
           <button
             className={`px-6 sm:px-10 py-2 rounded-xl sm:rounded-t-xl sm:rounded-b-xl md:rounded-b-none md:rounded-t-2xl font-bungee ${
@@ -219,7 +223,7 @@ export default function TopicComponent() {
             }`}
             onClick={() => setActiveTab("myForums")}
           >
-            Mis foros
+            <h2>{t('Mytopic.forums')}</h2>
           </button>
         </div>
       </div>
@@ -248,7 +252,7 @@ export default function TopicComponent() {
                       className="bg-[#783CDA] rounded-[14px] p-4 flex flex-col w-[387px] h-[167px] relative"
                       onClick={() => handleTopicClick(topic.id)}
                     >
-                      <div className="flex items-start mb-2">
+                       <div className="flex items-start mb-2">
                         {topic.user.userImage ? (
                           <img
                             src={topic.user.userImage}
@@ -271,7 +275,9 @@ export default function TopicComponent() {
                         </div>
                         <div className="flex items-center text-white">
                           <FaStopwatch className="w-3 h-3 mr-1" />
-                          <span className="font-sans text-xs">Abierto</span>
+                          <span className="font-sans text-xs">
+        {t('Mytopic.open')}
+      </span>{" "}
                         </div>
                       </div>
                       <div className="absolute top-2 right-2 flex flex-col items-end">

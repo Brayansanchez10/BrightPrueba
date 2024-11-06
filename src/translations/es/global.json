@@ -1029,15 +1029,6 @@
         "title": "Error al enviar la notificación"
     }
   },
-  "notifyCourse": {
-    "notificationCourse": "Notificación del Curso",
-    "selectNotificationMethod": "Selecciona el método de notificación",
-    "sendToAll": "Enviar a todos",
-    "sendToSpecific": "Usuarios específicos",
-    "emailPlaceholder": "Ingresa los correos electrónicos",
-    "emailInstructions": "Ingresa los correos electrónicos separados por comas (,)"
-  },
-
   "viewProfile": {
     "email": "Correo",
     "rol": "Rol",
