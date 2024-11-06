@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 import zorroImage from "../../../assets/img/imagen1.png"; 
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 const UpdateCategoryModal = ({
   visible,
@@ -69,7 +70,7 @@ const UpdateCategoryModal = ({
 
   return (
     <Modal
-      className="custom-modal w-[544px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden"
+      className="custom-modal w-[544px] h-[600px] bg-white rounded-3xl"
       visible={visible}
       closable={false}
       style={{ top: '10%' }}
@@ -92,7 +93,7 @@ const UpdateCategoryModal = ({
       </div>
 
       <Form
-        className="px-5 py-6 pb-8"
+        className="px-5 py-6"
         form={form}
         onFinish={handleSubmit}
         layout="vertical"
@@ -129,12 +130,20 @@ const UpdateCategoryModal = ({
           />
           <span className="text-red-500">{imageFile || imagePreview ? '' : t('updateCategoryModal.imageRequired')}</span>
         </div>
-        {imagePreview && (
+        {(imagePreview || initialImagePreview) ? (
           <div className="flex justify-center mt-2">
             <img
-              src={imagePreview}
+              src={imagePreview || initialImagePreview || noImg}
               alt={t('updateCategoryModal.imagePreview')}
-              className="w-[189.69px] h-[148px] object-contain rounded-lg border border-gray-300"
+              className="max-w-full h-[148px] object-contain rounded-lg"
+            />
+          </div>
+        ) : (
+          <div className="flex justify-center mt-2">
+            <img
+              src={noImg}
+              alt={t('updateCategoryModal.imagePreview')}
+              className="max-w-full h-[148px] object-contain rounded-lg"
             />
           </div>
         )}

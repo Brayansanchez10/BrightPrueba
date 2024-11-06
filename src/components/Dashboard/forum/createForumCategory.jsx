@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import { useForumCategories } from "../../../context/forum/forumCategories.context";
 import holaImage from "../../../assets/img/hola.png";
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 import { useAuth } from "../../../context/auth.context";
 import { useUserContext } from "../../../context/user/user.context";
@@ -244,8 +245,12 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
                         ref={imageRef}
                         className="mt-2"
                     />
-                    {categories.imagePreview && (
-                        <img src={categories.imagePreview} alt="Imagen previa" className="mt-2 w-32 h-32 object-cover" />
+                    {(categories.imagePreview || noImg) && (
+                        <img 
+                            src={categories.imagePreview || noImg} 
+                            alt="Imagen previa" 
+                            className="mt-2 w-32 h-32 object-cover" 
+                        />
                     )}
                     {errorMessage.image && (
                         <p className="text-red-500 text-sm mt-1">{errorMessage.image}</p>

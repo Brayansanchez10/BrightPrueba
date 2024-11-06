@@ -2,6 +2,7 @@ import React from "react";
 import { Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import zorroImage from "../../../assets/img/Zorro.png";
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 import "../css/Custom.css";
 
 const DetailsCategoryModal = ({ visible, onClose, category }) => {
@@ -11,7 +12,7 @@ const DetailsCategoryModal = ({ visible, onClose, category }) => {
 
   return (
     <Modal 
-      className="custom-modal w-[543px] h-[680px] bg-white rounded-3xl"
+      className="custom-modal w-[543px] h-auto bg-white rounded-3xl"
       onCancel={onClose} 
       closable={false}
       visible={visible}
@@ -48,14 +49,12 @@ const DetailsCategoryModal = ({ visible, onClose, category }) => {
               <strong className="text-black font-bold text-xl">{t('detailsCategoryModal.description')}</strong>
               <p className="text-black text-lg">{category.description}</p>
             </div>
-            <div className="flex justify-center mt-8">
-              {category.image && (
-                <img
-                  className="max-w-full rounded-lg"
-                  src={category.image}
-                  alt={t('detailsCategoryModal.imagePreview')}
-                />
-              )}
+            <div className="flex justify-center mt-10">
+              <img
+                className="max-w-full h-[185px] rounded-lg object-contain"
+                src={category.image || noImg}
+                alt={t('detailsCategoryModal.imagePreview')}
+              />
             </div>
           </div>
           <div className="flex justify-center mt-4">

@@ -170,7 +170,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         <Form.Item
           className="mb-4"
           name="entityId"
-          label={<span className="text-lg font-bold text-primary">{t('Seleccione Una Entidad')}</span>}
+          label={<span className="text-lg font-bold">{t('Seleccione Una Entidad')}</span>}
           rules={[{ required: true, message: t('Entidad necesaria') }]}
         >
           <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">

@@ -3,6 +3,7 @@ import { Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import zorroImage from "../../../assets/img/Zorro.png";
 import "../css/Custom.css";
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 const DetailsCategoryForumModal = ({ visible, onClose, category }) => {
     const { t } = useTranslation("global");
@@ -11,7 +12,7 @@ const DetailsCategoryForumModal = ({ visible, onClose, category }) => {
 
     return (
         <Modal 
-          className="custom-modal w-[543px] h-[700px] bg-white rounded-3xl"
+          className="custom-modal w-[543px] h-auto bg-white rounded-3xl"
           onCancel={onClose} 
           closable={false}
           visible={visible}
@@ -50,13 +51,11 @@ const DetailsCategoryForumModal = ({ visible, onClose, category }) => {
                   <p className="text-black text-lg">{category.description}</p>
                 </div>
                 <div className="flex justify-center mt-8">
-                  {category.image && (
-                    <img
-                      className="max-w-full rounded-lg"
-                      src={category.image}
-                      alt={t('detailsCategoryModal.imagePreview')}
-                    />
-                  )}
+                  <img
+                    className="max-w-full h-[185px] rounded-lg object-contain"
+                    src={category.image || noImg}
+                    alt={t('detailsCategoryModal.imagePreview')}
+                  />
                 </div>
               </div>
               <div className="flex justify-center mt-4">

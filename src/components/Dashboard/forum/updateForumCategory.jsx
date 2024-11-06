@@ -3,6 +3,7 @@ import { Modal, Select, Form, Input} from "antd";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import { useForumCategories } from "../../../context/forum/forumCategories.context";
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 const { Option } = Select;
 
@@ -69,7 +70,7 @@ const UpdateCategoriesForum = ({ visible, onClose, onUpdate, imagePreview: initi
     
     return (
         <Modal
-        className="custom-modal w-[544px] h-[600px] rounded-3xl bg-white flex flex-col justify-between"
+        className="custom-modal w-[544px] h-auto rounded-3xl bg-white"
         visible={visible}
         closable={false}
         centered
@@ -129,15 +130,13 @@ const UpdateCategoriesForum = ({ visible, onClose, onUpdate, imagePreview: initi
             />
             <span className="text-red-500">{imageFile || imagePreview ? '' : t('updateCategoryModal.imageRequired')}</span>
             </div>
-            {imagePreview && (
             <div className="flex justify-center mt-2">
                 <img
-                src={imagePreview}
+                src={imagePreview || noImg}
                 alt={t('updateCategoryModal.imagePreview')}
-                className="w-[189.69px] h-[148px] object-contain rounded-lg border border-gray-300"
+                className="max-w-full h-[185px] rounded-lg"
                 />
             </div>
-            )}
 
             <div className="flex justify-center space-x-4 mt-6">
             <button
