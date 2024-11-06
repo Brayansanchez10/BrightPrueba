@@ -174,13 +174,23 @@ const Cards = ({ isLeftBarVisible }) => {
           acc[course.category].push(course);
           return acc;
         }, {});
-        const colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99', '#ff9999', '#66b3ff'];
+
+        const generateDistinctColors = (count) => {
+          const hueStep = 360 / count;
+          return Array.from({ length: count }, (_, i) => {
+            const hue = i * hueStep;
+            return `hsl(${hue}, 70%, 50%)`;
+          });
+        };
+
+        const categoryCount = Object.keys(coursesByCategory).length;
+        const colors = generateDistinctColors(categoryCount);
         
         const data = Object.entries(coursesByCategory).map(([category, courses], index) => ({
           value: Math.round(courses.length),
           name: category,
           itemStyle: {
-            color: colors[index % colors.length]
+            color: colors[index]
           }
         }));
 
