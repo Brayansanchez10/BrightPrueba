@@ -13,10 +13,12 @@ export default function ProfileEditor() {
     email: '',
     firstNames: '',
     lastNames: '',
-    profileImage: null
+    profileImage: null,
+    entityId: "",
   });
   const { getUserById } = useUserContext();
   const { user } = useAuth();
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -28,7 +30,8 @@ export default function ProfileEditor() {
             email: fetchedUserData.email,
             firstNames: fetchedUserData.firstNames,
             lastNames: fetchedUserData.lastNames,
-            profileImage: fetchedUserData.userImage
+            profileImage: fetchedUserData.userImage,
+            entityId: fetchedUserData.entityId
           });
         } catch (error) {
           console.error("Failed to fetch user data:", error);
@@ -60,6 +63,7 @@ export default function ProfileEditor() {
               firstNames={userData.firstNames}
               lastNames={userData.lastNames}
               profileImage={userData.profileImage}
+              entityId={userData.entityId}
               onUserDataChange={handleUserDataChange}
             />
             <SettingsBar />

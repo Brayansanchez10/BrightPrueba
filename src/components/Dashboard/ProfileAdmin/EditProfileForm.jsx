@@ -4,6 +4,7 @@ import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from "react-i18next";
 import Swal from 'sweetalert2';
 import { Trash2 } from 'lucide-react';
+import { getEntity } from "../../../api/user/entities.request";
 
 const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   const { updateUserPartial, getUserById } = useUserContext();
@@ -20,6 +21,10 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   const [deleteProfileImage, setDeleteProfileImage] = useState(false);
   const [errors, setErrors] = useState({});
 
+  const [entityId, setEntityId] = useState("");
+  const [entities, setEntities] = useState([]);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     const fetchUserId = async () => {
       if (user && user.data && user.data.id) {
@@ -30,6 +35,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           setEmail(userData.email);
           setFirstNames(userData.firstNames);
           setLastNames(userData.lastNames);
+          setEntityId(userData.entityId);
 
           if (userData.userImage && userData.userImage !== "null") {
             setPreviewProfileImage(userData.userImage);
@@ -42,6 +48,20 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
     fetchUserId();
   }, [getUserById, user]);
+
+  useEffect(() => {
+    async function loadEntities() {
+      try {
+        const response = await getEntity(); // Llama a tu API para obtener las entidades
+        setEntities(response.data);
+        console.log("Entidades obtenidas; ", response);
+      } catch (error) {
+        console.error("Error loading entities:", error);
+        setError("Failed to load entities");
+      }
+    }
+    loadEntities();
+  }, []);
 
   const validateName = (name) => {
     if (name.length < 5 || name.length > 30) {
@@ -107,6 +127,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
             firstNames,
             lastNames,
             userImage: deleteProfileImage ? null : (profileImage || previewProfileImage),
+            entityId,
           };
 
           await updateUserPartial(userId, userData);
@@ -347,6 +368,38 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>
               )}
+            </div>
+            <div className="mb-4">
+                  <label
+                    htmlFor="entityId"
+                    className="text-base font-bold text-primary block mb-2"
+                  >
+                    {t("userProfileSettings.entities")}
+                  </label>
+                  <select
+                    name="entityId"
+                    value={entityId}
+                    onChange={(e) => setEntityId(e.target.value)}
+                    className={`mt-2 p-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100 ${
+                      entityId && errors.entityId ? "border-white" : "border-white-300"
+                    }`}
+                  >
+                    <option value="" label={t("register.choose_entity")} />
+                    {entities &&
+                      entities.length > 0 &&
+                      entities
+                        .filter((entity) => entity.id !== 1) // Filtra la entidad con id 1
+                        .map((entity) => (
+                          <option key={entity.id} value={entity.id}>
+                            {entity.name}
+                          </option>
+                        ))}
+                  </select>
+                  {entityId && errors.entityId && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.entityId}
+                    </p>
+                  )}
             </div>
             <div className="flex justify-between items-center mt-6">
               <button

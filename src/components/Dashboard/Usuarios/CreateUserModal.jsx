@@ -179,11 +179,13 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
           rules={[{ required: true, message: t("Entidad necesaria") }]}
         >
           <Select className="w-full h-[34px] rounded-xl bg-white shadow-md text-center">
-            {entities.map((entity) => (
-               <Option key={entity.id} value={entity.id}>
-               {entity.name}
-             </Option>
-            ))}
+            {entities
+              .filter((entity) => entity.id !== 1) // Filtra la entidad con id 1
+              .map((entity) => (
+                <Option key={entity.id} value={entity.id}>
+                  {entity.name}
+                </Option>
+              ))}
           </Select>
         </Form.Item>
         <div className="flex justify-center mt-6 space-x-4">

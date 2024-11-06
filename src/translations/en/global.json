@@ -205,7 +205,8 @@
         "name_length_invalid": "Name must be between 5 and 30 characters",
         "email_too_long": "Email must not exceed 30 characters",
         "image_too_large": "Image size must not exceed 5MB",
-        "invalid_image_format": "Invalid image format. Please use JPEG or PNG"
+        "invalid_image_format": "Invalid image format. Please use JPEG or PNG",
+        "entities": "Select the entity to which they belong"
         },
     "navigationBar": {
         "home": "HOME",

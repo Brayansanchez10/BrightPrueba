@@ -174,11 +174,13 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
           rules={[{ required: true, message: t('Entidad necesaria') }]}
         >
           <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">
-            {entities.map((entity) => (
-              <Option key={entity.id} value={entity.id}>
-                {entity.name}
-              </Option>
-            ))}
+            {entities
+              .filter((entity) => entity.id !== 1) // Filtra la entidad con id 1
+              .map((entity) => (
+                <Option key={entity.id} value={entity.id}>
+                  {entity.name}
+                </Option>
+              ))}
           </Select>
         </Form.Item>
 
