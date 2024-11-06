@@ -13,6 +13,7 @@ import Footer from "../footer";
 import Modal from "./Cards/Modal";
 import { getSubCategoryCourseId } from "../../api/courses/subCategory.requst";
 import profileBackground from '../../assets/img/profile_fondo.png';
+import { useTranslation } from "react-i18next";
 
 const fadeInFromLeft = {
   hidden: { opacity: 0, x: -100 },
@@ -28,6 +29,7 @@ const staggerChildren = {
 };
 
 export default function ViewProfile() {
+  const { t } = useTranslation("global");
   const { id } = useParams();
   const navigate = useNavigate();
   const { user: authUser } = useAuth();
@@ -204,7 +206,7 @@ export default function ViewProfile() {
         ))}
       </Slider>
       {courseList.length > sliderSettings.slidesToShow && (
-        <div className="flex justify-start items-center mt-4 text-[#CFCFCF]">
+        <div className="flex justify-center sm:justify-start items-center mt-4 text-[#CFCFCF]">
           <button
             onClick={handlePrev}
             className={`flex items-center mr-4 font-bold ${
@@ -279,10 +281,10 @@ export default function ViewProfile() {
                 <p className="text-lg md:text-xl text-purple-200 mb-4">{user.firstNames} {user.lastNames}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-x-8 md:gap-y-4">
                   {[
-                    { icon: FaEnvelope, label: "Correo", value: user.email },
-                    { icon: FaGraduationCap, label: "Rol", value: user.role },
-                    { icon: FaMapMarkerAlt, label: "Ubicación", value: "Colombia" },
-                    { icon: FaCalendar, label: "Fecha de registro", value: new Date(user.createdAt).toLocaleDateString() }
+                    { icon: FaEnvelope, label: t('viewProfile.email'), value: user.email },
+                    { icon: FaGraduationCap, label: t('viewProfile.rol'), value: user.role },
+                    { icon: FaMapMarkerAlt, label:t('viewProfile.location'), value: "Colombia" },
+                    { icon: FaCalendar, label: t('viewProfile.date'), value: new Date(user.createdAt).toLocaleDateString() }
                   ].map(({ icon: Icon, label, value }) => (
                     <div key={label} className="flex flex-col items-center md:items-start">
                       <div className="flex items-center gap-2">
@@ -309,12 +311,12 @@ export default function ViewProfile() {
           className="mt-8"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] dark:text-primary mb-6 font-bold text-center sm:text-left">CURSOS REGISTRADOS</h2>
+          <h2 className="text-2xl font-roboto text-[#303956] dark:text-primary mb-6 font-bold text-center sm:text-left">{t('viewProfile.registration')}</h2>
           <div className="max-w-7xl mx-auto">
             {courses.length > 0 ? 
               renderCourseCards(courses, sliderRef, currentSlide, maxSlide, handlePrev, handleNext)
               :
-              <p className="text-lg text-gray-600 dark:text-primary text-center">No está registrado en ningún curso aún.</p>
+              <p className="text-lg text-gray-600 dark:text-primary text-center">{t('viewProfile.registrationM')}</p>
             }
           </div>
         </motion.div>
@@ -323,12 +325,12 @@ export default function ViewProfile() {
           className="mt-16"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] dark:text-primary mb-6 font-bold text-center sm:text-left">CURSOS TERMINADOS</h2>
+          <h2 className="text-2xl font-roboto text-[#303956] dark:text-primary mb-6 font-bold text-center sm:text-left">{t('viewProfile.complete')}</h2>
           <div className="max-w-7xl mx-auto">
             {completedCourses.length > 0 ?
               renderCourseCards(completedCourses, completedSliderRef, currentCompletedSlide, maxCompletedSlide, handleCompletedPrev, handleCompletedNext)
               :
-              <p className="text-lg text-gray-600 dark:text-primary text-center">No ha completado ningún curso aún.</p>
+              <p className="text-lg text-gray-600 dark:text-primary text-center">{t('viewProfile.completeM')}</p>
             }
           </div>
         </motion.div>

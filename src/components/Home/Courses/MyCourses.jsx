@@ -115,15 +115,17 @@ export default function UserCourses() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <div className="w-full sm:w-auto">
+           <div className="w-full sm:w-auto mb-4 sm:mb-0">
                 <motion.h1
-                  className="text-4xl font-bold text-center sm:text-left font-bungee"
+                  className="text-3xl sm:text-4xl font-bold text-center sm:text-left font-bungee px-2 sm:px-0"
                   initial={{ scale: 0.9 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <span className="text-primary mr-2">{t("coursesComponent.your")}</span>
-                  <span className="text-purple-700 dark:text-secondary">
+                  <span className="text-primary mr-2 block sm:inline">
+                    {t("coursesComponent.your")}
+                  </span>
+                  <span className="text-purple-700 dark:text-secondary block sm:inline">
                     {t("coursesComponent.courses")}
                   </span>
                 </motion.h1>

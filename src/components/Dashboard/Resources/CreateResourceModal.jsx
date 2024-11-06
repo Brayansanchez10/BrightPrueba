@@ -262,7 +262,7 @@ const CreateResourceModal = ({ isVisible, onCancel, courseId, onCreate, visible 
               : "bg-purple-800 text-white"
           }`}
         >
-          Recursos
+          {t('courses.resource')}
         </button>
         <button
           // Cambia a la pestaña de recursos existentes
@@ -273,7 +273,7 @@ const CreateResourceModal = ({ isVisible, onCancel, courseId, onCreate, visible 
               : "bg-purple-800 text-white"
           }`}
         >
-          Crear
+           {t('courses.crear')}
         </button>
       </div>
       {/* Contenido principal del modal */}
