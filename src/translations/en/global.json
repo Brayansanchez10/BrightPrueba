@@ -222,7 +222,7 @@
         "myAccount": "My account",
         "configProfile": "Configure Profile",
         "forum": "Forum",
-         "view_profile": "View my profile"
+        "theme": "Theme"
     },
     "newPasswordUser": {
         "change_password": "Change Password",
@@ -241,7 +241,7 @@
     "coursesComponent": {
         "your": "YOUR",
         "courses": "COURSES",
-        "search_placeholder": "Search courses...",
+        "search_placeholder": "Search...",
         "previous": "Previous",
         "next": "Next"
     },
@@ -272,7 +272,8 @@
         "categories": "Categories",
         "roles": "Roles",
         "profileEditor": "Profile Editor",
-        "sign_off": "Sign off"
+        "sign_off": "Sign off",
+        "forum": "Forum"
     },
     "cardsComponent": {
         "activeUsers": "ACTIVE USERS",
@@ -331,7 +332,8 @@
         "status": "Status",
         "active": "Active",
         "inactive": "Inactive",
-        "close": "Close"
+        "close": "Close",
+        "entity": "Entity"
     },
     "UpdateUserModal": {
         "updateUserTitle": "Update user",
@@ -434,7 +436,12 @@
         "removeResourceError": "Error removing the resource",
         "newCourse": "New course",
         "assignedContent": "Assigned content",
-        "ButtonUpContent": "Assign Content"
+        "ButtonUpContent": "Assign Content",
+        "resource": "Resource",
+        "crear": "Create",
+        "section": "Section",
+        "generalComments": "general comments",
+        "comment": "Comment"
     },
     "courseDetails": {
         "detailsOfCourse": "Details of course:",
@@ -497,7 +504,8 @@
           "beginner": "Beginner",
           "intermediate": "Intermediate",
           "advanced": "Advanced",
-          "durationInvalid": "Duration must be a number between 0 and 99"
+          "durationInvalid": "Duration must be a number between 0 and 99",
+          "nameExists": "The name already exists"
         },
         "assignContentModal": {
         "title": "Add Content To",
@@ -592,7 +600,7 @@
         "onlyButton": "Just the category"
     },
     "detailsCategoryModal": {
-        "title": "Details of category",
+        "title": "Details",
         "name": "Name",
         "description": "Description",
         "imagePreview": "Image Preview",
@@ -826,7 +834,21 @@
     "NumerQuizz": "Number of attempts"
     },
     "forumCategory": {
-        "noCategory": "No categories created"
+        "noCategory": "No categories created",
+        "title": "Available",
+        "title2": "Forums",
+        "tableIcons": "icons",
+        "buttonCreate": "Create Category",
+        "forumTitle": "Forum Category",
+        "forumDesactivate": "Deactivate Forum",
+        "forumActivate": "Activate Forum",
+        "deleteTitle": "Delete Category",
+        "deleteText": "¿Are you sure you want to delete this Category?",
+        "AlertDelete": "Category successfully eliminated",
+        "AertError": "Error when deleting",
+        "AlertCreate": "Category successfully created",
+        "AertErrorCreate": "Error creating",
+        "modalCreate": "Create Category"
     },
     "Topic": {
         "topicDelete": "Topic successfully deleted",
@@ -980,23 +1002,52 @@
             "updateButton": "Update",
             "cancelButton": "Cancel"
         },
-        
-            "Mytopic": {
-              "favorites": "My favorites",
-              "forums": "My forums",
-              "forums_plural": "Forums",
-              "forum": "Forum",
-              "knowledge": "of knowledge",
-              "open": "Open",
-              "title": "Title",
-              "image_alt": "Forum image",
-              "create_forum": "CREATE FORUM"
-            },
-            
-                "categoriesTable": {
-                  "foroCategorias": "Forum Categories",
-                  "activateForum": "Activate Forum",
-                  "deactivateForum": "Deactivate Forum",
-                   "crearCategoria": "Create Category"
-                }
-              }
+
+        "forumCrud": {
+            "button": "Create forum",
+            "title": "Forum Categories",
+            "createTitle": "Create forum category",
+            "updateTitle": "Update forum",
+            "detailsTitle": "Forum details",
+            "deleteTitle": "Delete forum",
+            "deleteMessage": "Are you sure you want to delete this forum?",
+            "notify": "Forum created successfully"
+        },
+
+       "alerts": {
+        "sendEmailToAll": {
+            "title": "Do you want to send the email to all registered users?",
+            "text": "This action will send a notification to all users in the course.",
+            "confirmButtonText": "Send",
+            "cancelButtonText": "Cancel"
+    },
+        "emptyEmailField": {
+            "title": "The email field is empty"
+    },
+        "confirmEmailSend": {
+            "title": "Did you write the emails correctly and want to send them?",
+            "text": "Make sure the email addresses are written correctly.",
+            "confirmButtonText": "Send",
+            "cancelButtonText": "Cancel"
+    },
+        "notificationSentAll": {
+            "title": "Notification sent to all users successfully"
+    },
+        "notificationSentSpecific": {
+            "title": "Notification sent to specific users successfully"
+    },
+        "errorSendingNotification": {
+            "title": "Error sending notification"
+    }
+  },
+  "viewProfile": {
+    "email": "Email",
+    "rol": "Role",
+    "location": "Location",
+    "date": "Registration date",
+    "registration": "REGISTERED COURSES",
+    "registrationM": "You are not registered for any course yet.",
+    "complete": "COMPLETED COURSES",
+    "completeM": "You have not completed any courses yet."
+  }
+}

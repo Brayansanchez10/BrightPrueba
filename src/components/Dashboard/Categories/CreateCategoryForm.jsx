@@ -17,14 +17,11 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
   const [category, setCategory] = useState({
     name: "",
     description: "",
-    image: null,
   });
 
-  const [imagePreview, setImagePreview] = useState(null);
   const [errorMessage, setErrorMessage] = useState({
     name: "",
     description: "",
-    image: "",
   });
   const MAX_DESCRIPTION_LENGTH = 100;
 
@@ -77,21 +74,6 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setCategory({ ...category, image: file });
-      setImagePreview(URL.createObjectURL(file));
-      setErrorMessage((prev) => ({ ...prev, image: "" }));
-    } else {
-      e.target.value = null;
-      setImagePreview(null);
-      setErrorMessage((prev) => ({
-        ...prev,
-        image: t("createCategoryForm.invalidImageFile"),
-      }));
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,7 +82,6 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
     const errors = {
       name: "",
       description: "",
-      image: "",
     };
 
     if (!category.name || category.name.length < 3 || category.name.length > 20) {
@@ -111,10 +92,6 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
     if (!category.description || category.description.length < 30) {
       errors.description = t("createCategoryForm.descriptionTooShort");
     }
-    if (!category.image) {
-      errors.image = t("createCategoryForm.imageRequired");
-    }
-
     if (categories.some((existingCategory) => existingCategory.name === category.name)) {
       errors.name = t("createCategoryForm.nameExists")
     }
@@ -128,7 +105,6 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
     const categoryData = {
       name: category.name,
       description: category.description,
-      image: category.image,
       entityId: username.entityId,
     };
 
@@ -147,12 +123,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
   };
 
   const resetForm = () => {
-    setCategory({ name: "", description: "", image: null });
-    setImagePreview(null);
-    setErrorMessage({ name: "", description: "", image: "" });
-    if (imageRef.current) {
-      imageRef.current.value = null;
-    }
+    setCategory({ name: "", description: "", });
   };
 
   useEffect(() => {
@@ -222,32 +193,6 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
           </div>
           {errorMessage.description && (
             <p className="text-red-500 text-sm mt-1">{errorMessage.description}</p>
-          )}
-        </div>
-        <div className="mt-4 text-left">
-          <label className="text-lg font-bold text-[#000000] block">
-            {t("createCategoryForm.imageLabel")}
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-            ref={imageRef}
-            required
-          />
-          {errorMessage.image && (
-            <p className="text-red-500 text-sm mt-1">{errorMessage.image}</p>
-          )}
-          {imagePreview && (
-            <div className="mt-2 flex justify-center">
-              <img
-                src={imagePreview}
-                alt="preview"
-                className="rounded-lg"
-                style={{ maxWidth: "100%", maxHeight: "200px" }}
-              />
-            </div>
           )}
         </div>
         <div className="flex justify-center space-x-4 mt-6">

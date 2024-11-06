@@ -229,7 +229,7 @@ const CreateSubCategoryForm = ({
               : "bg-red-800 text-white"
           }`}
         >
-          Seccion
+          {t('courses.section')}
         </button>
         <button
           onClick={() => handleTabChange("recursos")}
@@ -239,7 +239,7 @@ const CreateSubCategoryForm = ({
               : "bg-red-800 text-white"
           }`}
         >
-          Crear
+          {t('courses.resource')}
         </button>
       </div>
       <div className="custom flex justify-center items-center h-full w-full">

@@ -3,13 +3,14 @@ import { Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import zorroImage from "../../../assets/img/Zorro.png";
 import "../css/Custom.css";
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 const CourseDetailsModal = ({ visible, onClose, course }) => {
   const { t } = useTranslation("global");
 
   return (
     <Modal
-      className="custom-modal w-[543px] h-[700px] bg-white rounded-3xl"
+      className="custom-modal w-[543px] h-auto bg-white rounded-3xl"
       centered
       visible={visible}
       onCancel={onClose}
@@ -63,13 +64,11 @@ const CourseDetailsModal = ({ visible, onClose, course }) => {
               </div>
             </div>
             <div className="flex justify-center mt-4">
-              {course.image && (
-                <img
-                  className="max-w-full rounded-lg"
-                  src={course.image}
-                  alt={t('courseDetails.imagePreview')}
-                />
-              )}
+              <img
+                className="max-w-full h-[185px] rounded-lg object-contain"
+                src={course.image || noImg}
+                alt={t('courseDetails.imagePreview')}
+              />
             </div>
           </div>
         ) : (

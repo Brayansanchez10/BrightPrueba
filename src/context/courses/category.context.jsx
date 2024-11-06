@@ -14,12 +14,11 @@ export const useCategoryContext = () => {
 export const CategoryProvider = ({ children }) => {
     const [categories, setCategories] = useState([]);
 
-    const createCategory = async ({ name, description, image, entityId }) => {
+    const createCategory = async ({ name, description, entityId }) => {
         try {
             const newCategoryData = {
                 name,
                 description,
-                image,
                 entityId,
             };
             const res = await createCategoryApi(newCategoryData);
@@ -42,12 +41,11 @@ export const CategoryProvider = ({ children }) => {
         }
     };
 
-    const updateCategory = async (id, { name, description, image }) => {
+    const updateCategory = async (id, { name, description }) => {
         try {
             const updatedCategoryData = {
                 name,
                 description,
-                image
             };
             const res = await updateCategoryApi(id, updatedCategoryData);
             setCategories(categories.map(cat => (cat._id === id ? res.data : cat)));

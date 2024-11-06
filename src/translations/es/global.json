@@ -217,7 +217,7 @@
         "myAccount": "Mi cuenta",
         "configProfile": "Configurar perfil",
         "forum": "Foro",
-        "view_profile": "Ver mi perfil"
+        "theme": "Tema"
     },
     "newPasswordUser": {
         "change_password": "Cambiar Contraseña",
@@ -236,7 +236,7 @@
     "coursesComponent": {
         "your": "TUS",
         "courses": "CURSOS",
-        "search_placeholder": "Buscar cursos...",
+        "search_placeholder": "Buscar...",
         "previous": "Anterior",
         "next": "Siguiente"
     },
@@ -267,7 +267,8 @@
         "categories": "Categorías",
         "roles": "Roles",
         "profileEditor": "Editor de Perfil",
-        "sign_off": "Cerrar sesión"
+        "sign_off": "Cerrar sesión",
+        "forum": "Foro"
     },
     "cardsComponent": {
         "activeUsers": "USUARIOS ACTIVADOS",
@@ -326,7 +327,8 @@
         "status": "Estado",
         "active": "Activo",
         "inactive": "Inactivo",
-        "close": "Cerrar"
+        "close": "Cerrar",
+        "entity": "Entidad"
     },
     "UpdateUserModal": {
         "updateUserTitle": "Actualizar usuario",
@@ -429,7 +431,12 @@
         "removeResourceError": "Error al eliminar el recurso",
         "newCourse": "Nuevo curso",
         "assignedContent": "Contenido asignado",
-        "ButtonUpContent": "Asignar Contenido"
+        "ButtonUpContent": "Asignar Contenido",
+        "resource": "Recursos",
+        "crear": "Crear",
+        "section": "Seccion",
+        "generalComments": "comentarios generales",
+        "comment": "Comentar"
     },
     "courseDetails": {
         "detailsOfCourse": "Detalles del curso:",
@@ -492,7 +499,8 @@
           "beginner": "Principiante",
           "intermediate": "Intermedio",
           "advanced": "Avanzado",
-          "durationInvalid": "La duración debe ser un número entre 0 y 99"
+          "durationInvalid": "La duración debe ser un número entre 0 y 99",
+          "nameExists": "El nombre ya existe"
         },
     "assignContentModal": {
         "title": "Agregar Contenido A",
@@ -587,7 +595,7 @@
         "onlyButton": "Solo la categoría"
     },
     "detailsCategoryModal": {
-        "title": "Detalles de la categoría",
+        "title": "Detalles",
         "name": "Nombre",
         "description": "Descripción",
         "imagePreview": "Vista previa de la imagen",
@@ -821,7 +829,21 @@
         "NumerQuizz": "Numero de intentos"
     },
     "forumCategory": {
-        "noCategory": "No hay categorias creadas"
+        "noCategory": "No hay categorias creadas",
+        "title": "Foros",
+        "title2": "Disponibles",
+        "tableIcons": "iconos",
+        "buttonCreate": "Crear Categoría",
+        "forumTitle": "Categoría De Foro",
+        "forumDesactivate": "Desactivar Foro",
+        "forumActivate": "Activar Foro",
+        "deleteTitle": "Eliminar Categoría",
+        "deleteText": "¿Estás seguro de que deseas eliminar esta Categoría?",
+        "AlertDelete": "Categoría eliminada exitosamente",
+        "AertError": "Error al eliminar",
+        "AlertCreate": "Categoría creada exitosamente",
+        "AertErrorCreate": "Error al crear",
+        "modalCreate": "Crear Categoría"
     },
     "Topic": {
         "topicDelete": "Tema eliminado exitosamente",
@@ -969,30 +991,52 @@
         "updateButton": "Actualizar",
         "cancelButton": "Cancelar"
     },
-        "Mytopic": {
-          "favorites": "Mis favoritos",
-          "forums": "Mis foros",
-           "forums_plural": "Foros",
-           "forum": "Foro",
-            "knowledge": "de conocimiento",
-            "open": "Abierto",
-            "title": "Titulo",
-            "image_alt": "Imagen del foro",
-            "create_forum": "CREAR FORO"
 
-        },
-        
-            "categoriesTable":{
-                "foroCategorias": "Categorías del Foro",
-                "activarForo": "Activar Foro",
-                "desactivarForo": "Desactivar Foro",
-                "crearCategoria": "Crear Categoría"
+    "forumCrud": {
+        "button": "Crear foro",
+        "title": "Categorias de foros",
+        "createTitle": "Crear categoria de foro",
+        "updateTitle": "Actualizar foro",
+        "detailsTitle": "Detalles del foro",
+        "deleteTitle": "Eliminar foro",
+        "deleteMessage": "¿Estás seguro de que quieres eliminar este foro?",
+        "notify": "Foro creado exitosamente"
+    },
 
-
-
-
-            }
-
-
-        
-      }
+    "alerts": {
+        "sendEmailToAll": {
+        "title": "¿Quieres enviar el correo a todos los usuarios registrados?",
+        "text": "Esta acción enviará una notificación a todos los usuarios del curso.",
+        "confirmButtonText": "Enviar",
+        "cancelButtonText": "Cancelar"
+    },
+    "emptyEmailField": {
+        "title": "El campo de correo electrónico está vacío"
+    },
+    "confirmEmailSend": {
+        "title": "¿Escribiste bien los correos y deseas enviarlos?",
+        "text": "Asegúrate de que los correos electrónicos estén escritos correctamente.",
+        "confirmButtonText": "Enviar",
+        "cancelButtonText": "Cancelar"
+    },
+    "notificationSentAll": {
+        "title": "Notificación enviada a todos los usuarios con éxito"
+    },
+    "notificationSentSpecific": {
+        "title": "Notificación enviada a los usuarios específicos con éxito"
+    },
+    "errorSendingNotification": {
+        "title": "Error al enviar la notificación"
+    }
+  },
+  "viewProfile": {
+    "email": "Correo",
+    "rol": "Rol",
+    "location": "Ubicacion",
+    "date": "Fecha de registro",
+    "registration": "CURSOS REGISTRADOS",
+    "registrationM": "No está registrado en ningún curso aún.",
+    "complete": "CURSOS TERMINADOS",
+    "completeM": "No ha completado ningún curso aún."
+  }
+}

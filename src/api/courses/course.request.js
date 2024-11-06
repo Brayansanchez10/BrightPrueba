@@ -1,18 +1,12 @@
-import axios from 'axios';
+import axios from '../axios';
 
-const api = `http://localhost:3068/PE/courses/`;
-
-const courseRequest = axios.create({
-  baseURL: api,
-  withCredentials: true,
-});
-export const unregisterFromCourse = (userId, courseId) => courseRequest.post(`/unregisterFromCourse/${userId}/${courseId}`); 
-export const getAllCourses = () => courseRequest.get('/getAllCourses');
+export const unregisterFromCourse = (userId, courseId) => axios.post(`/courses/unregisterFromCourse/${userId}/${courseId}`); 
+export const getAllCourses = () => axios.get('/courses/getAllCourses');
 
 export const asignarContenido = (id, contentFile) => {
   const formData = new FormData();
   formData.append('content', contentFile);
-  return courseRequest.post(`/asignarContenido/${id}`, formData, {
+  return axios.post(`/courses/asignarContenido/${id}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -21,7 +15,7 @@ export const asignarContenido = (id, contentFile) => {
 
 export const asignarLinkContenido = (id, texto) => {
   const data = { texto };
-  return courseRequest.post(`/asignarLinkContenido/${id}`, data, {
+  return axios.post(`/courses/asignarLinkContenido/${id}`, data, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -29,10 +23,10 @@ export const asignarLinkContenido = (id, texto) => {
 };
 
 export const deleteResource = (courseId, resourceIndex) => {
-  return courseRequest.delete(`/courses/${courseId}/resources/${resourceIndex}`);
+  return axios.delete(`/courses/courses/${courseId}/resources/${resourceIndex}`);
 };
 
-export const getCourse = (id) => courseRequest.get(`/getCourse/${id}`);
+export const getCourse = (id) => axios.get(`/courses/getCourse/${id}`);
 
 export const createCourse = async (courseData) => {
   try {
@@ -49,7 +43,7 @@ export const createCourse = async (courseData) => {
       formData.append('image', courseData.image);
     }
 
-    const response = await courseRequest.post('/createCourse', formData, {
+    const response = await axios.post('/courses/createCourse', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -75,7 +69,7 @@ export const updateCourse = async (id, courseData) => {
       formData.append('image', courseData.image);
     }
 
-    return courseRequest.put(`/updateCourse/${id}`, formData, {
+    return axios.put(`/courses/updateCourse/${id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -89,7 +83,7 @@ export const updateCourse = async (id, courseData) => {
 export const actualizarContenidoArchivo = (id, index, nuevoArchivo) => {
   const formData = new FormData();
   formData.append('content', nuevoArchivo);
-  return courseRequest.put(`/actualizarContenidoArchivo/${id}/${index}`, formData, {
+  return axios.put(`/courses/actualizarContenidoArchivo/${id}/${index}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -98,7 +92,7 @@ export const actualizarContenidoArchivo = (id, index, nuevoArchivo) => {
 
 export const actualizarLinkContenido = (id, nuevoTexto, index) => {
   const data = { nuevoTexto, index };
-  return courseRequest.put(`/actualizarLinkContenido/${id}`, data, {
+  return axios.put(`/courses/actualizarLinkContenido/${id}`, data, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -106,20 +100,18 @@ export const actualizarLinkContenido = (id, nuevoTexto, index) => {
 };
 
 export const notifyAllUsersInCourse = (courseId) => {
-  return courseRequest.post(`/${courseId}/notify-all`);
+  return axios.post(`/courses/${courseId}/notify-all`);
 };
 
 export const notifySpecificUser = (courseId, email) => {
   const data = { email };
-  return courseRequest.post(`/${courseId}/notify-specific`, data, {
+  return axios.post(`/courses/${courseId}/notify-specific`, data, {
     headers: {
       'Content-Type': 'application/json',
     },
   });
 };
 
-export const deleteCourse = (id) => courseRequest.delete(`/deleteCourse/${id}`);
+export const deleteCourse = (id) => axios.delete(`/courses/deleteCourse/${id}`);
 
-export const getCoursesByCategory = (categoryName) => courseRequest.get(`/category/${categoryName}`);
-
-export default courseRequest;
+export const getCoursesByCategory = (categoryName) => axios.get(`/courses/category/${categoryName}`);

@@ -11,7 +11,7 @@ const DetailsCategoryModal = ({ visible, onClose, category }) => {
 
   return (
     <Modal 
-      className="custom-modal w-[543px] h-[680px] bg-white rounded-3xl"
+      className="custom-modal w-[543px] h-[462px] bg-white rounded-3xl"
       onCancel={onClose} 
       closable={false}
       visible={visible}
@@ -47,15 +47,6 @@ const DetailsCategoryModal = ({ visible, onClose, category }) => {
             <div className="mb-5">
               <strong className="text-black font-bold text-xl">{t('detailsCategoryModal.description')}</strong>
               <p className="text-black text-lg">{category.description}</p>
-            </div>
-            <div className="flex justify-center mt-8">
-              {category.image && (
-                <img
-                  className="max-w-full rounded-lg"
-                  src={category.image}
-                  alt={t('detailsCategoryModal.imagePreview')}
-                />
-              )}
             </div>
           </div>
           <div className="flex justify-center mt-4">

@@ -3,6 +3,8 @@ import { Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import zorroImage from "../../../assets/img/Zorro.png";
 import "../css/Custom.css";
+import * as BsIcons from 'react-icons/ai';
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 const DetailsCategoryForumModal = ({ visible, onClose, category }) => {
     const { t } = useTranslation("global");
@@ -11,12 +13,13 @@ const DetailsCategoryForumModal = ({ visible, onClose, category }) => {
 
     return (
         <Modal 
-          className="custom-modal w-[543px] h-[700px] bg-white rounded-3xl"
+          className="custom-modal w-[543px] h-[60%] bg-white rounded-3xl"
           onCancel={onClose} 
           closable={false}
           visible={visible}
           centered
           footer={null}
+          style={{ top: '-10%' }}
           bodyStyle={{
             overflow: "hidden",
           }}
@@ -37,7 +40,7 @@ const DetailsCategoryForumModal = ({ visible, onClose, category }) => {
             </div>
             <div className="px-5 py-6">
               <h1 className="text-center text-[#350B48] text-3xl font-extrabold mt-10 mb-5 overflow-hidden text-ellipsis whitespace-nowrap font-bungee">
-                {t("detailsCategoryModal.title")}
+                {t("forumCrud.detailsTitle")}
                 <span className="font-extrabold uppercase"></span>
               </h1>
               <div>
@@ -50,13 +53,11 @@ const DetailsCategoryForumModal = ({ visible, onClose, category }) => {
                   <p className="text-black text-lg">{category.description}</p>
                 </div>
                 <div className="flex justify-center mt-8">
-                  {category.image && (
-                    <img
-                      className="max-w-full rounded-lg"
-                      src={category.image}
-                      alt={t('detailsCategoryModal.imagePreview')}
-                    />
-                  )}
+                {category.icons && BsIcons[category.icons] ? (
+                  React.createElement(BsIcons[category.icons], { style: { width: "150px", height: "150px" } })
+                ) : (
+                  <span>No icon</span>
+                )}
                 </div>
               </div>
               <div className="flex justify-center mt-4">

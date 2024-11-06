@@ -192,7 +192,7 @@ const LoginForm = () => {
             </div>
             <div className="flex justify-center">
               <a
-                href="https://apibrightmind.mesadoko.com/PE/google"
+                href={`${import.meta.env.VITE_API_URL}/PE/google`}
                 className="flex items-center justify-center gap-2 w-56 py-2 text-gray-700 rounded-xl font-bold text-lg border-2 border-gray-300 hover:bg-gray-50 transition-all duration-200"
               >
                 <img 

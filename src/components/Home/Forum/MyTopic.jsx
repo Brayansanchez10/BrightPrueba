@@ -9,7 +9,7 @@ import CreateTopicForm from "./TopicComponents/createTopic.jsx";
 import UpdateForumTopicForm from "./TopicComponents/updateTopic.jsx";
 import { useForumFavorite } from "../../../context/forum/forumFavorite.context.jsx";
 import { useUserContext } from "../../../context/user/user.context.jsx";
-import { FaSearch, FaUser, FaStopwatch, FaHeart, FaEdit, FaTrash } from "react-icons/fa";
+import { FaSearch, FaUser, FaStopwatch, FaHeart, FaEdit, FaTrash, FaRegUserCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import Footer from "../../footer.jsx";
 
@@ -171,11 +171,11 @@ export default function TopicComponent() {
               {t('Mytopic.create_forum')} {/* Aquí se usa la clave 'Mytopic.create_forum' */}
             </Button>
           )}
-          <div className="flex items-center px-4 py-2 border bg-secondary border-gray-300 dark:border-purple-900 rounded-xl shadow-md">
-            <FaSearch size={"18px"} className="text-primary mr-2" />
+          <div className="flex items-center px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md">
+            <FaSearch size={"18px"} className="mr-2" />
             <input
               type="search"
-              className="bg-secondary text-primary outline-none w-full sm:w-[220px] md:w-[280px] lg:w-[360px] xl:w-[420px]"
+              className="outline-none w-full sm:w-[220px] md:w-[280px] lg:w-[360px] xl:w-[420px]"
               placeholder={t("coursesComponent.search_placeholder")}
               defaultValue={t('Mytopic.title')}
             />
@@ -252,12 +252,17 @@ export default function TopicComponent() {
                       className="bg-[#783CDA] rounded-[14px] p-4 flex flex-col w-[387px] h-[167px] relative"
                       onClick={() => handleTopicClick(topic.id)}
                     >
-                      <div className="flex items-start mb-2">
-                        <img
-                          src={topic.user.userImage || "/placeholder.svg?height=100&width=100"}
-                          alt={t('Mytopic.image_alt')} 
-                          className="w-12 h-12 object-cover rounded-full mr-3"
-                        />
+                       <div className="flex items-start mb-2">
+                        {topic.user.userImage ? (
+                          <img
+                            src={topic.user.userImage}
+                            alt="Imagen del foro"
+                            className="w-12 h-12 object-cover rounded-full mr-3"
+                          />
+                        ) : (
+                          <FaRegUserCircle  className="w-12 h-12 text-white-500 mr-3" />
+                        )}
+
                         <div className="flex-grow pr-16">
                           <h2 className="text-white font-bungee text-base line-clamp-1">{topic.title}</h2>
                           <p className="text-white font-sans text-base line-clamp-2 mt-1">{topic.Content}</p>

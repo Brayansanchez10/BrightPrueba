@@ -305,6 +305,9 @@ export default function ResourceView() {
       if (isVideoLink(file)) {
         return (
           <div className="relative w-full" style={{ paddingBottom: "45%" }}>
+            <div 
+              className="absolute top-0 right-0 w-[70px] h-[70px] z-10"
+            />
             <iframe
               ref={videoRef}
               title="Video"

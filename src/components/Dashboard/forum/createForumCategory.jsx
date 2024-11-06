@@ -4,9 +4,12 @@ import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import { useForumCategories } from "../../../context/forum/forumCategories.context";
 import holaImage from "../../../assets/img/hola.png";
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 import { useAuth } from "../../../context/auth.context";
 import { useUserContext } from "../../../context/user/user.context";
+import IconSelector from "./IconSelector";
+
 
 const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
     const { createForumCategories } = useForumCategories();
@@ -25,14 +28,17 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
     const [categories, setCategories] = useState({
         name: "",
         description: "",
-        image: null,
+        icons: "",
     });
 
     const [errorMessage, setErrorMessage] = useState({
         name: "",
         description: "",
-        image: "",
+        icons: "",
     });
+
+    const [selectedIcon, setSelectedIcon] = useState(null);
+
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -50,24 +56,10 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
         fetchUserData();
     }, [user, getUserById]);
 
-
-    const imageRef = useRef(null);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCategories({ ...categories, [name]: value });
         validateField(name, value);
-    };
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file && file.type.startsWith("image/")) {
-            setCategories({ ...categories, image: file, imagePreview: URL.createObjectURL(file) });
-            setErrorMessage((prev) => ({ ...prev, image: "" }));
-        } else {
-            e.target.value = null;
-            setErrorMessage((prev) => ({ ...prev, image: t("createCourseForm.invalidImageFile") }));
-        }
     };
 
     const validateField = (name, value) => {
@@ -97,15 +89,20 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
         }
     };
 
+    const handleIconSelect = (icon) => {
+        setSelectedIcon(icon); // Actualiza solo el icono seleccionado
+        setErrorMessage((prev) => ({ ...prev, icons: "" })); // Limpia el mensaje de error
+    };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true); // Iniciar el envío
 
         const errors = {
             name: "",
-            category: "",
             description: "",
-            image: "",
+            icons: "",
         };
 
         if (!categories.name || categories.name.length < MIN_COURSE_NAME_LENGTH || categories.name.length > MAX_COURSE_NAME_LENGTH) {
@@ -114,8 +111,8 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
         if (!categories.description || categories.description.length < MIN_DESCRIPTION_LENGTH) {
             errors.description = t("createCourseForm.descriptionTooShort");
         }
-        if (!categories.image) {
-            errors.image = t("createCourseForm.allFieldsRequired");
+        if (!selectedIcon) { // Valida si hay un icono seleccionado
+            errors.icons = t("seleccione un icono");
         }
 
         if (Object.values(errors).some((error) => error)) {
@@ -128,7 +125,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
         const categoriesData = {
             name: categories.name,
             description: categories.description,
-            image: categories.image,
+            icons: selectedIcon,
             entityId: username.entityId,
         };
 
@@ -136,19 +133,20 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
             await createForumCategories(categoriesData);
             Swal.fire({
                 icon: "success",
-                title: t("createCourseForm.createSuccess"),
+                title: t("forumCrud.notify"),
                 timer: 1000,
                 showConfirmButton: false,
             }).then(() => {
                 onCreate(categoriesData);
                 resetForm();
+                setSelectedIcon(null);
                 onClose();
             });
         } catch (error) {
             console.error(error);
             Swal.fire({
                 icon: "error",
-                title: t("createCourseForm.createFailure"),
+                title: t("Error"),
                 timer: 3000,
                 showConfirmButton: true,
             });
@@ -161,17 +159,13 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
         setCategories({
             name: "",
             description: "",
-            image: null,
-            imagePreview: null,
+            icons: "",
         });
         setErrorMessage({
             name: "",
             description: "",
-            image: "",
+            icons: "",
         });
-        if (imageRef.current) {
-            imageRef.current.value = null;
-        }
     };
 
     return (
@@ -195,7 +189,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
             </div>
             <form onSubmit={handleSubmit} className="p-5 text-center">
                 <h1 className="text-2xl font-extrabold text-[#18116A] mt-5 mb-4 font-bungee">
-                    {t("createCourseForm.title")}
+                    {t("forumCrud.createTitle")}
                 </h1>
                 <div className="text-left mb-4">
                     <label className="text-lg font-bold text-[#000000] block">
@@ -233,22 +227,15 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
                         <p className="text-red-500 text-sm mt-1">{errorMessage.description}</p>
                     )}
                 </div>
-                <div className="text-left mb-4">
+               <div className="text-left mb-4">
                     <label className="text-lg font-bold text-[#000000] block">
-                        {t("createCourseForm.image")}
+                        {t("Icons")}
                     </label>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        ref={imageRef}
-                        className="mt-2"
-                    />
-                    {categories.imagePreview && (
-                        <img src={categories.imagePreview} alt="Imagen previa" className="mt-2 w-32 h-32 object-cover" />
-                    )}
-                    {errorMessage.image && (
-                        <p className="text-red-500 text-sm mt-1">{errorMessage.image}</p>
+                    <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-lg mb-2">
+                        <IconSelector onSelectIcon={handleIconSelect} selectedIcon={selectedIcon} />
+                    </div>
+                    {errorMessage.icons && (
+                        <p className="text-red-500 text-sm mt-1">{errorMessage.icons}</p>
                     )}
                 </div>
                 <button

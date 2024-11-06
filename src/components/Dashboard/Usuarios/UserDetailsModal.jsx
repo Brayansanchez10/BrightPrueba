@@ -80,7 +80,7 @@ const DetailsUserModal = ({ visible, onCancel, user }) => {
                 <span className="text-lg">{user.state ? t('userDetails.active') : t('userDetails.inactive')}</span>
               </p>
               <p className="mb-5">
-                <strong className="font-bold text-xl">{t('Entidad')}:</strong>
+                <strong className="font-bold text-xl">{t('userDetails.entity')}:</strong>
                 <br />
                 <span className="text-lg">{user.entityId}</span>
               </p>

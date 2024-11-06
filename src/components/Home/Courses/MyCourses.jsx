@@ -115,15 +115,17 @@ export default function UserCourses() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <div className="w-full sm:w-auto">
+           <div className="w-full sm:w-auto mb-4 sm:mb-0">
                 <motion.h1
-                  className="text-4xl font-bold text-center sm:text-left font-bungee"
+                  className="text-3xl sm:text-4xl font-bold text-center sm:text-left font-bungee px-2 sm:px-0"
                   initial={{ scale: 0.9 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <span className="text-primary mr-2">{t("coursesComponent.your")}</span>
-                  <span className="text-purple-700 dark:text-secondary">
+                  <span className="text-primary mr-2 block sm:inline">
+                    {t("coursesComponent.your")}
+                  </span>
+                  <span className="text-purple-700 dark:text-secondary block sm:inline">
                     {t("coursesComponent.courses")}
                   </span>
                 </motion.h1>
@@ -175,7 +177,7 @@ export default function UserCourses() {
                         <h3 className="text-xl sm:text-3xl font-bold text-primary mb-2 sm:mb-4 -mt-3 break-words">
                           {course.title}
                         </h3>
-                        <p className="text-[12px] sm:text-base text-gray-400 font-semibold -mb-12">
+                        <p className="text-[12px] sm:text-base text-gray-400 font-semibold">
                           {course.description}
                         </p>
                       </div>
@@ -306,7 +308,7 @@ export default function UserCourses() {
                   <p className="text-sm mb-2">
                     {t("deleteCourse.currentProgress")}
                   </p>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+                  <div className="w-full bg-gray-200 rounded-full  h-2.5 mb-1">
                     <div
                       className="bg-green-600 h-2.5 rounded-full"
                       style={{

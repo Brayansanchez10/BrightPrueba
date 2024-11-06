@@ -25,7 +25,6 @@ const Cards = ({ isLeftBarVisible }) => {
       let myChart = echarts.init(chartRef.current);
 
       const updateChart = () => {
-        // Limpiar y reinicializar el gráfico
         myChart.dispose();
         myChart = echarts.init(chartRef.current);
 
@@ -136,10 +135,8 @@ const Cards = ({ isLeftBarVisible }) => {
         myChart.setOption(option);
       };
 
-      // Inicialización inicial
       updateChart();
 
-      // Observer para detectar cambios en el tema
       const observer = new MutationObserver(updateChart);
 
       observer.observe(document.documentElement, {
@@ -163,13 +160,12 @@ const Cards = ({ isLeftBarVisible }) => {
       let myChart = echarts.init(pieChartRef.current);
 
       const updatePieChart = () => {
-        // Limpiar y reinicializar el gráfico
         myChart.dispose();
         myChart = echarts.init(pieChartRef.current);
 
         const htmlElement = document.documentElement;
         const isDarkMode = htmlElement.classList.contains('dark');
-        const legendTextColor = isDarkMode ? '#ffffff' : '#1E1034';
+        const textColor = isDarkMode ? '#ffffff' : '#1E1034';
 
         const coursesByCategory = courses.reduce((acc, course) => {
           if (!acc[course.category]) {
@@ -178,42 +174,58 @@ const Cards = ({ isLeftBarVisible }) => {
           acc[course.category].push(course);
           return acc;
         }, {});
-        const colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99', '#ff9999', '#66b3ff'];
+
+        const generateDistinctColors = (count) => {
+          const hueStep = 360 / count;
+          return Array.from({ length: count }, (_, i) => {
+            const hue = i * hueStep;
+            return `hsl(${hue}, 70%, 50%)`;
+          });
+        };
+
+        const categoryCount = Object.keys(coursesByCategory).length;
+        const colors = generateDistinctColors(categoryCount);
         
         const data = Object.entries(coursesByCategory).map(([category, courses], index) => ({
           value: Math.round(courses.length),
           name: category,
           itemStyle: {
-            color: colors[index % colors.length]
+            color: colors[index]
           }
         }));
+
+        const isResponsive = window.innerWidth < 768;
 
         const option = {
           tooltip: {
             trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
+            formatter: '{b}: {c} ({d}%)'
           },
           legend: {
             orient: 'vertical',
             left: 'left',
             textStyle: {
-              color: legendTextColor
-            }
+              color: textColor
+            },
+            show: !isResponsive
           },
           series: [
             {
               name: t("cardsComponent.StatisticsCoures"),
               type: 'pie',
-              radius: ['40%', '70%'],
+              radius: isResponsive ? ['30%', '70%'] : ['40%', '70%'],
               avoidLabelOverlap: false,
               label: {
-                show: false,
-                position: 'center'
+                show: isResponsive,
+                position: 'inside',
+                formatter: isResponsive ? '{b}\n{c}' : '',
+                fontSize: 12,
+                color: textColor
               },
               emphasis: {
                 label: {
                   show: true,
-                  fontSize: '18',
+                  fontSize: isResponsive ? 14 : 18,
                   fontWeight: 'bold'
                 }
               },
@@ -228,10 +240,8 @@ const Cards = ({ isLeftBarVisible }) => {
         myChart.setOption(option);
       };
 
-      // Inicialización inicial
       updatePieChart();
 
-      // Observer para detectar cambios en el tema
       const observer = new MutationObserver(updatePieChart);
 
       observer.observe(document.documentElement, {
@@ -239,7 +249,10 @@ const Cards = ({ isLeftBarVisible }) => {
         attributeFilter: ['class']
       });
 
-      const handleResize = () => myChart.resize();
+      const handleResize = () => {
+        myChart.resize();
+        updatePieChart();
+      };
       window.addEventListener("resize", handleResize);
 
       return () => {

@@ -1,32 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Modal, Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 import zorroImage from "../../../assets/img/imagen1.png"; 
+import noImg from "../../../assets/img/Imagenvacia.jpg";
 
 const UpdateCategoryModal = ({
   visible,
   onClose,
   onUpdate,
-  form,
-  imagePreview: initialImagePreview, 
+  form, 
 }) => {
   const { t } = useTranslation("global");
-  const [imagePreview, setImagePreview] = useState(null);
-  const [imageFile, setImageFile] = useState(null); 
 
-  useEffect(() => {
-    if (initialImagePreview) {
-      setImagePreview(initialImagePreview); 
-    }
-  }, [initialImagePreview]);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setImageFile(file); 
-      setImagePreview(URL.createObjectURL(file)); 
-    }
-  };
 
   const validateFields = (values) => {
     const errors = {};
@@ -45,11 +30,6 @@ const UpdateCategoryModal = ({
     } else if (values.description.length > 150) {
       errors.description = t('updateCategoryModal.descriptionLong'); 
     }
-
-    if (!imagePreview && !imageFile) {
-      errors.image = t('updateCategoryModal.imageRequired');
-    }
-
     return errors;
   };
 
@@ -62,14 +42,13 @@ const UpdateCategoryModal = ({
       return;
     }
     onUpdate({ 
-      ...values, 
-      image: imageFile ? imageFile : initialImagePreview 
+      ...values
     }); 
   };
 
   return (
     <Modal
-      className="custom-modal w-[544px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden"
+      className="custom-modal w-[544px] h-[495px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden"
       visible={visible}
       closable={false}
       style={{ top: '10%' }}
@@ -92,7 +71,7 @@ const UpdateCategoryModal = ({
       </div>
 
       <Form
-        className="px-5 py-6 pb-8"
+        className="px-5 py-6"
         form={form}
         onFinish={handleSubmit}
         layout="vertical"
@@ -117,27 +96,6 @@ const UpdateCategoryModal = ({
         >
           <Input.TextArea rows={3} maxLength={100} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
-        <div className="mb-4">
-          <label className="block text-lg font-bold text-black mb-2">
-            {t('updateCategoryModal.imagePreview')}
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            className="w-full h-[44px] rounded-xl bg-white shadow-md px-3 py-2"
-            onChange={handleImageChange}
-          />
-          <span className="text-red-500">{imageFile || imagePreview ? '' : t('updateCategoryModal.imageRequired')}</span>
-        </div>
-        {imagePreview && (
-          <div className="flex justify-center mt-2">
-            <img
-              src={imagePreview}
-              alt={t('updateCategoryModal.imagePreview')}
-              className="w-[189.69px] h-[148px] object-contain rounded-lg border border-gray-300"
-            />
-          </div>
-        )}
 
         <div className="flex justify-center space-x-4 mt-6">
           <button
