@@ -54,15 +54,13 @@ export const generatePremiumCertificatePDF = (
   doc.setFontSize(14);
   doc.text(
     `Por completar exitosamente el curso "${courseTitle}". `,
-    11,
+    14,
     17.5,
     { align: "center" }
   );
 
-  doc.text("Gracias por tu dedicación y", 19, 17.5, { align: "center" });
-
   doc.setFontSize(14);
-  doc.text("esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 18.0, {
+  doc.text("Gracias por tu dedicación y esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 18.0, {
     align: "center",
   });
 

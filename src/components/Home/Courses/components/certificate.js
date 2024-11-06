@@ -59,12 +59,13 @@ export const generatePremiumCertificatePDF = (username, courseTitle, zorroImage,
   doc.setFontSize(14);
   doc.text(
     `Por completar exitosamente el curso "${courseTitle}". `,
-    11,
+    14,
     17.5,
     { align: "center" }
   );
-  doc.text("Gracias por tu dedicación y", 19, 17.5, { align: "center" });
-  doc.text("esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 18.0, {
+
+  doc.setFontSize(14);
+  doc.text("Gracias por tu dedicación y esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 18.0, {
     align: "center",
   });
 
@@ -136,12 +137,13 @@ export const generateCertificatePreview = async (username, courseTitle, zorroIma
     doc.setFontSize(14);
     doc.text(
       `Por completar exitosamente el curso "${courseTitle}". `,
-      11,
+      14,
       17.5,
       { align: "center" }
     );
-    doc.text("Gracias por tu dedicación y", 19, 17.5, { align: "center" });
-    doc.text("esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 18.0, {
+  
+    doc.setFontSize(14);
+    doc.text("Gracias por tu dedicación y esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 18.0, {
       align: "center",
     });
 

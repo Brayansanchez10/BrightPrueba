@@ -36,7 +36,16 @@ export default function NavigationBar() {
   const menuRef = useRef(null);
   const [scrollDirection, setScrollDirection] = useState("up");
 
-  const forumActive = localStorage.getItem("forumActive") === "true";
+  const [forumActive, setForumActive] = useState(true); // Activado por defecto
+
+  useEffect(() => {
+      const forumState = localStorage.getItem("forumActive");
+
+      // Si hay un estado guardado en localStorage, lo usamos; de lo contrario, permanece activo
+      if (forumState !== null) {
+          setForumActive(forumState === "true");
+      }
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {

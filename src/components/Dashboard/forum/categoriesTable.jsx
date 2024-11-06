@@ -67,9 +67,11 @@ const DataTablete = () => {
 
     useEffect(() => {
         const forumState = localStorage.getItem("forumActive");
-        setForumActive(forumState === "true");
+    
+        // Si forumState no está en localStorage, establecemos el foro como activado (true)
+        setForumActive(forumState === "true" || forumState === null);
     }, []);
-
+    
     const toggleForumStatus = () => {
         const newStatus = !forumActive;
         setForumActive(newStatus);
