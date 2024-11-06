@@ -115,5 +115,3 @@ export const notifySpecificUser = (courseId, email) => {
 export const deleteCourse = (id) => axios.delete(`/courses/deleteCourse/${id}`);
 
 export const getCoursesByCategory = (categoryName) => axios.get(`/courses/category/${categoryName}`);
-
-export default courseRequest;
