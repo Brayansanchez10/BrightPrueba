@@ -80,7 +80,9 @@
         "AlertPasswordCorro": "The password cannot be an email.",
         "entity_type": "Entity type",
         "select_entity_type": "Select your entity",
-        "entity_required": "Required"
+        "entity_required": "Required",
+        "firstNames_required" : "First name is required",
+        "lastName_required": "Last name is required"
     },
     "reset_password": {
         "invalid_email": "Invalid email",

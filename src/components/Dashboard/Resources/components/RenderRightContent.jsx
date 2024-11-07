@@ -27,6 +27,7 @@ const RenderRightContent = ({
   image2,
   subCategory,
   handleFileChange,
+  onCancel,
 }) => {
   // Función para reiniciar todos los campos del formulario
   const handleCancel = () => {
@@ -38,6 +39,7 @@ const RenderRightContent = ({
     setLink("");
     setQuizzes([]);
     setAttempts(1);
+    onCancel();
   };
 
   // Manejador del envío del formulario

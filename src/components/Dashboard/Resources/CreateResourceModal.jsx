@@ -315,6 +315,7 @@ const CreateResourceModal = ({ isVisible, onCancel, courseId, onCreate, visible 
             image2={image2}
             subCategory={subCategory}
             handleFileChange={handleFileChange}
+            onCancel={onCancel}
           />
         </div>
       </div>

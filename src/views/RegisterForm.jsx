@@ -43,7 +43,8 @@ function RegisterForm() {
       .string()
       .required(t("register.firstNames_required")),
     lastNames: yup
-      .string(),
+      .string()
+      .required(t("register.lastName_required")),
     username: yup
       .string()
       .min(4, t("register.username_min_length"))
