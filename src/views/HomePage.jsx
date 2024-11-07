@@ -414,6 +414,7 @@ export default function HomePage() {
         </AnimatedSection>
 
         <AnimatedSection className="py-10 md:py-16 lg:py-20 mb-10 md:mb-16 lg:mb-8">
+          {/*
           <div className="mx-5 md:mx-10 lg:mx-20">
             <motion.h2
               className="text-center text-3xl md:text-4xl lg:text-5xl font-bungee text-purple-900 dark:text-secondary mb-10"
@@ -440,6 +441,7 @@ export default function HomePage() {
               </div>
             </motion.div>
           </div>
+          */}
         </AnimatedSection>
       </div>
       <Footer />

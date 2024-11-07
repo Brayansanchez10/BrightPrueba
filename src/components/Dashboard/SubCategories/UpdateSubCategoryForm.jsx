@@ -9,7 +9,7 @@ const UpdateSubCategoryForm = ({ isVisible, onCancel, subCategoryData, onUpdate,
     const [description, setDescription] = useState("");
     const { t } = useTranslation("global");
     const [errors, setErrors] = useState({});
-    const MAX_DESCRIPTION_LENGTH = 50;
+    const MAX_DESCRIPTION_LENGTH = 150;
 
     useEffect(() => {
         if (subCategoryData){

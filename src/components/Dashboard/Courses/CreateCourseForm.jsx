@@ -24,6 +24,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
     const { t } = useTranslation("global");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [entityId, setEntityId] = useState(null);
+    const ALLOWED_IMAGE_TYPES = [".jpg", ".jpeg", ".png"];
 
     const MAX_DESCRIPTION_LENGTH = 150;
     const MIN_COURSE_NAME_LENGTH = 3;
@@ -75,15 +76,34 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
+        
         if (file && file.type.startsWith("image/")) {
-            setCourse({ ...course, image: file, imagePreview: URL.createObjectURL(file) });
-            setErrorMessage((prev) => ({ ...prev, image: "" }));
+            const fileExtension = `.${file.name.split(".").pop().toLowerCase()}`;
+            
+            // Verifica si el archivo tiene una extensión permitida
+            if (ALLOWED_IMAGE_TYPES.includes(fileExtension)) {
+                setCourse({ 
+                    ...course, 
+                    image: file, 
+                    imagePreview: URL.createObjectURL(file) 
+                });
+                setErrorMessage((prev) => ({ ...prev, image: "" })); // Limpia el mensaje de error si es válido
+            } else {
+                e.target.value = null; // Restablece el campo de archivo si no es válido
+                setErrorMessage((prev) => ({ 
+                    ...prev, 
+                    image: t("createCourseForm.invalidImageFile") 
+                }));
+            }
         } else {
-            e.target.value = null;
-            setErrorMessage((prev) => ({ ...prev, image: t("createCourseForm.invalidImageFile") }));
+            e.target.value = null; // Restablece el campo de archivo si no es una imagen
+            setErrorMessage((prev) => ({ 
+                ...prev, 
+                image: t("createCourseForm.invalidImageFile") 
+            }));
         }
     };
-
+    
     const validateField = (name, value) => {
         switch (name) {
             case "name":
