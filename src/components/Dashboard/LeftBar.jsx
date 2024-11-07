@@ -1,22 +1,25 @@
+'use client'
+
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom'; // Añade useLocation
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import logo from '../../assets/img/hola.png';
 import { useAuth } from '../../context/auth.context.jsx';
 import { useTranslation } from 'react-i18next';
 import { FaBook, FaDiceD20, FaEdit, FaHome, FaSignOutAlt, FaTags, FaUsers, FaUserCircle, FaBars, FaHeadSideVirus, FaCity } from 'react-icons/fa';
 import { useUserContext } from '../../context/user/user.context.jsx';
+import ThemeToggle from '../themes/ThemeToggle';
 
 const LeftBar = ({ onVisibilityChange }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation(); // Obtén la ruta actual
+  const location = useLocation();
   const { t } = useTranslation("global");
   const { getUserById } = useUserContext();
   const { user } = useAuth();
   const [username, setUsername] = useState("Cargando...");
   const [userImage, setUserImage] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
-  const logoutTimerRef = useRef(null); 
+  const logoutTimerRef = useRef(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -27,7 +30,7 @@ const LeftBar = ({ onVisibilityChange }) => {
           setUserImage(userData.userImage !== "null" ? userData.userImage : null);
         } catch (error) {
           console.error(error);
-          setUserImage(null); 
+          setUserImage(null);
         }
       }
     };
@@ -41,16 +44,16 @@ const LeftBar = ({ onVisibilityChange }) => {
     }
 
     logoutTimerRef.current = setTimeout(() => {
-      handleLogout(); 
+      handleLogout();
     }, 15 * 60 * 1000);
   };
 
   useEffect(() => {
     const handleActivity = () => {
-      resetTimer(); 
+      resetTimer();
     };
 
-    resetTimer(); 
+    resetTimer();
 
     document.addEventListener("mousemove", handleActivity);
     document.addEventListener("keypress", handleActivity);
@@ -59,7 +62,7 @@ const LeftBar = ({ onVisibilityChange }) => {
       document.removeEventListener("mousemove", handleActivity);
       document.removeEventListener("keypress", handleActivity);
       if (logoutTimerRef.current) {
-        clearTimeout(logoutTimerRef.current); 
+        clearTimeout(logoutTimerRef.current);
       }
     };
   }, []);
@@ -70,7 +73,7 @@ const LeftBar = ({ onVisibilityChange }) => {
       localStorage.removeItem("token");
       setTimeout(() => {
         navigate("/");
-      }, 5000); 
+      }, 5000);
     } catch (error) {
       console.error("Error al hacer logout:", error);
     }
@@ -111,7 +114,7 @@ const LeftBar = ({ onVisibilityChange }) => {
       className={`fixed top-0 left-0 h-full overflow-auto bg-[#160a2b] text-white flex flex-col items-center transition-transform duration-300 
         ${isVisible ? "translate-x-0" : "-translate-x-full"} 
         sm:w-72 w-full h-screen z-50 
-        md:rounded-tr-xl md:rounded-br-xl`} 
+        md:rounded-tr-xl md:rounded-br-xl`}
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
     >
@@ -163,7 +166,6 @@ const LeftBar = ({ onVisibilityChange }) => {
         <Link to="/ForumCategories" className={`group flex rounded-xl my-1 py-2 px-4 md:px-6 text-left shadow-lg w-full transition duration-300 ${location.pathname === '/ForumCategories' ? 'shadow-gray-500 bg-white text-purple-700' : 'hover:shadow-gray-500 hover:bg-white hover:text-purple-700'}`}>
           <FaHeadSideVirus size="20px" className={`mr-2 h-5 ${location.pathname === '/ForumCategories' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('leftBarComponent.forum')}
         </Link>
-         {/* Enlace a Entidades solo si el usuario es admin */}
         {user && user.data.role === 'Admin' && (
           <Link to="/Entities" className={`group flex rounded-xl my-1 py-2 px-4 md:px-6 text-left shadow-lg w-full transition duration-300 ${location.pathname === '/Entities' ? 'shadow-gray-500 bg-white text-purple-700' : 'hover:shadow-gray-500 hover:bg-white hover:text-purple-700'}`}>
             <FaCity size="20px" className={`mr-2 h-5 ${location.pathname === '/Entities' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('entities.title')}
@@ -178,6 +180,10 @@ const LeftBar = ({ onVisibilityChange }) => {
       </div>
 
       <div className="mt-auto w-auto sm:w-[90%] font-bungee tracking-wide">
+        <div className="flex items-center justify-center mb-4 sm:hidden">
+          <ThemeToggle />
+          <span className="ml-2 text-white text-lg">{t("navigationBar.theme")}</span>
+        </div>
         <button onClick={handleLogout} className="flex rounded-xl my-4 py-2 px-4 md:px-6 shadow-lg hover:shadow-gray-500 hover:bg-white hover:text-red-600 w-full text-center transition duration-500">
           <FaSignOutAlt size="20px" className="text-red-600 mr-2 h-5 transition duration-300" />{t('leftBarComponent.sign_off')}
         </button>
