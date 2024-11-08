@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "antd";
 import { QuizView } from "./quizView.jsx";
 import { MAX_TITLE_LENGTH, MAX_DESCRIPTION_LENGTH } from "./resourceUtils.js";
+import { AiFillCaretDown  } from "react-icons/ai";
 
 const RenderRightContent = ({
   activeTab,
@@ -159,24 +160,27 @@ const RenderRightContent = ({
               <button
                 type="button"
                 onClick={() => setSelection("file")}
-                className={`flex-1 px-4 py-2 rounded-lg focus:outline-none ${
+                className={`flex items-center justify-center space-x-2 flex-1 px-4 py-2 rounded-lg focus:outline-none ${
                   selection === "file"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "bg-gray-300 text-gray-700 hover:bg-gray-400"
                 }`}
               >
                 {t("CreateResource.UpFile")}
+                <AiFillCaretDown />
               </button>
+
               <button
                 type="button"
                 onClick={() => setSelection("link")}
-                className={`flex-1 px-4 py-2 rounded-lg focus:outline-none ${
+                className={`flex items-center justify-center space-x-2 flex-1 px-4 py-2 rounded-lg focus:outline-none ${
                   selection === "link"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "bg-gray-300 text-gray-700 hover:bg-gray-400"
                 }`}
               >
                 {t("UpdateResource.LinkVideo")}
+                <AiFillCaretDown />
               </button>
             </div>
 
