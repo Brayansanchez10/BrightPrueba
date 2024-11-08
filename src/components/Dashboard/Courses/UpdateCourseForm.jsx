@@ -14,6 +14,8 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
   const { categories } = useCategoryContext();
   const { updateCourse, getCourse } = useCoursesContext();
   const { i18n } = useTranslation();
+  const ALLOWED_IMAGE_TYPES = [".jpg", ".jpeg", ".png"];
+  const { t } = useTranslation("global");
 
   const [course, setCourse] = useState({
     name: "",
@@ -108,12 +110,26 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    validateField("image", file);
-    if (file && file.type.startsWith("image/")) {
-      setCourse({ ...course, image: file });
-      setImagePreview(URL.createObjectURL(file)); // Cambiamos la vista previa si se selecciona una nueva imagen
+    if (!file) return;
+
+    // Extrae la extensión del archivo
+    const fileExtension = `.${file.name.split(".").pop().toLowerCase()}`;
+
+    // Verifica si el archivo es una imagen con un formato permitido
+    if (file.type.startsWith("image/") && ALLOWED_IMAGE_TYPES.includes(fileExtension)) {
+        setCourse({ ...course, image: file });
+        setImagePreview(URL.createObjectURL(file)); // Actualiza la vista previa si se selecciona una nueva imagen
+    } else {
+        Swal.fire({
+            icon: "warning",
+            title: t("UpdateResource.ValidationAlertFile"),
+            text: t("UpdateResource.ValidationAlertFileDescription"),
+            showConfirmButton: false,
+            timer: 2500,
+        });
+        e.target.value = ""; // Restablece el campo de archivo
     }
-  };
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();

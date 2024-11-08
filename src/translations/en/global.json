@@ -80,7 +80,9 @@
         "AlertPasswordCorro": "The password cannot be an email.",
         "entity_type": "Entity type",
         "select_entity_type": "Select your entity",
-        "entity_required": "Required"
+        "entity_required": "Required",
+        "firstNames_required" : "First name is required",
+        "lastName_required": "Last name is required"
     },
     "reset_password": {
         "invalid_email": "Invalid email",
@@ -666,9 +668,9 @@
         "ModalTitle": "Edit Resource",
         "Title": "Title",
         "Description": "Description",
-        "Files": "File",
+        "Files": "Upload File",
         "ActualFile": "Current file:",
-        "LinkVideo": "Video link",
+        "LinkVideo": "Add Video link",
         "AddLink": "Enter a link drive:",
         "Question": "Question",
         "DeleteOption": "Delete",
@@ -698,7 +700,7 @@
         "NoResources": "No resources created.",
         "FormCreate": "Create New Resource",
         "TipeResource": "Resource Type",
-        "UpFile": "Upload File",
+        "UpFile": "Add File",
         "VideoLink": "Video Links",
         "DeleteQuestion": "Delete question",
         "AddQuestion": "Add Question",

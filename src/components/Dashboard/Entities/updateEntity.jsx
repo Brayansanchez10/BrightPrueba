@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, Select, Form, Input } from "antd";
 import { useTranslation } from "react-i18next";
+import zorroImage from "../../../assets/img/imagen1.png"; 
 
 const { Option } = Select;
 
@@ -48,7 +49,7 @@ const UpdateEntityModal = ({ visible, onClose, onUpdate, form }) => {
         >
             <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
                 <img 
-                    src="/src/assets/img/imagen1.png" 
+                    src={zorroImage}
                     alt="Imagen de la cabecera"
                     className="w-[189.69px] h-[148px] object-contain mt-8" 
                 />
