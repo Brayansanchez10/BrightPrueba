@@ -16,7 +16,7 @@ export default function UserCourses() {
   const { t } = useTranslation("global");
   const { user } = useAuth();
   const { getUserCourses } = useUserContext();
-  const { getCourseProgress } = useCourseProgressContext();
+  const { getCourseProgress, deleteCourseProgress } = useCourseProgressContext();
   const { unregisterFromCourse } = useCoursesContext();
   const [userCourses, setUserCourses] = useState([]);
   const [courseProgress, setCourseProgress] = useState({});
@@ -76,10 +76,21 @@ export default function UserCourses() {
   const confirmUnregister = async () => {
     if (courseToDelete && user && user.data && user.data.id) {
       try {
+        // Eliminar el progreso del curso
+        await deleteCourseProgress(user.data.id, courseToDelete.id);
+        // Eliminar el curso del usuario
         await unregisterFromCourse(user.data.id, courseToDelete.id);
+        
         setUserCourses((prevCourses) =>
           prevCourses.filter((course) => course.id !== courseToDelete.id)
         );
+        
+        setCourseProgress((prevProgress) => {
+          const newProgress = { ...prevProgress };
+          delete newProgress[courseToDelete.id];
+          return newProgress;
+        });
+
         setIsDeleteModalOpen(false);
         setCourseToDelete(null);
       } catch (error) {
