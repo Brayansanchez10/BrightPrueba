@@ -2,6 +2,7 @@ import React, { useState, createContext, useContext } from "react";
 import {
   getCourseProgress as getCourseProgressApi,
   updateCourseProgress as updateCourseProgressApi,
+  deleteCourseProgress as deleteCourseProgressApi,
 } from "../../api/courses/progress.request";
 
 // Crear el Context
@@ -57,12 +58,33 @@ export const CourseProgressProvider = ({ children }) => {
     }
   };
 
+  const deleteCourseProgress = async (userId, courseId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await deleteCourseProgressApi(userId, courseId);
+      setCourseProgressData((prevData) => {
+        const newData = { ...prevData };
+        delete newData[courseId];
+        return newData;
+      });
+      return true;
+    } catch (err) {
+      console.error("Error deleting course progress:", err);
+      setError(err);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <CourseProgressContext.Provider
       value={{
         courseProgressData,
         getCourseProgress,
         updateCourseProgress,
+        deleteCourseProgress,
         loading,
         error,
       }}

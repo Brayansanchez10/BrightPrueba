@@ -32,3 +32,16 @@ export const updateCourseProgress = async (userId, courseId, progress) => {
     throw error;
   }
 };
+
+// Función para eliminar el progreso de un curso para un usuario específico
+export const deleteCourseProgress = async (userId, courseId) => {
+  try {
+    const response = await axios.delete(`/progress/deleteProgress/${userId}/${courseId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al eliminar el progreso del curso:", error);
+    throw error;
+  }
+};
