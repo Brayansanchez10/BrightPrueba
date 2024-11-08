@@ -68,24 +68,38 @@ const UpdateResourceForm = ({ isVisible, onCancel, resourceData, onUpdate, cours
     }
   }, [resourceData]);
 
-  // Función que valida el campo de Archivo
+  // Función para manejar el cambio de archivo
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Validar tamaño del archivo (10MB = 10 * 1024 * 1024 bytes)
+    if (file.size > 10 * 1024 * 1024) {
+        Swal.fire({
+            icon: "error",
+            title: t("UpdateResource.ValidationAlertFile"),
+            text: "El archivo excede el límite de 10MB",
+            showConfirmButton: false,
+            timer: 2500,
+        });
+        e.target.value = "";
+        setSelectedFile(null);
+        return;
+    }
+
     const fileExtension = file.name.split(".").pop().toLowerCase();
     if (ALLOWED_FILE_TYPES.includes(`.${fileExtension}`)) {
-      setSelectedFile(file);
+        setSelectedFile(file);
     } else {
-      Swal.fire({
-        icon: "warning",
-        title: t("UpdateResource.ValidationAlertFile"),
-        text: t("UpdateResource.ValidationAlertFileDescription"),
-        showConfirmButton: false,
-        timer: 2500,
-      });
-      e.target.value = "";
-      setSelectedFile(null);
+        Swal.fire({
+            icon: "warning",
+            title: t("UpdateResource.ValidationAlertFile"),
+            text: t("UpdateResource.ValidationAlertFileDescription"),
+            showConfirmButton: false,
+            timer: 2500,
+        });
+        e.target.value = "";
+        setSelectedFile(null);
     }
   };
 
