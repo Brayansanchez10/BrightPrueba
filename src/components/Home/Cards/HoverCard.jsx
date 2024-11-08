@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaHeart } from "react-icons/fa";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdPlayCircleOutline } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 import { getSubCategoryCourseId } from "../../../api/courses/subCategory.requst.js";
 
 export default function Component({ 
@@ -18,6 +19,7 @@ export default function Component({
 }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [subCategories, setSubCategories] = useState([]);
+  const { t } = useTranslation("global");
 
   useEffect(() => {
     const img = new Image();
@@ -118,7 +120,7 @@ export default function Component({
           </div>
           <div className="flex items-center">
             <MdPlayCircleOutline className="mr-1" />
-            <span>{subCategories.length} recursos</span>
+            <span>{subCategories.length} {t('courseComponent.sections')}</span>
           </div>
         </div>
       </div>

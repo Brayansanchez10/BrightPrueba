@@ -261,7 +261,13 @@
         "modalM": "Te has registrado exitosamente",
         "title": "Cursos",
         "favorites": "Tus favoritos",
-        "desFavorites": "Aquí se mostrarán tus cursos favoritos"
+        "desFavorites": "Aquí se mostrarán tus cursos favoritos",
+        "with": "Con",
+        "hours": "horas",
+        "sections": "secciones",
+        "registerM": "INSCRIBETE!",
+        "registering": "Inscribiendo...",
+        "yaregister": "YA REGISTRADO!" 
     },
     "leftBarComponent": {
         "start": "Inicio",
@@ -846,7 +852,8 @@
         "AertError": "Error al eliminar",
         "AlertCreate": "Categoría creada exitosamente",
         "AertErrorCreate": "Error al crear",
-        "modalCreate": "Crear Categoría"
+        "modalCreate": "Crear Categoría",
+        "check_back_later": "No hay foros disponibles en este momento. ¡Pronto habrá nuevos foros disponibles! Vuelve a consultar más tarde."
     },
     "Topic": {
         "topicDelete": "Tema eliminado exitosamente",
