@@ -264,7 +264,14 @@
         "modalM": "You have successfully registered",
          "title": "Courses",
          "favorites": "Your favorites",
-         "desFavorites": "Here will be shown your favorite courses."
+         "desFavorites": "Here will be shown your favorite courses.",
+         "with": "With",
+         "hours": "hours",
+         "sections": "sections",
+         "registerM": "RESGISTER!",
+         "registering": "Registering...",
+         "yaregister": "ALREADY REGISTERED!" 
+
     },
     "leftBarComponent": {
         "start": "Start",
@@ -849,7 +856,8 @@
         "AertError": "Error when deleting",
         "AlertCreate": "Category successfully created",
         "AertErrorCreate": "Error creating",
-        "modalCreate": "Create Category"
+        "modalCreate": "Create Category",
+        "check_back_later": "There are no forums available at this time. New forums will be available soon! Please check back later."
     },
     "Topic": {
         "topicDelete": "Topic successfully deleted",

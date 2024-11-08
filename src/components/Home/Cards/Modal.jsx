@@ -57,7 +57,7 @@ const Modal = ({
                     {course.title}
                   </h2>
                   <p className="text-[#939599] text-[11px]">
-                    Con <strong>{creator ? creator.username : "Cargando..."}</strong>
+                    {t('courseComponent.with')} <strong>{creator ? creator.username : "Cargando..."}</strong>
                   </p>
                 </div>
               </div>
@@ -76,11 +76,11 @@ const Modal = ({
                 <div className="flex flex-col text-[#939599] dark:text-primary text-[12px]">
                   <div className="flex items-center mt-1">
                     <AiOutlineClockCircle className="mr-1" />
-                    <span>{course.duracion} horas</span>
+                    <span>{course.duracion} {t('courseComponent.hours')}</span>
                   </div>
                   <div className="flex items-center mt-1">
                     <MdPlayCircleOutline className="mr-1" />
-                    <span>{subCategories ? subCategories.length : 0} recursos</span>
+                    <span>{subCategories ? subCategories.length : 0} {t('courseComponent.sections')}</span>
                   </div>
                   <div className="flex items-center mt-1">
                     <FaRegChartBar className="mr-1" />
@@ -99,10 +99,10 @@ const Modal = ({
                   whileTap={{ scale: 0.95 }}
                 >
                   {isLoading
-                    ? "Inscribiendo..."
+                    ? t('courseComponent.registering')
                     : isRegistered
-                    ? "YA REGISTRADO!"
-                    : "INSCRÍBETE!"}
+                    ? t('courseComponent.yaregister')
+                    : t('courseComponent.registerM')}
                 </motion.button>
               </div>
               {error && <p className="text-red-500 text-sm mt-2">{error}</p>}

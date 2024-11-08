@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { BsFillReplyFill, BsBookmarkFill, BsBookmark } from "react-icons/bs";
+import { BsFillReplyFill } from "react-icons/bs";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Button, Modal, Tooltip } from "antd";
+import { FaBookmark } from "react-icons/fa";
+import { Button, Modal } from "antd";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/auth.context.jsx";
 import NavigationBar from "../NavigationBar.jsx";
@@ -23,8 +23,6 @@ import Logo from "../../../assets/img/hola.png";
 import "../Resources/resourceView.css";
 import { deleteAnswer } from "../../../api/forum/answers.request.js";
 import { deleteForumComments } from "../../../api/forum/forumComments.request.js";
-
-const MotionButton = motion(Button);
 
 export default function TopicViewComponente() {
   const { t } = useTranslation("global");
@@ -185,267 +183,206 @@ export default function TopicViewComponente() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex flex-col min-h-screen bg-primary">
       <NavigationBar />
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex-grow mt-16"
-      >
-        <section className="w-full bg-[#783CDA] py-8 px-4 md:px-6 lg:px-8">
-          <div className="max-w-screen-2xl mx-auto">
-            <h1 className="text-3xl md:text-4xl font-bungee text-white mb-4">
-              {topic.title}
-            </h1>
-            <p className="text-lg text-gray-200">{topic.Content}</p>
-            <MotionButton
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="mt-6 bg-white text-[#783CDA] font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-gray-100 transition duration-300 ease-in-out"
-              onClick={handleCreateFormComments}
+      <div className="py-16 px-4 md:px-6 lg:px-8 flex flex-col md:flex-row">
+        <div className="flex-grow mb-8 md:mb-0 md:mr-8 bg-secondary rounded-lg shadow-md w-full md:w-2/3 overflow-y-auto custom-scrollbar-x" style={{ maxHeight: "calc(100vh - 4rem)" }}>
+          <div className="p-6">
+            <div className="border-b pb-4 mb-4">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-primary">
+                {topic.title}
+              </h1>
+              <p className="text-sm md:text-base text-gray-600 dark:text-primary">{topic.Content}</p>
+            </div>
+            <Button
+              className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-blue-700 transition w-full md:w-auto"
+              onClick={() => handleCreateFormComments()}
             >
               {t("topicView.topicComment")}
-            </MotionButton>
-          </div>
-        </section>
+            </Button>
 
-        <div className="px-4 md:px-6 lg:px-8 py-8">
-          <div className="max-w-screen-2xl mx-auto">
-            <div className="flex flex-col lg:flex-row gap-8">
-              <motion.div 
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="lg:w-2/3"
-              >
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 font-bungee">
-                  {t("topicView.comments")}
-                </h2>
-                <div className="space-y-6">
-                  <AnimatePresence>
-                    {Array.isArray(comments) && comments.length > 0 ? (
-                      comments.map((comment, index) => {
-                        const isLiked = likes.some((like) => like.commentsId === comment.id);
-                        const isBookmarked = bookmark.some((fav) => fav.commentId === comment.id);
+            <h2 className="text-xl font-semibold mt-6 mb-4 dark:text-primary">
+              {t("topicView.comments")}
+            </h2>
+            <div className="comments-section space-y-4">
+              {Array.isArray(comments) && comments.length > 0 ? (
+                comments.map((comment) => {
+                  const isLiked = likes.some(
+                    (like) => like.commentsId === comment.id
+                  );
+                  const isBookmarked = bookmark.some(
+                    (fav) => fav.commentId === comment.id
+                  );
 
-                        return (
-                          <motion.div
-                            key={comment.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ delay: index * 0.1, duration: 0.3 }}
-                            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
-                          >
-                            <div className="p-6">
-                              <p className="text-gray-800 dark:text-gray-200 text-lg mb-4">{comment.content}</p>
-                              <div className="flex items-center justify-between flex-wrap gap-4">
-                                <div className="flex items-center space-x-4">
-                                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                                    {t("Creador")}: {comment.user.username}
-                                  </span>
-                                  <div className="flex space-x-2">
-                                    <Tooltip title="Responder">
-                                      <MotionButton
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        className="text-[#783CDA] hover:text-[#6A35C2] dark:text-[#9B6AFF] dark:hover:text-[#B388FF]"
-                                        onClick={() => handleCreateFormAnswers(comment.id)}
-                                        icon={<BsFillReplyFill size={20} />}
-                                      />
-                                    </Tooltip>
-                                    <Tooltip title={isLiked ? "Quitar Me gusta" : "Me gusta"}>
-                                      <MotionButton
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        className={`${isLiked ? 'text-red-500' : 'text-gray-400'} hover:text-red-600`}
-                                        onClick={() => handleLikeToggle(comment.id)}
-                                        disabled={likesLoading}
-                                        icon={isLiked ? <AiFillHeart size={20} /> : <AiOutlineHeart size={20} />}
-                                      />
-                                    </Tooltip>
-                                    <Tooltip title={isBookmarked ? "Quitar marcador" : "Marcar"}>
-                                      <MotionButton
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        className={`${isBookmarked ? 'text-yellow-500' : 'text-gray-400'} hover:text-yellow-600`}
-                                        onClick={() => handleBookmarkToggle(comment.id)}
-                                        disabled={bookmarkLoading}
-                                        icon={isBookmarked ? <BsBookmarkFill size={20} /> : <BsBookmark size={20} />}
-                                      />
-                                    </Tooltip>
-                                  </div>
-                                </div>
-                                {user && user.data && user.data.id === comment.userId && (
-                                  <div className="flex space-x-2">
-                                    <Tooltip title="Editar">
-                                      <MotionButton
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
-                                        onClick={() => openEditCommentsModal(comment)}
-                                        icon={<EditOutlined size={20} />}
-                                      />
-                                    </Tooltip>
-                                    <Tooltip title="Eliminar">
-                                      <MotionButton
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200"
-                                        onClick={() => handleDeleteComment(comment.id)}
-                                        icon={<DeleteOutlined size={20} />}
-                                      />
-                                    </Tooltip>
+                  return (
+                    <div
+                      key={comment.id}
+                      className="p-4 bg-white dark:bg-primary border border-gray-300 dark:border-[#1E1034] rounded-lg shadow hover:shadow-lg transition mb-4"
+                    >
+                      <p className="text-sm md:text-base text-gray-800 dark:text-primary">{comment.content}</p>
+                      <small className="text-xs md:text-sm text-gray-400 block mt-1">
+                        {t("Creador")}: {comment.user.username}
+                      </small>
+
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <Button
+                          className="bg-secondary text-blue-500 dark:text-primary dark:border-[#1E1034] hover:bg-blue-100 transition-colors duration-200 p-1 md:p-2"
+                          onClick={() => handleCreateFormAnswers(comment.id)}
+                          icon={<BsFillReplyFill />}
+                        />
+                        <Button
+                          onClick={() => handleLikeToggle(comment.id)}
+                          className="bg-secondary text-red-500 dark:text-primary dark:border-[#1E1034] hover:bg-red-100 transition-colors duration-200 p-1 md:p-2"
+                          icon={
+                            isLiked ? (
+                              <AiFillHeart className="text-red-500" />
+                            ) : (
+                              <AiOutlineHeart />
+                            )
+                          }
+                          disabled={likesLoading}
+                        />
+                        <Button
+                          onClick={() => handleBookmarkToggle(comment.id)}
+                          className="bg-secondary text-yellow-500 dark:text-primary dark:border-[#1E1034] hover:bg-yellow-100 transition-colors duration-200 p-1 md:p-2"
+                          icon={
+                            <FaBookmark
+                              color={isBookmarked ? "orange" : "gray"}
+                            />
+                          }
+                          disabled={bookmarkLoading}
+                        />
+
+                        {user &&
+                          user.data &&
+                          user.data.id === comment.userId && (
+                            <>
+                              <Button
+                                onClick={() => openEditCommentsModal(comment)}
+                                className="bg-secondary text-blue-600 dark:text-primary dark:border-[#1E1034] hover:bg-blue-100 transition-colors duration-200 p-1 md:p-2"
+                                icon={<EditOutlined />}
+                              />
+                              <Button
+                                onClick={() => handleDeleteComment(comment.id)}
+                                className="bg-secondary text-red-600 dark:text-primary dark:border-[#1E1034] hover:bg-red-100 transition-colors duration-200 p-1 md:p-2"
+                                icon={<DeleteOutlined />}
+                              />
+                            </>
+                          )}
+                      </div>
+
+                      {answersByComment[comment.id] &&
+                      answersByComment[comment.id].length > 0 ? (
+                        <div className="answers-section mt-4 ml-2 md:ml-4 space-y-2">
+                          {answersByComment[comment.id].map((answer) => (
+                            <div
+                              key={answer.id}
+                              className="p-2 bg-gray-100 dark:bg-secondary border-l-4 border-purple-700 rounded-lg shadow mt-2"
+                            >
+                              <p className="text-sm md:text-base text-primary">{answer.content}</p>
+                              <small className="text-xs md:text-sm text-gray-400">
+                                {t("Creador")}: {answer.user.username}
+                              </small>
+
+                              {user &&
+                                user.data &&
+                                user.data.id === answer.userId && (
+                                  <div className="mt-2 space-x-2">
+                                    <Button
+                                      onClick={() => openEditAnswersModal(answer)}
+                                      className="dark:bg-primary text-blue-600 dark:text-primary dark:border-none p-1 md:p-2"
+                                      icon={<EditOutlined />}
+                                    />
+                                    <Button
+                                      onClick={() => handleDeleteAnswer(answer.id)}
+                                      className="dark:bg-primary text-red-600 dark:text-primary dark:border-none p-1 md:p-2"
+                                      icon={<DeleteOutlined />}
+                                    />
                                   </div>
                                 )}
-                              </div>
                             </div>
-
-                            {answersByComment[comment.id] && answersByComment[comment.id].length > 0 && (
-                              <div className="bg-gray-100 dark:bg-gray-700 p-4">
-                                <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-white">Respuestas</h3>
-                                <div className="space-y-4">
-                                  {answersByComment[comment.id].map((answer) => (
-                                    <motion.div
-                                      key={answer.id}
-                                      initial={{ opacity: 0, x: -20 }}
-                                      animate={{ opacity: 1, x: 0 }}
-                                      exit={{ opacity: 0, x: 20 }}
-                                      transition={{ duration: 0.3 }}
-                                      className="bg-white dark:bg-gray-600 p-4 rounded-lg shadow"
-                                    >
-                                      <p className="text-gray-800 dark:text-gray-200 mb-2">{answer.content}</p>
-                                      <div className="flex justify-between items-center">
-                                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                                          {t("Creador")}: {answer.user.username}
-                                        </span>
-                                        {user && user.data && user.data.id === answer.userId && (
-                                          <div className="flex space-x-2">
-                                            <Tooltip title="Editar respuesta">
-                                              <MotionButton
-                                                whileHover={{ scale: 1.1 }}
-                                                whileTap={{ scale: 0.9 }}
-                                                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
-                                                onClick={() => openEditAnswersModal(answer)}
-                                                icon={<EditOutlined size={16} />}
-                                              />
-                                            </Tooltip>
-                                            <Tooltip title="Eliminar respuesta">
-                                              <MotionButton
-                                                whileHover={{ scale: 1.1 }}
-                                                whileTap={{ scale: 0.9 }}
-                                                className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200"
-                                                onClick={() => handleDeleteAnswer(answer.id)}
-                                                icon={<DeleteOutlined size={16} />}
-                                              />
-                                            </Tooltip>
-                                          </div>
-                                        )}
-                                      </div>
-                                    </motion.div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </motion.div>
-                        );
-                      })
-                    ) : (
-                      <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="text-center text-gray-500 dark:text-gray-400 text-lg italic"
-                      >
-                        {t("noComments")}
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-
-              <motion.div 
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
-                className="lg:w-1/3 space-y-8"
-              >
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-                  <div className="p-6">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 font-bungee">Comentarios marcados</h2>
-                    <div className="space-y-4 max-h-[360px] overflow-y-auto custom-scrollbar-x">
-                      {bookmark.length > 0 ? (
-                        bookmark.map((fav) => {
-                          const comment = comments.find((c) => c.id === fav.commentId);
-                          return comment ? (
-                            <motion.div
-                              key={comment.id}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.3 }}
-                              className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg"
-                            >
-                              <p className="text-gray-800 dark:text-gray-200 text-sm">{comment.content}</p>
-                              <small className="text-gray-500 dark:text-gray-400 block mt-2">
-                                {t("Creador")}: {comment.user.username}
-                              </small>
-                            </motion.div>
-                          ) : null;
-                        })
-                      ) : (
-                        <div className="text-center">
-                          <img className="h-24 w-24 mx-auto mb-4" src={Logo} alt="Logo" />
-                          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
-                            No tienes comentarios marcados
-                          </h3>
-                          <p className="text-gray-600 dark:text-gray-300 text-sm">
-                            Marca comentarios de tu interés
-                          </p>
+                          ))}
                         </div>
+                      ) : (
+                        <p className="text-sm md:text-base text-gray-500 dark:text-primary mt-2">{t("No respuestas")}</p>
                       )}
                     </div>
-                  </div>
-                </div>
-
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-                  <div className="p-6">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 font-bungee">Foros favoritos</h2>
-                    <div className="space-y-4 max-h-[360px] overflow-y-auto custom-scrollbar-x">
-                      {topics.length > 0 ? (
-                        topics.map((topic) => (
-                          <motion.div
-                            key={topic.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300"
-                            onClick={() => handleTopicClick(topic.id)}
-                          >
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">{topic.title}</h3>
-                            <p className="text-gray-600 dark:text-gray-300 text-sm">{topic.Content}</p>
-                          </motion.div>
-                        ))
-                      ) : (
-                        <div className="text-center">
-                          <img className="h-24 w-24 mx-auto mb-4" src={Logo} alt="Logo" />
-                          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
-                            No tienes foros favoritos
-                          </h3>
-                          <p className="text-gray-600 dark:text-gray-300 text-sm">
-                            Agrega foros a tus favoritos
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+                  );
+                })
+              ) : (
+                <p className="text-sm md:text-base text-gray-500 dark:text-primary">{t("noComments")}</p>
+              )}
             </div>
           </div>
         </div>
-      </motion.div>
+
+        <div className="w-full md:w-1/3 bg-secondary rounded-lg shadow-md overflow-hidden">
+          <div className="dark:bg-primary p-4 rounded-md shadow-md overflow-y-auto custom-scrollbar-x" style={{ height: "360px", minHeight: "360px" }}>
+            <h2 className="text-lg md:text-xl text-primary font-semibold mb-4">Comentarios marcados</h2>
+            {bookmark.length > 0 ? <div className="space-y-2">
+                {bookmark.map((fav) => {
+                  const comment = comments.find((c) => c.id === fav.commentId);
+                  return comment ? (
+                    <div
+                      key={comment.id}
+                      className="p-2 bg-gray-100 dark:bg-secondary border-l-4 border-purple-700 rounded-lg shadow mt-2"
+                    >
+                      <p className="text-sm md:text-base text-primary">{comment.content}</p>
+                      <small className="text-xs md:text-sm text-gray-400">
+                        {t("Creador")}: {comment.user.username}
+                      </small>
+                    </div>
+                  ) : null;
+                })}
+              </div>
+              :
+              <div className="pb-3">
+                <div className="dark:bg-primary p-3 rounded-lg">
+                  <img className="h-20 md:h-28 mb-4 mx-auto" src={Logo} alt="Logo" />
+                  <h2 className="text-xl md:text-2xl font-bold mb-4 text-center text-gray-800 dark:text-primary">
+                    No tienes ningun comentario marcado
+                  </h2>
+                  <p className="text-center text-gray-600 dark:text-primary text-xs sm:text-sm md:text-base lg:text-lg">
+                    Marca comentarios de tu interes
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+
+          <div className="dark:bg-primary p-4 rounded-md shadow-md overflow-y-auto custom-scrollbar-x" style={{ height: "360px", minHeight: "360px" }}>
+            <h2 className="text-lg md:text-xl text-primary font-semibold mb-4">Foros favoritos</h2>
+
+            {topics.length > 0 ? (
+              <div className="space-y-2">
+                {topics.map((topic) => (
+                  <div
+                    key={topic.id}
+                    className="p-2 bg-gray-100 dark:bg-secondary border-l-4 border-purple-700 rounded-lg shadow mt-2 cursor-pointer"
+                    onClick={() => handleTopicClick(topic.id)}
+                  >
+                    <p className="text-sm md:text-base text-primary">{topic.title}</p>
+                    <small className="text-xs md:text-sm text-gray-400 dark:text-gray-300">
+                      {topic.Content}
+                    </small>{" "}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="dark:bg-primary p-4 rounded-lg">
+                <img className="h-20 md:h-28 mb-4 mx-auto" src={Logo} alt="Logo" />
+                <h2 className="text-xl md:text-2xl font-bold mb-4 text-center text-gray-800 dark:text-primary">
+                  No tienes foros favoritos establecidos
+                </h2>
+                <p className="text-center text-gray-600 dark:text-primary text-xs sm:text-sm md:text-base lg:text-lg">
+                  Mira tus foros favoritos
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       <Footer />
 
