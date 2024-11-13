@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useRoleContext } from "../../../context/user/role.context";
-import { Modal } from "antd";
+import { Modal, Input } from "antd";
 import Swal from "sweetalert2";
 import zorroImage from "../../../assets/img/Zorro.png";
 import { useTranslation } from "react-i18next";
@@ -9,33 +9,73 @@ import { getRole } from "../../../api/user/role.request.js";
 const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => {
   const { t } = useTranslation("global");
   const [role, setRole] = useState({ nombre: "" });
+  const [confirmationInput, setConfirmationInput] = useState("");
+  const [isConfirmDisabled, setIsConfirmDisabled] = useState(true);
   const { createRole, rolesData, getAllRoles } = useRoleContext();
+  const [roles, setRoles] = useState({});
+
+  const fetchRol = async () => {
+    setLoading(true);
+    try {
+        const response = await getRole(roleId);
+        setEntity(response.data);
+        console.log("Rol traido: ", response);
+    } catch (error) {
+        console.error("Error al obtener todas el rol", error);
+    } finally {
+        setLoading(false);
+    }
+};
 
   useEffect(() => {
     if (isVisible) {
       fetchRoles();
+      fetchRol();
     } else {
-      setRole([]); // Limpiar los recursos al cerrar la modal
+      setRole({ nombre: "" });
+      setRoles([]);
+      setConfirmationInput("");
     }
   }, [isVisible]);
 
+  useEffect(() => {
+    setIsConfirmDisabled(confirmationInput !== role.nombre);
+  }, [confirmationInput, role]);
+
   const fetchRoles = async () => {
     try {
-      const response = await getRole(roleId);
-      setRole(response.data);
+      const response = await getAllRoles();
+      const roleData = response.data.find(r => r.id === roleId);
+      setRole(roleData || { nombre: "" });
     } catch (err) {
       console.error("Error al obtener todas los roles:", err);
-      toast.error("Error al obtener todas los roles");
+      Swal.fire({
+        icon: "error",
+        title: t("roles.errorFetchingRoles"),
+        text: t("roles.errorFetchingRolesMessage"),
+        timer: 3000,
+        showConfirmButton: true,
+      });
     }
   };
 
-
   const confirmDeleteRole = async () => {
+    if (confirmationInput !== role.nombre) {
+      Swal.fire({
+        icon: "error",
+        title: t("roles.nameMatchError"),
+        text: t("roles.nameMatchErrorMessage"),
+        timer: 3000,
+        showConfirmButton: true,
+      });
+      return;
+    }
+
     try {
       await deleteRole(roleId);
       Swal.fire({
         icon: "success",
-        title: "Rol eliminado exitosamente",
+        title: t("roles.deleteSuccess"),
         timer: 2000,
         showConfirmButton: false,
       }).then(() => {
@@ -45,8 +85,8 @@ const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => 
     } catch (error) {
       Swal.fire({
         icon: "error",
-        title: "Error al eliminar el rol",
-        text: error.message || "An error occurred while deleting the role.",
+        title: t("roles.deleteError"),
+        text: error.message || t("roles.genericError"),
         timer: 3000,
         showConfirmButton: true,
       });
@@ -79,19 +119,35 @@ const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => 
         </button>
       </div>
       <div className="p-5 text-center">
-        <h1 className="text-2xl font-extrabold text-[#D84545] mt-5 mb-4">
+        <h1 className="text-2xl font-extrabold text-[#D84545] mt-5 mb- font-bungee">
           {t("roles.confirmDeleteRole")}
         </h1>
         <p className="text-lg font-semibold mb-3">
-          {t("roles.deleteConfirmation")} {role.nombre}
+          {t("roles.deleteConfirmation")} {role.nombre}?
         </p>
         <p className="text-sm font-extrabold text-red-500 mb-6">
           <b>{t("roles.deleteCannot")}</b>
         </p>
+        <div className="mb-4">
+          <p className="text-sm font-semibold mb-2">
+            {t("roles.confirmR")}
+          </p>
+          <Input
+            placeholder={t('deleteCourse.camp')}
+            value={confirmationInput}
+            onChange={(e) => setConfirmationInput(e.target.value)}
+            className="w-full max-w-md mx-auto"
+          />
+        </div>
         <div className="flex justify-center space-x-4">
           <button
-            className="bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#ff2f22] transition-all duration-300"
+            className={`bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md transition-all duration-300 ${
+              isConfirmDisabled
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:bg-[#ff2f22]'
+            }`}
             onClick={confirmDeleteRole}
+            disabled={isConfirmDisabled}
           >
             {t("roles.confirm")}
           </button>
