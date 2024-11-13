@@ -411,10 +411,11 @@
         "next": "Next",
         "previous": "Previous",
         "confirmDeleteRole": "Delete Role",
-        "deleteConfirmation": "Are you sure you want to delete this role?",
+        "deleteConfirmation": "Are you sure you want to delete the role",
         "deleteCannot": "This action cannot be undone.",
         "SearchRoles": "Search by roles",
-        "close":"Close"
+        "close":"Close",
+        "confirmR": "Escribe el nombre del rol en el campo para eliminar correctamente el rol."
     },
     "createRoleForm": {
         "title": "Create Role",
@@ -471,7 +472,9 @@
         "irreversibleMessage": "This action cannot be undone.",
         "confirmButton": "Delete",
         "loseProgressMessage": "You will lose your course progress",
-        "currentProgress": "Current progress:"
+        "currentProgress": "Current progress:",
+        "confirm": "Type the course name in the field to successfully delete the course.",
+        "camp": "Write the name to delete correctly"
     },
     "deleteConfirmation": {
         "confirmDeletion": "Confirm Deletion",
@@ -607,7 +610,8 @@
         "confirmMessage": "Do you want to delete this category with all its courses?",
         "warningMessage": "This action cannot be undone.",
         "confirmButton": "Yes",
-        "onlyButton": "Just the category"
+        "onlyButton": "Just the category",
+        "messageD": "Type the name of the forum in the field to successfully delete the forum."
     },
     "detailsCategoryModal": {
         "title": "Details",
@@ -991,10 +995,11 @@
         },
         "deleteEntity": {
             "confirmDeletion": "Delete entity",
-            "confirmMessage": "Do you want to delete this entity?",
+            "confirmMessage": "Do you want to delete the entity",
             "warningMessage": "This action cannot be undone.",
             "confirmButton": "Yes",
-            "cancelButton": "Cancel"
+            "cancelButton": "Cancel",
+            "confirm": "Escribe el nombre de la entidad en el campo para eliminar correctamente la entidad"
         },
         "detailsEntityModal": {
             "title": "Entity Details",
@@ -1021,7 +1026,7 @@
             "updateTitle": "Update forum",
             "detailsTitle": "Forum details",
             "deleteTitle": "Delete forum",
-            "deleteMessage": "Are you sure you want to delete this forum?",
+            "deleteMessage": "Are you sure you want to delete the forum",
             "notify": "Forum created successfully"
         },
 

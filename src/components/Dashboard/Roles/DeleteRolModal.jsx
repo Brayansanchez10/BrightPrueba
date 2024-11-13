@@ -4,6 +4,7 @@ import { Modal } from "antd";
 import Swal from "sweetalert2";
 import zorroImage from "../../../assets/img/Zorro.png";
 import { useTranslation } from "react-i18next";
+import { getRole } from "../../../api/user/role.request.js";
 
 const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => {
   const { t } = useTranslation("global");
@@ -20,7 +21,7 @@ const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => 
 
   const fetchRoles = async () => {
     try {
-      const response = await getAllRoles();
+      const response = await getRole(roleId);
       setRole(response.data);
     } catch (err) {
       console.error("Error al obtener todas los roles:", err);
@@ -82,7 +83,7 @@ const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => 
           {t("roles.confirmDeleteRole")}
         </h1>
         <p className="text-lg font-semibold mb-3">
-          {t("roles.deleteConfirmation")}
+          {t("roles.deleteConfirmation")} {role.nombre}
         </p>
         <p className="text-sm font-extrabold text-red-500 mb-6">
           <b>{t("roles.deleteCannot")}</b>

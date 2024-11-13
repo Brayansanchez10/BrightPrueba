@@ -449,7 +449,7 @@ const DataTablete = () => {
                         visible={showDeleteModal}
                         onClose={() => setShowDeleteModal(false)}
                         category={selectedCategory}
-                        deleteForumCategory = {deleteForumCategory}
+                        deleteForumCategory={deleteForumCategory}
                     />
                 </div>
             </div>

@@ -405,7 +405,8 @@
         "next": "Siguiente",
         "previous": "Anterior",
         "confirmDeleteRole": "Eliminar Rol",
-        "deleteConfirmation": "¿Estás seguro de que deseas eliminar este rol?",
+        "confirmR": "Escribe el nombre del rol en el campo para eliminar correctamente el rol.",
+        "deleteConfirmation": "¿Está seguro de que desea eliminar el rol",
         "deleteCannot": "Esta acción no se puede deshacer.",
         "SearchRoles": "Buscar por roles",
         "close":"Cerrar"
@@ -465,7 +466,9 @@
         "irreversibleMessage": "Esta acción no se podrá revertir.",
         "confirmButton": "Eliminar",
         "loseProgressMessage": "Perderas el progreso del curso",
-        "currentProgress": "Progreso actual:"
+        "currentProgress": "Progreso actual:",
+        "confirm": "Escribe el nombre del curso en el campo para eliminar correctamente el curso",
+        "camp": "Escribe el nombre para eliminar correctamente"
     },
     "deleteConfirmation": {
         "confirmDeletion": "Confirmar Eliminación",
@@ -601,7 +604,8 @@
         "confirmMessage": "¿Quieres eliminar esta categoría con todos sus cursos?",
         "warningMessage": "Esta acción no se puede deshacer.",
         "confirmButton": "Si",
-        "onlyButton": "Solo la categoría"
+        "onlyButton": "Solo la categoría",
+        "messageD": "Escribe el nombre del foro en el campo para eliminar correctamente el foro"
     },
     "detailsCategoryModal": {
         "title": "Detalles",
@@ -979,10 +983,11 @@
     },
     "deleteEntity": {
         "confirmDeletion": "Eliminar entidad",
-        "confirmMessage": "¿Quieres eliminar esta entidad?",
+        "confirmMessage": "¿Quieres eliminar la entidad",
         "warningMessage": "Esta acción no se puede deshacer.",
         "confirmButton": "Sí",
-        "cancelButton": "Cancelar"
+        "cancelButton": "Cancelar",
+        "confirm": "Escribe el nombre de la entidad en el campo para eliminar correctamente la entidad"
     },
     "detailsEntityModal": {
         "title": "Detalles de la entidad",
@@ -1009,7 +1014,7 @@
         "updateTitle": "Actualizar foro",
         "detailsTitle": "Detalles del foro",
         "deleteTitle": "Eliminar foro",
-        "deleteMessage": "¿Estás seguro de que quieres eliminar este foro?",
+        "deleteMessage": "¿Estás seguro de que quieres eliminar el foro",
         "notify": "Foro creado exitosamente"
     },
 
