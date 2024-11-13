@@ -1070,7 +1070,14 @@
         "open": "Open",
         "title": "Title",
         "image_alt": "Forum image",
-        "create_forum": "CREATE FORUM"
+        "create_forum": "CREATE FORUM",
+        "commentM": "Flagged comments",
+        "messageC": "You don't have any comments marked",
+        "messageC2": "Mark comments to quickly view them here.",
+        "noComments": "There are no comments yet, create a comment to start interacting",
+        "favoriteF": "Favorite forums",
+        "messageF": "You do not have established favorite forums",
+        "messageF2": "Bookmark forums to view them here."
     },
 
     "categoriesTable": {

@@ -149,6 +149,7 @@ export default function ViewProfile() {
     arrows: false,
     beforeChange: (_, newIndex) => setCurrentSlide(newIndex + 1),
     swipeToSlide: true,
+    variableWidth: false,
   };
 
   const completedSliderSettings = {
@@ -165,18 +166,16 @@ export default function ViewProfile() {
   const maxCompletedSlide = Math.ceil(completedCourses.length / sliderSettings.slidesToShow);
 
   const renderCourseCards = (courseList, sliderRef, currentSlide, maxSlide, handlePrev, handleNext) => (
-    <div className="relative">
-      <Slider ref={sliderRef} {...sliderSettings}>
+    <div className="relative overflow-hidden">
+      <Slider ref={sliderRef} {...sliderSettings} className="mx-[-8px] !flex justify-start">
         {courseList.map((course) => (
           <div key={course.id} className="px-2">
             <div
               className="cursor-pointer rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 mb-4"
               onClick={() => handleCardClick(course)}
               style={{
-                width: "250px",
+                width: "100%",
                 height: "220px",
-                marginRight: "20px",
-                marginTop: "10px",
               }}
             >
               <div
@@ -339,7 +338,7 @@ export default function ViewProfile() {
               <p className="text-lg text-gray-600 text-center">{t('viewProfile.completeM')}</p>
             }
           </div>
-        </motion.div>
+        </motion.div>zº
       </motion.div>
       <div className="pt-12">
         <Footer />
