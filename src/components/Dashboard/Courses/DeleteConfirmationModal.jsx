@@ -56,10 +56,10 @@ const DeleteConfirmationModal = ({ visible, onClose, onConfirm, courseName }) =>
 
         <div className="mb-4">
           <p className="text-sm font-semibold mb-2">
-            Escribe el nombre del curso en el campo para eliminar correctamente el curso
+            {t("deleteCourse.confirm")}
           </p>
           <Input
-            placeholder={t('Escribe el nombre del curso')}
+            placeholder={t('deleteCourse.camp')}
             value={confirmationInput}
             onChange={(e) => setConfirmationInput(e.target.value)}
             className="w-full max-w-md mx-auto"

@@ -1,8 +1,10 @@
 import axios from "../axios";
 
-// Función para obtnr todos las categorias
-
+// Función para obtener todas las categorias
 export const getAllForumCategories = () => axios.get('/forumCategory/getAll');
+
+// Función para obtener una categoría por ID
+export const getForumCategoryById = (id) => axios.get(`/forumCategory/${id}`);
 
 // Función para crear un Forum Categories
 export const createForumCategories = async (categoriesData) => {
@@ -13,7 +15,6 @@ export const createForumCategories = async (categoriesData) => {
         formData.append('entityId', Number(categoriesData.entityId));
         formData.append('icons', categoriesData.icons);
 
-        // Realizar la solicitud POST
         return axios.post('/forumCategory/create', formData, {
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +34,6 @@ export const updateForumCategories = async (id, categoriesData) => {
         formData.append('description', categoriesData.description);
         formData.append('icons', categoriesData.icons);
 
-        //Realizar solicitud PUT
         return axios.put(`/forumCategory/update/${id}`, formData, {
             headers: {
                 'Content-Type': 'application/json',
@@ -47,4 +47,3 @@ export const updateForumCategories = async (id, categoriesData) => {
 
 // Función para eliminar 
 export const deleteForumCategory = (id) => axios.delete(`/forumCategory/delete/${id}`);
-
