@@ -1058,7 +1058,14 @@
         "open": "Abierto",
         "title": "Titulo",
         "image_alt": "Imagen del foro",
-        "create_forum": "CREAR FORO"
+        "create_forum": "CREAR FORO",
+        "commentM": "Comentarios marcados",
+        "messageC": "No tienes ningún comentario marcado",
+        "messageC2": "Marca comentarios para visualizarlos rápidamente a ellos aquí.",
+        "noComments": "No hay comentarios aún, crea un comentario para empezar a interactuar",
+        "favoriteF": "Foros favoritos",
+        "messageF": "No tienes foros favoritos establecidos",
+        "messageF2": "Marca foros como favoritos para verlos aquí."
     },
 
     "categoriesTable":{

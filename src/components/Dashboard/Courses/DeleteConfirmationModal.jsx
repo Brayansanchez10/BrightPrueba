@@ -1,11 +1,23 @@
-import React from "react";
-import { Modal } from "antd";
+import React, { useState, useEffect } from "react";
+import { Modal, Input } from "antd";
 import { useTranslation } from "react-i18next";
 import pulpoImage from "../../../assets/img/pulpo.png";
 import "../css/Custom.css";
 
 const DeleteConfirmationModal = ({ visible, onClose, onConfirm, courseName }) => {
   const { t } = useTranslation("global");
+  const [confirmationInput, setConfirmationInput] = useState("");
+  const [isConfirmDisabled, setIsConfirmDisabled] = useState(true);
+
+  useEffect(() => {
+    setIsConfirmDisabled(confirmationInput !== courseName);
+  }, [confirmationInput, courseName]);
+
+  const handleConfirm = () => {
+    if (confirmationInput === courseName) {
+      onConfirm();
+    }
+  };
 
   return (
     <Modal
@@ -42,10 +54,27 @@ const DeleteConfirmationModal = ({ visible, onClose, onConfirm, courseName }) =>
           {t('deleteCourse.irreversibleMessage')}
         </p>
 
+        <div className="mb-4">
+          <p className="text-sm font-semibold mb-2">
+            Escribe el nombre del curso en el campo para eliminar correctamente el curso
+          </p>
+          <Input
+            placeholder={t('Escribe el nombre del curso')}
+            value={confirmationInput}
+            onChange={(e) => setConfirmationInput(e.target.value)}
+            className="w-full max-w-md mx-auto"
+          />
+        </div>
+
         <div className="flex justify-center">
           <button
-            className="bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#ff2f22] transition-all duration-300"
-            onClick={onConfirm}
+            className={`bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md transition-all duration-300 ${
+              isConfirmDisabled
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:bg-[#ff2f22]'
+            }`}
+            onClick={handleConfirm}
+            disabled={isConfirmDisabled}
           >
             {t('deleteCourse.confirmButton')}
           </button>

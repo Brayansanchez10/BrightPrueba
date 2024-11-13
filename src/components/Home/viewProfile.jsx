@@ -105,7 +105,7 @@ export default function ViewProfile() {
     } finally {
       setLoading(false);
     }
-  }, [id, authUser, getUserById, getUserCourses]);
+  }, [id, authUser, getUserById, getUserCourses, getCourseProgress]);
 
   useEffect(() => {
     fetchUserData();
@@ -149,6 +149,7 @@ export default function ViewProfile() {
     arrows: false,
     beforeChange: (_, newIndex) => setCurrentSlide(newIndex + 1),
     swipeToSlide: true,
+    variableWidth: false,
   };
 
   const completedSliderSettings = {
@@ -165,18 +166,16 @@ export default function ViewProfile() {
   const maxCompletedSlide = Math.ceil(completedCourses.length / sliderSettings.slidesToShow);
 
   const renderCourseCards = (courseList, sliderRef, currentSlide, maxSlide, handlePrev, handleNext) => (
-    <div className="relative">
-      <Slider ref={sliderRef} {...sliderSettings}>
+    <div className="relative overflow-hidden">
+      <Slider ref={sliderRef} {...sliderSettings} className="mx-[-8px] !flex justify-start">
         {courseList.map((course) => (
           <div key={course.id} className="px-2">
             <div
               className="cursor-pointer rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 mb-4"
               onClick={() => handleCardClick(course)}
               style={{
-                width: "250px",
+                width: "100%",
                 height: "220px",
-                marginRight: "20px",
-                marginTop: "10px",
               }}
             >
               <div
@@ -246,60 +245,66 @@ export default function ViewProfile() {
   );
 
   return (
-    <div className="bg-primary min-h-screen pt-16">
+    <div className="bg-primary min-h-screen">
       <NavigationBar />
-      <motion.div 
-        className="w-full py-8 md:py-12 mb-8"
-        variants={fadeInFromLeft}
-        initial="hidden"
-        animate="visible"
-        style={{
-          backgroundImage: `url(${profileBackground})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundColor: '#493073',
-          backgroundBlendMode: 'overlay',
-        }}
-      >
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center">
-            <div className="flex flex-col md:flex-row items-center md:items-start justify-center w-full mb-6 space-y-6 md:space-y-0 md:space-x-8">
-              <div className="relative">
-                <div className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center border-4 border-white shadow-lg">
-                  {user.userImage ? (
-                    <img src={user.userImage} alt={user.username} className="w-full h-full object-cover" />
-                  ) : (
-                    <FaUser className="text-purple-900 text-4xl md:text-6xl" />
-                  )}
-                </div>
-                <div className="absolute bottom-0 right-0 bg-green-500 rounded-full w-4 h-4 md:w-6 md:h-6 border-2 border-white"></div>
-              </div>
-              <div className="flex flex-col items-center md:items-start text-center md:text-left">
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bungee mb-2 tracking-wider" style={{ color: '#00D8A1', textShadow: '2px 2px 0 #FFFFFF, -2px -2px 0 #FFFFFF, 2px -2px 0 #FFFFFF, -2px 2px 0 #FFFFFF' }}>
-                  {user.username}
-                </h1>
-                <p className="text-lg md:text-xl text-purple-200 mb-4">{user.firstNames} {user.lastNames}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-x-8 md:gap-y-4">
-                  {[
-                    { icon: FaEnvelope, label: t('viewProfile.email'), value: user.email },
-                    { icon: FaGraduationCap, label: t('viewProfile.rol'), value: user.role },
-                    { icon: FaMapMarkerAlt, label:t('viewProfile.location'), value: "Colombia" },
-                    { icon: FaCalendar, label: t('viewProfile.date'), value: new Date(user.createdAt).toLocaleDateString() }
-                  ].map(({ icon: Icon, label, value }) => (
-                    <div key={label} className="flex flex-col items-center md:items-start">
-                      <div className="flex items-center gap-2">
-                        <Icon className="text-[#00D8A1] text-xl" />
-                        <span className="text-white font-roboto text-base">{label}</span>
-                      </div>
-                      <span className="text-[#BBBBBB] font-roboto mt-1 text-sm md:text-base">{value}</span>
+      <div className="relative">
+        <div 
+          className="absolute inset-0 bg-[#493073]"
+          style={{
+            backgroundImage: `url(${profileBackground})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundBlendMode: 'overlay',
+          }}
+        ></div>
+        <div className="relative pt-16">
+          <motion.div 
+            className="w-full py-8 md:py-12 mb-8"
+            variants={fadeInFromLeft}
+            initial="hidden"
+            animate="visible"
+          >
+            <div className="container mx-auto px-4">
+              <div className="flex flex-col items-center">
+                <div className="flex flex-col md:flex-row items-center md:items-start justify-center w-full mb-6 space-y-6 md:space-y-0 md:space-x-8">
+                  <div className="relative">
+                    <div className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center border-4 border-white shadow-lg">
+                      {user.userImage ? (
+                        <img src={user.userImage} alt={user.username} className="w-full h-full object-cover" />
+                      ) : (
+                        <FaUser className="text-purple-900 text-4xl md:text-6xl" />
+                      )}
                     </div>
-                  ))}
+                    <div className="absolute bottom-0 right-0 bg-green-500 rounded-full w-4 h-4 md:w-6 md:h-6 border-2 border-white"></div>
+                  </div>
+                  <div className="flex flex-col items-center md:items-start text-center md:text-left">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bungee mb-2 tracking-wider" style={{ color: '#00D8A1', textShadow: '2px 2px 0 #FFFFFF, -2px -2px 0 #FFFFFF, 2px -2px 0 #FFFFFF, -2px 2px 0 #FFFFFF' }}>
+                      {user.username}
+                    </h1>
+                    <p className="text-lg md:text-xl text-purple-200 mb-4">{user.firstNames} {user.lastNames}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-x-8 md:gap-y-4">
+                      {[
+                        { icon: FaEnvelope, label: t('viewProfile.email'), value: user.email },
+                        { icon: FaGraduationCap, label: t('viewProfile.rol'), value: user.role },
+                        { icon: FaMapMarkerAlt, label:t('viewProfile.location'), value: "Colombia" },
+                        { icon: FaCalendar, label: t('viewProfile.date'), value: new Date(user.createdAt).toLocaleDateString() }
+                      ].map(({ icon: Icon, label, value }) => (
+                        <div key={label} className="flex flex-col items-center md:items-start">
+                          <div className="flex items-center gap-2">
+                            <Icon className="text-[#00D8A1] text-xl" />
+                            <span className="text-white font-roboto text-base">{label}</span>
+                          </div>
+                          <span className="text-[#BBBBBB] font-roboto mt-1 text-sm md:text-base">{value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </motion.div>
+      </div>
 
       <motion.div 
         className="container mx-auto px-4 md:px-8 lg:px-16"
@@ -311,12 +316,12 @@ export default function ViewProfile() {
           className="mt-8"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] dark:text-primary mb-6 font-bold text-center sm:text-left">{t('viewProfile.registration')}</h2>
+          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">{t('viewProfile.registration')}</h2>
           <div className="max-w-7xl mx-auto">
             {courses.length > 0 ? 
               renderCourseCards(courses, sliderRef, currentSlide, maxSlide, handlePrev, handleNext)
               :
-              <p className="text-lg text-gray-600 dark:text-primary text-center">{t('viewProfile.registrationM')}</p>
+              <p className="text-lg text-gray-600 text-center">{t('viewProfile.registrationM')}</p>
             }
           </div>
         </motion.div>
@@ -325,15 +330,15 @@ export default function ViewProfile() {
           className="mt-16"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] dark:text-primary mb-6 font-bold text-center sm:text-left">{t('viewProfile.complete')}</h2>
+          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">{t('viewProfile.complete')}</h2>
           <div className="max-w-7xl mx-auto">
             {completedCourses.length > 0 ?
               renderCourseCards(completedCourses, completedSliderRef, currentCompletedSlide, maxCompletedSlide, handleCompletedPrev, handleCompletedNext)
               :
-              <p className="text-lg text-gray-600 dark:text-primary text-center">{t('viewProfile.completeM')}</p>
+              <p className="text-lg text-gray-600 text-center">{t('viewProfile.completeM')}</p>
             }
           </div>
-        </motion.div>
+        </motion.div>zº
       </motion.div>
       <div className="pt-12">
         <Footer />
