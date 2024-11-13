@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import zorroImage from "../../../assets/img/Zorro.png";
 import "../css/Custom.css";
-import { getEntity } from "../../../api/user/entities.request";
+import { getEntityById } from "../../../api/user/entities.request";
 
 const DeleteEntityModal = ({ visible, onClose, entities, deleteEntity }) => {
     const { t } = useTranslation("global");
@@ -20,10 +20,11 @@ const DeleteEntityModal = ({ visible, onClose, entities, deleteEntity }) => {
 
     const fetchEntities = async () => {
         try {
-            const response = await getEntity();
+            const response = await getEntityById(entities);
             setEntities(response.data);
+            console.log("Entidad traida: ", response);
         } catch (error) {
-            console.error("Error al obtener todas las Entidades", err);
+            console.error("Error al obtener todas las Entidades", error);
         }
     };
 
@@ -80,7 +81,7 @@ const DeleteEntityModal = ({ visible, onClose, entities, deleteEntity }) => {
               {t("deleteEntity.confirmDeletion")}
             </h1>
             <p className="text-lg font-semibold mb-3">
-              {t("deleteEntity.confirmMessage")}
+              {t("deleteEntity.confirmMessage")} {entity.name}
             </p>
             <p className="text-sm font-extrabold text-red-500 mb-6">
               <b>{t("roles.deleteCannot")}</b>

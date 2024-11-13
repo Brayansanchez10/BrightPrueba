@@ -29,3 +29,6 @@ export const deleteUserConfirmation = (id, confirmationCode) => axios.delete(`/u
 export const createUser = (userData) => axios.post(`/users/createUser`, userData);
 
 export const changePassword = (email, newPassword) => axios.post(`/users/changePassword`, { email, newPassword });
+
+// Nueva función para obtener los usuarios registrados en un Curso
+export const getUsersByCourse = (courseId) => axios.get(`/users/courses/${courseId}/users`);
