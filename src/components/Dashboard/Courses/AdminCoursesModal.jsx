@@ -10,6 +10,11 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
     const { getUsersByCourse } = useUserContext();
     const [tableUser, setTableUser] = useState([]);
     const { unregisterFromCourse } = useCoursesContext();
+    const [searchValue, setSearchValue] = useState("");
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1); 
+    const [totalItems, setTotalItems] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
     const { t } = useTranslation("global");
 
     useEffect(() => {
@@ -27,6 +32,63 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
             fetchUserData();
         }
     }, [courseId, getUsersByCourse, visible]);
+
+    useEffect(() => {
+        const filteredUsers = tableUser.filter(
+            (UserData) => 
+                (UserData.firstNames && UserData.firstNames.toLowerCase().includes(searchValue.toLowerCase())) ||
+                (UserData.lastNames && UserData.lastNames.toLowerCase().includes(searchValue.toLowerCase())) ||
+                (UserData.email && UserData.email.toLowerCase().includes(searchValue.toLowerCase())) ||
+                (UserData.documentNumber && UserData.documentNumber.toLowerCase().includes(searchValue.toLowerCase()))
+        );
+
+        setTotalItems(filteredUsers.length);
+        setTotalPages(Math.ceil(filteredUsers.length / itemsPerPage));
+    }, [tableUser, searchValue, itemsPerPage]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth;
+            if (width < 600) {
+                setItemsPerPage(6);
+            } else if (width < 1024) {
+                setItemsPerPage(10);
+            } else {
+                setItemsPerPage(12);
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        handleResize();
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    const generateIds = () => {
+        const filteredUsers = tableUser.filter(
+            (UserData) => 
+                (UserData.firstNames && UserData.firstNames.toLowerCase().includes(searchValue.toLowerCase())) ||
+                (UserData.lastNames && UserData.lastNames.toLowerCase().includes(searchValue.toLowerCase())) ||
+                (UserData.email && UserData.email.toLowerCase().includes(searchValue.toLowerCase())) ||
+                (UserData.documentNumber && UserData.documentNumber.toLowerCase().includes(searchValue.toLowerCase()))
+        );
+
+        return filteredUsers
+            .slice((currentPage - 1)* itemsPerPage, currentPage * itemsPerPage)
+            .map((_, index) => index + 1 + 1 (currentPage - 1)* itemsPerPage);
+    };
+
+    const filteredUsers = tableUser.filter(
+        (UserData) => 
+            (UserData.firstNames && UserData.firstNames.toLowerCase().includes(searchValue.toLowerCase())) ||
+            (UserData.lastNames && UserData.lastNames.toLowerCase().includes(searchValue.toLowerCase())) ||
+            (UserData.email && UserData.email.toLowerCase().includes(searchValue.toLowerCase())) ||
+            (UserData.documentNumber && UserData.documentNumber.toLowerCase().includes(searchValue.toLowerCase()))
+    );
 
     const handleUnregister = async (userId) => {
         try {
@@ -54,15 +116,26 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
     return (
         <Modal
             title={
-                <div
-                className="text-3xl font-bungee mb-4 md:mb-0"
-                style={{
-                    background: "linear-gradient(to right, #783CDA, #200E3E)",
-                    WebkitBackgroundClip: "text",
-                    color: "transparent",
-                }}
-                >
-                Usuarios Registrados
+                <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4"> 
+                    <div className="text-3xl font-bungee mb-4 md:mb-0"
+                    style={{
+                        background: "linear-gradient(to right, #783CDA, #200E3E)",
+                        WebkitBackgroundClip: "text",
+                        color: "transparent",
+                    }}
+                    >
+                    Usuarios Registrados
+                    </div>
+                    <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
+                        <FaSearch size={"18px"} className="mt-1 mr-2" />
+                            <input
+                                type="search"
+                                className="bg-white outline-none w-full md:w-[280px] lg:w-[360px]"
+                                placeholder={t("datatable.SearchByName")}
+                                value={searchValue}
+                                onChange={(e) => setSearchValue(e.target.value)}
+                            />
+                    </div>
                 </div>
             }
             visible={visible}
@@ -107,8 +180,13 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {tableUser.length > 0 ? (
-                        tableUser.map((record, index) =>
+                    {filteredUsers.length > 0 ? (
+                        tableUser
+                        .slice (
+                            (currentPage - 1) * itemsPerPage,
+                            currentPage * itemsPerPage
+                        )
+                        .map((record, index) =>
                         record ? (
                             <tr key={record.id || index}>
                             <td className="border-2 border-x-transparent px-1 py-2 bg-secondaryAdmin text-primary text-center border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
@@ -172,9 +250,28 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
                     )}
                     </tbody>
                 </table>
+                {totalPages > 1 && (
+                    <div className="flex justify-end items-center mt-5 space-x-2">
+                        <button
+                            onClick={() => paginate(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className={`py-1 px-2 rounded-full text-white ${currentPage === 1 ? "bg-gray-500" : "bg-purple-600 hover:bg-purple-800"}`}
+                        >
+                            <FaChevronLeft />
+                        </button>
+                        <div className="text-lg font-semibold">{currentPage}</div>
+                        <button
+                            onClick={() => paginate(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className={`py-1 px-2 rounded-full text-white ${currentPage === totalPages ? "bg-gray-500" : "bg-purple-600 hover:bg-purple-800"}`}
+                            >
+                            <FaChevronRight />
+                        </button>
+                    </div> 
+                )}
                 </div>
             </div>
-            </Modal>
+        </Modal>
     );
 };
 
