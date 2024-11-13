@@ -36,7 +36,7 @@ const DeleteEntityModal = ({ visible, onClose, entities, deleteEntity }) => {
             console.error("Error al obtener todas las Entidades", error);
         } finally {
             setLoading(false);
-        }
+        } 
     };
 
     const confirmDelete = async () => {

@@ -4,23 +4,40 @@ import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import zorroImage from "../../../assets/img/Zorro.png";
 import "../css/Custom.css";
+import { getForumCategoryById } from "../../../api/forum/forumCategories.request";
 
 const DeleteForumCategory = ({ visible, onClose, category, deleteForumCategory }) => {
     const { t } = useTranslation("global");
     const [confirmationInput, setConfirmationInput] = useState("");
     const [isConfirmDisabled, setIsConfirmDisabled] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [forum, setForum] = useState({});
 
     useEffect(() => {
         if (visible && category) {
             setConfirmationInput("");
             setIsConfirmDisabled(true);
+            fetchForum();
         }
     }, [visible, category]);
 
     useEffect(() => {
         setIsConfirmDisabled(confirmationInput !== category?.name);
     }, [confirmationInput, category?.name]);
+
+    const fetchForum = async () => {
+        setLoading(true);
+        try {
+            const response = await getForumCategoryById(category);
+            setForum(response.data);
+            console.log("Categoria traida: ", response);
+        } catch (error) {
+            console.error("Error al obtener todas las Entidades", error);
+        } finally {
+            setLoading(false);
+        } 
+    };
+
 
     const confirmDeleteCategory = async () => {
         if (confirmationInput !== category?.name) {
@@ -111,7 +128,7 @@ const DeleteForumCategory = ({ visible, onClose, category, deleteForumCategory }
                     {t("forumCrud.deleteTitle")}
                 </h1>
                 <p className="text-lg font-semibold mb-3">
-                    {t("forumCrud.deleteMessage")} {category?.name}?
+                    {t("forumCrud.deleteMessage")} {forum.name}?
                 </p>
                 <p className="text-sm font-extrabold text-red-500 mb-6">
                     <b>{t("roles.deleteCannot")}</b>

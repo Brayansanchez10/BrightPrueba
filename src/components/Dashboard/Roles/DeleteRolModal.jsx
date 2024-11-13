@@ -1,46 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useRoleContext } from "../../../context/user/role.context";
-import { Modal, Input } from "antd";
+import { Modal, Input  } from "antd";
 import Swal from "sweetalert2";
 import zorroImage from "../../../assets/img/Zorro.png";
 import { useTranslation } from "react-i18next";
-import { getRole } from "../../../api/user/role.request.js";
+import { getRole } from "../../../api/user/role.request";
 
 const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => {
   const { t } = useTranslation("global");
   const [role, setRole] = useState({ nombre: "" });
+  const [roles, setRoles] = useState({});
+  const { createRole, rolesData, getAllRoles } = useRoleContext();
   const [confirmationInput, setConfirmationInput] = useState("");
   const [isConfirmDisabled, setIsConfirmDisabled] = useState(true);
-  const { createRole, rolesData, getAllRoles } = useRoleContext();
-  const [roles, setRoles] = useState({});
-
-  const fetchRol = async () => {
-    setLoading(true);
-    try {
-        const response = await getRole(roleId);
-        setEntity(response.data);
-        console.log("Rol traido: ", response);
-    } catch (error) {
-        console.error("Error al obtener todas el rol", error);
-    } finally {
-        setLoading(false);
-    }
-};
 
   useEffect(() => {
-    if (isVisible) {
+    if (visible) {
       fetchRoles();
-      fetchRol();
+      fetchRole();
     } else {
       setRole({ nombre: "" });
       setRoles([]);
       setConfirmationInput("");
     }
-  }, [isVisible]);
+  }, [visible]);
 
   useEffect(() => {
     setIsConfirmDisabled(confirmationInput !== role.nombre);
   }, [confirmationInput, role]);
+
+  const fetchRole = async () => {
+    try {
+      const response = await getRole(roleId);
+      setRole(response.data);
+      const roleData = await getAllRoles();
+    } catch (err) {
+      console.error("Error al obtener todas los roles:", err);
+    }
+  };
 
   const fetchRoles = async () => {
     try {
@@ -49,33 +46,16 @@ const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => 
       setRole(roleData || { nombre: "" });
     } catch (err) {
       console.error("Error al obtener todas los roles:", err);
-      Swal.fire({
-        icon: "error",
-        title: t("roles.errorFetchingRoles"),
-        text: t("roles.errorFetchingRolesMessage"),
-        timer: 3000,
-        showConfirmButton: true,
-      });
     }
   };
 
-  const confirmDeleteRole = async () => {
-    if (confirmationInput !== role.nombre) {
-      Swal.fire({
-        icon: "error",
-        title: t("roles.nameMatchError"),
-        text: t("roles.nameMatchErrorMessage"),
-        timer: 3000,
-        showConfirmButton: true,
-      });
-      return;
-    }
 
+  const confirmDeleteRole = async () => {
     try {
       await deleteRole(roleId);
       Swal.fire({
         icon: "success",
-        title: t("roles.deleteSuccess"),
+        title: "Rol eliminado exitosamente",
         timer: 2000,
         showConfirmButton: false,
       }).then(() => {
@@ -85,8 +65,8 @@ const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => 
     } catch (error) {
       Swal.fire({
         icon: "error",
-        title: t("roles.deleteError"),
-        text: error.message || t("roles.genericError"),
+        title: "Error al eliminar el rol",
+        text: error.message || "An error occurred while deleting the role.",
         timer: 3000,
         showConfirmButton: true,
       });
@@ -156,5 +136,6 @@ const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => 
     </Modal>
   );
 };
+
 
 export default DeleteRolModal;

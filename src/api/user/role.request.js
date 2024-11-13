@@ -2,7 +2,7 @@ import axios from '../axios';
 
 export const getAllRoles = () => axios.get(`/roles/getRoles`);
 
-export const getRole = (_id) => axios.get(`/roles/getRole/${_id}`);
+export const getRole = (id) => axios.get(`/roles/getRole/${id}`);
 
 export const updateRole = async (id, data) => axios.put(`/roles/updateRole/${id}`, data);
 

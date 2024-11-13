@@ -4,7 +4,7 @@ import axios from "../axios";
 export const getAllForumCategories = () => axios.get('/forumCategory/getAll');
 
 // Función para obtener una categoría por ID
-export const getForumCategoryById = (id) => axios.get(`/forumCategory/${id}`);
+export const getForumCategoryById = (id) => axios.get(`/forumCategory/forumCategory/${id}`);
 
 // Función para crear un Forum Categories
 export const createForumCategories = async (categoriesData) => {
