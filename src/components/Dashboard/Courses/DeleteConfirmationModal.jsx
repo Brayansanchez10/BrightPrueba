@@ -55,6 +55,7 @@ const DeleteConfirmationModal = ({ visible, onClose, onConfirm, courseName }) =>
         </p>
 
         <div className="mb-4">
+        <p className="text-xl font-black text-red-500 mb-2">"{ courseName }"</p>
           <p className="text-sm font-semibold mb-2">
             {t("deleteCourse.confirm")}
           </p>
