@@ -318,7 +318,7 @@ export default function TopicViewComponente() {
         </div>
 
         <div className="w-full md:w-1/3 bg-secondary rounded-lg shadow-md overflow-hidden">
-          <div className="dark:bg-primary p-4 rounded-md shadow-md overflow-y-auto custom-scrollbar-x" style={{ height: "360px", minHeight: "360px" }}>
+          <div className="dark:bg-primary m-4 p-3 rounded-md shadow-md overflow-y-auto custom-scrollbar-x" style={{ height: "360px", minHeight: "360px" }}>
             <h2 className="text-lg md:text-xl text-primary font-semibold mb-4">Comentarios marcados</h2>
             {bookmark.length > 0 ? <div className="space-y-2">
                 {bookmark.map((fav) => {
@@ -351,7 +351,7 @@ export default function TopicViewComponente() {
             }
           </div>
 
-          <div className="dark:bg-primary p-4 rounded-md shadow-md overflow-y-auto custom-scrollbar-x" style={{ height: "360px", minHeight: "360px" }}>
+          <div className="dark:bg-primary m-4 p-3 rounded-md shadow-md overflow-y-auto custom-scrollbar-x" style={{ height: "360px", minHeight: "360px" }}>
             <h2 className="text-lg md:text-xl text-primary font-semibold mb-4">Foros favoritos</h2>
 
             {topics.length > 0 ? (

@@ -12,6 +12,8 @@ import { useUserContext } from "../../../context/user/user.context.jsx";
 import { FaSearch, FaUser, FaStopwatch, FaHeart, FaEdit, FaTrash, FaRegUserCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import Footer from "../../footer.jsx";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.bubble.css';
 
 export default function TopicComponent() {
   const { t } = useTranslation("global");
@@ -264,8 +266,17 @@ export default function TopicComponent() {
                         )}
 
                         <div className="flex-grow pr-16">
-                          <h2 className="text-white font-bungee text-base line-clamp-1">{topic.title}</h2>
-                          <p className="text-white font-sans text-base line-clamp-2 mt-1">{topic.Content}</p>
+                          <h2 className="text-white font-bungee text-base line-clamp-1">
+                            {topic.title}
+                          </h2>
+                          <div className="text-white font-sans text-base line-clamp-2 mt-1 quill-content-preview">
+                            <ReactQuill
+                              value={topic.Content}
+                              readOnly={true}
+                              theme="bubble"
+                              modules={{ toolbar: false }}
+                            />
+                          </div>
                         </div>
                       </div>
                       <div className="flex justify-between items-center mt-auto">
@@ -276,8 +287,8 @@ export default function TopicComponent() {
                         <div className="flex items-center text-white">
                           <FaStopwatch className="w-3 h-3 mr-1" />
                           <span className="font-sans text-xs">
-        {t('Mytopic.open')}
-      </span>{" "}
+                            {t('Mytopic.open')}
+                          </span>{" "}
                         </div>
                       </div>
                       <div className="absolute top-2 right-2 flex flex-col items-end">

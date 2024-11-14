@@ -5,6 +5,10 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../../../../context/auth.context";
 import { useUserContext } from "../../../../context/user/user.context";
 import { useForumTopic } from "../../../../context/forum/topic.context";
+import { FaVideo, FaImage } from "react-icons/fa";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import '../Custom.css'
 
 const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCategoryId, TopicData, fetchForumTopic }) => {
     const { getUserById } = useUserContext();
@@ -17,7 +21,66 @@ const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCate
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState({});
     const MAX_TITLE_LENGTH = 30;
+    const [characterCount, setCharacterCount] = useState(0);
+    const [quillRef, setQuillRef] = useState(null);
+    const MAX_CONTENT_LENGTH = 1000;
 
+    const modules = {
+        toolbar: [
+            [{ 'header': [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            ['code-block'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link']
+        ],
+        keyboard: {
+            bindings: {
+                tab: false
+            }
+        },
+        clipboard: {
+            matchVisual: false
+        }
+    };
+
+    const formats = [
+        'header',
+        'bold', 'italic', 'underline', 'strike',
+        'code-block',
+        'list', 'bullet',
+        'link', 'video', 'image'
+    ];
+
+    const handleQuillRef = (ref) => {
+        if (ref) {
+            setQuillRef(ref);
+        }
+    };
+
+    const countCharacters = (htmlContent) => {
+        const imageCount = (htmlContent.match(/<img[^>]*>/g) || []).length * 10;
+        const videoCount = (htmlContent.match(/<iframe[^>]*>/g) || []).length * 25;
+        const textContent = htmlContent.replace(/<(.|\n)*?>/g, '').trim();
+        return textContent.length + imageCount + videoCount;
+    };
+
+    const getEmbedUrl = (url) => {
+        const youtubeRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const youtubeMatch = url.match(youtubeRegExp);
+
+        if (youtubeMatch && youtubeMatch[2].length === 11) {
+            return `https://www.youtube.com/embed/${youtubeMatch[2]}`;
+        }
+
+        const driveRegExp = /^https:\/\/drive\.google\.com\/file\/d\/(.*?)\/view/;
+        const driveMatch = url.match(driveRegExp);
+
+        if (driveMatch) {
+            return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+        }
+
+        return url;
+    };
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -50,14 +113,26 @@ const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCate
 
     const validateFields = () => {
         const newErrors = {};
-       
+        
         if (!title || title.length < 3) {
             newErrors.title = t("updateTopic.validateTitle");
         } 
 
-        if (!Content || Content.length < 8) {
+        const textContent = Content.replace(/<(.|\n)*?>/g, '').trim();
+        if (!textContent || textContent.length < 8) {
             newErrors.Content = t("updateTopic.validateContent");
         }
+
+        if (textContent.length > 1000) {
+            Swal.fire({
+                icon: 'warning',
+                title: t("updateTopic.contentTooLong"),
+                text: t("updateTopic.pleaseReduceContent"),
+                confirmButtonColor: '#9333EA'
+            });
+            return false;
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -104,6 +179,7 @@ const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCate
             closable={false}
             centered
             onCancel={onClose}
+            width={1000}
             bodyStyle={{
                 borderRadius: "20px",
                 overflow: "hidden",
@@ -125,15 +201,104 @@ const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCate
                             {title.length}/{MAX_TITLE_LENGTH}
                         </div>
                     </div>
-                    <div className="mb-4">
-                        <Input.TextArea 
-                            value={Content} 
-                            onChange={(e) => setContent(e.target.value)} 
-                            placeholder={t("updateTopic.topicContent")}
-                            rows={4} 
-                            required 
-                        />
-                        {errors.Content && <p className="text-red-500">{errors.Content}</p>}
+                    <div className="mb-6">
+                        <div className="flex gap-2 flex-col sm:flex-row mb-2">
+                            <Button 
+                                type="default"
+                                onClick={() => {
+                                    Swal.fire({
+                                        title: t("updateTopic.insertImage"),
+                                        input: 'url',
+                                        inputPlaceholder: 'https://ejemplo.com/imagen.jpg',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#9333EA',
+                                        cancelButtonColor: '#6B7280',
+                                        confirmButtonText: t("updateTopic.insert"),
+                                        cancelButtonText: t("updateTopic.cancel"),
+                                        inputValidator: (value) => {
+                                            if (!value) {
+                                                return t("updateTopic.urlRequired");
+                                            }
+                                        }
+                                    }).then((result) => {
+                                        if (result.isConfirmed && quillRef) {
+                                            const editor = quillRef.getEditor();
+                                            const range = editor.getSelection() || { index: editor.getLength() };
+
+                                            editor.insertEmbed(range.index, 'image', result.value);
+                                            editor.insertText(range.index + 1, '\n');
+                                            editor.setSelection(range.index + 2, 0);
+                                        }
+                                    });
+                                }}
+                            >
+                                <FaImage className="mr-1 text-purple-800" /> {t("updateTopic.addImage")}
+                            </Button>
+
+                            <Button 
+                                type="default"
+                                onClick={() => {
+                                    Swal.fire({
+                                        title: t("updateTopic.insertVideo"),
+                                        input: 'url',
+                                        inputPlaceholder: 'https://www.youtube.com/watch?v=... o https://drive.google.com/file/d/.../view',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#9333EA',
+                                        cancelButtonColor: '#6B7280',
+                                        confirmButtonText: t("updateTopic.insert"),
+                                        cancelButtonText: t("updateTopic.cancel"),
+                                        inputValidator: (value) => {
+                                            if (!value) {
+                                                return t("updateTopic.urlRequired");
+                                            }
+                                            if (!value.includes('youtube.com') && 
+                                                !value.includes('youtu.be') && 
+                                                !value.includes('drive.google.com')) {
+                                                return t("updateTopic.invalidVideoUrl");
+                                            }
+                                        }
+                                    }).then((result) => {
+                                        if (result.isConfirmed && quillRef) {
+                                            const editor = quillRef.getEditor();
+                                            const range = editor.getSelection() || { index: editor.getLength() };
+
+                                            const embedUrl = getEmbedUrl(result.value);
+                                            editor.insertEmbed(range.index, 'video', embedUrl);
+                                            editor.insertText(range.index + 1, '\n');
+                                            editor.setSelection(range.index + 2, 0);
+                                        }
+                                    });
+                                }}
+                            >
+                                <FaVideo className="mr-1 text-purple-800" /> {t("updateTopic.addVideo")}
+                            </Button>
+                        </div>
+
+                        <div className="quill-wrapper">
+                            <ReactQuill 
+                                ref={handleQuillRef}
+                                theme="snow"
+                                value={Content}
+                                onChange={(content) => {
+                                    setContent(content);
+                                    setCharacterCount(countCharacters(content));
+                                }}
+                                modules={modules}
+                                formats={formats}
+                                placeholder={t("updateTopic.topicContent")}
+                                style={{
+                                    height: '300px',
+                                    display: 'flex',
+                                    flexDirection: 'column'
+                                }}
+                            />
+                        </div>
+                        <div className={`text-right mt-1 text-sm ${characterCount >= MAX_CONTENT_LENGTH ? 'text-red-500' : 'text-gray-600'}`}>
+                            {characterCount}/{MAX_CONTENT_LENGTH}
+                        </div>
+                        {errors.Content && (
+                            <p className="text-red-500 text-sm -mt-4">{errors.Content}</p>
+                        )}
                     </div>
 
                     <div className="flex justify-end">

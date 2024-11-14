@@ -1,0 +1,104 @@
+.quill-wrapper .quill {
+    border-radius: 8px;
+}
+
+.quill-wrapper .ql-container {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    height: calc(100% - 42px) !important;
+    overflow-y: auto;
+}
+
+.quill-wrapper .ql-toolbar {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.quill-content-preview .ql-editor {
+    max-height: 6em;  /* Altura máxima */
+    overflow: hidden;
+    display: -webkit-box;
+    line-clamp: 4;  /* Número de líneas a mostrar */
+    -webkit-box-orient: vertical;
+    padding: 0 !important;
+}
+
+.quill-content-preview .ql-editor p {
+    margin: 0;
+    line-height: 1.5em;
+}
+
+.quill-wrapper .ql-editor {
+    min-height: 100%;
+}
+
+/* Ajustar el tamaño de los iframes de video */
+.ql-editor iframe {
+    width: 100% !important;
+    height: 350px !important; /* Puedes ajustar esta altura según necesites */
+    max-width: 620px !important; /* Limitar el ancho máximo */
+}
+
+/* Estilos para el popup de enlaces */
+.ql-tooltip {
+  z-index: 1000;
+  left: 0 !important;
+}
+
+.ql-tooltip[data-mode="link"]::before {
+  content: "Ingrese el enlace:";
+}
+
+.ql-tooltip.ql-editing {
+  min-width: 300px;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  border-radius: 4px;
+}
+
+/* Estilos para los botones activos de la barra de herramientas */
+.ql-toolbar .ql-active,
+.ql-toolbar .ql-picker-label.ql-active,
+.ql-toolbar button:active {
+  color: #6B46C1 !important;
+}
+
+.ql-toolbar .ql-stroke.ql-active,
+.ql-toolbar .ql-stroke-miter.ql-active,
+.ql-toolbar button.ql-active .ql-stroke,
+.ql-toolbar button.ql-active .ql-stroke-miter,
+.ql-toolbar .ql-picker-label.ql-active .ql-stroke {
+  stroke: #6B46C1 !important;
+}
+
+.ql-toolbar .ql-fill.ql-active,
+.ql-toolbar button.ql-active .ql-fill {
+  fill: #6B46C1 !important;
+}
+
+/* Estilos para las opciones del selector de headers */
+.ql-picker.ql-header .ql-picker-item:hover,
+.ql-picker.ql-header .ql-picker-item.ql-selected {
+  color: #6B46C1 !important;
+}
+
+.ql-picker.ql-header .ql-picker-label:hover .ql-stroke,
+.ql-picker.ql-header .ql-picker-label.ql-active .ql-stroke {
+  stroke: #6B46C1 !important;
+}
+
+/* Mantener los estilos del hover separados */
+.ql-toolbar button:hover {
+  color: #6B46C1 !important;
+}
+
+.ql-toolbar button:hover .ql-stroke,
+.ql-toolbar button:hover .ql-stroke-miter {
+  stroke: #6B46C1 !important;
+}
+
+.ql-toolbar button:hover .ql-fill {
+  fill: #6B46C1 !important;
+}
