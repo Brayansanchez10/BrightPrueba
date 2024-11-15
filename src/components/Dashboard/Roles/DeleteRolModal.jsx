@@ -109,6 +109,7 @@ const DeleteRolModal = ({ isVisible, visible, onClose, roleId, deleteRole }) => 
           <b>{t("roles.deleteCannot")}</b>
         </p>
         <div className="mb-4">
+        <p className="text-xl font-black text-red-500 mb-2">"{role.nombre}"</p>
           <p className="text-sm font-semibold mb-2">
             {t("roles.confirmR")}
           </p>

@@ -125,6 +125,7 @@ const DeleteEntityModal = ({ visible, onClose, entities, deleteEntity }) => {
                     <b>{t("roles.deleteCannot")}</b>
                 </p>
                 <div className="mb-4">
+                <p className="text-xl font-black text-red-500 mb-2">"{entity.name}"</p>
                     <p className="text-sm font-semibold mb-2">
                         {t("deleteEntity.confirm")}
                     </p>
