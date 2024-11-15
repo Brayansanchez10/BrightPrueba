@@ -79,7 +79,8 @@
         "ready": "PREPARADO!",
         "AlertPasswordCorro": "La contraseña no puede ser un correo electrónico",
         "firstNames_required" : "Nombre es requerido",
-        "lastName_required": "Apellido es requerido"
+        "lastName_required": "Apellido es requerido",
+        "entityId_required": "Entidad es requerida"
     },
     "reset_password": {
         "invalid_email": "Correo electrónico no válido",
