@@ -64,13 +64,20 @@
 /* Ajustar el tamaño de los iframes de video */
 .ql-editor iframe {
     width: 100% !important;
-    height: 350px !important; /* Puedes ajustar esta altura según necesites */
-    max-width: 620px !important; /* Limitar el ancho máximo */
+    height: 350px !important;
+    max-width: 620px !important;
+}
+
+@media screen and (max-width: 425px) {
+    .ql-editor iframe {
+        height: auto !important;
+        max-height: 350px !important;
+    }
 }
 
 /* Ajustar el tamaño de los img */
 .ql-editor img {
-  height: 350px !important; /* Puedes ajustar esta altura según necesites */
+  max-height: 350px !important; /* Puedes ajustar esta altura según necesites */
 }
 
 /* Estilos para el popup de enlaces */

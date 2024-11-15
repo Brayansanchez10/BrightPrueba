@@ -16,6 +16,10 @@ module.exports = {
       },
       screens: {
         'h720': {'raw': '(min-height: 720px)'},
+        'w800': {'raw': '(min-width: 800px)'},
+        'w900': {'raw': '(min-width: 900px)'},
+        'w1000': {'raw': '(min-width: 1000px)'},
+        'w1200': {'raw': '(min-width: 1200px)'},
       },
       boxShadow: {
         orange: '0 8px 12px -4px rgba(255, 117, 24, 0.7), 0 3px 6px -2px rgba(255, 117, 24, 0.5)',
