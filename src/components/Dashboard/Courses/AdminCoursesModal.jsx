@@ -3,8 +3,9 @@ import { Modal } from "antd";
 import Swal from "sweetalert2";
 import { useUserContext } from "../../../context/user/user.context";
 import { useCoursesContext } from "../../../context/courses/courses.context";
-import { FaChevronLeft, FaChevronRight, FaCircle, FaSearch, FaUserCheck, FaUserTimes, } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaCircle, FaSearch, FaUserCheck, FaUserTimes, FaRegEye, FaTrash  } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import AdminDetails from "./DetailsAdmin/AdminDetails";
 
 const AdminCoursesModal = ({ visible, onClose, courseId }) => {
     const { getUsersByCourse } = useUserContext();
@@ -16,6 +17,19 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
     const [totalItems, setTotalItems] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const { t } = useTranslation("global");
+
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [selectAdmin, setSelectAdmin] = useState(null);
+
+    const handleDetailsButtonClick = (tableUser) => {
+        setSelectAdmin(tableUser);
+        setShowDetailsModal(true);
+    };
+    
+    const handleDetailsModalClose = () => {
+        setShowDetailsModal(false);
+        setSelectAdmin(null);
+    };
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -78,8 +92,8 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
         );
 
         return filteredUsers
-            .slice((currentPage - 1)* itemsPerPage, currentPage * itemsPerPage)
-            .map((_, index) => index + 1 + 1 (currentPage - 1)* itemsPerPage);
+            .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+            .map((_, index) => index + 1 + (currentPage - 1) * itemsPerPage);
     };
 
     const filteredUsers = tableUser.filter(
@@ -116,7 +130,7 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
     return (
         <Modal
             title={
-                <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4"> 
+                <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-28"> 
                     <div className="text-3xl font-bungee mb-4 md:mb-0"
                     style={{
                         background: "linear-gradient(to right, #783CDA, #200E3E)",
@@ -144,11 +158,12 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
             width={1200}
             bodyStyle={{
                 display: "flex",
-                justifyContent: "flex-start", // Alinea el contenido en la parte superior
-                alignItems: "center",
+                flexDirection: "column", // Coloca los elementos en columna
+                justifyContent: "flex-start", // Alinea el contenido hacia la parte superior
+                alignItems: "stretch",
                 height: "75vh",
                 background: "#50A7D7",
-                paddingTop: "20px", // Agrega algo de espacio en la parte superior
+                paddingTop: "20px",
             }}
             >
             <div className="flex justify-center mt-4 md:mt-2 w-full">
@@ -157,25 +172,25 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
                     <thead>
                     <tr>
                         <th className="text-lg px-3 py-3 bg-secondaryAdmin text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
-                        User ID
+                        {t("datatable.ID")}
                         </th>
                         <th className="text-lg px-3 py-3 bg-secondaryAdmin text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
-                        Nombre
+                        {t("datatable.FirstNames")}
                         </th>
                         <th className="text-lg px-3 py-3 bg-secondaryAdmin text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
-                        Apellido
+                        {t("datatable.LastNames")}
                         </th>
                         <th className="text-lg px-3 py-3 bg-secondaryAdmin text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
-                        Correo
+                        {t("datatable.Email")}
                         </th>
                         <th className="text-lg px-3 py-3 bg-secondaryAdmin text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
-                        Documento
+                        {t("datatable.DocumentNumber")}
                         </th>
                         <th className="text-lg px-3 py-3 bg-secondaryAdmin text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
-                        Estado
+                        {t("datatable.Status")}
                         </th>
                         <th className="text-lg px-3 py-3 bg-secondaryAdmin text-primary border-2 cursor-pointer border-x-transparent font-bungee border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
-                        Acciones
+                        {t("datatable.Actions")}
                         </th>
                     </tr>
                     </thead>
@@ -225,12 +240,20 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
                                 </div>
                             </td>
                             <td className="border-2 border-x-transparent px-1 py-2 bg-secondaryAdmin text-primary text-center border-t-transparent border-b-cyan-200 dark:border-b-[#00d8a257]">
-                                <button
-                                className="bg-red-500 text-white py-1 px-3 rounded"
-                                onClick={() => handleUnregister(record.id)}
-                                >
-                                Eliminar
-                                </button>
+                                <div className="flex flex-nowrap justify-center space-x-2">
+                                    <button
+                                            className="bg-blue-500 text-white py-3 px-3 rounded"
+                                            onClick={() => handleDetailsButtonClick(record)}
+                                            >
+                                            <FaRegEye/>
+                                    </button>
+                                    <button
+                                        className="bg-red-500 text-white py-3 px-3 rounded"
+                                        onClick={() => handleUnregister(record.id)}
+                                        >
+                                        <FaTrash/>
+                                    </button>
+                                </div>
                             </td>
                             </tr>
                         ) : (
@@ -270,6 +293,12 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
                     </div> 
                 )}
                 </div>
+                <AdminDetails
+                    visible={showDetailsModal}
+                    onClose={handleDetailsModalClose}
+                    tableUser={selectAdmin}
+                    courseId={courseId}
+                />
             </div>
         </Modal>
     );

@@ -21,6 +21,7 @@ import fondoCursos from "../../assets/img/fondo_cursos.png";
 import fondoMiscursos from "../../assets/img/fondo_miscursos.png";
 import fondoForo from "../../assets/img/fondo_cursos.png";
 import ThemeToggle from '../themes/ThemeToggle';
+import { useForumCategories } from "../../context/forum/forumCategories.context";
 
 export default function NavigationBar() {
   const { t } = useTranslation("global");
@@ -29,6 +30,7 @@ export default function NavigationBar() {
   const { logout, user } = useAuth();
   const { getUserById } = useUserContext();
   const [username, setUsername] = useState("");
+  const [entityId, setEntityId] = useState(null)
   const [userImage, setUserImage] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,15 +39,7 @@ export default function NavigationBar() {
   const [scrollDirection, setScrollDirection] = useState("up");
 
   const [forumActive, setForumActive] = useState(true); // Activado por defecto
-
-  useEffect(() => {
-      const forumState = localStorage.getItem("forumActive");
-
-      // Si hay un estado guardado en localStorage, lo usamos; de lo contrario, permanece activo
-      if (forumState !== null) {
-          setForumActive(forumState === "true");
-      }
-  }, []);
+  const { getForumState, toggleForumActivation, forumState } = useForumCategories();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -53,7 +47,16 @@ export default function NavigationBar() {
         try {
           const userData = await getUserById(user.data.id);
           setUsername(userData.username.toUpperCase());
+
+           // Guarda el entityId del usuario
+          setEntityId(userData.entityId); // Asegúrate de tener este estado definido
+
           setUserImage(userData.userImage === "null" ? "" : userData.userImage);
+
+          // Obtener el estado del foro desde el servidor
+          const forumStateFromServer = await getForumState(userData.entityId);
+          setForumActive(forumStateFromServer); 
+
         } catch (error) {
           console.error("Error al obtener datos del usuario:", error);
         }

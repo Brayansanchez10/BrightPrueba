@@ -32,11 +32,12 @@ export const EntityProvider = ({ children }) => {
         }
     };
 
-    const createEntity = async ({ name, type }) => {
+    const createEntity = async ({ name, type, userId }) => {
         try {
             const newEntity = {
                 name,
                 type,
+                userId,
            };
 
             console.log(newEntity);
