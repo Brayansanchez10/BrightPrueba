@@ -82,7 +82,8 @@
         "select_entity_type": "Select your entity",
         "entity_required": "Required",
         "firstNames_required" : "First name is required",
-        "lastName_required": "Last name is required"
+        "lastName_required": "Last name is required",
+        "entityId_required": "Entity is required"
     },
     "reset_password": {
         "invalid_email": "Invalid email",
