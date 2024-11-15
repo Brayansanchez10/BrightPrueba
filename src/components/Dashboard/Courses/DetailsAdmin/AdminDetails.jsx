@@ -127,9 +127,16 @@ const AdminDetails = ({ visible, onClose, tableUser, courseId }) => {
                                             <td>{progress.resource?.title || 'No Title'}</td>
                                             <td>
                                                 {editingIndex === index ? (
-                                                    <Input
+                                                   <Input
+                                                        type="number"
                                                         value={editedProgress.attempts}
-                                                        onChange={(e) => handleInputChange(e, 'attempts')}
+                                                        onChange={(e) => {
+                                                            // Asegura que el valor no sea negativo y no supere el máximo
+                                                            const value = Math.max(0, Math.min(10, parseInt(e.target.value) || 0)); // 0 es el valor mínimo y 10 el máximo
+                                                            handleInputChange(e, 'attempts', value);
+                                                        }}
+                                                        min="0"
+                                                        max="10"
                                                     />
                                                 ) : (
                                                     progress.attempts
@@ -138,8 +145,15 @@ const AdminDetails = ({ visible, onClose, tableUser, courseId }) => {
                                             <td>
                                                 {editingIndex === index ? (
                                                     <Input
+                                                        type="number"
                                                         value={editedProgress.bestScore}
-                                                        onChange={(e) => handleInputChange(e, 'bestScore')}
+                                                        onChange={(e) => {
+                                                            // Asegura que el valor no sea negativo y no supere el máximo
+                                                            const value = Math.max(0, Math.min(100, parseInt(e.target.value) || 0)); // 0 es el valor mínimo y 100 el máximo
+                                                            handleInputChange(e, 'bestScore', value);
+                                                        }}
+                                                        min="0"
+                                                        max="100"
                                                     />
                                                 ) : (
                                                     progress.bestScore

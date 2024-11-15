@@ -1,22 +1,19 @@
 // CertificateGenerator.js
 import { jsPDF } from "jspdf";
+import { Anothershabby_trial } from "../../../../Tipografy/Anothershabby_trial-normal";
 
-
-export const generatePremiumCertificatePDF = (
-  username,
-  courseTitle,
-  zorroImage,
-  derechaabajo,
-  izquierdaarriba
-) => {
+export const generatePremiumCertificatePDF = (username, courseTitle, zorroImage, derechaabajo, izquierdaarriba) => {
   const doc = new jsPDF({
     orientation: "landscape",
     unit: "cm",
     format: [28, 21.6],
   });
+
+  // Fondo
   doc.setFillColor(240, 248, 255);
   doc.rect(0, 0, 28, 21.6, "F");
 
+  // Imágenes decorativas
   if (izquierdaarriba) {
     doc.addImage(izquierdaarriba, "JPEG", -1, -1, 10, 10);
   }
@@ -24,34 +21,40 @@ export const generatePremiumCertificatePDF = (
     doc.addImage(derechaabajo, "JPEG", 19, 13, 10, 10);
   }
 
-  // eslint-disable-next-line no-undef
-  doc.addFileToVFS("Anothershabby.ttf", Anothershabby_trial);
-  doc.addFont("Anothershabby.ttf", "AnotherShabby", "normal");
-  doc.setFont("AnotherShabby");
+  // Configuración de fuentes
+  doc.setFont("Arial", "normal");
 
-  doc.setFontSize(70);
+  // Título principal
   doc.setTextColor(0, 0, 0);
+  doc.setFontSize(70);
   doc.text("CONSTANCIA", 14, 4.5, { align: "center" });
 
+  // Subtítulo
   doc.setFontSize(25);
   doc.text("De aprendizaje", 18, 5.5, { align: "center" });
 
+  // Logo
   if (zorroImage) {
     doc.addImage(zorroImage, "JPEG", 12, 7, 4, 4);
   }
 
+  // Texto del certificado
   doc.setFont("times", "bold");
   doc.setFontSize(18);
   doc.text("ESTE CERTIFICADO SE OTORGA A", 14, 13.0, { align: "center" });
 
+  // Nombre del usuario
   doc.setFontSize(65);
-  doc.setFont("AnotherShabby", "normal");
+  doc.setFont("Arial", "normal");
   doc.text(`${username}`, 14, 15.5, { align: "center" });
 
+  // Línea decorativa
   doc.setLineWidth(0.1);
   doc.setDrawColor(0, 0, 0);
   doc.line(6, 16, 22, 16);
 
+  // Texto descriptivo
+  doc.setFont("times", "normal");
   doc.setFontSize(14);
   doc.text(
     `Por completar exitosamente el curso "${courseTitle}". `,
@@ -65,7 +68,7 @@ export const generatePremiumCertificatePDF = (
     align: "center",
   });
 
-  doc.setFontSize(14);
+  // Pie de página
   doc.setTextColor(192, 192, 192);
   doc.text("Este certificado fue generado automáticamente.", 14, 19.5, {
     align: "center",

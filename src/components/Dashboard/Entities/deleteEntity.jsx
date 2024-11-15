@@ -55,7 +55,7 @@ const DeleteEntityModal = ({ visible, onClose, entities, deleteEntity }) => {
             await deleteEntity(entities);
             Swal.fire({
                 icon: "success",
-                title: t("deleteEntity.successMessage"),
+                title: t("deleteEntity.deleteSuccess"),
                 timer: 2000,
                 showConfirmButton: false,
             }).then(() => {

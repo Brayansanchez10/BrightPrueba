@@ -993,6 +993,7 @@
         "nameTooShort": "El nombre de la entidad debe tener al menos 3 caracteres.",
         "createButton": "Crear",
         "createSuccess": "¡Entidad creada exitosamente!",
+        "updateSuccess": "¡Entidad actualizada exitosamente!",
         "createFailure": "No se pudo crear la entidad. Por favor, intenta de nuevo.",
         "nameRequired": "Por favor, ingresa el nombre de la entidad",
         "typeRequired": "Por favor, selecciona el tipo de entidad",
@@ -1008,7 +1009,8 @@
         "warningMessage": "Esta acción no se puede deshacer.",
         "confirmButton": "Sí",
         "cancelButton": "Cancelar",
-        "confirm": "Escribe el nombre de la entidad en el campo para eliminar correctamente la entidad"
+        "confirm": "Escribe el nombre de la entidad en el campo para eliminar correctamente la entidad",
+        "deleteSuccess": "¡Entidad eliminada exitosamente!"
     },
     "detailsEntityModal": {
         "title": "Detalles de la entidad",

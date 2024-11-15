@@ -36,9 +36,15 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
             if (courseId) {
                 try {
                     const userData = await getUsersByCourse(courseId);
-                    setTableUser(userData);
+                    if (Array.isArray(userData)) {
+                        setTableUser(userData);
+                    } else {
+                        console.error("getUsersByCourse no retornó un array:", userData);
+                        setTableUser([]);
+                    }
                 } catch (error) {
                     console.error("Error al obtener datos del curso:", error);
+                    setTableUser([]); // Establece un valor por defecto en caso de error
                 }
             }
         };

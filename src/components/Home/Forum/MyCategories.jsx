@@ -9,6 +9,7 @@ import Footer from "../../footer.jsx";
 import { FaSearch } from "react-icons/fa";
 import Logo from "../../../assets/img/hola.png";
 import * as BsIcons from 'react-icons/ai';
+import { useUserContext } from "../../../context/user/user.context.jsx";
 
 export default function ForumCategoriesComponent() {
   const { t } = useTranslation("global");
@@ -19,10 +20,15 @@ export default function ForumCategoriesComponent() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(15);
+  const [entityId, setEntityId] = useState(null);
+  const { getUserById } = useUserContext();
+
 
   const fetchForumCategories = useCallback(async () => {
     if (user && user.data && user.data.id) {
       try {
+        const userData = await getUserById(user.data.id);
+        setEntityId(userData.entityId);
         const fetchedCategories = await getAllForumCategories();
         setCategories(fetchedCategories);
       } catch (error) {
@@ -40,12 +46,18 @@ export default function ForumCategoriesComponent() {
     navigate(`/categories/${forumCategoryId}`);
   };
 
-  const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+ // Filtrado de categorías
+  const filteredCategories = categories
+    .filter((category) =>
+      category.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((category) =>
+      // Mostrar siempre categorías de la entidad 2, o filtrar por entidad del usuario
+      category.entityId === 2 || entityId === 1 || category.entityId === entityId
+    );
 
-  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
-  const paginatedCategories = filteredCategories.slice(
+    const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+    const paginatedCategories = filteredCategories.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );

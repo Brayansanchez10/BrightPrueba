@@ -1005,6 +1005,7 @@
             "nameTooShort": "Entity name must be at least 3 characters long.",
             "createButton": "Create",
             "createSuccess": "Entity created successfully!",
+            "updateSuccess": "Entity updated successfully!",
             "createFailure": "Failed to create entity. Please try again.",
             "nameRequired": "Please enter the entity name",
             "typeRequired": "Please select the entity type",
@@ -1020,7 +1021,8 @@
             "warningMessage": "This action cannot be undone.",
             "confirmButton": "Yes",
             "cancelButton": "Cancel",
-            "confirm": "Escribe el nombre de la entidad en el campo para eliminar correctamente la entidad"
+            "confirm": "Enter the name of the entity in the field to successfully delete the entity",
+            "deleteSuccess": "Entity successfully removed!"
         },
         "detailsEntityModal": {
             "title": "Entity Details",

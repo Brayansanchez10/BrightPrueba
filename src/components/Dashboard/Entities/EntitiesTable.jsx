@@ -115,7 +115,7 @@ const DataTablete = () => {
         try {
           await updateEntity(selectedEntity.id, values);
           Swal.fire({
-            title: t("categories.updateSuccess"),
+            title: t("createEntityForm.updateSuccess"),
             icon: "success",
             timer: 1500,
             showConfirmButton: false,
