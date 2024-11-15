@@ -1,6 +1,6 @@
 // CertificateGenerator.js
 import { jsPDF } from "jspdf";
-import { Anothershabby_trial } from "../../../../Tipografy/Anothershabby_trial-normal";
+
 
 export const generatePremiumCertificatePDF = (
   username,
@@ -24,6 +24,7 @@ export const generatePremiumCertificatePDF = (
     doc.addImage(derechaabajo, "JPEG", 19, 13, 10, 10);
   }
 
+  // eslint-disable-next-line no-undef
   doc.addFileToVFS("Anothershabby.ttf", Anothershabby_trial);
   doc.addFont("Anothershabby.ttf", "AnotherShabby", "normal");
   doc.setFont("AnotherShabby");

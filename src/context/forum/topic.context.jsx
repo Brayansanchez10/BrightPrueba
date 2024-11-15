@@ -56,10 +56,11 @@ export const TopicProvider = ({ children }) => {
         }
     };
 
-    const createForumTopic = async ({ title, Content, userId, forumCategoryId }) => {
+    const createForumTopic = async ({ title, description, Content, userId, forumCategoryId }) => {
         try {
             const newTopic = {
                 title,
+                description,
                 Content,
                 userId: Number(userId),
                 forumCategoryId: Number(forumCategoryId)
@@ -75,10 +76,11 @@ export const TopicProvider = ({ children }) => {
         }
     };
 
-    const updateForumTopic = async (id, { title, Content, userId, forumCategoryId}) => {
+    const updateForumTopic = async (id, { title, description, Content, userId, forumCategoryId}) => {
         try {
             const topicData = {
                 title,
+                description,
                 Content,
                 userId: Number(userId),
                 forumCategoryId: Number(forumCategoryId)

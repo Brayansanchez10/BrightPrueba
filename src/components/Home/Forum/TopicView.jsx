@@ -24,6 +24,8 @@ import Logo from "../../../assets/img/hola.png";
 import "../Resources/resourceView.css";
 import { deleteAnswer } from "../../../api/forum/answers.request.js";
 import { deleteForumComments } from "../../../api/forum/forumComments.request.js";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.bubble.css';
 
 export default function TopicViewComponente() {
   const { t } = useTranslation("global");
@@ -200,7 +202,7 @@ export default function TopicViewComponente() {
       >
         <div className="flex-grow mb-8 md:mb-0 md:mr-8 w-full md:w-2/3">
           <motion.div 
-            className="w-full bg-[#783CDA] rounded-[10px] p-6 mb-8 mt-6 relative"
+            className="w-full bg-[#783CDA] rounded-[10px] p-6 mb-8 mt-6 overflow-y-auto"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}
@@ -210,7 +212,12 @@ export default function TopicViewComponente() {
                 {topic.title}
               </h1>
             </div>
-            <p className="text-white text-center">{topic.Content}</p>
+            <ReactQuill
+              value={topic.Content}
+              readOnly={true}
+              theme="bubble"
+              className="quill-content"
+            />
           </motion.div>
 
           <motion.div 
@@ -458,8 +465,8 @@ export default function TopicViewComponente() {
                     transition={{ delay: 0.1 * index, duration: 0.5 }}
                   >
                     <div className="flex-grow">
-                      <h3 className="font-bungee text-white text-left text-lg">{topic.title}</h3>
-                      <p className="text-white text-sm font-roboto">{topic.Content}</p>
+                      <h3 className="font-bungee text-white text-left text-md">{topic.title}</h3>
+                      <p className="text-white text-sm font-roboto">{topic.description}</p>
                     </div>
                   </motion.div>
                 ))}

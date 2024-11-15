@@ -32,23 +32,28 @@ const CourseNotesHandler = ({
 }) => {
     const handleAddNote = async (e) => {
         e.preventDefault();
-        if (userNote.trim() !== "" && user?.data?.id) {
-          try {
-            const result = await addNote(course.id, {
-              content: userNote,
-              userId: user.data.id,
-            });
-    
-            if (result) {
-              setUserNote("");
-              await fetchCourseNotes(course.id, user.data.id);
-              Swal.fire({icon: "success", title: "Apunte creado", text: "Tu apunte ha sido creado exitosamente.",});}
-          } catch (error) {
-            console.error("Error al añadir nota:", error);
-            Swal.fire({icon: "error", title: "Error", text: "Ocurrió un error al crear el apunte. Por favor, intenta de nuevo más tarde.",});}
-        } else {
-          Swal.fire({icon: "warning",title: "Advertencia", text: "Por favor, escribe un apunte antes de guardar.",});
+        if (userNote.trim() === "") {
+          Swal.fire({
+            icon: "warning",
+            title: "Advertencia",
+            text: "Por favor, escribe un apunte antes de guardar."
+          });
+          return;
         }
+
+        try {
+          const result = await addNote(course.id, {
+            content: userNote,
+            userId: user.data.id,
+          });
+    
+          if (result) {
+            setUserNote("");
+            await fetchCourseNotes(course.id, user.data.id);
+            Swal.fire({icon: "success", title: "Apunte creado", text: "Tu apunte ha sido creado exitosamente.",});}
+        } catch (error) {
+          console.error("Error al añadir nota:", error);
+          Swal.fire({icon: "error", title: "Error", text: "Ocurrió un error al crear el apunte. Por favor, intenta de nuevo más tarde.",});}
       };
     
       const handleAddResourceNote = async (e) => {
