@@ -54,6 +54,20 @@ export default function TopicViewComponente() {
   const { favorites, loading, toggleForumFavorites } = useForumFavorite();
   const [topics, setTopics] = useState([]);
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     if (favorites.length > 0) {
       const fetchForumDetails = async () => {
@@ -200,7 +214,7 @@ export default function TopicViewComponente() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
       >
-        <div className="flex-grow mb-8 md:mb-0 md:mr-8 w-full md:w-2/3">
+        <div className="flex-grow mb-8 md:mb-0 md:mr-[300px] w800:mr-[330px] w900:mr-[380px] w1000:mr-[410px] w1200:mr-[420px] w-full">
           <motion.div 
             className="w-full bg-[#783CDA] rounded-[10px] p-6 mb-8 mt-6 overflow-y-auto"
             initial={{ scale: 0.9, opacity: 0 }}
@@ -378,14 +392,24 @@ export default function TopicViewComponente() {
         </div>
 
         <motion.div 
-          className="w-full md:w-1/3 space-y-8 mt-6"
+          className="w-full md:w-1/3 space-y-8 mt-6 md:block md:fixed md:right-8 md:top-16"
+          style={{ 
+            maxWidth: windowWidth >= 768 ? "400px" : "none",
+            maxHeight: "calc(100vh - 120px)",
+            overflowY: "auto"
+          }}
           initial={{ x: 20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.5 }}
         >
           <div 
             className="bg-[#653079] rounded-[10px] p-4 overflow-y-auto flex flex-col" 
-            style={{ maxHeight: "410px", minHeight: "410px", scrollbarWidth: 'thin', scrollbarColor: '#AF7BC7 #653079' }}
+            style={{ 
+              height: "calc(45vh - 60px)",
+              minHeight: "200px",
+              scrollbarWidth: 'thin', 
+              scrollbarColor: '#AF7BC7 #653079'
+            }}
           >
             <h2 className="font-bungee text-white text-left text-xl mb-4 w-full">{t("Mytopic.commentM")}</h2>
             {bookmark && bookmark.length > 0 ? (
@@ -447,7 +471,12 @@ export default function TopicViewComponente() {
 
           <motion.div 
             className="bg-[#653079] rounded-[10px] p-4 overflow-y-auto" 
-            style={{ maxHeight: "360px", minHeight: "360px", scrollbarWidth: 'thin', scrollbarColor: '#AF7BC7 #653079' }}
+            style={{ 
+              height: "calc(45vh - 60px)",
+              minHeight: "200px",
+              scrollbarWidth: 'thin', 
+              scrollbarColor: '#AF7BC7 #653079'
+            }}
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 1, duration: 0.5 }}
