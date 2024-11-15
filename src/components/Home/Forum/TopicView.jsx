@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { BsFillReplyFill } from "react-icons/bs";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { FaBookmark } from "react-icons/fa";
+import { FaBookmark, FaUser, FaRegUserCircle } from "react-icons/fa";
 import { Button, Modal } from "antd";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/auth.context.jsx";
@@ -23,6 +24,8 @@ import Logo from "../../../assets/img/hola.png";
 import "../Resources/resourceView.css";
 import { deleteAnswer } from "../../../api/forum/answers.request.js";
 import { deleteForumComments } from "../../../api/forum/forumComments.request.js";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.bubble.css';
 
 export default function TopicViewComponente() {
   const { t } = useTranslation("global");
@@ -183,31 +186,60 @@ export default function TopicViewComponente() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-primary">
+    <motion.div 
+      className="flex flex-col min-h-screen bg-primary"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <NavigationBar />
 
-      <div className="py-16 px-4 md:px-6 lg:px-8 flex flex-col md:flex-row">
-        <div className="flex-grow mb-8 md:mb-0 md:mr-8 bg-secondary rounded-lg shadow-md w-full md:w-2/3 overflow-y-auto custom-scrollbar-x" style={{ maxHeight: "calc(100vh - 4rem)" }}>
-          <div className="p-6">
-            <div className="border-b pb-4 mb-4">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-primary">
+      <motion.div 
+        className="py-16 px-4 md:px-6 lg:px-8 flex flex-col md:flex-row"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
+        <div className="flex-grow mb-8 md:mb-0 md:mr-8 w-full md:w-2/3">
+          <motion.div 
+            className="w-full bg-[#783CDA] rounded-[10px] p-6 mb-8 mt-6 overflow-y-auto"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            <div className="flex justify-between items-start mb-4">
+              <h1 className="font-bungee text-white text-left text-3xl pr-16 break-words">
                 {topic.title}
               </h1>
-              <p className="text-sm md:text-base text-gray-600 dark:text-primary">{topic.Content}</p>
             </div>
+            <ReactQuill
+              value={topic.Content}
+              readOnly={true}
+              theme="bubble"
+              className="quill-content"
+            />
+          </motion.div>
+
+          <motion.div 
+            className="w-full bg-[#783CDA] rounded-[10px] p-6 overflow-y-auto"
+            style={{ maxHeight: "calc(100vh - 20rem)", scrollbarWidth: 'thin', scrollbarColor: '#5A28AA #783CDA' }}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
             <Button
-              className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-blue-700 transition w-full md:w-auto"
+              className="bg-[#783CDA] text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-[#5A28AA] transition w-full md:w-auto mb-6 font-bungee"
               onClick={() => handleCreateFormComments()}
             >
               {t("topicView.topicComment")}
             </Button>
 
-            <h2 className="text-xl font-semibold mt-6 mb-4 dark:text-primary">
+            <h2 className="font-bungee text-white text-left text-2xl mb-6">
               {t("topicView.comments")}
             </h2>
-            <div className="comments-section space-y-4">
+            <div className="comments-section space-y-6">
               {Array.isArray(comments) && comments.length > 0 ? (
-                comments.map((comment) => {
+                comments.map((comment, index) => {
                   const isLiked = likes.some(
                     (like) => like.commentsId === comment.id
                   );
@@ -216,173 +248,260 @@ export default function TopicViewComponente() {
                   );
 
                   return (
-                    <div
+                    <motion.div
                       key={comment.id}
-                      className="p-4 bg-white dark:bg-primary border border-gray-300 dark:border-[#1E1034] rounded-lg shadow hover:shadow-lg transition mb-4"
+                      className="p-4 bg-[#5A28AA] rounded-lg shadow mb-4 hover:bg-[#4A3270] transition-colors duration-300 relative group"
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.1 * index, duration: 0.5 }}
                     >
-                      <p className="text-sm md:text-base text-gray-800 dark:text-primary">{comment.content}</p>
-                      <small className="text-xs md:text-sm text-gray-400 block mt-1">
-                        {t("Creador")}: {comment.user.username}
-                      </small>
-
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        <Button
-                          className="bg-secondary text-blue-500 dark:text-primary dark:border-[#1E1034] hover:bg-blue-100 transition-colors duration-200 p-1 md:p-2"
-                          onClick={() => handleCreateFormAnswers(comment.id)}
-                          icon={<BsFillReplyFill />}
-                        />
+                      <div className="flex items-start mb-4">
+                        <div className="w-10 h-10 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3">
+                          {comment.user.userImage ? (
+                            <img src={comment.user.userImage} alt={comment.user.username} className="w-full h-full object-cover" />
+                          ) : (
+                            <FaUser className="text-purple-900 text-xl" />
+                          )}
+                        </div>
+                        <div className="flex-grow">
+                          <span className="text-white font-semibold block">{comment.user.username}</span>
+                          <span className="text-gray-300 text-sm">{new Date(comment.createdAt).toLocaleString()}</span>
+                        </div>
+                        {user &&
+                          user.data &&
+                          user.data.id === comment.userId && (
+                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <div className="flex items-center space-x-2">
+                                <Button
+                                  onClick={() => openEditCommentsModal(comment)}
+                                  className="bg-transparent border-none p-1 hover:text-blue-400 transition-colors duration-300"
+                                  icon={<EditOutlined className="text-white text-lg hover:text-blue-400" />}
+                                />
+                                <Button
+                                  onClick={() => handleDeleteComment(comment.id)}
+                                  className="bg-transparent border-none p-1 hover:text-red-400 transition-colors duration-300"
+                                  icon={<DeleteOutlined className="text-white text-lg hover:text-red-400" />}
+                                />
+                              </div>
+                            </div>
+                          )}
+                      </div>
+                      <p className="text-white mb-4">{comment.content}</p>
+                      <div className="flex justify-end space-x-2">
                         <Button
                           onClick={() => handleLikeToggle(comment.id)}
-                          className="bg-secondary text-red-500 dark:text-primary dark:border-[#1E1034] hover:bg-red-100 transition-colors duration-200 p-1 md:p-2"
+                          className="bg-transparent border-none p-1 hover:text-red-400 transition-colors duration-300"
                           icon={
                             isLiked ? (
-                              <AiFillHeart className="text-red-500" />
+                              <AiFillHeart className="text-red-500 text-xl" />
                             ) : (
-                              <AiOutlineHeart />
+                              <AiOutlineHeart className="text-white text-xl hover:text-red-400" />
                             )
                           }
                           disabled={likesLoading}
                         />
                         <Button
                           onClick={() => handleBookmarkToggle(comment.id)}
-                          className="bg-secondary text-yellow-500 dark:text-primary dark:border-[#1E1034] hover:bg-yellow-100 transition-colors duration-200 p-1 md:p-2"
+                          className="bg-transparent border-none p-1 hover:text-yellow-400 transition-colors duration-300"
                           icon={
                             <FaBookmark
-                              color={isBookmarked ? "orange" : "gray"}
+                              className={`text-xl ${isBookmarked ? "text-yellow-500" : "text-white hover:text-yellow-400"}`}
                             />
                           }
                           disabled={bookmarkLoading}
                         />
-
-                        {user &&
-                          user.data &&
-                          user.data.id === comment.userId && (
-                            <>
-                              <Button
-                                onClick={() => openEditCommentsModal(comment)}
-                                className="bg-secondary text-blue-600 dark:text-primary dark:border-[#1E1034] hover:bg-blue-100 transition-colors duration-200 p-1 md:p-2"
-                                icon={<EditOutlined />}
-                              />
-                              <Button
-                                onClick={() => handleDeleteComment(comment.id)}
-                                className="bg-secondary text-red-600 dark:text-primary dark:border-[#1E1034] hover:bg-red-100 transition-colors duration-200 p-1 md:p-2"
-                                icon={<DeleteOutlined />}
-                              />
-                            </>
-                          )}
+                        <Button
+                          className="bg-transparent border-none p-1 hover:text-blue-400 transition-colors duration-300"
+                          onClick={() => handleCreateFormAnswers(comment.id)}
+                          icon={<BsFillReplyFill className="text-white text-xl hover:text-blue-400" />}
+                        />
                       </div>
 
                       {answersByComment[comment.id] &&
-                      answersByComment[comment.id].length > 0 ? (
-                        <div className="answers-section mt-4 ml-2 md:ml-4 space-y-2">
-                          {answersByComment[comment.id].map((answer) => (
-                            <div
+                      answersByComment[comment.id].length > 0 && (
+                        <div className="answers-section mt-4 space-y-4 pl-4 border-l-2 border-white">
+                          {answersByComment[comment.id].map((answer, answerIndex) => (
+                            <motion.div
                               key={answer.id}
-                              className="p-2 bg-gray-100 dark:bg-secondary border-l-4 border-purple-700 rounded-lg shadow mt-2"
+                              className="p-4 bg-[#4A2394] rounded-lg shadow mt-2 hover:bg-[#3D1D7A] transition-colors duration-300 relative group"
+                              initial={{ x: -10, opacity: 0 }}
+                              animate={{ x: 0, opacity: 1 }}
+                              transition={{ delay: 0.1 * (answerIndex + 1), duration: 0.5 }}
                             >
-                              <p className="text-sm md:text-base text-primary">{answer.content}</p>
-                              <small className="text-xs md:text-sm text-gray-400">
-                                {t("Creador")}: {answer.user.username}
-                              </small>
-
-                              {user &&
-                                user.data &&
-                                user.data.id === answer.userId && (
-                                  <div className="mt-2 space-x-2">
-                                    <Button
-                                      onClick={() => openEditAnswersModal(answer)}
-                                      className="dark:bg-primary text-blue-600 dark:text-primary dark:border-none p-1 md:p-2"
-                                      icon={<EditOutlined />}
-                                    />
-                                    <Button
-                                      onClick={() => handleDeleteAnswer(answer.id)}
-                                      className="dark:bg-primary text-red-600 dark:text-primary dark:border-none p-1 md:p-2"
-                                      icon={<DeleteOutlined />}
-                                    />
-                                  </div>
-                                )}
-                            </div>
+                              <div className="flex items-start mb-2">
+                                <div className="w-8 h-8 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-2">
+                                  {answer.user.userImage ? (
+                                    <img src={answer.user.userImage} alt={answer.user.username} className="w-full h-full object-cover" />
+                                  ) : (
+                                    <FaUser className="text-purple-900 text-sm" />
+                                  )}
+                                </div>
+                                <div className="flex-grow">
+                                  <span className="text-white font-semibold block">{answer.user.username}</span>
+                                  <span className="text-gray-300 text-sm">{new Date(answer.createdAt).toLocaleString()}</span>
+                                </div>
+                                {user &&
+                                  user.data &&
+                                  user.data.id === answer.userId && (
+                                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                      <div className="flex items-center space-x-2">
+                                        <Button
+                                          onClick={() => openEditAnswersModal(answer)
+                                          }
+                                          className="bg-transparent border-none p-1 hover:text-blue-400 transition-colors duration-300"
+                                          icon={<EditOutlined className="text-white text-lg hover:text-blue-400" />}
+                                        />
+                                        <Button
+                                          onClick={() =>
+                                            handleDeleteAnswer(answer.id)
+                                          }
+                                          className="bg-transparent border-none p-1 hover:text-red-400 transition-colors duration-300"
+                                          icon={<DeleteOutlined className="text-white text-lg hover:text-red-400" />}
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                              </div>
+                              <p className="text-white">{answer.content}</p>
+                            </motion.div>
                           ))}
                         </div>
-                      ) : (
-                        <p className="text-sm md:text-base text-gray-500 dark:text-primary mt-2">{t("No respuestas")}</p>
                       )}
-                    </div>
+                    </motion.div>
                   );
                 })
               ) : (
-                <p className="text-sm md:text-base text-gray-500 dark:text-primary">{t("noComments")}</p>
+                <p className="text-white">{t("Mytopic.noComments")}</p>
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        <div className="w-full md:w-1/3 bg-secondary rounded-lg shadow-md overflow-hidden">
-          <div className="dark:bg-primary m-4 p-3 rounded-md shadow-md overflow-y-auto custom-scrollbar-x" style={{ height: "360px", minHeight: "360px" }}>
-            <h2 className="text-lg md:text-xl text-primary font-semibold mb-4">Comentarios marcados</h2>
-            {bookmark.length > 0 ? <div className="space-y-2">
+        <motion.div 
+          className="w-full md:w-1/3 space-y-8 mt-6"
+          initial={{ x: 20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+        >
+          <div 
+            className="bg-[#653079] rounded-[10px] p-4 overflow-y-auto flex flex-col" 
+            style={{ maxHeight: "410px", minHeight: "410px", scrollbarWidth: 'thin', scrollbarColor: '#AF7BC7 #653079' }}
+          >
+            <h2 className="font-bungee text-white text-left text-xl mb-4 w-full">{t("Mytopic.commentM")}</h2>
+            {bookmark && bookmark.length > 0 ? (
+              <div className="space-y-2 w-full">
                 {bookmark.map((fav) => {
-                  const comment = comments.find((c) => c.id === fav.commentId);
+                  const comment = comments.find((c) => c.id === fav.commentId)
                   return comment ? (
-                    <div
+                    <motion.div
                       key={comment.id}
-                      className="p-2 bg-gray-100 dark:bg-secondary border-l-4 border-purple-700 rounded-lg shadow mt-2"
+                      className="p-2 bg-[#AF7BC7] rounded-[10px] shadow mt-2"
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.3 }}
                     >
-                      <p className="text-sm md:text-base text-primary">{comment.content}</p>
-                      <small className="text-xs md:text-sm text-gray-400">
-                        {t("Creador")}: {comment.user.username}
-                      </small>
-                    </div>
-                  ) : null;
+                      <div className="flex items-center mb-2">
+                        <div className="w-8 h-8 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-2">
+                          {comment.user.userImage ? (
+                            <img src={comment.user.userImage} alt={comment.user.username} className="w-full h-full object-cover" />
+                          ) : (
+                            <FaUser className="text-purple-900 text-sm" />
+                          )}
+                        </div>
+                        <span className="text-sm font-semibold text-white">{comment.user.username}</span>
+                      </div>
+                      <p className="text-ls text-white font-medium">{comment.content}</p>
+                    </motion.div>
+                  ) : null
                 })}
               </div>
-              :
-              <div className="pb-3">
-                <div className="dark:bg-primary p-3 rounded-lg">
-                  <img className="h-20 md:h-28 mb-4 mx-auto" src={Logo} alt="Logo" />
-                  <h2 className="text-xl md:text-2xl font-bold mb-4 text-center text-gray-800 dark:text-primary">
-                    No tienes ningun comentario marcado
-                  </h2>
-                  <p className="text-center text-gray-600 dark:text-primary text-xs sm:text-sm md:text-base lg:text-lg">
-                    Marca comentarios de tu interes
-                  </p>
-                </div>
-              </div>
-            }
-          </div>
-
-          <div className="dark:bg-primary m-4 p-3 rounded-md shadow-md overflow-y-auto custom-scrollbar-x" style={{ height: "360px", minHeight: "360px" }}>
-            <h2 className="text-lg md:text-xl text-primary font-semibold mb-4">Foros favoritos</h2>
-
-            {topics.length > 0 ? (
-              <div className="space-y-2">
-                {topics.map((topic) => (
-                  <div
-                    key={topic.id}
-                    className="p-2 bg-gray-100 dark:bg-secondary border-l-4 border-purple-700 rounded-lg shadow mt-2 cursor-pointer"
-                    onClick={() => handleTopicClick(topic.id)}
-                  >
-                    <p className="text-sm md:text-base text-primary">{topic.title}</p>
-                    <small className="text-xs md:text-sm text-gray-400 dark:text-gray-300">
-                      {topic.Content}
-                    </small>{" "}
-                  </div>
-                ))}
-              </div>
             ) : (
-              <div className="dark:bg-primary p-4 rounded-lg">
-                <img className="h-20 md:h-28 mb-4 mx-auto" src={Logo} alt="Logo" />
-                <h2 className="text-xl md:text-2xl font-bold mb-4 text-center text-gray-800 dark:text-primary">
-                  No tienes foros favoritos establecidos
-                </h2>
-                <p className="text-center text-gray-600 dark:text-primary text-xs sm:text-sm md:text-base lg:text-lg">
-                  Mira tus foros favoritos
-                </p>
+              <div className="flex-grow flex flex-col items-center justify-center">
+                <motion.img 
+                  className="h-32 mb-4" 
+                  src={Logo} 
+                  alt="Logo"
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+                <motion.p 
+                  className="text-white text-lg font-semibold text-center"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2, duration: 0.5 }}
+                >
+                  {t("Mytopic.messageC")}
+                </motion.p>
+                <motion.p 
+                  className="text-white text-sm mt-2 text-center"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                >
+                  {t("Mytopic.messageC2")}
+                </motion.p>
               </div>
             )}
           </div>
-        </div>
-      </div>
+
+          <motion.div 
+            className="bg-[#653079] rounded-[10px] p-4 overflow-y-auto" 
+            style={{ maxHeight: "360px", minHeight: "360px", scrollbarWidth: 'thin', scrollbarColor: '#AF7BC7 #653079' }}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1, duration: 0.5 }}
+          >
+            <h2 className="font-bungee text-white text-left text-xl mb-4">{t("Mytopic.favoriteF")}</h2>
+            {topics.length > 0 ? (
+              <div className="space-y-2">
+                {topics.map((topic, index) => (
+                  <motion.div
+                    key={topic.id}
+                    className="p-2 bg-[#AF7BC7] rounded-[10px] shadow mt-2 cursor-pointer flex items-center"
+                    onClick={() => handleTopicClick(topic.id)}
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.1 * index, duration: 0.5 }}
+                  >
+                    <div className="flex-grow">
+                      <h3 className="font-bungee text-white text-left text-md">{topic.title}</h3>
+                      <p className="text-white text-sm font-roboto">{topic.description}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center">
+                <motion.img 
+                  className="h-32 mb-4 mx-auto" 
+                  src={Logo} 
+                  alt="Logo"
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+                <motion.p 
+                  className="text-white text-lg font-semibold"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2, duration: 0.5 }}
+                >
+                  {t("Mytopic.messageF")}
+                </motion.p>
+                <motion.p 
+                  className="text-white text-sm mt-2"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                >
+                  {t("Mytopic.messageF2")}
+                </motion.p>
+              </div>
+            )}
+          </motion.div>
+        </motion.div>
+      </motion.div>
 
       <Footer />
 
@@ -427,6 +546,6 @@ export default function TopicViewComponente() {
           fetchForumTopic();
         }}
       />
-    </div>
+    </motion.div>
   );
 }

@@ -1,71 +1,123 @@
-import React, { useEffect, useState } from "react";
-import { Modal, Spin } from "antd";
+import React, { useState, useEffect } from "react";
+import { Modal, Spin, Input } from "antd";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import zorroImage from "../../../assets/img/Zorro.png";
 import "../css/Custom.css";
-import { getAllForumCategories } from "../../../api/forum/forumCategories.request";
+import {
+  getForumCategoryById,
+  deleteForumCategory as apiDeleteForumCategory,
+} from "../../../api/forum/forumCategories.request";
 
+const DeleteForumCategory = ({
+  visible,
+  onClose,
+  category,
+  onDeleteSuccess = () => {},
+}) => {
+  const { t } = useTranslation("global");
+  const [confirmationInput, setConfirmationInput] = useState("");
+  const [isConfirmDisabled, setIsConfirmDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [forum, setForum] = useState({ id: null, name: "" });
 
-const DeleteForumCategory = ({ isVisible, visible, onClose, category, deleteForumCategory }) => {
-    const { t } = useTranslation("global");
-    const [ categories, setCategories ] = useState("");
+  useEffect(() => {
+    if (visible && category) {
+      fetchForum();
+      setConfirmationInput("");
+    } else {
+      setForum({ id: null, name: "" });
+      setConfirmationInput("");
+    }
+  }, [visible, category]);
 
-    useEffect(() => {
-        if (visible) {
-            fetchCategories();
-        } else {
-            setCategories([]);
+  useEffect(() => {
+    setIsConfirmDisabled(confirmationInput !== forum.name);
+  }, [confirmationInput, forum.name]);
+
+  const fetchForum = async () => {
+    setLoading(true);
+    try {
+      const response = await getForumCategoryById(category);
+      setForum(response.data);
+    } catch (error) {
+      console.error("Error fetching forum category", error);
+      Swal.fire({
+        icon: "error",
+        title: t("forumCategory.fetchError"),
+        text: t("forumCategory.fetchErrorMessage"),
+        timer: 3000,
+        showConfirmButton: true,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const confirmDeleteCategory = async () => {
+    if (confirmationInput !== forum.name) {
+      Swal.fire({
+        icon: "error",
+        title: t("forumCategory.nameMatchError"),
+        text: t("forumCategory.nameMatchErrorMessage"),
+        timer: 3000,
+        showConfirmButton: true,
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await apiDeleteForumCategory(forum.id);
+      Swal.fire({
+        icon: "success",
+        title: t("forumCategory.deleteSuccess"),
+        timer: 2000,
+        showConfirmButton: false,
+      }).then(() => {
+        if (typeof onDeleteSuccess === 'function') {
+          onDeleteSuccess();
         }
-    }, [visible]);
+        onClose();
+      });
+    } catch (error) {
+      console.error("Error deleting forum category", error);
+      Swal.fire({
+        icon: "error",
+        title: t("forumCategory.deleteError"),
+        text: error.response?.data?.message || t("forumCategory.genericError"),
+        timer: 3000,
+        showConfirmButton: true,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const fetchCategories = async () => {
-        try {
-            const response = await getAllForumCategories();
-            setCategories(response.data);
-        } catch (error) {
-            console.error("Error al obtener todas las categorias del foro:", err);
-        }
-    };
+  if (!category) {
+    return null;
+  }
 
-    const confirmDeleteRole = async () => {
-        try {
-          await deleteForumCategory(category);
-          Swal.fire({
-            icon: "success",
-            title: "Foro eliminado correctamente",
-            timer: 2000,
-            showConfirmButton: false,
-          }).then(() => {
-            onClose();
-          });
-          fetchCategories();
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "Error al eliminar el foro",
-            text: error.message || "An error occurred while deleting the forum.",
-            title: t("forumCategory.AertError"),
-            text: error.message || "An error occurred while deleting the role.",
-            timer: 3000,
-            showConfirmButton: true,
-          });
-        }
-    };
-
-
-    return (
-        <Modal
-          className="custom-modal w-[543px] h-[350px] bg-white rounded-3xl"
-          centered
-          visible={visible}
-          onCancel={onClose}
-          footer={null}
-          closable={false}
-          bodyStyle={{
-            overflow: "hidden",
-          }}
-        >
+  return (
+    <Modal
+      className="custom-modal w-[543px] bg-white rounded-3xl"
+      centered
+      open={visible}
+      onCancel={onClose}
+      footer={null}
+      closable={false}
+      styles={{
+        body: {
+          overflow: "hidden",
+        },
+      }}
+    >
+      {loading ? (
+        <div className="flex justify-center items-center h-[350px]">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <>
           <div className="relative w-full h-[125px] bg-gradient-to-r from-[#872626] to-red-500 flex justify-center items-center">
             <img
               src={zorroImage}
@@ -84,23 +136,41 @@ const DeleteForumCategory = ({ isVisible, visible, onClose, category, deleteForu
               {t("forumCrud.deleteTitle")}
             </h1>
             <p className="text-lg font-semibold mb-3">
-              {t("forumCrud.deleteMessage")}
+              {t("forumCrud.deleteMessage")} {forum.name}?
             </p>
             <p className="text-sm font-extrabold text-red-500 mb-6">
               <b>{t("roles.deleteCannot")}</b>
             </p>
+            <div className="mb-4">
+              <p className="text-xl font-black text-red-500 mb-2">"{forum.name}"</p>
+              <p className="text-sm font-semibold mb-2">
+                {t("deleteCategory.messageD")}
+              </p>
+              <Input
+                placeholder={t("deleteCourse.camp")}
+                value={confirmationInput}
+                onChange={(e) => setConfirmationInput(e.target.value)}
+                className="w-full max-w-md mx-auto"
+              />
+            </div>
             <div className="flex justify-center space-x-4">
               <button
-                className="bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#ff2f22] transition-all duration-300"
-                onClick={confirmDeleteRole}
+                className={`bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md transition-all duration-300 ${
+                  isConfirmDisabled
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-[#ff2f22]"
+                }`}
+                onClick={confirmDeleteCategory}
+                disabled={isConfirmDisabled}
               >
                 {t("roles.confirm")}
               </button>
             </div>
           </div>
-        </Modal>
-    );
-    
+        </>
+      )}
+    </Modal>
+  );
 };
 
 export default DeleteForumCategory;

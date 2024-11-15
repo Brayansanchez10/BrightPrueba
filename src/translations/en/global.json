@@ -411,10 +411,11 @@
         "next": "Next",
         "previous": "Previous",
         "confirmDeleteRole": "Delete Role",
-        "deleteConfirmation": "Are you sure you want to delete this role?",
+        "deleteConfirmation": "Are you sure you want to delete the role",
         "deleteCannot": "This action cannot be undone.",
         "SearchRoles": "Search by roles",
-        "close":"Close"
+        "close":"Close",
+        "confirmR": "Escribe el nombre del rol en el campo para eliminar correctamente el rol."
     },
     "createRoleForm": {
         "title": "Create Role",
@@ -471,7 +472,9 @@
         "irreversibleMessage": "This action cannot be undone.",
         "confirmButton": "Delete",
         "loseProgressMessage": "You will lose your course progress",
-        "currentProgress": "Current progress:"
+        "currentProgress": "Current progress:",
+        "confirm": "Type the course name in the field to successfully delete the course.",
+        "camp": "Write the name to delete correctly"
     },
     "deleteConfirmation": {
         "confirmDeletion": "Confirm Deletion",
@@ -607,7 +610,8 @@
         "confirmMessage": "Do you want to delete this category with all its courses?",
         "warningMessage": "This action cannot be undone.",
         "confirmButton": "Yes",
-        "onlyButton": "Just the category"
+        "onlyButton": "Just the category",
+        "messageD": "Type the name of the forum in the field to successfully delete the forum."
     },
     "detailsCategoryModal": {
         "title": "Details",
@@ -882,6 +886,7 @@
         "ModalTitle": "Create Topic",
         "buttonCreate": "Create Topic",
         "topicTitle": "Please enter a title for your topic",
+        "topicDescription": "Please enter a description for your topic",
         "topicContent": "Here the content",
         "contentTooLong": "The content is too long",
         "pleaseReduceContent": "Please reduce the content to make it more readable.",
@@ -894,12 +899,14 @@
         "create": "Create",
         "cancel": "Cancel",
         "validateTitle": "Minimum characters for the title is 3",
+        "validateDescription": "Minimum characters for the description is 30",
         "validateContent": "Minimum characters for the content is 8"
     },
     "updateTopic": {
         "updateAlert": "Topic successfully updated",
         "TitleModalCreate": "Update Topic",
         "topicTitle": "Please enter a title for your topic",
+        "topicDescription": "Please enter a description for your topic",
         "topicContent": "Here the content",
         "contentTooLong": "The content is too long",
         "pleaseReduceContent": "Please reduce the content to make it more readable.",
@@ -912,6 +919,7 @@
         "update": "Save",
         "cancel": "Cancel",
         "validateTitle": "Minimum characters for the title is 3",
+        "validateDescription": "Minimum characters for the description is 30",
         "validateContent": "Minimum characters for the content is 8"
     },
     "createComments": {
@@ -1007,10 +1015,11 @@
         },
         "deleteEntity": {
             "confirmDeletion": "Delete entity",
-            "confirmMessage": "Do you want to delete this entity?",
+            "confirmMessage": "Do you want to delete the entity",
             "warningMessage": "This action cannot be undone.",
             "confirmButton": "Yes",
-            "cancelButton": "Cancel"
+            "cancelButton": "Cancel",
+            "confirm": "Escribe el nombre de la entidad en el campo para eliminar correctamente la entidad"
         },
         "detailsEntityModal": {
             "title": "Entity Details",
@@ -1037,7 +1046,7 @@
             "updateTitle": "Update forum",
             "detailsTitle": "Forum details",
             "deleteTitle": "Delete forum",
-            "deleteMessage": "Are you sure you want to delete this forum?",
+            "deleteMessage": "Are you sure you want to delete the forum",
             "notify": "Forum created successfully"
         },
 
@@ -1086,7 +1095,14 @@
         "open": "Open",
         "title": "Title",
         "image_alt": "Forum image",
-        "create_forum": "CREATE FORUM"
+        "create_forum": "CREATE FORUM",
+        "commentM": "Flagged comments",
+        "messageC": "You don't have any comments marked",
+        "messageC2": "Mark comments to quickly view them here.",
+        "noComments": "There are no comments yet, create a comment to start interacting",
+        "favoriteF": "Favorite forums",
+        "messageF": "You do not have established favorite forums",
+        "messageF2": "Bookmark forums to view them here."
     },
 
     "categoriesTable": {

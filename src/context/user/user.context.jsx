@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
-import { getAllUsers, ActivateAcc, getUser, updateUser as updateUserApi, deleteUser as deleteUserApi, deleteUserConfirmation as deleteUserConfirmationApi, createUser as createUserApi, registerToCourse as registerToCourseApi, getUserCourses as getUserCoursesApi, changePassword as changePasswordApi } from '../../api/user/user.request';
+import { getAllUsers, ActivateAcc, getUser, updateUser as updateUserApi, deleteUser as deleteUserApi, deleteUserConfirmation as deleteUserConfirmationApi, createUser as createUserApi, registerToCourse as registerToCourseApi, getUserCourses as getUserCoursesApi, changePassword as changePasswordApi, getUsersByCourse as getUsersByCourseApi } from '../../api/user/user.request';
 import { useAuth } from '../auth.context'; // Importa el contexto de autenticación
 import NewPassword from '../../components/Home/ChangePasswordUser';
 
@@ -144,6 +144,18 @@ export const UserProvider = ({ children }) => {
         }
     };
 
+    // Nueva función para obtener los usuarios registrados en un Curso
+    const getUsersByCourse = async (courseId) => {
+        try {
+            const res = await getUsersByCourseApi(courseId);
+            console.log('Curso Obtenido', res.data);
+            return res.data;
+        } catch (error) {
+            console.error('Error al obteneer el curso', error);
+            return null;
+        }
+    };
+
     useEffect(() => {
         if (isAuthenticated()) {
             getUsers();
@@ -166,6 +178,7 @@ export const UserProvider = ({ children }) => {
                 registerToCourse,
                 getUserCourses,
                 changePassword,
+                getUsersByCourse,
             }}
         >
             {children}

@@ -3,6 +3,8 @@ import axios from "../axios";
 // Función para obtener todas las entidades
 export const getEntity = () => axios.get('/entities/getEntity');
 
+export const getEntityById = (id) => axios.get(`/entities/getEntityById/${id}`)
+
 // Función para crear una entidad
 export const createEntity = async (entityData) => {
     try {

@@ -17,11 +17,13 @@ const CreateTopicForm = ({ visible, onClose, onCreate, forumCategoryId, fetchFor
     const { t } = useTranslation("global");
     const [username, setUsername] = useState('');
     const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const [Content, setContent] = useState('');
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [characterCount, setCharacterCount] = useState(0);
     const MAX_TITLE_LENGTH = 30;
+    const MAX_DESCRIPTION_LENGTH = 300;
     const MAX_CONTENT_LENGTH = 1000;
 
     const modules = {
@@ -77,6 +79,7 @@ const CreateTopicForm = ({ visible, onClose, onCreate, forumCategoryId, fetchFor
     // Resetear el formulario después de crear el tema
     const resetForm = () => {
         setTitle('');
+        setDescription('');
         setContent('');
         setErrors({});
     };
@@ -86,6 +89,9 @@ const CreateTopicForm = ({ visible, onClose, onCreate, forumCategoryId, fetchFor
         
         if (!title || title.length < 3) {
             newErrors.title = t("createTopic.validateTitle");
+        } 
+        if (!description || description.length < 30) {
+            newErrors.description = t("createTopic.validateDescription");
         } 
 
         const textContent = Content.replace(/<(.|\n)*?>/g, '').trim();
@@ -152,6 +158,7 @@ const CreateTopicForm = ({ visible, onClose, onCreate, forumCategoryId, fetchFor
         setIsSubmitting(true); // Desactivar el botón de enviar mientras se procesa
         const topicData = {
             title,
+            description,
             Content,
             userId: user.data.id,
             forumCategoryId: Number(forumCategoryId)
@@ -212,6 +219,20 @@ const CreateTopicForm = ({ visible, onClose, onCreate, forumCategoryId, fetchFor
                         {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
                         <div className="text-gray-600 text-right mt-1 text-sm">
                             {title.length}/{MAX_TITLE_LENGTH}
+                        </div>
+                    </div>
+                    <div className="mb-4">
+                        <Input 
+                            value={description} 
+                            onChange={(e) => setDescription(e.target.value)} 
+                            placeholder={t("createTopic.topicDescription")}
+                            maxLength={MAX_DESCRIPTION_LENGTH}
+                            className="w-full"
+                            required 
+                        />
+                        {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+                        <div className="text-gray-600 text-right mt-1 text-sm">
+                            {description.length}/{MAX_DESCRIPTION_LENGTH}
                         </div>
                     </div>
 

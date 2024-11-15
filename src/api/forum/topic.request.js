@@ -14,6 +14,7 @@ export const createForumTopic = async (topicData) => {
   try {
     const formData = new FormData(); // Crear una instancia de FormData
     formData.append('title', topicData.title);
+    formData.append('description', topicData.description);
     formData.append('Content', topicData.Content);
     formData.append('userId', topicData.userId);
     formData.append('forumCategoryId', Number(topicData.forumCategoryId));
@@ -35,6 +36,7 @@ export const updateForumTopic = async (id, topicData) => {
     try {
         const formData = new FormData(); // Crear una instancia de FormData   
         formData.append('title', topicData.title);
+        formData.append('description', topicData.description);
         formData.append('Content', topicData.Content);
         formData.append('userId', topicData.userId);
         formData.append('forumCategoryId', Number(topicData.forumCategoryId));

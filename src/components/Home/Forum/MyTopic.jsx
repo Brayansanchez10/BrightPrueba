@@ -265,17 +265,12 @@ export default function TopicComponent() {
                           <FaRegUserCircle  className="w-12 h-12 text-white-500 mr-3" />
                         )}
 
-                        <div className="flex-grow pr-16">
+                        <div className="flex-grow w-full pr-16">
                           <h2 className="text-white font-bungee text-base line-clamp-1">
                             {topic.title}
                           </h2>
-                          <div className="text-white font-sans text-base line-clamp-2 mt-1 quill-content-preview">
-                            <ReactQuill
-                              value={topic.Content}
-                              readOnly={true}
-                              theme="bubble"
-                              modules={{ toolbar: false }}
-                            />
+                          <div className="text-white font-sans text-base line-clamp-4 mt-1">
+                            <p className="text-sm">{topic.description || 'No hay una descripción para el foro'}</p>
                           </div>
                         </div>
                       </div>

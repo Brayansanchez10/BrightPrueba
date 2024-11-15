@@ -17,12 +17,14 @@ const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCate
     const [username, setUsername] = useState('');
     const { updateForumTopic, getForumTopicByCategoryId } = useForumTopic();
     const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const [Content, setContent] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState({});
-    const MAX_TITLE_LENGTH = 30;
     const [characterCount, setCharacterCount] = useState(0);
     const [quillRef, setQuillRef] = useState(null);
+    const MAX_TITLE_LENGTH = 30;
+    const MAX_DESCRIPTION_LENGTH = 300;
     const MAX_CONTENT_LENGTH = 1000;
 
     const modules = {
@@ -100,6 +102,7 @@ const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCate
         if (TopicData){
             // Actualizar el estado con los datos iniciales
             setTitle(TopicData.title || "");
+            setDescription(TopicData.description || "");
             setContent(TopicData.Content || "");
         }
     }, [TopicData]);
@@ -107,6 +110,7 @@ const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCate
     // Resetear el formulario después de crear el tema
     const resetForm = () => {
         setTitle(TopicData.title);
+        setDescription(TopicData.description);
         setContent(TopicData.Content);
         setErrors({});
     };
@@ -116,6 +120,9 @@ const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCate
         
         if (!title || title.length < 3) {
             newErrors.title = t("updateTopic.validateTitle");
+        } 
+        if (!description || description.length < 30) {
+            newErrors.description = t("updateTopic.validateDescription");
         } 
 
         const textContent = Content.replace(/<(.|\n)*?>/g, '').trim();
@@ -147,6 +154,7 @@ const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCate
         setIsSubmitting(true); // Desactivar el botón de enviar mientras se procesa
         const updatedData = {
             title,
+            description,
             Content,
             userId: user.data.id,
             forumCategoryId: Number(forumCategoryId)
@@ -194,6 +202,7 @@ const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCate
                             value={title} 
                             onChange={(e) => setTitle(e.target.value)} 
                             placeholder={t("updateTopic.topicTitle")}
+                            maxLength={MAX_TITLE_LENGTH}
                             required 
                         />
                         {errors.title && <p className="text-red-500">{errors.title}</p>}
@@ -201,6 +210,20 @@ const UpdateForumTopicForm = ({ isVisible, onClose, visible, onUpdate, forumCate
                             {title.length}/{MAX_TITLE_LENGTH}
                         </div>
                     </div>
+                    <div className="mb-4">
+                        <Input 
+                            value={description} 
+                            onChange={(e) => setDescription(e.target.value)} 
+                            placeholder={t("updateTopic.topicDescription")}
+                            maxLength={MAX_DESCRIPTION_LENGTH}
+                            required 
+                        />
+                        {errors.description && <p className="text-red-500">{errors.description}</p>}
+                         <div className="text-gray-600 text-right mt-1">
+                            {description.length}/{MAX_DESCRIPTION_LENGTH}
+                        </div>
+                    </div>
+
                     <div className="mb-6">
                         <div className="flex gap-2 flex-col sm:flex-row mb-2">
                             <Button 

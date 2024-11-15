@@ -32,11 +32,45 @@
     min-height: 100%;
 }
 
+/* Estilos para el contenido de TopicView */
+.quill-content {
+  border: none;
+}
+
+.quill-content .ql-editor {
+  padding: 0;
+  color: white;
+  font-size: 16px;
+}
+
+/* Asegura que todo el contenido dentro del editor tenga los mismos estilos */
+.quill-content .ql-editor p,
+.quill-content .ql-editor span {
+  color: white;
+  font-size: 16px;
+}
+
+/* Asegura que los enlaces sean visibles */
+.quill-content .ql-editor a {
+  color: #00aeff;
+}
+
+/* Estilos para las listas */
+.quill-content .ql-editor ul,
+.quill-content .ql-editor ol {
+  color: white;
+}
+
 /* Ajustar el tamaño de los iframes de video */
 .ql-editor iframe {
     width: 100% !important;
     height: 350px !important; /* Puedes ajustar esta altura según necesites */
     max-width: 620px !important; /* Limitar el ancho máximo */
+}
+
+/* Ajustar el tamaño de los img */
+.ql-editor img {
+  height: 350px !important; /* Puedes ajustar esta altura según necesites */
 }
 
 /* Estilos para el popup de enlaces */
