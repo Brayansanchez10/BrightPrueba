@@ -21,9 +21,7 @@ export const generatePremiumCertificatePDF = (username, courseTitle, zorroImage,
   }
 
   // Configuración de fuentes
-  doc.addFileToVFS("Anothershabby.ttf", Anothershabby_trial);
-  doc.addFont("Anothershabby.ttf", "AnotherShabby", "normal");
-  doc.setFont("AnotherShabby");
+  doc.setFont("Arial", "normal");
 
   // Título principal
   doc.setTextColor(0, 0, 0);
@@ -46,7 +44,7 @@ export const generatePremiumCertificatePDF = (username, courseTitle, zorroImage,
 
   // Nombre del usuario
   doc.setFontSize(65);
-  doc.setFont("AnotherShabby", "normal");
+  doc.setFont("Arial", "normal");
   doc.text(`${username}`, 14, 15.5, { align: "center" });
 
   // Línea decorativa
@@ -99,9 +97,7 @@ export const generateCertificatePreview = async (username, courseTitle, zorroIma
     }
 
     // Configuración de fuentes
-    doc.addFileToVFS("Anothershabby.ttf", Anothershabby_trial);
-    doc.addFont("Anothershabby.ttf", "AnotherShabby", "normal");
-    doc.setFont("AnotherShabby");
+    doc.setFont("Arial", "normal");
 
     // Título principal
     doc.setTextColor(0, 0, 0);
@@ -124,7 +120,7 @@ export const generateCertificatePreview = async (username, courseTitle, zorroIma
 
     // Nombre del usuario
     doc.setFontSize(65);
-    doc.setFont("AnotherShabby", "normal");
+    doc.setFont("Arial", "normal");
     doc.text(`${username}`, 14, 15.5, { align: "center" });
 
     // Línea decorativa
@@ -141,7 +137,7 @@ export const generateCertificatePreview = async (username, courseTitle, zorroIma
       17.5,
       { align: "center" }
     );
-  
+
     doc.setFontSize(14);
     doc.text("Gracias por tu dedicación y esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 18.0, {
       align: "center",
@@ -149,14 +145,11 @@ export const generateCertificatePreview = async (username, courseTitle, zorroIma
 
     // Agregar marcas de agua si el curso no está completado
     if (!isCompleted) {
-      // Configurar transparencia
       doc.setGState(new doc.GState({ opacity: 0.6 })); // Reducimos la opacidad a 0.6 (60%)
       
       doc.setTextColor(100, 149, 237);
       doc.setFontSize(40);
       doc.setFont("helvetica", "bold");
-
-      // Crear patrón de marcas de agua
       for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 4; j++) {
           const xPos = i * 7;
@@ -168,12 +161,8 @@ export const generateCertificatePreview = async (username, courseTitle, zorroIma
           });
         }
       }
-
-      // Restaurar la opacidad normal para el resto del contenido
       doc.setGState(new doc.GState({ opacity: 1 }));
     }
-
-    // Retornar el PDF como array buffer
     return doc.output('arraybuffer');
   } catch (error) {
     console.error('Error generando el certificado:', error);

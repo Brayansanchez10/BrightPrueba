@@ -229,7 +229,7 @@ export default function AllCourses() {
     (course) =>
       (course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
        course.category.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (entityId === 1 || course.entityId === entityId) &&
+      (course.entityId === 2 || entityId === 1 || course.entityId === entityId) && // Asegura que se muestren los cursos de la entidad 2 siempre
       course.categoryId !== 1
   );
 

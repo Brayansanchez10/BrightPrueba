@@ -98,7 +98,7 @@ const CreateEntityModal = ({ visible, onClose, isVisible }) => {
 
       Swal.fire({
         icon: "success",
-        title: t('createEntityForm.entityCreated'),
+        title: t('createEntityForm.createSuccess'),
         showConfirmButton: false,
         timer: 1500,
       }).then(() => {

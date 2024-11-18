@@ -47,3 +47,25 @@ export const updateForumCategories = async (id, categoriesData) => {
 
 // Función para eliminar 
 export const deleteForumCategory = (id) => axios.delete(`/forumCategory/delete/${id}`);
+
+// Función para activar/desactivar el foro
+export const toggleForumActivation = async (entityId, userId) => {
+    try {
+        const response = await axios.post('/forumCategory/forum/toggle', { entityId, userId });
+        return response.data; // Devuelve el mensaje y el estado actualizado
+    } catch (error) {
+        console.error("Error al activar/desactivar el foro:", error);
+        throw error;
+    }
+};
+
+// Función para obtener el estado del foro
+export const getForumState = async (entityId) => {
+    try {
+        const response = await axios.get('/forumCategory/forum/state', { params: { entityId } });
+        return response.data.state; // Devuelve el estado actual del foro
+    } catch (error) {
+        console.error("Error al obtener el estado del foro:", error);
+        throw error;
+    }
+};

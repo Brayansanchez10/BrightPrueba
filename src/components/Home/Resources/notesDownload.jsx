@@ -1,39 +1,60 @@
 import jsPDF from "jspdf";
+import hola from "../../../assets/img/hola.png"
 
 export const generateNotesPDF = (notes, resourceNotes, resources) => {
   const doc = new jsPDF();
-  let yOffset = 10;
+  
+  // Configuración inicial y header
+  doc.setFont('helvetica', 'bold');
+  
+  // Logo
+  doc.addImage(hola, 'PNG', 20, 3, 25, 25);
+  
+  // Título principal
+  doc.setFontSize(16);
+  doc.text('APUNTES DEL CURSO', 190, 18, { align: 'right' });
+  
+  // Línea separadora
+  doc.setLineWidth(0.3);
+  doc.line(20, 30, 190, 30);
 
-  // Título (contenido del apunte general)
+  // Título del contenido
+  let yOffset = 45;
   if (notes.length > 0) {
     doc.setFontSize(20);
     doc.text(notes[0].content, 105, yOffset, { align: "center" });
     yOffset += 20;
   }
 
-  // Apuntes de los recursos
+  // Contenido de los recursos
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(12);
+
   resourceNotes.forEach((resourceNote) => {
     const resource = resources.find(r => r.id === resourceNote.resourceId);
     const resourceTitle = resource ? resource.title : `Recurso desconocido (ID: ${resourceNote.resourceId})`;
 
-    // Subtítulo (nombre del recurso)
-    doc.setFontSize(16);
-    doc.text(resourceTitle, 10, yOffset);
+    doc.setFont('helvetica', 'bold');
+    doc.text(resourceTitle, 20, yOffset);
     yOffset += 10;
 
-    // Contenido del apunte del recurso
-    doc.setFontSize(12);
-    const splitContent = doc.splitTextToSize(resourceNote.content, 180);
+    doc.setFont('helvetica', 'normal');
+    const splitContent = doc.splitTextToSize(resourceNote.content, 170);
     
-    if (yOffset + splitContent.length * 7 > 280) {
+    if (yOffset + splitContent.length * 7 > 260) { // Ajustado para dejar espacio al pie de página
       doc.addPage();
-      yOffset = 10;
+      yOffset = 20;
     }
 
-    doc.text(splitContent, 10, yOffset);
+    doc.text(splitContent, 20, yOffset);
     yOffset += splitContent.length * 7 + 15;
   });
 
-  // Guardar el PDF
+  // Pie de página
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.text('PLATAFORMA EDUCATIVA', 105, 280, { align: 'center' });
+  doc.text('COLOMBIA', 105, 285, { align: 'center' });
+
   doc.save("Apuntes_del_curso.pdf");
 };

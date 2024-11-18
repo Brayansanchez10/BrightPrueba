@@ -4,6 +4,8 @@ import {
     createForumCategories as  createForumCategoriesApi,
     updateForumCategories as  updateForumCategoriesApi,
     deleteForumCategory   as  deleteForumCategoryApi,
+    toggleForumActivation as toggleForumActivationApi,
+    getForumState as getForumStateApi,
 } from '../../api/forum/forumCategories.request.js';
 
 export const CategoriesContext = createContext();
@@ -19,6 +21,7 @@ export const useForumCategories = () => {
 
 export const ForumCategoriesProvider = ({ children }) => {
     const [ categories, setCategories ] = useState([]);
+    const [forumState, setForumState] = useState(null);  // Nuevo estado para almacenar el estado del foro
 
 
     const getAllForumCategories = async () => {
@@ -76,13 +79,37 @@ export const ForumCategoriesProvider = ({ children }) => {
         }
     };
 
+     // Función para activar/desactivar el foro
+     const toggleForumActivation = async (entityId, userId) => {
+        try {
+            const result = await toggleForumActivationApi(entityId, userId);
+            console.log(result.message);  // Muestra el mensaje de activación/desactivación
+            return result.state;  // Devuelve el nuevo estado del foro
+        } catch (error) {
+            console.error('Error al activar/desactivar el foro:', error);
+            throw error;
+        }
+    };
+
+    // Función para obtener el estado del foro
+    const getForumState = async (entityId) => {
+        try {
+            const state = await getForumStateApi(entityId);
+            setForumState(state);  // Actualiza el estado del foro en el contexto
+            return state;
+        } catch (error) {
+            console.error('Error al obtener el estado del foro:', error);
+            throw error;
+        }
+    };
+
     
     useEffect(() => {
         getAllForumCategories();
     }, []);
 
     return (
-        <CategoriesContext.Provider value= {{ categories, getAllForumCategories, createForumCategories, updateForumCategories, deleteForumCategory }}> 
+        <CategoriesContext.Provider value= {{ categories, getAllForumCategories, createForumCategories, updateForumCategories, deleteForumCategory, toggleForumActivation, getForumState }}> 
             {children}
         </CategoriesContext.Provider>
     );

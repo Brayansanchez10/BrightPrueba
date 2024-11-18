@@ -277,8 +277,13 @@ const DataTablete = () => {
         (course) => entityId === 1 || course.entityId === entityId // Cambia la condición según tu lógica
     );
 
+    // Filtrado por userId si el usuario no es admin (userId !== 1)
+    const userFilteredCourses = entityFilteredCourses.filter(
+        (course) => user?.data?.id === 1 || course.userId === user?.data?.id
+    );
+
     // Paginar los cursos filtrados
-    const paginatedCourses = entityFilteredCourses.slice(
+    const paginatedCourses = userFilteredCourses.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
@@ -293,8 +298,10 @@ const DataTablete = () => {
           course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
           course.category.toLowerCase().includes(searchValue.toLowerCase()) ||
           course.description.toLowerCase().includes(searchValue.toLowerCase())
-  ).filter(
-      (course) => entityId === 1 || course.entityId === entityId // Filtrado por entityId
+      ).filter(
+        (course) => entityId === 1 || course.entityId === entityId // Filtrado por entityId
+      ).filter(
+        (course) => user?.data?.id === 1 || course.userId === user?.data?.id // Filtrado por userId
   );
 
    // Función para manejar la visibilidad del menú de cada curso
@@ -456,50 +463,53 @@ const DataTablete = () => {
 
                                                           {/* Menú desplegable para los botones de update, details, notify y delete */}
                                                           <div className="relative">
-                                                          <Button
-                                                              className="bg-gray-300 text-gray-700 font-bold py-1.5 px-4 rounded-full ml-2 shadow-md shadow-gray-400"
+                                                            <Button
+                                                              className="bg-gray-300 text-gray-700 font-bold py-1.5 px-4 rounded-full ml-0 shadow-md shadow-gray-400"
                                                               icon={<MoreOutlined />}
                                                               onClick={() => toggleDropdown(course.id)}
                                                             />
                                                               {openMenus[course.id] && (
-                                                                  <div className="absolute left-full ml-2 mt-0 w-8 bg-white border rounded-md shadow-lg z-10 flex flex-col"  ref={menuRef}>
-                                                                      {canEdit && (
-                                                                          <Button
-                                                                              className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1 px-4 w-full"
-                                                                              icon={<ReloadOutlined />}
-                                                                              onClick={() => handleUpdateButtonClick(course)}
-                                                                          >
-                                                                              
-                                                                          </Button>
-                                                                      )}
-                                                                      {canShow && (
-                                                                          <Button
-                                                                              className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1 px-4 w-full"
-                                                                              icon={<InfoCircleOutlined />}
-                                                                              onClick={() => handleDetailsButtonClick(course)}
-                                                                          >
-                                                                              
-                                                                          </Button>
-                                                                      )}
-                                                                      {canNotify && (
-                                                                          <Button
-                                                                              className="bg-orange-500 hover:bg-zinc-300 text-white font-bold py-1 px-4 w-full"
-                                                                              icon={<BellOutlined />}
-                                                                              onClick={() => handleNotifyButtonClick(course)}
-                                                                          >
-                                                                              
-                                                                          </Button>
-                                                                      )}
-                                                                      {canDelete && (
-                                                                          <Button
-                                                                              className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1 px-4 w-full"
-                                                                              icon={<DeleteOutlined />}
-                                                                              onClick={() => handleDeleteButtonClick(course)}
-                                                                          >
-                                                                              
-                                                                          </Button>
-                                                                      )}
-                                                                  </div>
+                                                                <div
+                                                                  className="absolute left-full top-0 ml-0 bg-white border rounded-md shadow-lg z-10 flex flex-row space-x-0"
+                                                                  ref={menuRef}
+                                                                >
+                                                                  {canEdit && (
+                                                                    <Button
+                                                                      className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1 px-4"
+                                                                      icon={<ReloadOutlined />}
+                                                                      onClick={() => handleUpdateButtonClick(course)}
+                                                                    >
+                                                                      {/* Botón de Editar */}
+                                                                    </Button>
+                                                                  )}
+                                                                  {canShow && (
+                                                                    <Button
+                                                                      className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1 px-4"
+                                                                      icon={<InfoCircleOutlined />}
+                                                                      onClick={() => handleDetailsButtonClick(course)}
+                                                                    >
+                                                                      {/* Botón de Ver Detalles */}
+                                                                    </Button>
+                                                                  )}
+                                                                  {canNotify && (
+                                                                    <Button
+                                                                      className="bg-orange-500 hover:bg-zinc-300 text-white font-bold py-1 px-4"
+                                                                      icon={<BellOutlined />}
+                                                                      onClick={() => handleNotifyButtonClick(course)}
+                                                                    >
+                                                                      {/* Botón de Notificar */}
+                                                                    </Button>
+                                                                  )}
+                                                                  {canDelete && (
+                                                                    <Button
+                                                                      className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1 px-4"
+                                                                      icon={<DeleteOutlined />}
+                                                                      onClick={() => handleDeleteButtonClick(course)}
+                                                                    >
+                                                                      {/* Botón de Eliminar */}
+                                                                    </Button>
+                                                                  )}
+                                                                </div>
                                                               )}
                                                           </div>
                                                       </div>

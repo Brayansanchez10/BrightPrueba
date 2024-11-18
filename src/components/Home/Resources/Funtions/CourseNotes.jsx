@@ -37,13 +37,22 @@ const CourseNotes = ({
       </h3>
       {notes.length === 0 && (
         <div className="mb-4">
-          <input
-            value={userNote}
-            onChange={(e) => setUserNote(e.target.value)}
-            placeholder={t("resource_view.addNotePlaceholder1")}
-            className="w-full bg-[#321A5A] text-white rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#9869E3]"
-          />
-          <div className="flex justify-end mt-2">
+          <div className="relative">
+            <input
+              value={userNote}
+              onChange={(e) => {
+                const newValue = e.target.value.slice(0, 50);
+                setUserNote(newValue);
+              }}
+              placeholder={t("resource_view.addNotePlaceholder1")}
+              className="w-full bg-[#321A5A] text-white rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#9869E3]"
+              maxLength={50}
+            />
+            <span className="absolute right-2 bottom-[-20px] text-white text-sm">
+              {`${userNote.length}/50`}
+            </span>
+          </div>
+          <div className="flex justify-end mt-6">
             <button
               onClick={handleAddNote}
               className="px-4 py-2 bg-[#4B2F7A] font-bungee text-white rounded-md hover:bg-[#6e46b4] transition-colors flex items-center text-xs"

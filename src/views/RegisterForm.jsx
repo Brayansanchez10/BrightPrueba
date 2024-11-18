@@ -67,6 +67,9 @@ function RegisterForm() {
       .oneOf([yup.ref("password"), null], t("register.passwords_match"))
       .required(t("register.repeat_password")
     ),
+    entityId: yup
+    .string()
+    .required(t("register.entityId_required")),
   });
 
   const formik = useFormik({

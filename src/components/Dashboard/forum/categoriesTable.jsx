@@ -21,7 +21,7 @@ import * as BsIcons from 'react-icons/ai';
 
 const DataTablete = () => {
     const { t } = useTranslation("global");
-    const { categories, getAllForumCategories, deleteForumCategory, updateForumCategories } = useForumCategories();
+    const { categories, getAllForumCategories, deleteForumCategory, updateForumCategories, getForumState, toggleForumActivation, forumState } = useForumCategories();
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [dataFlag, setDataFlag] = useState(false);
     const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
@@ -64,19 +64,21 @@ const DataTablete = () => {
         setTotalItems(filteredCategory.length);
         setTotalPages(Math.ceil(filteredCategory.length / itemsPerPage));
     }, [categories, searchValue, itemsPerPage]);
-
-    useEffect(() => {
-        const forumState = localStorage.getItem("forumActive");
     
-        // Si forumState no está en localStorage, establecemos el foro como activado (true)
-        setForumActive(forumState === "true" || forumState === null);
-    }, []);
-    
-    const toggleForumStatus = () => {
+   // Función para activar/desactivar el foro
+   const toggleForumStatus = async () => {
+    try {
         const newStatus = !forumActive;
-        setForumActive(newStatus);
-        localStorage.setItem("forumActive", newStatus); // Guardamos el estado en localStorage
-    };
+        setForumActive(newStatus);  // Actualiza el estado en el componente
+
+        // Guardar el estado en el servidor
+        const newStateFromServer = await toggleForumActivation(entityId, user.data.id);
+        setForumActive(newStateFromServer);  // Actualiza el estado después de la respuesta del servidor
+    } catch (error) {
+        console.error('Error al cambiar el estado del foro:', error);
+        setError("No se pudo cambiar el estado del foro.");
+    }
+};
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -95,6 +97,10 @@ const DataTablete = () => {
                         setPermisosByRol(permisos || []); // Si permisos es undefined, establece un array vacío
                         console.log("Permisos del rol", permisos);
                     }
+
+                     // Obtener el estado del foro desde el servidor
+                     const forumStateFromServer = await getForumState(userData.entityId);
+                     setForumActive(forumStateFromServer);  // Actualiza el estado del foro desde el servidor
                 } catch (error) {
                     console.error("Error al obtener datos del usuario o permisos del rol:", error);
                     setError("Error al obtener datos del usuario o permisos del rol.");
@@ -103,7 +109,7 @@ const DataTablete = () => {
         };
     
         fetchUserData();
-    }, [user]);
+    }, [user, getForumState]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -262,7 +268,7 @@ const DataTablete = () => {
                                 </h2>
                                 <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
                                     {canActivate &&
-                                        <Button
+                                         <Button
                                             type="primary"
                                             className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
                                             onClick={toggleForumStatus}

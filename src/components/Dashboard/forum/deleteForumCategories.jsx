@@ -8,6 +8,7 @@ import {
   getForumCategoryById,
   deleteForumCategory as apiDeleteForumCategory,
 } from "../../../api/forum/forumCategories.request";
+import { useForumCategories } from "../../../context/forum/forumCategories.context";
 
 const DeleteForumCategory = ({
   visible,
@@ -20,6 +21,17 @@ const DeleteForumCategory = ({
   const [isConfirmDisabled, setIsConfirmDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [forum, setForum] = useState({ id: null, name: "" });
+  const { getAllForumCategories } = useForumCategories();
+  const [categories, setCategories] = useState({});
+
+  const fetchCategories = async () => {
+    try {
+      const response = await getAllForumCategories();
+      setCategories(response);
+    } catch (err) {
+      console.error("Error al obtener todas los roles:", err);
+    }
+  };
 
   useEffect(() => {
     if (visible && category) {
@@ -42,13 +54,6 @@ const DeleteForumCategory = ({
       setForum(response.data);
     } catch (error) {
       console.error("Error fetching forum category", error);
-      Swal.fire({
-        icon: "error",
-        title: t("forumCategory.fetchError"),
-        text: t("forumCategory.fetchErrorMessage"),
-        timer: 3000,
-        showConfirmButton: true,
-      });
     } finally {
       setLoading(false);
     }
@@ -71,7 +76,7 @@ const DeleteForumCategory = ({
       await apiDeleteForumCategory(forum.id);
       Swal.fire({
         icon: "success",
-        title: t("forumCategory.deleteSuccess"),
+        title: t("forumCategory.AlertDelete"),
         timer: 2000,
         showConfirmButton: false,
       }).then(() => {
@@ -80,6 +85,7 @@ const DeleteForumCategory = ({
         }
         onClose();
       });
+      fetchCategories();
     } catch (error) {
       console.error("Error deleting forum category", error);
       Swal.fire({
