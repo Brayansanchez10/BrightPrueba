@@ -338,7 +338,7 @@ export default function ViewProfile() {
               <p className="text-lg text-gray-600 text-center">{t('viewProfile.completeM')}</p>
             }
           </div>
-        </motion.div>zº
+        </motion.div>
       </motion.div>
       <div className="pt-12">
         <Footer />

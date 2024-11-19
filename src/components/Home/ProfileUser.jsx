@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import { Trash2 } from "lucide-react";
 import { getEntity } from "../../api/user/entities.request";
+import Footer from "../footer";
 
 const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
   const { t } = useTranslation("global");
@@ -212,21 +213,21 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
     <div className="bg-primary min-h-screen">
       <NavigationBar />
       <div className="justify-center items-center pt-16 w-full">
-        <div className="md:mt-3 mt-5 px-4 pb-3 rounded-lg">
-          <div className="max-w-lg w-full mx-auto bg-secondary rounded-lg shadow-lg overflow-hidden">
+        <div className="md:mt-3 mt-5 px-4 pb-3 rounded-lg md:flex md:justify-center">
+          <div className="max-w-lg w-full mx-auto bg-secondary rounded-lg shadow-lg overflow-hidden md:mr-2">
             <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-4 px-6 md:px-10">
               <h1 className="text-center font-black text-white md:text-xl lg:text-2xl">
                 {t("userProfileSettings.edit_profile")}
               </h1>
             </div>
-            <div className="p-6 md:p-10">
-              <div className="flex items-center mb-6">
-                <div className="relative">
+            <div className="p-6 md:px-10 md:py-6">
+              <div className="flex items-center mb-4">
+                <div className="relative flex-shrink-0">
                   {previewProfileImage && (
                     <img
                       src={previewProfileImage}
                       alt="Preview"
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full shadow-lg"
+                      className="w-14 h-14 sm:w-20 sm:h-20 rounded-full shadow-lg"
                     />
                   )}
                   {previewProfileImage && (
@@ -235,7 +236,7 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
                       className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
                       onClick={handleDeleteImage}
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={14} />
                     </button>
                   )}
                 </div>
@@ -387,8 +388,11 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
               </form>
             </div>
           </div>
-          <SettingsBar className="" />
+          <SettingsBar />
         </div>
+      </div>
+      <div className="pt-12">
+        <Footer />
       </div>
     </div>
   );
