@@ -20,7 +20,9 @@
         "login_se": "Login",
         "your_account": "your account",
         "or": "or",
-        "google": "Login with Google"
+        "google": "Login with Google",
+        "titleE": "Login error",
+        "messageE": "The data entered does not correspond to the registered user"
     },
     "carousel": {
         "phrases": {
@@ -96,7 +98,8 @@
         "enter_registered_email": "Enter your registered email",
         "send_recovery_code": "Send recovery code",
         "not_registered_yet": "Haven’t you registered yet",
-        "register_now": "Register Now"
+        "register_now": "Register Now",
+        "try_again": "Try again with a registered email address in BrightMind"
     },
     "reset_password_verify": {
         "sent_code": "We sent you a code",
@@ -849,7 +852,7 @@
     "NumerQuizz": "Number of attempts"
     },
     "forumCategory": {
-        "noCategory": "No categories created",
+        "noCategory": "There are no forums created",
         "title": "Available",
         "title2": "Forums",
         "tableIcons": "icons",

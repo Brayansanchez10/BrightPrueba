@@ -59,19 +59,19 @@ const LoginForm = () => {
           setError(message);
           Swal.fire({
             icon: 'error',
-            title: t("login.error"),
+            title: t("login.titleE"),
             text: message,
           });
         }
       } catch (error) {
         console.log("Error capturado en el catch:", error);
         const errorMessage =
-          error?.response?.data?.message || t("login.error_occurred");
+          error?.response?.data?.message || t("login.messageE");
         setError(errorMessage);
         Swal.fire({
           icon: 'error',
-          title: t("login.error"),
-          text: errorMessage,
+          title: t("login.titleE"),
+          text: t("login.messageE"),
         });
       } finally {
         setLoading(false);
