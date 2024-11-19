@@ -43,7 +43,7 @@ const SettingsBar = () => {
   };
 
   return (
-    <div className="mt-8 md:mt-6 bg-secondary rounded-xl shadow-lg max-w-lg mx-auto overflow-hidden">
+    <div className="mt-8 md:mt-0 bg-secondary rounded-xl shadow-lg max-w-lg mx-auto my-auto overflow-hidden md:ml-2">
       <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-4 px-6">
         <h2 className="text-center font-black text-white text-xl md:text-2xl">
           {t("settingsBar.account_settings")}

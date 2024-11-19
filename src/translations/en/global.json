@@ -276,7 +276,8 @@
          "sections": "sections",
          "registerM": "RESGISTER!",
          "registering": "Registering...",
-         "yaregister": "ALREADY REGISTERED!" 
+         "yaregister": "ALREADY REGISTERED!", 
+         "progressbarra": "Progress:"
 
     },
     "leftBarComponent": {
