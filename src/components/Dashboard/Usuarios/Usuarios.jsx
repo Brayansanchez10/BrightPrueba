@@ -66,8 +66,13 @@ const DataTable = () => {
             try {
                 // Obtener datos del usuario
                 const userData = await getUserById(user.data.id);
-                setUsername(userData.username); // Guarda el nombre de usuario (u otra información)
-
+                if (Array.isArray(userData)) {
+                    setUsername(userData.username); // Guarda el nombre de usuario (u otra información)
+                } else {
+                    console.error("getUserById no retornó un array:", userData);
+                    setUsername([]);
+                }
+                
                 // Guarda el entityId del usuario
                 setEntityId(userData.entityId); // Asegúrate de tener este estado definido
                 

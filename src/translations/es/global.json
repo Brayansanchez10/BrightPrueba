@@ -268,7 +268,8 @@
         "sections": "secciones",
         "registerM": "INSCRIBETE!",
         "registering": "Inscribiendo...",
-        "yaregister": "YA REGISTRADO!" 
+        "yaregister": "YA REGISTRADO!",
+        "progressbarra": "Progreso:"
     },
     "leftBarComponent": {
         "start": "Inicio",
