@@ -208,7 +208,7 @@ export default function UserCourses() {
                         <div className="flex items-center">
                           <FaFlagCheckered className="text-gray-400 dark:text-primary" />
                           <p className="text-gray-400 dark:text-primary font-semibold ml-2 mr-1">
-                            {"Progreso:"}
+                            {t("courseComponent.progressbarra")}
                           </p>
                           <p className="text-green-600 dark:text-green-500 font-semibold">{`${
                             courseProgress[course.id] || 0
