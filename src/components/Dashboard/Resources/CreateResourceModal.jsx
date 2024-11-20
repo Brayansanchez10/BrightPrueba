@@ -20,7 +20,7 @@ const { Text } = Typography;
 const MAX_TITLE_LENGTH = 30;
 const { Panel } = Collapse;
 
-const ALLOWED_FILE_TYPES = [".mov", ".docx", ".pdf", ".jpg", ".png"];
+const ALLOWED_FILE_TYPES = [".pdf", ".jpg", ".jpeg", ".png"];
 const YOUTUBE_URL_REGEX =
   /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
 const VIMEO_URL_REGEX = /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)$/i;
@@ -193,16 +193,6 @@ const CreateResourceModal = ({
     return "";
   };
 
-  const getPdfEmbedUrl = (url) => {
-    return `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent(url)}`;
-  };
-
-  const isMobileDevice = () => {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    );
-  };
-
   // Manejar cambios en los quizzes
   const handleQuizChange = (index, e) => {
     const { name, value } = e.target;
@@ -363,20 +353,36 @@ const CreateResourceModal = ({
     const file = e.target.files[0];
     if (!file) return;
 
-    const fileExtension = file.name.split(".").pop().toLowerCase();
-    if (ALLOWED_FILE_TYPES.includes(`.${fileExtension}`)) {
-      setSelectedFile(file);
-    } else {
+    // Validar tamaño del archivo (10MB = 10 * 1024 * 1024 bytes)
+    if (file.size > 10 * 1024 * 1024) {
       Swal.fire({
-        icon: "warning",
-        title: t("UpdateResource.ValidationAlertFile"),
-        text: t("UpdateResource.ValidationAlertFileDescription"),
-        showConfirmButton: false,
-        timer: 2500,
+          icon: "error",
+          title: t("UpdateResource.ValidationAlertFile"),
+          text: "El archivo excede el límite de 10MB",
+          showConfirmButton: false,
+          timer: 2500,
       });
       e.target.value = "";
       setSelectedFile(null);
-    }
+      return;
+  }
+   // Obtener la extensión del archivo en minúsculas
+   const fileExtension = file.name.split(".").pop().toLowerCase();
+    
+   // Validar si la extensión está permitida
+   if (ALLOWED_FILE_TYPES.includes(`.${fileExtension}`)) {
+     setSelectedFile(file); // Si es válido, establecer el archivo seleccionado
+   } else {
+     Swal.fire({
+       icon: "warning",
+       title: t("UpdateResource.ValidationAlertFile"),
+       text: t("UpdateResource.ValidationAlertFileDescription"),
+       showConfirmButton: false,
+       timer: 3000,
+     });
+     e.target.value = ""; // Limpiar el input de archivo
+     setSelectedFile(null); // Eliminar archivo seleccionado
+   }
   };
 
   const handleLinkChange = (e) => setLink(e.target.value);

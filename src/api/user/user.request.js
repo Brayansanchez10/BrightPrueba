@@ -32,3 +32,6 @@ export const changePassword = (email, newPassword) => axios.post(`/users/changeP
 
 // Nueva función para obtener los usuarios registrados en un Curso
 export const getUsersByCourse = (courseId) => axios.get(`/users/courses/${courseId}/users`);
+
+// Nueva función para el botón de activar y desactivar cuenta
+export const toggleState = (userId) => axios.post(`/users/toggleState/${userId}`);

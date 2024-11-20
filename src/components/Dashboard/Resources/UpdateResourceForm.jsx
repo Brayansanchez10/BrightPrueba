@@ -89,20 +89,23 @@ const UpdateResourceForm = ({ isVisible, onCancel, resourceData, onUpdate, cours
         return;
     }
 
-    const fileExtension = file.name.split(".").pop().toLowerCase();
-    if (ALLOWED_FILE_TYPES.includes(`.${fileExtension}`)) {
-        setSelectedFile(file);
-    } else {
-        Swal.fire({
-            icon: "warning",
-            title: t("UpdateResource.ValidationAlertFile"),
-            text: t("UpdateResource.ValidationAlertFileDescription"),
-            showConfirmButton: false,
-            timer: 2500,
-        });
-        e.target.value = "";
-        setSelectedFile(null);
-    }
+   // Obtener la extensión del archivo en minúsculas
+   const fileExtension = file.name.split(".").pop().toLowerCase();
+    
+   // Validar si la extensión está permitida
+   if (ALLOWED_FILE_TYPES.includes(`.${fileExtension}`)) {
+     setSelectedFile(file); // Si es válido, establecer el archivo seleccionado
+   } else {
+     Swal.fire({
+       icon: "warning",
+       title: t("UpdateResource.ValidationAlertFile"),
+       text: t("UpdateResource.ValidationAlertFileDescription"),
+       showConfirmButton: false,
+       timer: 3000,
+     });
+     e.target.value = ""; // Limpiar el input de archivo
+     setSelectedFile(null); // Eliminar archivo seleccionado
+   }
   };
 
   // Funciones encargadas de manejar todo lo relacionado al quizz
