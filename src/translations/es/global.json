@@ -452,7 +452,10 @@
         "crear": "Crear",
         "section": "Seccion",
         "generalComments": "comentarios generales",
-        "comment": "Comentar"
+        "comment": "Comentar",
+        "myCourses": "Mis Cursos",
+        "allEntityCourses": "Todos los Cursos",
+        "details": "Ver detalles"
     },
     "courseDetails": {
         "detailsOfCourse": "Detalles del curso:",
@@ -666,7 +669,7 @@
         "Option": "La opción no puede estar vacía.",
         "ValidationAnswer": "La respuesta correcta debe coincidir con una de las opciones.",
         "ValidationAlertFile": "Tipo de archivo no permitido.",
-        "ValidationAlertFileDescription": "Por favor, selecciona un archivo con uno de los tipos permitidos.",
+        "ValidationAlertFileDescription": "Por favor, selecciona un archivo PDF o imagen con los siguentes formatos: jpg/jpeg/png.",
         "UpdateAlert": "Recurso actualizado exitosamente.",
         "ErrorAlert": "Ocurrió un error al guardar el recurso.",
         "ModalTitle": "Editar Recurso",

@@ -28,7 +28,7 @@ import { useTranslation } from "react-i18next";
 const DataTable = () => {
   const { t } = useTranslation("global");
   const { rolesData } = useRoleContext();
-  const { getUsers, usersData, activateAccount, updateUser, createUser, getUserById } =
+  const { getUsers, usersData, activateAccount, updateUser, createUser, getUserById, buttonActivate } =
     useUserContext();
   const [updatedDataFlag, setUpdatedDataFlag] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -168,7 +168,7 @@ const DataTable = () => {
 
   const handleActivateAccount = (userId) => {
     setUpdatedDataFlag(true);
-    activateAccount(userId);
+    buttonActivate(userId);
   };
 
   const orderBy = (key) => {
@@ -501,7 +501,7 @@ const DataTable = () => {
                                   <>
                                     <FaUserCheck
                                       size="16px"
-                                      className="inline-block mr-1.5 -mt-1"
+                                      className="inline-block mr-2.5 -mt-0"
                                     />
                                     {t("datatable.Activate")}
                                   </>

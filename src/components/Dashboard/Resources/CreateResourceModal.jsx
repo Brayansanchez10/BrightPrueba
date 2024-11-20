@@ -7,7 +7,7 @@ import {
   deleteResource,
 } from "../../../api/courses/resource.request";
 import UpdateResourceForm from "./UpdateResourceForm";
-import { EditOutlined, DeleteFilled, FilePdfOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteFilled, FilePdfOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
@@ -20,7 +20,7 @@ const { Text } = Typography;
 const MAX_TITLE_LENGTH = 30;
 const { Panel } = Collapse;
 
-const ALLOWED_FILE_TYPES = [".mov", ".docx", ".pdf", ".jpg", ".png"];
+const ALLOWED_FILE_TYPES = [".pdf", ".jpg", ".jpeg", ".png"];
 const YOUTUBE_URL_REGEX =
   /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
 const VIMEO_URL_REGEX = /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)$/i;
@@ -51,6 +51,7 @@ const CreateResourceModal = ({
   const [subCategory, setSubCategory] = useState([]);
   const [subcategoryId, setSubcategoryId] = useState("");
   const MAX_DESCRIPTION_LENGTH = 500;
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateFields = () => {
     const newErrors = {};
@@ -192,16 +193,6 @@ const CreateResourceModal = ({
     return "";
   };
 
-  const getPdfEmbedUrl = (url) => {
-    return `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent(url)}`;
-  };
-
-  const isMobileDevice = () => {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    );
-  };
-
   // Manejar cambios en los quizzes
   const handleQuizChange = (index, e) => {
     const { name, value } = e.target;
@@ -305,6 +296,8 @@ const CreateResourceModal = ({
       return; // No envía el formulario si ambos están vacíos
     }
 
+    setIsLoading(true); // Activar loading
+
     const resourceData = {
       courseId,
       title,
@@ -351,6 +344,8 @@ const CreateResourceModal = ({
           timer: 700,
         });
       }
+    } finally {
+      setIsLoading(false); // Desactivar loading
     }
   };
 
@@ -358,20 +353,36 @@ const CreateResourceModal = ({
     const file = e.target.files[0];
     if (!file) return;
 
-    const fileExtension = file.name.split(".").pop().toLowerCase();
-    if (ALLOWED_FILE_TYPES.includes(`.${fileExtension}`)) {
-      setSelectedFile(file);
-    } else {
+    // Validar tamaño del archivo (10MB = 10 * 1024 * 1024 bytes)
+    if (file.size > 10 * 1024 * 1024) {
       Swal.fire({
-        icon: "warning",
-        title: t("UpdateResource.ValidationAlertFile"),
-        text: t("UpdateResource.ValidationAlertFileDescription"),
-        showConfirmButton: false,
-        timer: 2500,
+          icon: "error",
+          title: t("UpdateResource.ValidationAlertFile"),
+          text: "El archivo excede el límite de 10MB",
+          showConfirmButton: false,
+          timer: 2500,
       });
       e.target.value = "";
       setSelectedFile(null);
-    }
+      return;
+  }
+   // Obtener la extensión del archivo en minúsculas
+   const fileExtension = file.name.split(".").pop().toLowerCase();
+    
+   // Validar si la extensión está permitida
+   if (ALLOWED_FILE_TYPES.includes(`.${fileExtension}`)) {
+     setSelectedFile(file); // Si es válido, establecer el archivo seleccionado
+   } else {
+     Swal.fire({
+       icon: "warning",
+       title: t("UpdateResource.ValidationAlertFile"),
+       text: t("UpdateResource.ValidationAlertFileDescription"),
+       showConfirmButton: false,
+       timer: 3000,
+     });
+     e.target.value = ""; // Limpiar el input de archivo
+     setSelectedFile(null); // Eliminar archivo seleccionado
+   }
   };
 
   const handleLinkChange = (e) => setLink(e.target.value);
@@ -1020,12 +1031,18 @@ const CreateResourceModal = ({
                 <Button
                   htmlType="submit"
                   className="bg-green-600 text-white"
+                  disabled={isLoading}
                 >
-                  {t("CreateResource.ButtonCreate")}
+                  {isLoading ? (
+                    <LoadingOutlined className="text-xl" spin />
+                  ) : (
+                    t("CreateResource.ButtonCreate")
+                  )}
                 </Button>
                 <Button
                   onClick={handleCancel}
                   className="bg-red-600 text-white"
+                  disabled={isLoading}
                 >
                   {t("UpdateResource.ButtonCancel")}
                 </Button>
