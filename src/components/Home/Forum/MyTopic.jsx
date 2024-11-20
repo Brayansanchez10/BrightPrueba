@@ -14,6 +14,7 @@ import Swal from "sweetalert2";
 import Footer from "../../footer.jsx";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function TopicComponent() {
   const { t } = useTranslation("global");
@@ -162,10 +163,21 @@ export default function TopicComponent() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col pt-16 bg-primary">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen flex flex-col pt-16 bg-primary"
+    >
       <NavigationBar />
 
-      <div className="flex flex-col sm:flex-row justify-between items-center mt-6 mx-4 sm:mx-6">
+      <motion.div 
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col sm:flex-row justify-between items-center mt-6 mx-4 sm:mx-6"
+      >
         <div className="w-full sm:w-auto mb-4 sm:mb-0">
           <h1 className="text-3xl sm:text-4xl font-bold text-black text-center sm:text-left font-bungee">
           <span className="text-purple-800 dark:text-secondary">
@@ -185,7 +197,12 @@ export default function TopicComponent() {
               {t('Mytopic.create_forum')}
             </Button>
           )}
-          <div className="flex items-center px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md">
+          <motion.div 
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="flex items-center px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md"
+          >
             <FaSearch size={"18px"} className="mr-2" />
             <input
               type="search"
@@ -194,7 +211,7 @@ export default function TopicComponent() {
               value={searchTerm}
               onChange={handleSearchChange}
             />
-          </div>
+          </motion.div>
           {activeTab === "myForums" && (
             <div className="flex">
               <Button
@@ -206,11 +223,18 @@ export default function TopicComponent() {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
-      <div className="mx-4 sm:mx-12 mt-8 sm:mb-2 md:mb-0">
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="mx-4 sm:mx-12 mt-8 sm:mb-2 md:mb-0"
+      >
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:justify-center md:ml-0 lg:justify-start lg:ml-6">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className={`px-6 sm:px-10 py-2 rounded-xl sm:rounded-t-xl sm:rounded-b-xl md:rounded-b-none md:rounded-t-2xl font-bungee ${
               activeTab === "forums"
                 ? "bg-purple-600 text-white dark:bg-secondary"
@@ -219,8 +243,10 @@ export default function TopicComponent() {
             onClick={() => setActiveTab("forums")}
           >
             <h3>{t('Mytopic.forums_plural')}</h3>
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className={`px-6 sm:px-10 py-2 rounded-xl sm:rounded-t-xl sm:rounded-b-xl md:rounded-b-none md:rounded-t-2xl font-bungee ${
               activeTab === "myFavorites"
                 ? "bg-purple-600 text-white dark:bg-secondary"
@@ -229,8 +255,10 @@ export default function TopicComponent() {
             onClick={() => setActiveTab("myFavorites")}
           >
            <h1>{t('Mytopic.favorites')}</h1>
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className={`px-6 sm:px-10 py-2 rounded-xl sm:rounded-t-xl sm:rounded-b-xl md:rounded-b-none md:rounded-t-2xl font-bungee ${
               activeTab === "myForums"
                 ? "bg-purple-600 text-white dark:bg-secondary"
@@ -239,11 +267,14 @@ export default function TopicComponent() {
             onClick={() => setActiveTab("myForums")}
           >
             <h2>{t('Mytopic.forums')}</h2>
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
-      <div
+      <motion.div
+        initial={{ y: 40, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
         className="bg-slate-300 dark:bg-secondary mx-4 mt-4 sm:mx-12 rounded-3xl md:mt-0 mb-4"
         style={{ height: `${containerHeight}px` }}
       >
@@ -254,124 +285,151 @@ export default function TopicComponent() {
           <div className="m-2">
             <div className="flex flex-wrap justify-evenly gap-4 w-full">
               {loading ? (
-                <div className="text-center py-16">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-center py-16"
+                >
                   <h2 className="text-3xl font-bold text-gray-700">
                     {t("Topic.topicLoading")}
                   </h2>
-                </div>
+                </motion.div>
               ) : filteredTopics().length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 xl:grid-cols-3 cursor-pointer">
-                  {filteredTopics().map((topic) => (
-                    <div
-                      key={topic.id}
-                      className="bg-[#783CDA] rounded-[14px] p-4 flex flex-col w-[387px] h-[167px] relative"
-                      onClick={() => handleTopicClick(topic.id)}
-                    >
-                       <div className="flex items-start mb-2">
-                        {topic.user.userImage ? (
-                          <img
-                            src={topic.user.userImage}
-                            alt="Imagen del foro"
-                            className="w-12 h-12 object-cover rounded-full mr-3"
-                          />
-                        ) : (
-                          <FaRegUserCircle  className="w-12 h-12 text-white-500 mr-3" />
-                        )}
+                  <AnimatePresence>
+                    {filteredTopics().map((topic) => (
+                      <motion.div
+                        key={topic.id}
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.9, opacity: 0 }}
+                        whileHover={{ scale: 1.03 }}
+                        className="bg-[#783CDA] rounded-[14px] p-4 flex flex-col w-[387px] h-[167px] relative"
+                        onClick={() => handleTopicClick(topic.id)}
+                      >
+                         <div className="flex items-start mb-2">
+                          {topic.user.userImage ? (
+                            <img
+                              src={topic.user.userImage}
+                              alt="Imagen del foro"
+                              className="w-12 h-12 object-cover rounded-full mr-3"
+                            />
+                          ) : (
+                            <FaRegUserCircle  className="w-12 h-12 text-white-500 mr-3" />
+                          )}
 
-                        <div className="flex-grow w-full pr-16">
-                          <h2 className="text-white font-bungee text-base line-clamp-1">
-                            {topic.title}
-                          </h2>
-                          <div className="text-white font-sans text-base line-clamp-4 mt-1">
-                            <p className="text-sm">{topic.description || 'No hay una descripción para el foro'}</p>
+                          <div className="flex-grow w-full pr-16">
+                            <h2 className="text-white font-bungee text-base line-clamp-1">
+                              {topic.title}
+                            </h2>
+                            <div className="text-white font-sans text-base line-clamp-4 mt-1">
+                              <p className="text-sm">{topic.description || 'No hay una descripción para el foro'}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex justify-between items-center mt-auto">
-                        <div className="flex items-center text-white">
-                          <FaUser className="w-3 h-3 mr-1" />
-                          <span className="font-sans text-xs">{topic.user.username}</span>
+                        <div className="flex justify-between items-center mt-auto">
+                          <div className="flex items-center text-white">
+                            <FaUser className="w-3 h-3 mr-1" />
+                            <span className="font-sans text-xs">{topic.user.username}</span>
+                          </div>
+                          <div className="flex items-center text-white">
+                            <FaStopwatch className="w-3 h-3 mr-1" />
+                            <span className="font-sans text-xs">
+                              {t('Mytopic.open')}
+                            </span>{" "}
+                          </div>
                         </div>
-                        <div className="flex items-center text-white">
-                          <FaStopwatch className="w-3 h-3 mr-1" />
-                          <span className="font-sans text-xs">
-                            {t('Mytopic.open')}
-                          </span>{" "}
-                        </div>
-                      </div>
-                      <div className="absolute top-2 right-2 flex flex-col items-end">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleFavoriteToggle(topic.id);
-                          }}
-                          className={`mb-1 p-1 rounded-full ${
-                            isFavorite(topic.id) ? "bg-red-500" : "bg-white"
-                          }`}
-                          disabled={favoritesLoading}
-                        >
-                          <FaHeart
-                            className={`w-3 h-3 ${
-                              isFavorite(topic.id) ? "text-white" : "text-red-500"
+                        <div className="absolute top-2 right-2 flex flex-col items-end">
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleFavoriteToggle(topic.id);
+                            }}
+                            className={`mb-1 p-1 rounded-full ${
+                              isFavorite(topic.id) ? "bg-red-500" : "bg-white"
                             }`}
-                          />
-                        </button>
-                        {user.data.id === topic.userId && (
-                          <>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                openEditModal(topic);
-                              }}
-                              className="mb-1 p-1 rounded-full bg-yellow-500"
-                            >
-                              <FaEdit className="w-3 h-3 text-white" />
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                Swal.fire({
-                                  title: t("Topic.alertDelete"),
-                                  text: t("Topic.texAlertDelete"),
-                                  icon: "warning",
-                                  showCancelButton: true,
-                                  confirmButtonColor: "#28a745",
-                                  cancelButtonColor: "#d33",
-                                  confirmButtonText: t("Topic.yesDelete"),
-                                  cancelButtonText: t("Topic.buttonCancel"),
-                                  reverseButtons: true,
-                                }).then((result) => {
-                                  if (result.isConfirmed) {
-                                    handleRemove(topic);
-                                  }
-                                });
-                              }}
-                              className="p-1 rounded-full bg-red-500"
-                            >
-                              <FaTrash className="w-3 h-3 text-white" />
-                            </button>
-                          </>
-                        )}
-                      </div>
-                
-                    </div>
-                  ))}
+                            disabled={favoritesLoading}
+                          >
+                            <FaHeart
+                              className={`w-3 h-3 ${
+                                isFavorite(topic.id) ? "text-white" : "text-red-500"
+                              }`}
+                            />
+                          </motion.button>
+                          {user.data.id === topic.userId && (
+                            <>
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openEditModal(topic);
+                                }}
+                                className="mb-1 p-1 rounded-full bg-yellow-500"
+                              >
+                                <FaEdit className="w-3 h-3 text-white" />
+                              </motion.button>
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  Swal.fire({
+                                    title: t("Topic.alertDelete"),
+                                    text: t("Topic.texAlertDelete"),
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#28a745",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: t("Topic.yesDelete"),
+                                    cancelButtonText: t("Topic.buttonCancel"),
+                                    reverseButtons: true,
+                                  }).then((result) => {
+                                    if (result.isConfirmed) {
+                                      handleRemove(topic);
+                                    }
+                                  });
+                                }}
+                                className="p-1 rounded-full bg-red-500"
+                              >
+                                <FaTrash className="w-3 h-3 text-white" />
+                              </motion.button>
+                            </>
+                          )}
+                        </div>
+                  
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </div>
               ) : (
-                <div className="text-center py-16">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-center py-16"
+                >
                   <h2 className="text-3xl font-bold text-gray-700 dark:text-primary">
                     {t("Topic.noTopic")}
                   </h2>
-                </div>
+                </motion.div>
               )}
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="pt-10">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+        className="pt-10"
+      >
         <Footer />
-      </div>
+      </motion.div>
 
       <CreateTopicForm
         visible={createTopicForm}
@@ -393,6 +451,6 @@ export default function TopicComponent() {
           fetchForumTopic();
         }}
       />
-    </div>
+    </motion.div>
   );
 }
