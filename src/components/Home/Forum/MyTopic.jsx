@@ -35,6 +35,7 @@ export default function TopicComponent() {
     loading: favoritesLoading,
   } = useForumFavorite();
   const [activeTab, setActiveTab] = useState("forums");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchForumTopic = async () => {
     if (user && user.data && user.data.id) {
@@ -136,17 +137,28 @@ export default function TopicComponent() {
   };
 
   const filteredTopics = () => {
+    let filtered = topics;
     if (activeTab === "myFavorites") {
-      return topics.filter(topic => isFavorite(topic.id));
+      filtered = filtered.filter(topic => isFavorite(topic.id));
     } else if (activeTab === "myForums") {
-      return topics.filter(topic => topic.userId === user.data.id);
+      filtered = filtered.filter(topic => topic.userId === user.data.id);
     }
-    return topics;
+    if (searchTerm) {
+      filtered = filtered.filter(topic => 
+        topic.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        topic.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    return filtered;
   };
 
   const handleTopicClick = (topicId) => {
     console.log("Tema ID", topicId);
     navigate(`/topic/${topicId}`);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
@@ -170,7 +182,7 @@ export default function TopicComponent() {
               className="bg-purple-800 text-white font-bold text-xl py-5 px-6 rounded-1xl min-w-[160px] shadow-md shadow-gray-400 font-bungee hidden lg:flex"
               onClick={handleCreateTopicForm}
             >
-              {t('Mytopic.create_forum')} {/* Aquí se usa la clave 'Mytopic.create_forum' */}
+              {t('Mytopic.create_forum')}
             </Button>
           )}
           <div className="flex items-center px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-md">
@@ -179,7 +191,8 @@ export default function TopicComponent() {
               type="search"
               className="outline-none w-full sm:w-[220px] md:w-[280px] lg:w-[360px] xl:w-[420px]"
               placeholder={t("coursesComponent.search_placeholder")}
-              defaultValue={t('Mytopic.title')}
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
           </div>
           {activeTab === "myForums" && (

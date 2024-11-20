@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { registerRequest } from "../api/auth";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import imagen from "../assets/img/book.png";
 import LoginFond from "../assets/img/Login.png"
 import "../css/animations.css";
@@ -175,9 +175,22 @@ function RegisterForm() {
             >
               <div className="flex space-x-3">
                 <div className="w-1/2">
-                  <label className="text-lg font-bold text-gray-600 block">
-                    {t("register.firstNames")}
-                  </label>
+                  <div className="flex items-center gap-2">
+                    <label className="text-lg font-bold text-gray-600">
+                      {t("register.firstNames")}
+                    </label>
+                    {formik.touched.firstNames && formik.errors.firstNames && (
+                      <div className="relative group">
+                        <FontAwesomeIcon
+                          icon={faInfoCircle}
+                          className="text-red-500 cursor-help"
+                        />
+                        <div className="absolute hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
+                          {formik.errors.firstNames}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <input
                     type="text"
                     name="firstNames"
@@ -191,16 +204,24 @@ function RegisterForm() {
                     }`}
                     placeholder={t("register.enter_firstNames")}
                   />
-                  {formik.touched.firstNames && formik.errors.firstNames ? (
-                    <div className="text-red-500 mt-1">
-                      {formik.errors.firstNames}
-                    </div>
-                  ) : null}
                 </div>
                 <div className="w-1/2">
-                  <label className="text-lg font-bold text-gray-600 block">
-                    {t("register.lastNames")}
-                  </label>
+                  <div className="flex items-center gap-2">
+                    <label className="text-lg font-bold text-gray-600">
+                      {t("register.lastNames")}
+                    </label>
+                    {formik.touched.lastNames && formik.errors.lastNames && (
+                      <div className="relative group">
+                        <FontAwesomeIcon
+                          icon={faInfoCircle}
+                          className="text-red-500 cursor-help"
+                        />
+                        <div className="absolute hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
+                          {formik.errors.lastNames}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <input
                     type="text"
                     name="lastNames"
@@ -214,19 +235,27 @@ function RegisterForm() {
                     }`}
                     placeholder={t("register.enter_lastNames")}
                   />
-                  {formik.touched.lastNames && formik.errors.lastNames ? (
-                    <div className="text-red-500 mt-1">
-                      {formik.errors.lastNames}
-                    </div>
-                  ) : null}
                 </div>
               </div>
               
               <div className="flex space-x-3">
                 <div className="w-full">
-                  <label className="text-lg font-bold text-gray-600 block">
-                    {t("register.username")}
-                  </label>
+                  <div className="flex items-center gap-2">
+                    <label className="text-lg font-bold text-gray-600">
+                      {t("register.username")}
+                    </label>
+                    {formik.touched.username && formik.errors.username && (
+                      <div className="relative group">
+                        <FontAwesomeIcon
+                          icon={faInfoCircle}
+                          className="text-red-500 cursor-help"
+                        />
+                        <div className="absolute hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
+                          {formik.errors.username}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <input
                     type="text"
                     name="username"
@@ -240,18 +269,26 @@ function RegisterForm() {
                     }`}
                     placeholder={t("register.enter_username")}
                   />
-                  {formik.touched.username && formik.errors.username ? (
-                    <div className="text-red-500 mt-1">
-                      {formik.errors.username}
-                    </div>
-                  ) : null}
                 </div>
               </div>
               
               <div>
-                <label className="text-lg font-bold text-gray-600 block">
-                  {t("register.email")}
-                </label>
+                <div className="flex items-center gap-2">
+                  <label className="text-lg font-bold text-gray-600">
+                    {t("register.email")}
+                  </label>
+                  {formik.touched.email && formik.errors.email && (
+                    <div className="relative group">
+                      <FontAwesomeIcon
+                        icon={faInfoCircle}
+                        className="text-red-500 cursor-help"
+                      />
+                      <div className="absolute hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
+                        {formik.errors.email}
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <input
                   type="email"
                   name="email"
@@ -265,14 +302,24 @@ function RegisterForm() {
                   }`}
                   placeholder={t("register.enter_email")}
                 />
-                {formik.touched.email && formik.errors.email ? (
-                  <div className="text-red-500 mt-1">{formik.errors.email}</div>
-                ) : null}
               </div>
               <div>
-                <label className="text-lg font-bold text-gray-600 block">
-                  {t("register.password")}
-                </label>
+                <div className="flex items-center gap-2">
+                  <label className="text-lg font-bold text-gray-600">
+                    {t("register.password")}
+                  </label>
+                  {formik.touched.password && formik.errors.password && (
+                    <div className="relative group">
+                      <FontAwesomeIcon
+                        icon={faInfoCircle}
+                        className="text-red-500 cursor-help"
+                      />
+                      <div className="absolute z-10 hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
+                        {formik.errors.password}
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
@@ -295,16 +342,24 @@ function RegisterForm() {
                     <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                   </button>
                 </div>
-                {formik.touched.password && formik.errors.password ? (
-                  <div className="text-red-500 mt-1">
-                    {formik.errors.password}
-                  </div>
-                ) : null}
               </div>
               <div>
-                <label className="text-lg font-bold text-gray-600 block">
-                  {t("register.repeat_password")}
-                </label>
+                <div className="flex items-center gap-2">
+                  <label className="text-lg font-bold text-gray-600">
+                    {t("register.repeat_password")}
+                  </label>
+                  {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+                    <div className="relative group">
+                      <FontAwesomeIcon
+                        icon={faInfoCircle}
+                        className="text-red-500 cursor-help"
+                      />
+                      <div className="absolute z-10 hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
+                        {formik.errors.confirmPassword}
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <div className="relative">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
@@ -313,8 +368,7 @@ function RegisterForm() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
-                      formik.touched.confirmPassword &&
-                      formik.errors.confirmPassword
+                      formik.touched.confirmPassword && formik.errors.confirmPassword
                         ? "border-red-500"
                         : "border-purple-300"
                     }`}
@@ -325,22 +379,27 @@ function RegisterForm() {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
                   >
-                    <FontAwesomeIcon
-                      icon={showConfirmPassword ? faEyeSlash : faEye}
-                    />
+                    <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
                   </button>
                 </div>
-                {formik.touched.confirmPassword &&
-                formik.errors.confirmPassword ? (
-                  <div className="text-red-500 mt-1">
-                    {formik.errors.confirmPassword}
-                  </div>
-                ) : null}
               </div>
               <div>
-                <label className="text-lg font-bold text-gray-600 block">
-                  {t("register.select_entity")}
-                </label>
+                <div className="flex items-center gap-2">
+                  <label className="text-lg font-bold text-gray-600">
+                    {t("register.select_entity")}
+                  </label>
+                  {formik.touched.entityId && formik.errors.entityId && (
+                    <div className="relative group">
+                      <FontAwesomeIcon
+                        icon={faInfoCircle}
+                        className="text-red-500 cursor-help"
+                      />
+                      <div className="absolute hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
+                        {formik.errors.entityId}
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <select
                   name="entityId"
                   value={formik.values.entityId}
@@ -352,20 +411,17 @@ function RegisterForm() {
                       : "border-purple-300"
                   }`}
                 >
-                 <option value="" label={t("register.choose_entity")} />
+                  <option value="" label={t("register.choose_entity")} />
                   {entities &&
                     entities.length > 0 &&
                     entities
-                      .filter((entity) => entity.id !== 1) // Filtra la entidad con id 1
+                      .filter((entity) => entity.id !== 1)
                       .map((entity) => (
                         <option key={entity.id} value={entity.id}>
-                          {entity.name} {/* Reemplaza 'name' por el campo adecuado */}
+                          {entity.name}
                         </option>
                       ))}
                 </select>
-                {formik.touched.entityId && formik.errors.entityId ? (
-                  <div className="text-red-500 mt-1">{formik.errors.entityId}</div>
-                ) : null}
               </div>
               <div className="flex justify-center">
                 <button
