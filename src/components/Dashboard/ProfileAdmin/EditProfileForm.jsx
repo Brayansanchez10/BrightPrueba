@@ -25,6 +25,9 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   const [entities, setEntities] = useState([]);
   const [error, setError] = useState(null);
 
+  const [descripcion, setDescripcion] = useState("");
+  const [especialidades, setEspecialidades] = useState("");
+
   useEffect(() => {
     const fetchUserId = async () => {
       if (user && user.data && user.data.id) {
@@ -36,12 +39,14 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           setFirstNames(userData.firstNames);
           setLastNames(userData.lastNames);
           setEntityId(userData.entityId);
+          setDescripcion(userData.descripcion || "");
+          setEspecialidades(userData.especialidades || "");
 
           if (userData.userImage && userData.userImage !== "null") {
             setPreviewProfileImage(userData.userImage);
           }
         } catch (error) {
-          console.error("Failed to fetch user data:", error);
+          console.error("Error al obtener datos del usuario:", error);
         }
       }
     };
@@ -52,12 +57,11 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   useEffect(() => {
     async function loadEntities() {
       try {
-        const response = await getEntity(); // Llama a tu API para obtener las entidades
+        const response = await getEntity();
         setEntities(response.data);
-        console.log("Entidades obtenidas; ", response);
       } catch (error) {
-        console.error("Error loading entities:", error);
-        setError("Failed to load entities");
+        console.error("Error al cargar entidades:", error);
+        setError("Error al cargar entidades");
       }
     }
     loadEntities();
@@ -65,7 +69,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
   const validateName = (name) => {
     if (name.length < 5 || name.length > 30) {
-      return t('userProfileSettings.name_length_invalid');
+      return "El nombre debe tener entre 5 y 30 caracteres";
     }
     return "";
   };
@@ -73,34 +77,34 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return t('userProfileSettings.invalid_email');
+      return "Email inválido";
     }
     if (email.length > 30) {
-      return t('userProfileSettings.email_too_long');
+      return "El email no debe exceder los 30 caracteres";
     }
     return "";
   };
 
   const validateFirstNames = (firstNames) => {
     if (firstNames.length < 3 || firstNames.length > 60) {
-      return t('userProfileSettings.firstNames_length_invalid');
+      return "Los nombres deben tener entre 3 y 60 caracteres";
     }
     return "";
   };
 
   const validateLastNames = (lastNames) => {
     if (lastNames.length < 3 || lastNames.length > 60) {
-      return t('userProfileSettings.lastNames_length_invalid');
+      return "Los apellidos deben tener entre 3 y 60 caracteres";
     }
     return "";
   };
 
   const validateImage = (file) => {
     if (file.size > 5 * 1024 * 1024) {
-      return t('userProfileSettings.image_too_large');
+      return "La imagen no debe exceder 5MB";
     }
     if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
-      return t('userProfileSettings.invalid_image_format');
+      return "Formato de imagen inválido. Use JPEG, PNG o GIF";
     }
     return "";
   };
@@ -128,13 +132,15 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
             lastNames,
             userImage: deleteProfileImage ? null : (profileImage || previewProfileImage),
             entityId,
+            descripcion,
+            especialidades,
           };
 
           await updateUserPartial(userId, userData);
-
+          
           Swal.fire({
             icon: 'success',
-            title: t("userProfileSettings.changes_saved_successfully"),
+            title: "Cambios guardados exitosamente",
             showConfirmButton: false,
             timer: 750,
           });
@@ -149,16 +155,17 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
             setDeleteProfileImage(false);
           }
         } catch (error) {
+          console.error("Error al actualizar el usuario:", error);
           Swal.fire({
             icon: 'error',
-            title: t('userProfileSettings.failed_to_save_changes'),
+            title: "Error al guardar los cambios",
             text: error.message,
             confirmButtonText: 'OK',
             timer: 3000,
           });
         }
       } else {
-        console.error("Couldn't get user ID");
+        console.error("No se pudo obtener el ID del usuario");
       }
     }
   };
@@ -223,23 +230,23 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   const handleDeleteImage = async () => {
     if (userId) {
       const result = await Swal.fire({
-        title: t('userProfileSettings.confirm_image_deletion'),
-        text: t('userProfileSettings.are_you_sure'),
+        title: "¿Confirmar eliminación de imagen?",
+        text: "¿Estás seguro?",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: t('userProfileSettings.yes_delete_it'),
-        cancelButtonText: t('userProfileSettings.cancel'),
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
       });
 
       if (result.isConfirmed) {
         try {
-          await updateUserPartial(userId, { username: name, email, firstNames, lastNames, userImage: null });
+          await updateUserPartial(userId, { username: name, email, firstNames, lastNames, userImage: null, descripcion, especialidades});
 
           Swal.fire({
             icon: 'success',
-            title: t('userProfileSettings.image_deleted_successfully'),
+            title: "Imagen eliminada exitosamente",
             showConfirmButton: false,
             timer: 3000,
           });
@@ -251,7 +258,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
         } catch (error) {
           Swal.fire({
             icon: 'error',
-            title: t('userProfileSettings.failed_to_delete_image'),
+            title: "Error al eliminar la imagen",
             text: error.message,
             showConfirmButton: false,
             timer: 3000,
@@ -259,154 +266,192 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
         }
       }
     } else {
-      console.error("Couldn't get user ID");
+      console.error("No se pudo obtener el ID del usuario");
     }
   };
 
   return (
-    <div className="md:mt-3 mt-5 mx-4 mb-2 flex rounded-lg">
-      <div className="max-w-lg w-full mx-auto bg-secondaryAdmin rounded-lg shadow-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-4 px-6 md:px-10">
-          <h1 className="text-center font-black text-white md:text-xl lg:text-2xl">
-            {t('userProfileSettings.edit_profile')}
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2">
+      <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 py-6 px-6 sm:px-10 mt-0">
+          <h1 className="text-center font-bold text-white text-2xl sm:text-3xl lg:text-4xl">
+            Editar Perfil
           </h1>
         </div>
-        <div className="p-6 md:p-10">
-          <div className="flex items-center mb-6">
-            <div className="relative flex-shrink-0">
+        <div className="p-6 sm:p-10">
+          <div className="flex flex-col sm:flex-row items-center mb-8">
+            <div className="relative mb-4 sm:mb-0 sm:mr-6">
               {previewProfileImage && (
                 <img
                   src={previewProfileImage}
-                  alt="Preview"
-                  className="w-16 h-16 md:w-20 md:h-20 rounded-full shadow-lg"
+                  alt="Vista previa"
+                  className="w-24 h-24 sm:w-32 sm:h-32 rounded-full shadow-lg object-cover"
                 />
               )}
               {previewProfileImage && (
                 <button
                   type="button"
-                  className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
+                  className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition duration-300"
                   onClick={handleDeleteImage}
                 >
-                  <Trash2 size={14} />
+                  <Trash2 size={16} />
                 </button>
               )}
             </div>
-            <div className={`${!previewProfileImage ? 'flex-grow' : 'ml-4'}`}>
+            <div className="flex-grow">
               <input
                 type="file"
                 id="profileImage"
                 accept="image/*"
-                className="w-full border text-sm border-gray-300 dark:border-gray-500 rounded-md p-2 dark:text-primary hover:bg-primaryAdmin transition-colors duration-300"
+                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 transition duration-300"
                 onChange={handleImageChange}
               />
               {errors.image && (
-                <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+                <p className="text-red-500 text-sm mt-2">{errors.image}</p>
               )}
             </div>
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="name" className="text-base font-bold text-primary block mb-2">
-                {t('userProfileSettings.name')}
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="name" className="text-sm font-medium text-gray-700 block mb-2">
+                Nombre de usuario
               </label>
               <input
                 type="text"
                 id="name"
-                className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
+                          focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                          disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:shadow-none
+                          invalid:border-pink-500 invalid:text-pink-600
+                          focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
                 value={name}
                 onChange={handleNameChange}
                 maxLength={50}
               />
               {errors.name && (
-                <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                <p className="text-red-500 text-xs mt-1">{errors.name}</p>
               )}
             </div>
-            <div className="mb-4">
-              <label htmlFor="firstNames" className="text-base font-bold text-primary block mb-2">
-                {t('userProfileSettings.firstNames')}
-              </label>
-              <input
-                type="text"
-                id="firstNames"
-                className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
-                value={firstNames}
-                onChange={handleFirstNamesChange}
-                maxLength={50}
-              />
-              {errors.firstNames && (
-                <p className="text-red-500 text-sm mt-1">{errors.firstNames}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label htmlFor="lastNames" className="text-base font-bold text-primary block mb-2">
-                {t('userProfileSettings.lastNames')}
-              </label>
-              <input
-                type="text"
-                id="lastNames"
-                className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
-                value={lastNames}
-                onChange={handleLastNamesChange}
-                maxLength={50}
-              />
-              {errors.lastNames && (
-                <p className="text-red-500 text-sm mt-1">{errors.lastNames}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label htmlFor="email" className="text-base font-bold text-primary block mb-2">
-                {t('userProfileSettings.email')}
+            <div>
+              <label htmlFor="email" className="text-sm font-medium text-gray-700 block mb-2">
+                Email
               </label>
               <input
                 type="email"
                 id="email"
-                className="mt-2 p-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
+                          focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                          disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:shadow-none
+                          invalid:border-pink-500 invalid:text-pink-600
+                          focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
                 value={email}
                 onChange={handleEmailChange}
                 required
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
               )}
             </div>
-            <div className="mb-4">
-                  <label
-                    htmlFor="entityId"
-                    className="text-base font-bold text-primary block mb-2"
-                  >
-                    {t("userProfileSettings.entities")}
-                  </label>
-                  <select
-                    name="entityId"
-                    value={entityId}
-                    onChange={(e) => setEntityId(e.target.value)}
-                    className={`mt-2 p-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100 ${
-                      entityId && errors.entityId ? "border-white" : "border-white-300"
-                    }`}
-                  >
-                    <option value="" label={t("register.choose_entity")} />
-                    {entities &&
-                      entities.length > 0 &&
-                      entities
-                        .filter((entity) => entity.id !== 1) // Filtra la entidad con id 1
-                        .map((entity) => (
-                          <option key={entity.id} value={entity.id}>
-                            {entity.name}
-                          </option>
-                        ))}
-                  </select>
-                  {entityId && errors.entityId && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.entityId}
-                    </p>
-                  )}
+            <div>
+              <label htmlFor="firstNames" className="text-sm font-medium text-gray-700 block mb-2">
+                Nombres
+              </label>
+              <input
+                type="text"
+                id="firstNames"
+                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
+                          focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                          disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:shadow-none
+                          invalid:border-pink-500 invalid:text-pink-600
+                          focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
+                value={firstNames}
+                onChange={handleFirstNamesChange}
+                maxLength={50}
+              />
+              {errors.firstNames && (
+                <p className="text-red-500 text-xs mt-1">{errors.firstNames}</p>
+              )}
             </div>
-            <div className="flex justify-between items-center mt-6">
+            <div>
+              <label htmlFor="lastNames" className="text-sm font-medium text-gray-700 block mb-2">
+                Apellidos
+              </label>
+              <input
+                type="text"
+                id="lastNames"
+                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
+                          focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                          disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:shadow-none
+                          invalid:border-pink-500 invalid:text-pink-600
+                          focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
+                value={lastNames}
+                onChange={handleLastNamesChange}
+                maxLength={50}
+              />
+              {errors.lastNames && (
+                <p className="text-red-500 text-xs mt-1">{errors.lastNames}</p>
+              )}
+            </div>
+            <div className="sm:col-span-2">
+              <label htmlFor="entityId" className="text-sm font-medium text-gray-700 block mb-2">
+                Entidad
+              </label>
+              <select
+                name="entityId"
+                value={entityId}
+                onChange={(e) => setEntityId(e.target.value)}
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              >
+                <option value="">Seleccione una entidad</option>
+                {entities &&
+                  entities.length > 0 &&
+                  entities
+                    .filter((entity) => entity.id !== 1)
+                    .map((entity) => (
+                      <option key={entity.id} value={entity.id}>
+                        {entity.name}
+                      </option>
+                    ))}
+              </select>
+              {entityId && errors.entityId && (
+                <p className="text-red-500 text-xs mt-1">{errors.entityId}</p>
+              )}
+            </div>
+            <div className="sm:col-span-2">
+              <label htmlFor="descripcion" className="text-sm font-medium text-gray-700 block mb-2">
+                Descripción
+              </label>
+              <textarea
+                id="descripcion"
+                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
+                          focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                          disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:shadow-none"
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                rows={4}
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label htmlFor="especialidades" className="text-sm font-medium text-gray-700 block mb-2">
+                Especialidades
+              </label>
+              <input
+                type="text"
+                id="especialidades"
+                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
+                          focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+                          disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:shadow-none"
+                value={especialidades}
+                onChange={(e) => setEspecialidades(e.target.value)}
+                placeholder="Ingrese especialidades separadas por comas"
+              />
+            </div>
+            <div className="sm:col-span-2 flex justify-end mt-6">
               <button
-                className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-300"
                 type="submit"
               >
-                {t('userProfileSettings.save')}
+                Guardar
               </button>
             </div>
           </form>

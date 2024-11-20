@@ -17,13 +17,6 @@ import { generateStudyPlanPDF } from "./components/studyPlan";
 
 const { Panel } = Collapse;
 
-const CreatorDescriptions = [
-  "es un visionario en su campo, con una habilidad única para transformar ideas en conocimiento práctico.",
-  "es una autoridad respetada, reconocido por su capacidad de simplificar temas complejos.",
-  "es un apasionado del aprendizaje continuo, siempre buscando perfeccionar sus habilidades y compartirlas con los demás.",
-  "es un profesional admirado, con una carrera marcada por logros significativos y un compromiso inquebrantable con la educación.",
-  "es un líder intelectual, dedicado a influir positivamente en su comunidad a través de la enseñanza.",
-];
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -50,6 +43,8 @@ export default function CourseView() {
   const [creatorDescription, setCreatorDescription] = useState("");
   const [subCategory, setSubCategory] = useState([]);
   const [currentProgress, setCurrentProgress] = useState(0);
+  const [descripcion, setDescripcion] = useState("");
+  const [especialidades, setEspecialidades] = useState("");
 
   const fetchCourseData = useCallback(async () => {
     if (!courseId) return;
@@ -61,6 +56,8 @@ export default function CourseView() {
       if (courseData && courseData.userId) {
         const creatorData = await getUserById(courseData.userId);
         setCreator(creatorData);
+        setDescripcion(creatorData.descripcion || "");
+        setEspecialidades(creatorData.especialidades || "");
       }
 
       const resourceData = await getResource(courseId);
@@ -72,7 +69,7 @@ export default function CourseView() {
     } finally {
       setIsLoading(false);
     }
-  }, [courseId]);
+  }, [courseId, getCourse, getUserById]);
 
   useEffect(() => {
     const fetchProgress = async () => {
@@ -83,7 +80,7 @@ export default function CourseView() {
     };
 
     fetchProgress();
-  }, [user, courseId]);
+  }, [user, courseId, getCourseProgress]);
 
   const fetchSubCategories = async (courseId) => {
     try {
@@ -98,20 +95,6 @@ export default function CourseView() {
     fetchCourseData();
   }, [fetchCourseData]);
 
-  useEffect(() => {
-    const changeDescription = () => {
-      const newDescription =
-        CreatorDescriptions[
-          Math.floor(Math.random() * CreatorDescriptions.length)
-        ];
-      setCreatorDescription(newDescription);
-    };
-
-    changeDescription();
-    const intervalId = setInterval(changeDescription, 5 * 60 * 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
 
   const handleResourceClick = (resourceId) => {
     navigate(`/course/${courseId}/resource/${resourceId}`);
@@ -395,7 +378,6 @@ export default function CourseView() {
                   whileHover={{ y: -5 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  
                   <div className="p-6">
                     <div className="flex items-center mb-4">
                       <motion.img
@@ -425,17 +407,14 @@ export default function CourseView() {
                     </div>
                     <AnimatePresence mode="wait">
                       <motion.p
-                        key={creatorDescription}
+                        key={descripcion}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.5 }}
                         className="text-gray-600 dark:text-primary mb-4"
                       >
-                        <strong>
-                          {creator ? creator.username : t("Loading")}
-                        </strong>{" "}
-                        {creatorDescription}
+                        {descripcion || t("course_user.noDescription")}
                       </motion.p>
                     </AnimatePresence>
                     <motion.div 
@@ -447,11 +426,19 @@ export default function CourseView() {
                       <h5 className="text-md font-semibold text-gray-800 dark:text-primary mb-2">
                         {t("course_user.specialties")}
                       </h5>
-                      <ul className="list-disc list-inside text-gray-600 dark:text-primary">
-                        <motion.li whileHover={{ x: 5 }}>{t("course_user.web")}</motion.li>
-                        <motion.li whileHover={{ x: 5 }}>{t("course_user.desing")}</motion.li>
-                        <motion.li whileHover={{ x: 5 }}>{t("course_user.programming")}</motion.li>
-                      </ul>
+                      {especialidades ? (
+                        <ul className="list-disc list-inside text-gray-600 dark:text-primary">
+                          {especialidades.split(',').map((especialidad, index) => (
+                            <motion.li key={index} whileHover={{ x: 5 }}>
+                              {especialidad.trim()}
+                            </motion.li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-gray-600 dark:text-primary">
+                          {t("course_user.noSpecialties")}
+                        </p>
+                      )}
                     </motion.div>
                   </div>
                 </motion.div>
