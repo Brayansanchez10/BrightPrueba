@@ -273,12 +273,12 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
         </div>
         <div className="p-6 md:p-10">
           <div className="flex items-center mb-6">
-            <div className="relative">
+            <div className="relative flex-shrink-0">
               {previewProfileImage && (
                 <img
                   src={previewProfileImage}
                   alt="Preview"
-                  className="w-20 h-20 rounded-full shadow-lg"
+                  className="w-16 h-16 md:w-20 md:h-20 rounded-full shadow-lg"
                 />
               )}
               {previewProfileImage && (
@@ -287,7 +287,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
                   className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
                   onClick={handleDeleteImage}
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={14} />
                 </button>
               )}
             </div>
