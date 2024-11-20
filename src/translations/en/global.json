@@ -364,7 +364,8 @@
         "usernameRequired": "Please enter a username",
         "emailRequired": "Please enter an email",
         "roleRequired": "Please select a role",
-        "stateRequired": "Please select a state"
+        "stateRequired": "Please select a state",
+        "selectEntty": "Select An Entity:"
     },
     "CreateUserModal": {
         "createUserTitle": "Create User",

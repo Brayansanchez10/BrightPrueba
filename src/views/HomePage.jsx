@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import NavigationBar from "../components/Home/NavigationBar";
@@ -68,6 +69,7 @@ const AnimatedSection = ({ children, className }) => {
 
 export default function HomePage() {
   const { t } = useTranslation("global");
+  const navigate = useNavigate();
 
   const phrases = [
     {
@@ -180,7 +182,7 @@ export default function HomePage() {
                     ease: "easeInOut"
                   }}
                 >
-                  bringmind
+                  brightmind
                 </motion.span>
               </h2>
               <p className="text-primary text-base md:text-lg lg:text-2xl text-justify">
@@ -274,7 +276,7 @@ export default function HomePage() {
               className="text-center text-3xl md:text-4xl lg:text-5xl font-bungee mb-10"
               variants={fadeInFromLeft}
             >
-              <span className="text-purple-900 dark:text-secondary">bringmind </span>
+              <span className="text-purple-900 dark:text-secondary">brightmind </span>
               <span className="text-primary">{t("home.offert")}</span>
             </motion.h2>
             <motion.div
@@ -345,6 +347,7 @@ export default function HomePage() {
                 className="bg-purple-800 text-white text-xl rounded-full py-4 px-8 hover:bg-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl font-bungee"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/AllCourses")}
               >
                 {t("home.go_courses")}
               </motion.button>
@@ -359,7 +362,7 @@ export default function HomePage() {
               variants={fadeInFromLeft}
             >
               <span className="text-primary">{t("home.feature")}</span>{" "}
-              <span className="text-purple-900 dark:text-secondary">bringmind</span>
+              <span className="text-purple-900 dark:text-secondary">brightmind</span>
             </motion.h2>
             <motion.div
               className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto max-w-6xl"
@@ -405,7 +408,7 @@ export default function HomePage() {
               variants={fadeInFromLeft}
             >
               <span className="text-primary">{t("home.testimonial")}</span>{" "}
-              <span className="text-purple-900 dark:text-secondary">bringmind</span>
+              <span className="text-purple-900 dark:text-secondary">brightmind</span>
             </motion.h2>
             <motion.div variants={fadeInFromLeft}>
               <Testimonials profiles={profiles} />

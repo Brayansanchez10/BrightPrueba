@@ -56,11 +56,11 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
 
   return (
     <Modal
-      className={`custom-modal w-[544px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden ${shake ? "shake" : ""}`}
+      className={`custom-modal w-[544px] h-[989px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden ${shake ? "shake" : ""}`}
       visible={visible}
       footer={null}
       closable={false}
-      style={{ top: '1%' }}
+      style={{ top: '5%' }}
       onCancel={onCancel}
     >
       <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
@@ -123,7 +123,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
           label={<span className="text-lg font-bold">{t('CreateUserModal.documentNumber')}</span>}
           rules={[{ required: true, message: t("CreateUserModal.documentNumberRequired") }]}
         >
-          <Input minLength={3} maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+          <Input type="number" minLength={3} maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3"  onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); }} />
         </Form.Item>
 
         <Form.Item
@@ -170,8 +170,8 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
         <Form.Item
           className="mb-4"
           name="entityId"
-          label={<span className="text-lg font-bold">{t('Seleccione Una Entidad')}</span>}
-          rules={[{ required: true, message: t('Entidad necesaria') }]}
+          label={<span className="text-lg font-bold">{t('UpdateUserModal.selectEntty')}</span>}
+          rules={[{ required: true, message: t('UpdateUserModal.selectEntty') }]}
         >
           <Select className="w-full h-[34px] text-base rounded-xl bg-white shadow-md px-3 border-none">
             {entities
@@ -184,7 +184,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
           </Select>
         </Form.Item>
 
-        <div className="flex justify-end pt-2 space-x-4">
+        <div className="flex justify-center pt-2 space-x-4">
           <button
             type="submit"
             className="bg-[#350b48] text-white rounded-xl h-[41px] w-[133px] text-lg font-bold cursor-pointer"
