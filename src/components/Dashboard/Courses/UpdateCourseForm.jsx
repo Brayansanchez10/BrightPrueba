@@ -304,12 +304,14 @@ const UpdateCourseForm = ({ visible, onClose, onUpdate, courseId }) => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-[133px] h-[41px] bg-[#350b48] text-white font-bold text-lg rounded-lg shadow-md hover:bg-[#4c104f] transition duration-200"
-        >
-          {i18n.language === "es" ? "Actualizar" : "Update"}
-        </button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="w-[133px] h-[41px] bg-[#350b48] text-white font-bold text-lg rounded-lg shadow-md hover:bg-[#4c104f] transition duration-200"
+          >
+            {i18n.language === "es" ? "Actualizar" : "Update"}
+          </button>
+        </div>
       </form>
     </Modal>
   );

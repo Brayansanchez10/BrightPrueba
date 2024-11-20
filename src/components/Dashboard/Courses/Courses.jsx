@@ -68,6 +68,7 @@ const DataTablete = () => {
   const [openMenus, setOpenMenus] = useState({});
   const menuRef = useRef(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+  const buttonRef = useRef(null);
 
   useEffect(() => {
     getUsers();
@@ -306,7 +307,7 @@ const DataTablete = () => {
   );
 
    // Función para manejar la visibilidad del menú de cada curso
-   const toggleDropdown = (courseId, event) => {
+  const toggleDropdown = (courseId, event) => {
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
     
@@ -322,17 +323,21 @@ const DataTablete = () => {
   };
 
   // Cerrar el menú cuando se hace clic fuera
-   useEffect(() => {
+  useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      // Solo cerrar si el clic es fuera del menú y el botón
+      if (
+        menuRef.current && !menuRef.current.contains(event.target) &&
+        buttonRef.current && !buttonRef.current.contains(event.target)
+      ) {
         setOpenMenus({});
       }
     };
-
+  
     const handleScroll = () => {
       setOpenMenus({}); // Cerrar menús al hacer scroll
     };
-
+  
     document.addEventListener("mousedown", handleClickOutside);
     window.addEventListener("scroll", handleScroll);
     
@@ -340,7 +345,7 @@ const DataTablete = () => {
       document.removeEventListener("mousedown", handleClickOutside);
       window.removeEventListener("scroll", handleScroll);
     };
-    }, []);
+  }, []);
 
     if (loading) return <p>Cargando permisos del rol...</p>;
     if (error) return <p>{error}</p>;

@@ -358,7 +358,8 @@
         "usernameRequired": "Por favor ingrese un nombre de usuario",
         "emailRequired": "Por favor ingrese un correo electrónico",
         "roleRequired": "Por favor seleccione un rol",
-        "stateRequired": "Por favor seleccione un estado"
+        "stateRequired": "Por favor seleccione un estado",
+        "selectEntty": "Seleccione Una Entidad:"
     },
     "CreateUserModal": {
         "createUserTitle": "Crear Usuario",

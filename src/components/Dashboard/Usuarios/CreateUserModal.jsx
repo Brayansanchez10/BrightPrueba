@@ -70,7 +70,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
 
   return (
     <Modal
-      className={`custom-modal w-[544px] rounded-3xl bg-white flex flex-col justify-between ${
+      className={`custom-modal w-[540px] h-[920px] rounded-3xl bg-white flex flex-col justify-between ${
         shake ? "shake" : ""
       }`}
       visible={visible}
@@ -133,7 +133,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
           label={t("CreateUserModal.documentNumber")}
           rules={[{ required: true, message: t("CreateUserModal.documentNumberRequired") }]}
         >
-          <Input minLength={3} maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+          <Input type="number" minLength={3} maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); }} />
         </Form.Item>
         <Form.Item
           className="text-lg font-bold mb-2"
@@ -176,7 +176,7 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
           className="text-lg font-bold mb-2"
           name="entityId"
           label={t("Seleccione Una Entidad")}
-          rules={[{ required: true, message: t("Entidad necesaria") }]}
+          rules={[{ required: true, message: t("register.entityId_required") }]}
         >
           <Select className="w-full h-[34px] rounded-xl bg-white shadow-md text-center">
             {entities
