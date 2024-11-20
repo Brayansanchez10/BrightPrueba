@@ -458,7 +458,10 @@
         "crear": "Create",
         "section": "Section",
         "generalComments": "general comments",
-        "comment": "Comment"
+        "comment": "Comment",
+        "myCourses": "My Courses",
+        "allEntityCourses": "All Entity Courses",
+        "details": "View details"
     },
     "courseDetails": {
         "detailsOfCourse": "Details of course:",

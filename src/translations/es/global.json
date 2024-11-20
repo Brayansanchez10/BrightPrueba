@@ -452,7 +452,10 @@
         "crear": "Crear",
         "section": "Seccion",
         "generalComments": "comentarios generales",
-        "comment": "Comentar"
+        "comment": "Comentar",
+        "myCourses": "Mis Cursos",
+        "allEntityCourses": "Todos los Cursos",
+        "details": "Ver detalles"
     },
     "courseDetails": {
         "detailsOfCourse": "Detalles del curso:",

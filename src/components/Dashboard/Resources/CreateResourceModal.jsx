@@ -7,7 +7,7 @@ import {
   deleteResource,
 } from "../../../api/courses/resource.request";
 import UpdateResourceForm from "./UpdateResourceForm";
-import { EditOutlined, DeleteFilled, FilePdfOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteFilled, FilePdfOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
@@ -51,6 +51,7 @@ const CreateResourceModal = ({
   const [subCategory, setSubCategory] = useState([]);
   const [subcategoryId, setSubcategoryId] = useState("");
   const MAX_DESCRIPTION_LENGTH = 500;
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateFields = () => {
     const newErrors = {};
@@ -305,6 +306,8 @@ const CreateResourceModal = ({
       return; // No envía el formulario si ambos están vacíos
     }
 
+    setIsLoading(true); // Activar loading
+
     const resourceData = {
       courseId,
       title,
@@ -351,6 +354,8 @@ const CreateResourceModal = ({
           timer: 700,
         });
       }
+    } finally {
+      setIsLoading(false); // Desactivar loading
     }
   };
 
@@ -1020,12 +1025,18 @@ const CreateResourceModal = ({
                 <Button
                   htmlType="submit"
                   className="bg-green-600 text-white"
+                  disabled={isLoading}
                 >
-                  {t("CreateResource.ButtonCreate")}
+                  {isLoading ? (
+                    <LoadingOutlined className="text-xl" spin />
+                  ) : (
+                    t("CreateResource.ButtonCreate")
+                  )}
                 </Button>
                 <Button
                   onClick={handleCancel}
                   className="bg-red-600 text-white"
+                  disabled={isLoading}
                 >
                   {t("UpdateResource.ButtonCancel")}
                 </Button>

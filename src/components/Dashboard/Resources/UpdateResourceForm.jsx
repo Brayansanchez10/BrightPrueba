@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Modal, Button } from "antd";
+import { LoadingOutlined } from '@ant-design/icons';
 // Importaciones de request: 
 import { updateResource, getResource } from "../../../api/courses/resource.request";
 import { getSubCategoryCourseId } from "../../../api/courses/subCategory.requst.js";
@@ -28,6 +29,7 @@ const UpdateResourceForm = ({ isVisible, onCancel, resourceData, onUpdate, cours
   const [subCategory, setSubCategory] = useState([]);
   const [subcategoryId, setSubcategoryId] = useState("");
   const [quizzes, setQuizzes] = useState([  { question: "", options: ["", ""], correctAnswer: "" }, ]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isVisible && courseId) {
@@ -169,6 +171,8 @@ const UpdateResourceForm = ({ isVisible, onCancel, resourceData, onUpdate, cours
     // Si hay errores, no continúes
     if (Object.keys(allErrors).length > 0) return;
 
+    setIsLoading(true); // Activar loading
+
     const updatedData = {
       title,
       subcategoryId,
@@ -207,6 +211,8 @@ const UpdateResourceForm = ({ isVisible, onCancel, resourceData, onUpdate, cours
           timer: 1000,
         });
       }
+    } finally {
+      setIsLoading(false); // Desactivar loading
     }
   };
 
@@ -460,11 +466,23 @@ const UpdateResourceForm = ({ isVisible, onCancel, resourceData, onUpdate, cours
         )}
 
         <div className="flex justify-end gap-4">
-          <Button onClick={handleCancel}>
+          <Button 
+            onClick={handleCancel}
+            disabled={isLoading}
+          >
             {t("UpdateResource.ButtonCancel")}
           </Button>
-          <Button type="primary" htmlType="submit" onClick={handleUpdate}>
-            {t("UpdateResource.ButtonUpdate")}
+          <Button 
+            type="primary" 
+            htmlType="submit" 
+            onClick={handleUpdate}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <LoadingOutlined className="text-xl" spin />
+            ) : (
+              t("UpdateResource.ButtonUpdate")
+            )}
           </Button>
         </div>
       </form>

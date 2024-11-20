@@ -17,7 +17,7 @@ const { Option } = Select;
 
 export default function CreateCourseForm({ visible = false, onClose = () => {}, onCreate = () => {} }) {
     const { categories } = useCategoryContext();
-    const { createCourse } = useCoursesContext();
+    const { createCourse, courses } = useCoursesContext();
     const { getUserById } = useUserContext();
     const { user } = useAuth();
     const [username, setUsername] = useState('');
@@ -145,7 +145,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
             duracion: "",
         };
     
-        if (categories.some((existingCategory) => existingCategory.name === course.name)) {
+        if (courses.some((existingCourse) => existingCourse.title === course.name)) {
             errors.name = t("createCourseForm.nameExists");
         }
     
