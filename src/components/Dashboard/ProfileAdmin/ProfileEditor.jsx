@@ -55,8 +55,8 @@ export default function ProfileEditor() {
       <LeftBar onVisibilityChange={handleLeftBarVisibilityChange} />
       <div className={`w-full transition-all duration-300 ${isLeftBarVisible ? 'ml-56' : ''}`}>
         <Navbar />
-        <div className="flex flex-col items-center justify-center p-4 space-y-6">
-          <div className="w-full max-w-lg">
+        <div className="flex items-center justify-center p-4">
+          <div className="flex flex-col md:flex-row w-full md:max-w-full justify-center">
             <ProfileForm
               name={userData.name}
               email={userData.email}

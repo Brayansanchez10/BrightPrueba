@@ -8,7 +8,7 @@ import { useAuth } from "../context/auth.context";
 import VideoPage from "./VideoPage";
 import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import imagen from "../assets/img/torch.png";
 import LoginFond from "../assets/img/Login.png"
 import "../css/animations.css";
@@ -24,8 +24,15 @@ const LoginForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validationSchema = yup.object().shape({
-    email: yup.string().email(t("login.invalid_email")).required(t("login.email_required")),
-    password: yup.string().required(t("login.password_required")),
+    email: yup
+      .string()
+      .email(t("login.invalid_email"))
+      .matches(/@/, t("login.email_requires_at"))
+      .matches(/\.com$/, t("login.email_requires_com"))
+      .required(t("login.email_required")),
+    password: yup
+      .string()
+      .required(t("login.password_required")),
   });
 
   const formik = useFormik({
@@ -124,26 +131,53 @@ const LoginForm = () => {
             />
             <div className="flex flex-col space-y-4">
               <div>
-                <label className="text-lg font-bold text-gray-600 block">
-                  {t("login.email")}
-                </label>
+                <div className="flex items-center gap-2">
+                  <label className="text-lg font-bold text-gray-600 block">
+                    {t("login.email")}
+                  </label>
+                  {formik.touched.email && formik.errors.email && (
+                    <div className="relative group">
+                      <FontAwesomeIcon
+                        icon={faInfoCircle}
+                        className="text-red-500 cursor-help"
+                      />
+                      <div className="absolute hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
+                        {formik.errors.email}
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <input
                   type="email"
                   name="email"
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full p-4 border border-purple-300 rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none focus:border-purple-500 focus:bg-white"
+                  className={`w-full p-4 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                    formik.touched.email && formik.errors.email
+                      ? "border-red-500"
+                      : "border-purple-300"
+                  }`}
                   placeholder={t("login.enter_email")}
                 />
-                {formik.touched.email && formik.errors.email ? (
-                  <div className="text-red-500">{formik.errors.email}</div>
-                ) : null}
               </div>
               <div>
-                <label className="text-lg font-bold text-gray-600 block">
-                  {t("login.password")}
-                </label>
+                <div className="flex items-center gap-2">
+                  <label className="text-lg font-bold text-gray-600 block">
+                    {t("login.password")}
+                  </label>
+                  {formik.touched.password && formik.errors.password && !formik.values.password && (
+                    <div className="relative group">
+                      <FontAwesomeIcon
+                        icon={faInfoCircle}
+                        className="text-red-500 cursor-help"
+                      />
+                      <div className="absolute z-10 hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
+                        {formik.errors.password}
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
@@ -151,7 +185,11 @@ const LoginForm = () => {
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="w-full p-4 border border-purple-300 rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none focus:border-purple-500 focus:bg-white"
+                    className={`w-full p-4 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                      formik.touched.password && formik.errors.password && !formik.values.password
+                        ? "border-red-500"
+                        : "border-purple-300"
+                    }`}
                     placeholder={t("login.enter_password")}
                   />
                   <button
@@ -162,9 +200,6 @@ const LoginForm = () => {
                     <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                   </button>
                 </div>
-                {formik.touched.password && formik.errors.password ? (
-                  <div className="text-red-500">{formik.errors.password}</div>
-                ) : null}
               </div>
               <div className="text-end mt-2 mb-2">
                 <Link

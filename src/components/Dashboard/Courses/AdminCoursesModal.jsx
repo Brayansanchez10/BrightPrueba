@@ -6,6 +6,9 @@ import { useCoursesContext } from "../../../context/courses/courses.context";
 import { FaChevronLeft, FaChevronRight, FaCircle, FaSearch, FaUserCheck, FaUserTimes, FaRegEye, FaTrash  } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import AdminDetails from "./DetailsAdmin/AdminDetails";
+import { deleteResourceProgress } from "../../../api/courses/resource.request";
+import { useCourseProgressContext } from "../../../context/courses/progress.context";
+import { getUsersAndQuizzesByCourseIdAndUserId } from "../../../api/courses/AdminQuiz.request";
 
 const AdminCoursesModal = ({ visible, onClose, courseId }) => {
     const { getUsersByCourse } = useUserContext();
@@ -16,6 +19,7 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
     const [currentPage, setCurrentPage] = useState(1); 
     const [totalItems, setTotalItems] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
+    const { deleteCourseProgress } = useCourseProgressContext();
     const { t } = useTranslation("global");
 
     const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -36,8 +40,29 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
             if (courseId) {
                 try {
                     const userData = await getUsersByCourse(courseId);
+    
                     if (Array.isArray(userData)) {
-                        setTableUser(userData);
+                        const enrichedData = await Promise.all(
+                            userData.map(async (user) => {
+                                try {
+                                    const userWithQuizzes = await getUsersAndQuizzesByCourseIdAndUserId(courseId, user.id);
+                                    const resources = userWithQuizzes[0]?.user?.progress.map(progress => ({
+                                        id: progress.resource.id,
+                                        title: progress.resource.title,
+                                    })) || [];
+                                    console.log('Recursos para el usuario con ID', user.id, ':', resources);  // Verificación
+                                    return {
+                                        ...user,
+                                        resources,
+                                    };
+                                } catch (error) {
+                                    console.error(`Error al obtener quizzes para el usuario con ID ${user.id}:`, error);
+                                    return { ...user, resources: [] };
+                                }
+                            })
+                        );
+    
+                        setTableUser(enrichedData);
                     } else {
                         console.error("getUsersByCourse no retornó un array:", userData);
                         setTableUser([]);
@@ -48,6 +73,7 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
                 }
             }
         };
+    
         if (visible) {
             fetchUserData();
         }
@@ -110,7 +136,7 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
             (UserData.documentNumber && UserData.documentNumber.toLowerCase().includes(searchValue.toLowerCase()))
     );
 
-    const handleUnregister = async (userId) => {
+    const handleUnregister = async (userId, courseId, resources) => {
         try {
             const result = await Swal.fire({
                 title: "Confirmación",
@@ -121,8 +147,20 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Sí, desuscribir",
             });
-
+    
             if (result.isConfirmed) {
+                // 1. Eliminar progreso del curso
+                await deleteCourseProgress(userId, courseId);
+    
+                 // 2. Eliminar progreso de quizzes asociados al curso
+                if (resources && resources.length > 0) {
+                    for (const resource of resources) {
+                        if (resource.id) {
+                            await deleteResourceProgress(userId, resource.id);
+                        }
+                    }
+                }
+    
                 await unregisterFromCourse(userId, courseId);
                 setTableUser(prevUsers => prevUsers.filter(user => user.id !== userId));
                 Swal.fire("Desuscrito!", "El usuario ha sido desuscrito del curso.", "success");
@@ -255,8 +293,12 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
                                     </button>
                                     <button
                                         className="bg-red-500 text-white py-3 px-3 rounded"
-                                        onClick={() => handleUnregister(record.id)}
-                                        >
+                                        onClick={() => {
+                                            const selectedUser = tableUser.find(user => user.id === record.id);
+                                            console.log('Recursos del usuario:', selectedUser?.resources);  // Verificación
+                                            handleUnregister(record.id, courseId, selectedUser?.resources || []);
+                                        }}
+                                    >
                                         <FaTrash/>
                                     </button>
                                 </div>
