@@ -5,7 +5,7 @@ import i18next from "i18next";
 export const MAX_TITLE_LENGTH = 30;
 export const MAX_DESCRIPTION_LENGTH = 500;
 // Tipos de archivos permitidos para subir
-export const ALLOWED_FILE_TYPES = [".mov", ".docx", ".pdf", ".jpg", ".png"];
+export const ALLOWED_FILE_TYPES = [".pdf", ".jpg", ".jpeg", ".png"];
 
 // Expresiones regulares para validar diferentes tipos de URLs de video
 export const URL_REGEX = {

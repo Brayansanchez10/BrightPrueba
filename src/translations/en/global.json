@@ -672,7 +672,7 @@
         "Option": "The option cannot be empty.",
         "ValidationAnswer": "The correct answer must match one of the options.",
         "ValidationAlertFile": "File type not allowed.",
-        "ValidationAlertFileDescription": "Please select a file with one of the allowed types.",
+        "ValidationAlertFileDescription": "Please select a PDF or image file with the following formats: jpg/jpeg/png.",
         "UpdateAlert": "Resource successfully updated.",
         "ErrorAlert": "An error occurred while saving the resource.",
         "ModalTitle": "Edit Resource",

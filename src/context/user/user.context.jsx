@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
-import { getAllUsers, ActivateAcc, getUser, updateUser as updateUserApi, deleteUser as deleteUserApi, deleteUserConfirmation as deleteUserConfirmationApi, createUser as createUserApi, registerToCourse as registerToCourseApi, getUserCourses as getUserCoursesApi, changePassword as changePasswordApi, getUsersByCourse as getUsersByCourseApi } from '../../api/user/user.request';
+import { getAllUsers, ActivateAcc, toggleState, getUser, updateUser as updateUserApi, deleteUser as deleteUserApi, deleteUserConfirmation as deleteUserConfirmationApi, createUser as createUserApi, registerToCourse as registerToCourseApi, getUserCourses as getUserCoursesApi, changePassword as changePasswordApi, getUsersByCourse as getUsersByCourseApi } from '../../api/user/user.request';
 import { useAuth } from '../auth.context'; // Importa el contexto de autenticación
 import NewPassword from '../../components/Home/ChangePasswordUser';
 
@@ -38,6 +38,15 @@ export const UserProvider = ({ children }) => {
             console.log(error);
         }
     };
+
+    const buttonActivate = async (userId) =>{
+        try {
+            await toggleState(userId);
+            getUsers();
+        } catch (error) {
+            
+        }
+    }
 
     const getUserById = async (_id) => {
         try {
@@ -179,6 +188,7 @@ export const UserProvider = ({ children }) => {
                 getUserCourses,
                 changePassword,
                 getUsersByCourse,
+                buttonActivate,
             }}
         >
             {children}
