@@ -370,9 +370,9 @@ export default function HomePage() {
               variants={staggerChildren}
             >
               {[
-                { image: MusicImage, title: "home.Cience" },
-                { image: PHPImage, title: "home.CienceSocial" },
-                { image: JSImage, title: "home.Tecnologia" },
+                { image: PHPImage, title: "home.Cience" },
+                { image: JSImage, title: "home.CienceSocial" },
+                { image: MusicImage, title: "home.Tecnologia" },
                 { image: ArtImage, title: "home.art" },
                 
               ].map((item, index) => (
