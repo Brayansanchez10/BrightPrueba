@@ -43,8 +43,8 @@ export default function CourseView() {
   const [creatorDescription, setCreatorDescription] = useState("");
   const [subCategory, setSubCategory] = useState([]);
   const [currentProgress, setCurrentProgress] = useState(0);
-  const [descripcion, setDescripcion] = useState("");
-  const [especialidades, setEspecialidades] = useState("");
+  const [description, setDescription] = useState("");
+  const [specialties, setSpecialties] = useState("");
 
   const fetchCourseData = useCallback(async () => {
     if (!courseId) return;
@@ -56,8 +56,8 @@ export default function CourseView() {
       if (courseData && courseData.userId) {
         const creatorData = await getUserById(courseData.userId);
         setCreator(creatorData);
-        setDescripcion(creatorData.descripcion || "");
-        setEspecialidades(creatorData.especialidades || "");
+        setDescription(creatorData.description || "");
+        setSpecialties(creatorData.specialties || "");
       }
 
       const resourceData = await getResource(courseId);
@@ -407,14 +407,14 @@ export default function CourseView() {
                     </div>
                     <AnimatePresence mode="wait">
                       <motion.p
-                        key={descripcion}
+                        key={description}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.5 }}
                         className="text-gray-600 dark:text-primary mb-4"
                       >
-                        {descripcion || t("course_user.noDescription")}
+                        {description || t("course_user.noDescription")}
                       </motion.p>
                     </AnimatePresence>
                     <motion.div 
@@ -426,11 +426,11 @@ export default function CourseView() {
                       <h5 className="text-md font-semibold text-gray-800 dark:text-primary mb-2">
                         {t("course_user.specialties")}
                       </h5>
-                      {especialidades ? (
+                      {specialties ? (
                         <ul className="list-disc list-inside text-gray-600 dark:text-primary">
-                          {especialidades.split(',').map((especialidad, index) => (
+                          {specialties.split(',').map((specialty, index) => (
                             <motion.li key={index} whileHover={{ x: 5 }}>
-                              {especialidad.trim()}
+                              {specialty.trim()}
                             </motion.li>
                           ))}
                         </ul>

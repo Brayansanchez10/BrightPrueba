@@ -25,8 +25,8 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
   const [entities, setEntities] = useState([]);
   const [error, setError] = useState(null);
 
-  const [descripcion, setDescripcion] = useState("");
-  const [especialidades, setEspecialidades] = useState("");
+  const [description, setDescription] = useState("");
+  const [specialties, setSpecialties] = useState("");
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -39,8 +39,8 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
           setFirstNames(userData.firstNames);
           setLastNames(userData.lastNames);
           setEntityId(userData.entityId);
-          setDescripcion(userData.descripcion || "");
-          setEspecialidades(userData.especialidades || "");
+          setDescription(userData.description || "");
+          setSpecialties(userData.specialties || "");
 
           if (userData.userImage && userData.userImage !== "null") {
             setPreviewProfileImage(userData.userImage);
@@ -132,8 +132,8 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
             lastNames,
             userImage: deleteProfileImage ? null : (profileImage || previewProfileImage),
             entityId,
-            descripcion,
-            especialidades,
+            description,
+            specialties,
           };
 
           await updateUserPartial(userId, userData);
@@ -242,7 +242,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
 
       if (result.isConfirmed) {
         try {
-          await updateUserPartial(userId, { username: name, email, firstNames, lastNames, userImage: null, descripcion, especialidades});
+          await updateUserPartial(userId, { username: name, email, firstNames, lastNames, userImage: null, description, specialties});
 
           Swal.fire({
             icon: 'success',
@@ -426,8 +426,8 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
                 className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
                           focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
                           disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:shadow-none"
-                value={descripcion}
-                onChange={(e) => setDescripcion(e.target.value)}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 rows={4}
               />
             </div>
@@ -441,8 +441,8 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
                 className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
                           focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
                           disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:shadow-none"
-                value={especialidades}
-                onChange={(e) => setEspecialidades(e.target.value)}
+                value={specialties}
+                onChange={(e) => setSpecialties(e.target.value)}
                 placeholder="Ingrese especialidades separadas por comas"
               />
             </div>

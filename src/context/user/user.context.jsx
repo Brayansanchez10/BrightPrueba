@@ -79,7 +79,7 @@ export const UserProvider = ({ children }) => {
         }
     };
 
-    const updateUserPartial = async (_id, { username, firstNames, lastNames, documentNumber, email, userImage, entityId, descripcion, especialidades }) => {
+    const updateUserPartial = async (_id, { username, firstNames, lastNames, documentNumber, email, userImage, entityId, description, specialties }) => {
         try {
             const { data: currentUserData } = await getUser(_id);
     
@@ -93,8 +93,8 @@ export const UserProvider = ({ children }) => {
                 role: currentUserData.role,
                 userImage: userImage !== undefined ? userImage : currentUserData.userImage,
                 entityId: entityId || currentUserData.entityId,
-                descripcion: descripcion || currentUserData.descripcion, 
-                especialidades: especialidades || currentUserData.especialidades,
+                description: description || currentUserData.description, 
+                specialties: specialties || currentUserData.specialties,
             };
     
             const formData = new FormData();
