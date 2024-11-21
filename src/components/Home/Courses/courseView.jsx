@@ -400,7 +400,7 @@ export default function CourseView() {
                         <div className="flex items-center text-gray-500 dark:text-primary mt-1">
                           <FaGraduationCap className="mr-2" />
                           <span>
-                            {t("course_user.expert")} {course.title}
+                            {t("Instructor")} {course.title}
                           </span>
                         </div>
                       </div>

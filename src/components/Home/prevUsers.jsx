@@ -41,7 +41,7 @@ export default function PrevUser() {
     };
 
     fetchUserData();
-  }, [id, getUserById, getUserCourses, getCourse]);
+  }, [id]);
 
   if (loading) {
     return <div>Cargando...</div>;
