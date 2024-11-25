@@ -79,7 +79,7 @@ const ProfileForm = ({ name: initialName, email: initialEmail }) => {
     if (!emailRegex.test(email)) {
       return "Email inválido";
     }
-    if (email.length > 30) {
+    if (email.length > 50) {
       return "El email no debe exceder los 30 caracteres";
     }
     return "";

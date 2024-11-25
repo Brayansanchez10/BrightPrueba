@@ -65,7 +65,7 @@ const CreateRolForm = ({ visible, onClose, isVisible }) => {
     };
 
     if (!role.nombre || role.nombre.length < 4 || role.nombre.length > 10) {
-      errors.nombre = t("createRoleForm.minMaxRole"); 
+      errors.nombre = t("createRoleForm.mixRole"); 
     }
 
     if (rolesData.some((existingRole) => existingRole.nombre === role.nombre)) {

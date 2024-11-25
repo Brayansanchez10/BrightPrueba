@@ -19,7 +19,7 @@ const UpdateCategoryModal = ({
       errors.name = t('updateCategoryModal.namePlaceholder'); 
     } else if (values.name.length < 3) {
       errors.name = t('updateCategoryModal.nameShort');
-    } else if (values.name.length > 20) {
+    } else if (values.name.length > 30) {
       errors.name = t('updateCategoryModal.nameLong');
     }
 
@@ -85,7 +85,7 @@ const UpdateCategoryModal = ({
           label={t('updateCategoryModal.nameLabel')}
           rules={[{ required: true, message: t('updateCategoryModal.namePlaceholder') }]}
         >
-          <Input maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+          <Input maxLength={30} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
 
         <Form.Item

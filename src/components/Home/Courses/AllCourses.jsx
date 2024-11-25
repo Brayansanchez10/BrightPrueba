@@ -153,7 +153,7 @@ export default function AllCourses() {
     };
   
     loadRatings();
-  }, [courses, fetchRatingsByCourse, fetchCreatorName, fetchSubCategories]);
+  }, [courses]);
 
   const calculateAverageRating = (courseId) => {
     const courseRatings = ratings.filter(rating => rating.courseId === courseId);

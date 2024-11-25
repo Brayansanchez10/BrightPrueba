@@ -7,7 +7,7 @@ import { useUserContext } from '../../context/user/user.context';
 import { useFavorite } from "../../context/courses/favorites.context";
 import { useCourseProgressContext } from "../../context/courses/progress.context";
 import { FaUser, FaEnvelope, FaGraduationCap, FaHeart, FaMapMarkerAlt, FaCalendar } from 'react-icons/fa';
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import NavigationBar from "../../components/Home/NavigationBar";
 import Footer from "../footer";
 import Modal from "./Cards/Modal";
@@ -52,7 +52,9 @@ export default function ViewProfile() {
   const sliderRef = useRef(null);
   const completedSliderRef = useRef(null);
 
-  const handleResize = useCallback(() => setWindowWidth(window.innerWidth), []);
+  const handleResize = useCallback(() => {
+    setWindowWidth(window.innerWidth);
+  }, []);
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);
@@ -105,7 +107,7 @@ export default function ViewProfile() {
     } finally {
       setLoading(false);
     }
-  }, [id, authUser, getUserById, getUserCourses, getCourseProgress]);
+  }, [id, authUser, getUserById]);
 
   useEffect(() => {
     fetchUserData();
@@ -144,12 +146,32 @@ export default function ViewProfile() {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: windowWidth >= 1024 ? 4 : windowWidth >= 768 ? 3 : windowWidth >= 480 ? 2 : 1,
+    slidesToShow: 4,
     slidesToScroll: 1,
     arrows: false,
     beforeChange: (_, newIndex) => setCurrentSlide(newIndex + 1),
-    swipeToSlide: true,
-    variableWidth: false,
+    responsive: [
+      {
+        breakpoint: 1280,
+        settings: {
+          slidesToShow: 3,
+        }
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        }
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+          centerMode: true,
+          centerPadding: '40px',
+        }
+      }
+    ]
   };
 
   const completedSliderSettings = {
@@ -162,19 +184,20 @@ export default function ViewProfile() {
   const handleCompletedPrev = () => completedSliderRef.current?.slickPrev();
   const handleCompletedNext = () => completedSliderRef.current?.slickNext();
 
-  const maxSlide = Math.ceil(courses.length / sliderSettings.slidesToShow);
-  const maxCompletedSlide = Math.ceil(completedCourses.length / sliderSettings.slidesToShow);
+  const maxSlide = Math.ceil(courses.length / (windowWidth >= 1280 ? 4 : windowWidth >= 1024 ? 3 : windowWidth >= 640 ? 2 : 1));
+  const maxCompletedSlide = Math.ceil(completedCourses.length / (windowWidth >= 1280 ? 4 : windowWidth >= 1024 ? 3 : windowWidth >= 640 ? 2 : 1));
 
   const renderCourseCards = (courseList, sliderRef, currentSlide, maxSlide, handlePrev, handleNext) => (
     <div className="relative overflow-hidden">
-      <Slider ref={sliderRef} {...sliderSettings} className="mx-[-8px] !flex justify-start">
+      <Slider ref={sliderRef} {...sliderSettings} className="mx-auto">
         {courseList.map((course) => (
-          <div key={course.id} className="px-2">
+          <div key={course.id} className="px-2 sm:px-3 md:px-4">
             <div
-              className="cursor-pointer rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 mb-4"
+              className="cursor-pointer rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 mb-4 mx-auto bg-white"
               onClick={() => handleCardClick(course)}
               style={{
                 width: "100%",
+                maxWidth: "280px",
                 height: "220px",
               }}
             >
@@ -182,7 +205,8 @@ export default function ViewProfile() {
                 className="relative"
                 style={{
                   overflow: "hidden",
-                  borderRadius: "0.5rem",
+                  borderTopLeftRadius: "0.5rem",
+                  borderTopRightRadius: "0.5rem",
                   height: "175px",
                 }}
               >
@@ -193,9 +217,9 @@ export default function ViewProfile() {
                 />
               </div>
               <div className="bg-secondary p-3 rounded-b-lg flex justify-between items-center">
-                <h3 className="text-primary font-bold text-sm truncate">{course.title}</h3>
+                <h3 className="text-primary font-bold text-sm truncate flex-1 mr-2">{course.title}</h3>
                 <FaHeart
-                  className={`cursor-pointer ${favorites.some(fav => fav.courseId === course.id) ? "text-red-500" : "text-gray-500"} transition-colors duration-300`}
+                  className={`cursor-pointer flex-shrink-0 ${favorites.some(fav => fav.courseId === course.id) ? "text-red-500" : "text-gray-500"} transition-colors duration-300`}
                   onClick={(e) => handleFavoriteToggle(course.id, e)}
                   style={{ fontSize: "16px" }}
                 />
@@ -205,10 +229,10 @@ export default function ViewProfile() {
         ))}
       </Slider>
       {courseList.length > sliderSettings.slidesToShow && (
-        <div className="flex justify-center sm:justify-start items-center mt-4 text-[#CFCFCF]">
+        <div className="flex justify-center items-center mt-4 text-[#CFCFCF]">
           <button
             onClick={handlePrev}
-            className={`flex items-center mr-4 font-bold ${
+            className={`flex items-center mr-2 font-bold ${
               currentSlide <= 1
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:text-[#B99CEA]"
@@ -218,18 +242,20 @@ export default function ViewProfile() {
             <ChevronLeft className="w-5 h-5 mr-1" />
             <span className="hidden sm:inline">PREV</span>
           </button>
-          <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
-            <span className="text-white font-bold">
-              {currentSlide}
-            </span>
-          </div>
-          <span className="mx-2 text-[#B99CEA]">de</span>
-          <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
-            <span className="text-white font-bold">{maxSlide}</span>
+          <div className="flex items-center mx-2">
+            <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
+              <span className="text-white font-bold">
+                {currentSlide}
+              </span>
+            </div>
+            <span className="mx-2 text-[#B99CEA]">de</span>
+            <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
+              <span className="text-white font-bold">{maxSlide}</span>
+            </div>
           </div>
           <button
             onClick={handleNext}
-            className={`flex items-center ml-4 font-bold ${
+            className={`flex items-center ml-2 font-bold ${
               currentSlide >= maxSlide
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:text-[#B99CEA]"
@@ -267,7 +293,7 @@ export default function ViewProfile() {
             <div className="container mx-auto px-4">
               <div className="flex flex-col items-center">
                 <div className="flex flex-col md:flex-row items-center md:items-start justify-center w-full mb-6 space-y-6 md:space-y-0 md:space-x-8">
-                  <div className="relative">
+                  <div className="relative md:mt-6">
                     <div className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center border-4 border-white shadow-lg">
                       {user.userImage ? (
                         <img src={user.userImage} alt={user.username} className="w-full h-full object-cover" />

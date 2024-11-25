@@ -93,15 +93,14 @@ const DataTable = () => {
   }, [user]);
 
   useEffect(() => {
-    const filteredUser = usersData.filter(
-      (item) =>
-        item.username.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.password.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.role.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.documentNumber.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.firstNames.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.lastNames.toLowerCase().includes(searchValue.toLowerCase()) 
+    const filteredUser = usersData.filter((item) => 
+      (item.username && item.username.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.email && item.email.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.password && item.password.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.role && item.role.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.documentNumber && item.documentNumber.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.firstNames && item.firstNames.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.lastNames && item.lastNames.toLowerCase().includes(searchValue.toLowerCase()))
     );
 
     setTotalItems(filteredUser.length);
@@ -158,7 +157,7 @@ const DataTable = () => {
       (value) =>
         value &&
         typeof value === "string" &&
-        value.toLowerCase().includes(searchValue.toLowerCase())
+        value.toLowerCase().includes(searchValue?.toLowerCase() || "")
     )
   );
 
@@ -231,12 +230,12 @@ const DataTable = () => {
   // Lógica de filtrado y paginación
   const generateIds = () => {
     const searchFiltered = usersData.filter((item) => 
-      item.username.toLowerCase().includes(searchValue.toLowerCase()) ||
-      item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
-      item.role.toLowerCase().includes(searchValue.toLowerCase()) ||
-      item.documentNumber.toLowerCase().includes(searchValue.toLowerCase()) ||
-      item.firstNames.toLowerCase().includes(searchValue.toLowerCase()) ||
-      item.lastNames.toLowerCase().includes(searchValue.toLowerCase())
+      (item.username && item.username.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.email && item.email.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.role && item.role.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.documentNumber && item.documentNumber.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.firstNames && item.firstNames.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.lastNames && item.lastNames.toLowerCase().includes(searchValue.toLowerCase()))
     );
 
     // Filtrado por `entityId`, solo si `entityId` es distinto de `1`
