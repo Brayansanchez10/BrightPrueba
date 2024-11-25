@@ -1120,5 +1120,12 @@
         "message2": "Esta acción no se puede deshacer.",
         "confirm": "Si, eliminar",
         "cancel": "No, cancelar"
-} 
+    },
+    "notifications": {
+        "delete": "Eliminar",
+        "empty": "No hay notificaciones",
+        "mark_all_read": "Marcar todas como leídas",
+        "new_course": "Nuevo curso disponible",
+        "course_update": "Actualización de curso"
+    }
 }

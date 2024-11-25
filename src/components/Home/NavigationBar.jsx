@@ -22,6 +22,7 @@ import fondoMiscursos from "../../assets/img/fondo_miscursos.png";
 import fondoForo from "../../assets/img/fondo_cursos.png";
 import ThemeToggle from '../themes/ThemeToggle';
 import { useForumCategories } from "../../context/forum/forumCategories.context";
+import NotificationBell from "../NotificationBell";
 
 export default function NavigationBar() {
   const { t } = useTranslation("global");
@@ -216,6 +217,7 @@ export default function NavigationBar() {
           )}
         </div>
         <div className="hidden lg:flex items-center">
+          <NotificationBell />
           <div className="flex flex-col items-end mr-4">
             <div className="relative text-white text-lg font-bold cursor-pointer max-w-[200px] truncate">
               {username}
