@@ -7,7 +7,7 @@ const { Option } = Select;
 
 const UpdateEntityModal = ({ visible, onClose, onUpdate, form }) => {
     const { t } = useTranslation("global");
-    const MAX_COURSE_NAME_LENGTH = 30;
+    const MAX_COURSE_NAME_LENGTH = 20;
     const MIN_DESCRIPTION_LENGTH = 30;
 
     const validateFields = (values) => {

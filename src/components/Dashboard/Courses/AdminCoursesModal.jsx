@@ -150,13 +150,21 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
     
             if (result.isConfirmed) {
                 // 1. Eliminar progreso del curso
-                await deleteCourseProgress(userId, courseId);
-    
+                try {
+                    await deleteCourseProgress(userId, courseId);
+                } catch (error) {
+                    console.warn("No se encontro el progreso del curso:", error);
+                }
+                
                  // 2. Eliminar progreso de quizzes asociados al curso
-                if (resources && resources.length > 0) {
+                 if (resources && resources.length > 0) {
                     for (const resource of resources) {
                         if (resource.id) {
-                            await deleteResourceProgress(userId, resource.id);
+                            try {
+                                await deleteResourceProgress(userId, resource.id);
+                            } catch (error) {
+                                console.warn(`No se encontro el progreso del recurso con ID ${resource.id}:`, error);
+                            }
                         }
                     }
                 }

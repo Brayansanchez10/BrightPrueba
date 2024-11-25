@@ -16,7 +16,7 @@ export const getResourceWithQuizzes = (id) => axios.get(`/resource/getResourceWi
 export const getUserResourceProgress = (userId, resourceId) => axios.get(`/resource/user/${userId}/resource/${resourceId}/progress`);
 
 // Nueva función para eliminar un progreso de un usuario de un quiz.
-export const deleteResourceProgress = (userId, resourceId) => axios.delete(`/resource/user/${userId}/resource/${resourceId}/progress`);
+export const deleteResourceProgress = async (userId, resourceId) => axios.delete(`/resource/user/${userId}/resource/${resourceId}/progress`);
 
 // Función para crear un recurso
 export const createResource = async (resourceData) => {

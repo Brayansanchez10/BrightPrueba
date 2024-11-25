@@ -27,7 +27,7 @@ const CreateEntityModal = ({ visible, onClose, isVisible }) => {
       case "name":
         if (value.length < 3) {  
           setError((prev) => ({ ...prev, name: t("createEntityForm.minName") }));
-        } else if (value.length > 30) {  
+        } else if (value.length > 20) {  
           setError((prev) => ({ ...prev, name: t("createEntityForm.maxName") }));
         } else {
           setError((prev) => ({ ...prev, name: "" }));
@@ -160,7 +160,7 @@ const CreateEntityModal = ({ visible, onClose, isVisible }) => {
             onChange={handleChange}
             className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
             placeholder={t('createEntityForm.namePlaceholder')}
-            maxLength={30}
+            maxLength={20}
             required
           />
           {error.name && (
