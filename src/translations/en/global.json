@@ -269,16 +269,16 @@
         "no_courses_available": "Coming soon",
         "check_back_later": "There are no courses available at the moment. New courses will be available soon! Please check back later.",
         "no_courses_enrolled": "You are not enrolled in any courses yet.",
-        "modalA": "¡Success!",
-        "modalM": "You have successfully registered",
+        "modalA": "¡Request successfully submitted!",
+        "modalM": "You have requested access to this course, you must wait for confirmation to view the content.",
          "title": "Courses",
          "favorites": "Your favorites",
          "desFavorites": "Here will be shown your favorite courses.",
          "with": "With",
          "hours": "hours",
          "sections": "sections",
-         "registerM": "RESGISTER!",
-         "registering": "Registering...",
+         "registerM": "Request Access!",
+         "registering": "Application Pending...",
          "yaregister": "ALREADY REGISTERED!", 
          "progressbarra": "Progress:"
 
@@ -336,7 +336,12 @@
         "Activate": "Activate",
         "Desactivate": "Desactivate",
         "Active": "Active",
-        "Inactive": "Inactive"
+        "Inactive": "Inactive",
+        "Username": "Username",
+        "Pending": "There are no pending users to accept in this course.",
+        "NoRegister": "There are no registered users in this course.",
+        "DataError": "Error: user data not available.",
+        "titleModal": "Registered Users"
     },
     "userDetails": {
         "title": "User Details",

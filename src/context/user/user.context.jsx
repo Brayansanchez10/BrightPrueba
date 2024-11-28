@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
-import { getAllUsers, ActivateAcc, toggleState, getUser, updateUser as updateUserApi, deleteUser as deleteUserApi, deleteUserConfirmation as deleteUserConfirmationApi, createUser as createUserApi, registerToCourse as registerToCourseApi, getUserCourses as getUserCoursesApi, changePassword as changePasswordApi, getUsersByCourse as getUsersByCourseApi } from '../../api/user/user.request';
+import { getAllUsers, ActivateAcc, toggleState, getUser, updateUser as updateUserApi, deleteUser as deleteUserApi, deleteUserConfirmation as deleteUserConfirmationApi, createUser as createUserApi, registerToCourse as registerToCourseApi, getUserCourses as getUserCoursesApi, changePassword as changePasswordApi, getUsersByCourse as getUsersByCourseApi, getPendingUsersByCourse as getPendingUsersByCourseApi, updateUserCourseState} from '../../api/user/user.request';
 import { useAuth } from '../auth.context'; // Importa el contexto de autenticación
 import NewPassword from '../../components/Home/ChangePasswordUser';
 
@@ -44,7 +44,15 @@ export const UserProvider = ({ children }) => {
             await toggleState(userId);
             getUsers();
         } catch (error) {
-            
+            console.error(error); 
+        }
+    }
+
+    const buttonStateActivate = async(userId, courseId) => {
+        try {
+            await updateUserCourseState(userId, courseId);
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -155,7 +163,7 @@ export const UserProvider = ({ children }) => {
         }
     };
 
-    // Nueva función para obtener los usuarios registrados en un Curso
+    // Nueva función para obtener los usuarios registrados en un Curso con el estado en True
     const getUsersByCourse = async (courseId) => {
         try {
             const res = await getUsersByCourseApi(courseId);
@@ -166,6 +174,19 @@ export const UserProvider = ({ children }) => {
             return null;
         }
     };
+
+    // Nueva función para obtener los usuarios registrados en un Curso con el estado en False
+    const getPendingUsersByCourse = async (courseId) => {
+        try {
+            const res = await getPendingUsersByCourseApi(courseId);
+            console.log('Curso Obtenido', res.data);
+            return res.data;
+        } catch (error) {
+            console.error('Error al obteneer el curso', error);
+            return null;
+        }
+    };
+
 
     useEffect(() => {
         if (isAuthenticated()) {
@@ -191,6 +212,8 @@ export const UserProvider = ({ children }) => {
                 changePassword,
                 getUsersByCourse,
                 buttonActivate,
+                getPendingUsersByCourse,
+                buttonStateActivate
             }}
         >
             {children}

@@ -15,7 +15,7 @@ import Footer from "../../footer";
 export default function UserCourses() {
   const { t } = useTranslation("global");
   const { user } = useAuth();
-  const { getUserCourses } = useUserContext();
+  const { getUserCourses, getUsersByCourse } = useUserContext();
   const { getCourseProgress, deleteCourseProgress } = useCourseProgressContext();
   const { unregisterFromCourse } = useCoursesContext();
   const [userCourses, setUserCourses] = useState([]);
