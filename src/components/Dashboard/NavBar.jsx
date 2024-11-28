@@ -7,7 +7,7 @@ import LeftBar from "./LeftBar";
 import { useTranslation } from "react-i18next";
 import Logo from "../../assets/img/hola.png";
 import ThemeToggle from '../themes/ThemeToggle.jsx';
-import NotificationBell from "../NotificationBell.jsx";
+import NotificationBell from "../Notifications/NotificationBell.jsx";
 
 const Navbar = () => {
   const { t } = useTranslation("global");

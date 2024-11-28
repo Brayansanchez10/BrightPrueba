@@ -1143,6 +1143,13 @@
         "empty": "No notifications",
         "mark_all_read": "Mark all as read",
         "new_course": "New course available",
-        "course_update": "Course update"
+        "course_update": "Course update",
+        "view_all": "Show all",
+        "all_notifications": "All notifications",
+        "back": "Back",
+        "filter_all": "All notifications",
+        "filter_courses": "Courses notifications",
+        "filter_forums": "Forums notifications",
+        "filter_resources": "Resources notifications"
     }
 }
