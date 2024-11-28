@@ -155,7 +155,8 @@ function RegisterForm() {
         </div>
         
         
-        <div className="flex flex-col justify-center items-center bg-white w-full md:w-2/2 sm:rounded-none md:rounded-tr-3xl md:rounded-br-3xl p-3">
+        <div className="flex flex-col justify-center items-center bg-white w-full rounded-3xl lg:rounded-tr-3xl lg:rounded-br-3xl lg:rounded-tl-none lg:rounded-bl-none p-3">
+
           <div className="text-2xl w-full mx-auto text-center font-black bg-gradient-to-r from-emerald-400  to-purple-800 bg-clip-text text-transparent font-impact mb-2">
               <p>{t("register.register_now")}</p>
               <p>{t("register.future")}</p>
@@ -173,8 +174,8 @@ function RegisterForm() {
               onSubmit={formik.handleSubmit}
               className="flex flex-col mt-3 space-y-3"
             >
-              <div className="flex space-x-3">
-                <div className="w-1/2">
+              <div className="flex flex-col space-y-3 md:flex-row md:space-x-3 md:space-y-0">
+                <div className="w-full md:w-1/2">
                   <div className="flex items-center gap-2">
                     <label className="text-lg font-bold text-gray-600">
                       {t("register.firstNames")}
@@ -205,7 +206,7 @@ function RegisterForm() {
                     placeholder={t("register.enter_firstNames")}
                   />
                 </div>
-                <div className="w-1/2">
+                <div className="w-full md:w-1/2">
                   <div className="flex items-center gap-2">
                     <label className="text-lg font-bold text-gray-600">
                       {t("register.lastNames")}

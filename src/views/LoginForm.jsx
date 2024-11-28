@@ -112,7 +112,8 @@ const LoginForm = () => {
           <Carousel />
         </div>
 
-        <div className="flex flex-col justify-center items-center bg-white w-full md:w-2/2 sm:rounded-none md:rounded-tr-3xl md:rounded-br-3xl p-3">
+        <div className="flex flex-col justify-center items-center bg-white w-full rounded-3xl lg:rounded-tr-3xl lg:rounded-br-3xl lg:rounded-tl-none lg:rounded-bl-none p-3">
+          
           <div className="text-2xl w-full mx-auto text-center font-black bg-gradient-to-r from-emerald-400  to-purple-800 bg-clip-text text-transparent font-impact mb-3">
               <p>{t("login.hello")}</p>
               <p>{t("login.welcome_message")}</p>
