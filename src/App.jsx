@@ -64,6 +64,7 @@ import ActivationComponent from "./components/Activate";
 import DeleteAccountConfirmation from "./components/Dashboard/ProfileAdmin/eliminatedCode";
 import Entities from "./components/Dashboard/Entities/EntitiesTable.jsx";
 import CertificatePreview from "./components/Home/Courses/CertificatePreview";
+import AllNotifications from './components/Notifications/AllNotifications.jsx';
 
 function App() {
   const [forumActive, setForumActive] = useState(true); // Activado por defecto
@@ -119,6 +120,7 @@ function App() {
                                                         <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />
                                                         <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />
                                                         <Route path="/AllCourses" element={<AllCourses />}/>
+                                                        <Route path="/notifications" element={<AllNotifications />}/>
                                                         <Route path="/CourseCategory/:category" element={<CourseCategory />} />
                                                             {forumActive && (
                                                                 <>
@@ -144,6 +146,7 @@ function App() {
                                                         <Route path="/ProfileEditor" element={<ProfileEditor />} />
                                                         <Route path="/ChangePassword" element={<ChangePassword />} />
                                                         <Route path="/eliminatedCode" element={<DeleteAccountConfirmation />} />
+                                                        <Route path="/adminNotifications" element={<AllNotifications />}/>
                                                       </Route>
 
                                                       <Route path="/notFound" element={<NotFoundPage />} />

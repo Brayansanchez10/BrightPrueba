@@ -1126,6 +1126,13 @@
         "empty": "No hay notificaciones",
         "mark_all_read": "Marcar todas como leídas",
         "new_course": "Nuevo curso disponible",
-        "course_update": "Actualización de curso"
+        "course_update": "Actualización de curso",
+        "view_all": "Ver todas",
+        "all_notifications": "Todas las notificaciones",
+        "back": "Volver",
+        "filter_all": "Todas las notificaciones",
+        "filter_courses": "Notificaciones de cursos",
+        "filter_forums": "Notificaciones del Foro",
+        "filter_resources": "Notificaciones de recursos"
     }
 }
