@@ -22,7 +22,7 @@ import fondoMiscursos from "../../assets/img/fondo_miscursos.png";
 import fondoForo from "../../assets/img/fondo_cursos.png";
 import ThemeToggle from '../themes/ThemeToggle';
 import { useForumCategories } from "../../context/forum/forumCategories.context";
-import NotificationBell from "../NotificationBell";
+import NotificationBell from "../Notifications/NotificationBell";
 
 export default function NavigationBar() {
   const { t } = useTranslation("global");
