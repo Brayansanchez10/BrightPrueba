@@ -283,9 +283,9 @@ export default function CourseView() {
                     expandIconPosition="right"
                   >
                     {subCategory.map((subcategory, index) => {
-                      const filteredResources = resources.filter(
-                        (resource) => resource.subcategoryId === subcategory.id
-                      );
+                      const filteredResources = resources
+                        .filter((resource) => resource.subcategoryId === subcategory.id)
+                        .sort((a, b) => (a.order || 0) - (b.order || 0));
 
                       return (
                         <Panel

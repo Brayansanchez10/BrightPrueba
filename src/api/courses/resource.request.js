@@ -105,5 +105,14 @@ export const completeQuiz = async (userId, resourceId, score) => {
     }
 };
 
+export const updateResourceOrder = async (data) => {
+  try {
+    return await axios.put('/resource/updateResourceOrder', data);
+  } catch (error) {
+    console.error('Error al actualizar el orden de los recursos:', error);
+    throw error;
+  }
+};
+
 // Función para obtener un recurso especifico de un curso
 export const getResourceById = (courseId, resourceId) => axios.get(`/resource/courses/${courseId}/resources/${resourceId}`);

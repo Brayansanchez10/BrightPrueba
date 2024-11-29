@@ -728,7 +728,11 @@
         "ButtonCreate": "Create Resource",
         "MaxOptionsAlert": "Options Limit",
         "MaxOptionsText": "You have reached the maximum number of options.",
-        "PleaseSelectFileOrQuiz": "Please upload a file or create a quiz."
+        "PleaseSelectFileOrQuiz": "Please upload a file or create a quiz.",
+        "reorderSuccess": "Order updated successfully",
+        "reorderError": "Error updating order",
+        "cantMoveResource": "Cannot move resource",
+        "resourceMoveError": "Resources can only be reordered within their own section"
     },
     "course_user": {
         "courseImageAlt": "Course Image",
