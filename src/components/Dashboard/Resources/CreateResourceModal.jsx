@@ -491,7 +491,7 @@ const CreateResourceModal = ({
         icon: 'error',
         title: t('CreateResource.reorderError'),
         showConfirmButton: false,
-        timer: 1500
+        timer: 2500
       });
     }
   };
@@ -1123,7 +1123,7 @@ const CreateResourceModal = ({
                         htmlFor="percent"
                         className="block text-sm font-medium text-gray-700"
                       >
-                        {t("Porcentaje de aprovación")}
+                        {t("CreateResource.ScorePercing")}
                       </label>
                       <input
                         type="number"

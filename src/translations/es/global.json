@@ -333,7 +333,9 @@
         "Pending": "No hay usuarios pendientes por aceptar en este curso.",
         "NoRegister": "No hay usuarios registrados en este curso.",
         "DataError": "Error: datos de usuario no disponibles.",
-        "titleModal": "Usuarios Registrados"
+        "titleModal": "Usuarios Registrados",
+        "titleActivate": "Usuarios Registrados",
+        "titleInactive": "Solicitudes De Ingreso"
     },
     "userDetails": {
         "title": "Detalles del Usuario",
@@ -724,7 +726,8 @@
         "reorderSuccess": "Orden actualizado exitosamente",
         "reorderError": "Error al actualizar el orden",
         "cantMoveResource": "No se puede mover el recurso",
-        "resourceMoveError": "No puedes mover un recurso a otra sección."
+        "resourceMoveError": "No puedes mover un recurso a otra sección, por favor para cambiarlo, edite el recurso y cambielo de sección.",
+        "ScorePercing": "Puntaje de aprobación"
     },
     "course_user": {
         "courseImageAlt": "Imagen del curso",

@@ -128,7 +128,7 @@ const AdminDetails = ({ visible, onClose, tableUser, courseId }) => {
                                                     <th className="px-4 py-2">{t('Nombre del quizz')}</th>
                                                     <th className="px-4 py-2">{t('Intentos realizados')}</th>
                                                     <th className="px-4 py-2">{t('Puntaje Obtenido')}</th>
-                                                    <th className="px-4 py-2">{t('Puntaje De Aprobación')}</th>
+                                                    <th className="px-4 py-2">{t('CreateResource.ScorePercing')}</th>
                                                     <th className="px-4 py-2">{t('Resultado')}</th>
                                                     <th className="px-4 py-2">{t('Acciones')}</th>
                                                 </tr>

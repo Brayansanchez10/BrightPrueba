@@ -469,7 +469,7 @@ export default function ResourceView() {
 
         <div className="flex flex-col items-center p-4 bg-blue-50 rounded-xl"> 
             <span className="text-lg sm:text-xl font-medium text-green-700">
-              {t("Puntaje Minimo de aprovación:")}
+              {t("CreateResource.ScorePercing")}:
             </span>
             <span className="text-2xl sm:text-3xl font-bold text-green-900">
               {resource.percent}
@@ -630,7 +630,7 @@ export default function ResourceView() {
 
         <div className="flex flex-col items-center p-4 bg-blue-50 rounded-xl"> 
             <span className="text-lg sm:text-xl font-medium text-green-700">
-              {t("Puntaje Minimo de aprovación:")}
+              {t("CreateResource.ScorePercing")}:
             </span>
             <span className="text-2xl sm:text-3xl font-bold text-green-900">
               {resource.percent}

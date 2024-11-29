@@ -477,7 +477,7 @@ const UpdateResourceForm = ({ isVisible, onCancel, resourceData, onUpdate, cours
                   htmlFor="percent"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  {t("Porcentaje de aprobación")}
+                  {t("CreateResource.ScorePercing")}
                 </label>
                 <input
                   type="number"

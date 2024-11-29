@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import logo from '../../assets/img/hola.png'; 
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/auth.context';
@@ -5,6 +6,15 @@ import { useAuth } from '../../context/auth.context';
 const NotFoundPage = () => {
   const { t } = useTranslation('global');
   const { logout, role } = useAuth();
+
+   // Redireccionamiento automático después de 5 segundos
+   useEffect(() => {
+    const timer = setTimeout(() => {
+      window.location.href = '/'; // Redirige a la vista pública (por ejemplo, página de inicio pública).
+    }, 500); // Redirecciona después de 5 segundos.
+
+    return () => clearTimeout(timer); // Limpia el temporizador si el componente se desmonta.
+  }, []);
 
   const handleLogout = async () => {
     try {

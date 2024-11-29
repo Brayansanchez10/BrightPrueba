@@ -341,7 +341,9 @@
         "Pending": "There are no pending users to accept in this course.",
         "NoRegister": "There are no registered users in this course.",
         "DataError": "Error: user data not available.",
-        "titleModal": "Registered Users"
+        "titleModal": "Registered Users",
+        "titleActivate": "Registered Users",
+        "titleInactive": "Applications for Admission"
     },
     "userDetails": {
         "title": "User Details",
@@ -732,7 +734,8 @@
         "reorderSuccess": "Order updated successfully",
         "reorderError": "Error updating order",
         "cantMoveResource": "Cannot move resource",
-        "resourceMoveError": "Resources can only be reordered within their own section"
+        "resourceMoveError": "You cannot move a resource to another section, please edit the resource and move it to another section to change it.",
+        "ScorePercing": "Passing score"
     },
     "course_user": {
         "courseImageAlt": "Course Image",
