@@ -103,3 +103,12 @@ export const completeQuiz = async (userId, resourceId, score) => {
     }
 };
 
+export const updateResourceOrder = async (data) => {
+  try {
+    return await axios.put('/resource/updateResourceOrder', data);
+  } catch (error) {
+    console.error('Error al actualizar el orden de los recursos:', error);
+    throw error;
+  }
+};
+
