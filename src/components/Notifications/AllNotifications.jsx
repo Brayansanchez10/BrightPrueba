@@ -29,7 +29,7 @@ const AllNotifications = () => {
   // Definir categorías de notificaciones
   const notificationCategories = {
     all: [],
-    courses: ['COURSE_CREATED', 'COURSE_DELETED', 'COURSE_COMPLETED'],
+    courses: ['COURSE_CREATED', 'COURSE_DELETED', 'COURSE_COMPLETED', 'APPLICATION', 'ACCEPTED'],
     forums: ['FORUM_ACTIVATED', 'FORUM_DESACTIVATED', 'ANSWER_CREATED'],
     resources: ['RESOURCE_CREATED'],
   };

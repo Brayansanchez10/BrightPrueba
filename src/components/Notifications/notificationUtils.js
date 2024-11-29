@@ -6,15 +6,19 @@ export const getNotificationBorderColor = (type) => {
     case 'FORUM_DESACTIVATED':
       return 'border-red-500';
     case 'COURSE_CREATED':
-      return 'border-pink-400';
+      return 'border-green-500';
     case 'COURSE_DELETED':
       return 'border-red-500';
     case 'RESOURCE_CREATED':
-      return 'border-purple-500';
+      return 'border-green-500';
     case 'COURSE_COMPLETED':
-      return 'border-yellow-400';
+      return 'border-green-700';
     case 'ANSWER_CREATED':
       return 'border-blue-600';
+    case 'APPLICATION':
+      return 'border-blue-600';
+    case 'ACCEPTED':
+      return 'border-green-500';  
     default:
       return 'border-gray-500';
   }

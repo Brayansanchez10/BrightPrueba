@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { getUsersAndQuizzesByCourseIdAndUserId, updateUserResourceProgress } from "../../../../api/courses/AdminQuiz.request.js";
+import { getResourceById } from "../../../../api/courses/resource.request.js";
 import { MdCancel, MdEdit, MdSave } from "react-icons/md";
 import { Input } from "antd";
 
@@ -10,6 +11,7 @@ const AdminDetails = ({ visible, onClose, tableUser, courseId }) => {
     const [infoQuizz, setInfoQuizz] = useState(null);
     const [editingIndex, setEditingIndex] = useState(null);
     const [editedProgress, setEditedProgress] = useState(null);
+    const [resource, setResource] = useState({});
 
     useEffect(() => {
         const fetchQuizzData = async () => {
@@ -17,6 +19,20 @@ const AdminDetails = ({ visible, onClose, tableUser, courseId }) => {
                 try {
                     const data = await getUsersAndQuizzesByCourseIdAndUserId(courseId, tableUser.id);
                     setInfoQuizz(data[0]?.user || {});
+        
+                    const progress = data[0]?.user?.progress || [];
+                    if (progress.length > 0) {
+                        const resourceId = progress[0].resourceId; // Accede al primer resourceId
+                        if (resourceId) {
+                            const resourceData = await getResourceById(courseId, resourceId);
+                            setResource(resourceData.data);
+                            console.log("Recurso", resourceData);
+                        } else {
+                            console.warn("No se encontró resourceId en el progreso del usuario.");
+                        }
+                    } else {
+                        console.warn("El usuario no tiene progreso registrado.");
+                    }
                 } catch (error) {
                     console.error("Error al obtener datos del usuario con el quizz:", error);
                 }
@@ -112,6 +128,7 @@ const AdminDetails = ({ visible, onClose, tableUser, courseId }) => {
                                                     <th className="px-4 py-2">{t('Nombre del quizz')}</th>
                                                     <th className="px-4 py-2">{t('Intentos realizados')}</th>
                                                     <th className="px-4 py-2">{t('Puntaje Obtenido')}</th>
+                                                    <th className="px-4 py-2">{t('Puntaje De Aprobación')}</th>
                                                     <th className="px-4 py-2">{t('Resultado')}</th>
                                                     <th className="px-4 py-2">{t('Acciones')}</th>
                                                 </tr>
@@ -154,13 +171,14 @@ const AdminDetails = ({ visible, onClose, tableUser, courseId }) => {
                                                                 progress.bestScore
                                                             )}
                                                         </td>
+                                                        <td className="px-4 py-2"> {resource?.percent || t("Sin título")} </td>
                                                         <td className="px-4 py-2">
                                                             <span
                                                                 className={`font-semibold ${
-                                                                    progress.bestScore >= 50 ? 'text-green-400' : 'text-red-400'
+                                                                    (progress.bestScore >= (resource?.percent || 0)) ? 'text-green-400' : 'text-red-400'
                                                                 }`}
                                                             >
-                                                                {progress.bestScore >= 50 ? t('Aprobado') : t('Reprobado')}
+                                                                {(progress.bestScore >= (resource?.percent || 0)) ? t('Aprobado') : t('Reprobado')}
                                                             </span>
                                                         </td>
                                                         <td className="px-4 py-2">

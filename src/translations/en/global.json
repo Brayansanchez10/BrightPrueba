@@ -663,16 +663,16 @@
     "footer": {
         "text": "Discover a world full of opportunities and learn at your own pace. With our flexible courses, you can improve your skills practically and effectively, adapting learning to your needs and available time.",
         "title": "Learn with Bright",
-        "developed": "Developed at Disruptive",
-        "copy": "© 2024 Mesadoko - BrightMind. All rights reserved.",
+        "developed": "Mesadoko",
+        "copy": "© 2024 - BrightMind. All rights reserved.",
         "options": "Explore our world",
         "courses": "Available courses",
         "blog": "Informative blog",
         "yourCourses": "Your courses",
         "events": "Events",
         "Contact": "Contact us",
-        "description": "Mesadoko © developed by Disruptive IT",
-        "copy_right": "Copyright 2024"
+        "description": "© 2024 Mesadoko - BrightMind.",
+        "copy_right": "Developed by Disruptive IT"
     },
     "UpdateResource": {
        "ValidateTitle": "The title must be at least 3 characters long.",
@@ -917,7 +917,10 @@
         "cancel": "Cancel",
         "validateTitle": "Minimum characters for the title is 3",
         "validateDescription": "Minimum characters for the description is 30",
-        "validateContent": "Minimum characters for the content is 8"
+        "validateContent": "Minimum characters for the content is 8",
+        "title": "Title Of The Topic: ",
+        "description": "Brief Description:",
+        "content": "Content:"
     },
     "updateTopic": {
         "updateAlert": "Topic successfully updated",

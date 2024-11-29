@@ -37,6 +37,7 @@ const CreateResourceModal = ({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [attempts, setAttempts] = useState("");
+  const [percent, setPercent] = useState("");
   const [link, setLink] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [resources, setResources] = useState([]);
@@ -306,6 +307,7 @@ const CreateResourceModal = ({
       link: selection === "link" ? link : null,
       file: selection === "file" ? selectedFile : null,
       attempts,
+      percent,
       quizzes: quizzes.map((quiz) => ({
         question: quiz.question,
         options: quiz.options,
@@ -993,37 +995,70 @@ const CreateResourceModal = ({
                   >
                     {t("CreateResource.AddQuestion")}
                   </Button>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        htmlFor="attempts"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        {t("quizz.NumerQuizz")}
+                      </label>
+                      <input
+                        type="number"
+                        id="attempts"
+                        value={attempts}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value, 10);
 
-                  <div>
-                    <label
-                      htmlFor="attempts"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      {t("quizz.NumerQuizz")}
-                    </label>
-                    <input
-                      type="number"
-                      id="attempts"
-                      value={attempts}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value, 10);
+                          // Validar que el valor esté dentro del rango permitido
+                          if (value >= 1 && value <= 10) {
+                            setAttempts(value);
+                          } else if (value < 1) {
+                            setAttempts(1); // Si es menor que 1, establecer en 1
+                          } else if (value > 10) {
+                            setAttempts(10); // Si es mayor que 10, establecer en 10
+                          }
+                        }}
+                        min="1"
+                        max="10"
+                        inputMode="numeric" // Asegura el teclado numérico en móviles
+                        className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
+                        required
+                      />
+                    </div>
 
-                        // Validar que el valor esté dentro del rango permitido
-                        if (value >= 1 && value <= 10) {
-                          setAttempts(value);
-                        } else if (value < 1) {
-                          setAttempts(1); // Si es menor que 1, establecer en 1
-                        } else if (value > 10) {
-                          setAttempts(10); // Si es mayor que 10, establecer en 10
-                        }
-                      }}
-                      min="1"
-                      max="10"
-                      inputMode="numeric" // Asegura el teclado numérico en móviles
-                      className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
-                      required
-                    />
+                    <div>
+                      <label
+                        htmlFor="percent"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        {t("Porcentaje de aprovación")}
+                      </label>
+                      <input
+                        type="number"
+                        id="percent"
+                        value={percent}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value, 10);
+
+                          // Validar que el valor esté dentro del rango permitido
+                          if (value >= 1 && value <= 100) {
+                            setPercent(value);
+                          } else if (value < 1) {
+                            setPercent(1); // Si es menor que 1, establecer en 1
+                          } else if (value > 100) {
+                            setPercent(10); // Si es mayor que 10, establecer en 10
+                          }
+                        }}
+                        min="1"
+                        max="100"
+                        inputMode="numeric" // Asegura el teclado numérico en móviles
+                        className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
+                        required
+                      />
+                    </div>
                   </div>
+                  
                 </div>
               )}
 

@@ -217,7 +217,7 @@ export default function ViewProfile() {
                 />
               </div>
               <div className="bg-secondary p-3 rounded-b-lg flex justify-between items-center">
-                <h3 className="text-primary font-bold text-sm truncate flex-1 mr-2">{course.title}</h3>
+                <h3 className="text-primary dark:text-secondary font-bold text-sm truncate flex-1 mr-2">{course.title}</h3>
                 <FaHeart
                   className={`cursor-pointer flex-shrink-0 ${favorites.some(fav => fav.courseId === course.id) ? "text-red-500" : "text-gray-500"} transition-colors duration-300`}
                   onClick={(e) => handleFavoriteToggle(course.id, e)}
@@ -342,7 +342,7 @@ export default function ViewProfile() {
           className="mt-8"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">{t('viewProfile.registration')}</h2>
+          <h2 className="text-2xl dark:text-secondary font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">{t('viewProfile.registration')}</h2>
           <div className="max-w-7xl mx-auto">
             {courses.length > 0 ? 
               renderCourseCards(courses, sliderRef, currentSlide, maxSlide, handlePrev, handleNext)
@@ -356,7 +356,7 @@ export default function ViewProfile() {
           className="mt-16"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">{t('viewProfile.complete')}</h2>
+          <h2 className="text-2xl dark:text-secondary font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">{t('viewProfile.complete')}</h2>
           <div className="max-w-7xl mx-auto">
             {completedCourses.length > 0 ?
               renderCourseCards(completedCourses, completedSliderRef, currentCompletedSlide, maxCompletedSlide, handleCompletedPrev, handleCompletedNext)

@@ -70,7 +70,7 @@ export const ResourceProvider = ({ children }) => {
     };
 
     // Función para crear un recurso
-    const createResource = async ({ courseId, title, subcategoryId, description, file, link, attempts, quizzes }) => {
+    const createResource = async ({ courseId, title, subcategoryId, description, file, link, attempts, percent, quizzes }) => {
         try {
             const newResource = {
                 courseId, 
@@ -80,6 +80,7 @@ export const ResourceProvider = ({ children }) => {
                 file,
                 link,
                 attempts,
+                percent: Number(percent),
                 quizzes // Añadir quizzes al nuevo recurso
             };
             console.log(newResource);
@@ -94,7 +95,7 @@ export const ResourceProvider = ({ children }) => {
     };
 
     // Función para actualizar un recurso
-    const updateResource = async (id, { title, subcategoryId, description, file, link, attempts, quizzes }) => {
+    const updateResource = async (id, { title, subcategoryId, description, file, link, attempts, percent, quizzes }) => {
         try {
             const resourceData = {
                 title,
@@ -103,6 +104,7 @@ export const ResourceProvider = ({ children }) => {
                 file,
                 link,
                 attempts: Number(attempts), // Convertir attempts a número
+                percent: Number(percent),
                 quizzes // Incluir quizzes en la actualización
             };
 

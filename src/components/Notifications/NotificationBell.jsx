@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { Badge, Dropdown, Empty } from 'antd';
-import { BellOutlined } from '@ant-design/icons';
+import { BellOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNotifications } from '../../context/user/notification.context';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/auth.context';
 import { useNavigate } from 'react-router-dom';
 import { getNotificationBorderColor } from './notificationUtils';
+
 
 const NotificationBell = () => {
   const { t } = useTranslation("global");
@@ -67,7 +68,7 @@ const NotificationBell = () => {
               }}
               className="text-red-500 text-sm hover:text-red-700"
             >
-              {t('notifications.delete')}
+              <DeleteOutlined/>
             </button>
           </div>
         </div>

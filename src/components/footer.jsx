@@ -46,39 +46,39 @@ const Footer = () => {
           <AnimatePresence>
             {isExpanded && (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.3 }}
-                className="flex flex-col justify-between py-2 sm:py-4 h-full"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full mb-2">
-                  <div className="flex flex-col items-start">
-                    <h3 className="text-base sm:text-xl font-bold font-bungee mb-1 sm:mb-2">
-                      {t('footer.title')}<span className="text-[#00D8A1]">Mind</span>
-                    </h3>
-                    <p className="text-xs sm:text-sm max-w-md font-sans mb-2 sm:mb-4">
-                      {t('footer.text')}
-                    </p>
-                    <div className="flex space-x-2 sm:space-x-4">
-                      {["https://www.facebook.com/disruptive.devops", "https://x.com/DisruptiveITDev", "https://www.instagram.com/disruptive.info/"].map((social) => (
-                        <motion.a
-                          key={social}
-                          href={`${social}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-white rounded-full text-[#783CDA] hover:bg-[#000000] hover:text-white transition-colors duration-300"
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                        >
-                          {social === "https://www.facebook.com/disruptive.devops" && <FaFacebook size="12px" className="sm:text-base" />}
-                          {social === "https://x.com/DisruptiveITDev" && (
-                            <svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 512 512" className="sm:h-4">
-                              <path fill="currentColor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
-                            </svg>
-                          )}
-                          {social === "https://www.instagram.com/disruptive.info/" && <FaInstagram size="12px" className="sm:text-base" />}
-                        </motion.a>                      
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col justify-between py-2 sm:py-4 h-full"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full mb-2">
+                <div className="flex flex-col items-start">
+                  <h3 className="text-base sm:text-xl font-bold font-bungee mb-1 sm:mb-2">
+                    {t('footer.title')}<span className="text-[#00D8A1]">Mind</span>
+                  </h3>
+                  <p className="text-xs sm:text-sm max-w-md font-sans mb-2 sm:mb-4">
+                    {t('footer.text')}
+                  </p>
+                  <div className="flex space-x-2 sm:space-x-4">
+                    {["https://www.facebook.com/MesaDavisEnterprises/", "https://x.com/MesaDavisEnt", "https://www.instagram.com/mesadoko"].map((social) => (
+                      <motion.a
+                        key={social}
+                        href={`${social}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-white rounded-full text-[#783CDA] hover:bg-[#000000] hover:text-white transition-colors duration-300"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        {social === "https://www.facebook.com/MesaDavisEnterprises/" && <FaFacebook size="12px" className="sm:text-base" />}
+                        {social === "https://x.com/MesaDavisEnt" && (
+                          <svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 512 512" className="sm:h-4">
+                            <path fill="currentColor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+                          </svg>
+                        )}
+                        {social === "https://www.instagram.com/mesadoko" && <FaInstagram size="12px" className="sm:text-base" />}
+                      </motion.a>                   
                       ))}
                     </div>
                   </div>

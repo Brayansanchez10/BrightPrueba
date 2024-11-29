@@ -27,6 +27,7 @@ export const createResource = async (resourceData) => {
         if (resourceData.subcategoryId) formData.append('subcategoryId', resourceData.subcategoryId);
         if (resourceData.description) formData.append('description', resourceData.description);
         if (resourceData.attempts) formData.append('attempts', resourceData.attempts);
+        if (resourceData.percent) formData.append('percent', resourceData.percent);
         if (resourceData.file) formData.append('file', resourceData.file);
         if (resourceData.link) formData.append('link', resourceData.link);
 
@@ -60,6 +61,7 @@ export const updateResource = async (id, resourceData) => {
         if (resourceData.subcategoryId) formData.append('subcategoryId', resourceData.subcategoryId);
         if (resourceData.description) formData.append('description', resourceData.description);
         if (resourceData.attempts) formData.append('attempts', Number(resourceData.attempts));
+        if (resourceData.percent) formData.append('percent', resourceData.percent);
         if (resourceData.file) formData.append('file', resourceData.file);
         if (resourceData.link) formData.append('link', resourceData.link);
 
@@ -103,3 +105,5 @@ export const completeQuiz = async (userId, resourceId, score) => {
     }
 };
 
+// Función para obtener un recurso especifico de un curso
+export const getResourceById = (courseId, resourceId) => axios.get(`/resource/courses/${courseId}/resources/${resourceId}`);

@@ -32,3 +32,6 @@ export const deleteUserResourceProgress = async (userId, resourceId) => {
       throw new Error("No se pudo eliminar el progreso del recurso.");
     }
 };
+
+// Nueva función para obtener el estado de un usuario registrado a un curso
+export const getUserCourseStatus = (userId, courseId) => axios.get(`/adminQuizUser/user-courses/${userId}/${courseId}`);
