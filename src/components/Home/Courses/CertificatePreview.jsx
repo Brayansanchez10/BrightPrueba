@@ -3,14 +3,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/auth.context';
 import { useCoursesContext } from '../../../context/courses/courses.context';
 import { useCourseProgressContext } from '../../../context/courses/progress.context';
+import { useUserContext } from '../../../context/user/user.context';
 import NavigationBar from '../NavigationBar';
 import { motion } from 'framer-motion';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { generatePremiumCertificatePDF, generateCertificatePreview } from './components/certificate';
-import zorro from '../../../assets/img/Zorro.png';
-import derechaabajo from '../../../assets/img/DerechaAbajo.jpeg';
-import izquierdaarriba from '../../../assets/img/IzquierdaArriba.jpeg';
+import zorro from '../../../assets/img/Insigniaa.png';
+import derechaabajo from '../../../assets/img/DerechaAbajo.png';
+import izquierdaarriba from '../../../assets/img/IzquierdaArriba.png';
+import estructura from '../../../assets/img/LineaEstructura.png';
 
 export default function CertificatePreview() {
   const { courseId } = useParams();
@@ -19,11 +21,13 @@ export default function CertificatePreview() {
   const { user } = useAuth();
   const { getCourse } = useCoursesContext();
   const { getCourseProgress } = useCourseProgressContext();
+  const { getUserById} = useUserContext();
   const [course, setCourse] = useState(null);
   const [certificatePreview, setCertificatePreview] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentProgress, setCurrentProgress] = useState(0);
+  const [ userData, setUserData ] = useState("");
 
   // Cargar los datos del curso
   useEffect(() => {
@@ -32,6 +36,9 @@ export default function CertificatePreview() {
         try {
           const courseData = await getCourse(courseId);
           setCourse(courseData);
+          const userInfo = await getUserById(userdata.id);
+          setUserData(userInfo);
+          console.log("Información Usuario",userInfo);
         } catch (err) {
           console.error('Error fetching course:', err);
           setError('Error al cargar el curso');
@@ -39,7 +46,7 @@ export default function CertificatePreview() {
       }
     };
     fetchCourse();
-  }, [courseId, getCourse]);
+  }, [courseId, getCourse, userData]);
 
   // Generar la vista previa del certificado
   useEffect(() => {
@@ -50,10 +57,12 @@ export default function CertificatePreview() {
         if (user?.data?.username && course?.title) {
           const pdfOutput = await generateCertificatePreview(
             user.data.username,
+            userData.documentNumber,
             course.title,
             zorro,
             derechaabajo,
             izquierdaarriba,
+            estructura,
             currentProgress === 100
           );
           
@@ -108,10 +117,12 @@ export default function CertificatePreview() {
     
     generatePremiumCertificatePDF(
       user.data.username, 
+      userData.documentNumber, 
       course.title, 
       zorro, 
       derechaabajo, 
-      izquierdaarriba
+      izquierdaarriba,
+      estructura
     );
   };
 

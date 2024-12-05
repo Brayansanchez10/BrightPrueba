@@ -24,7 +24,7 @@ function RegisterForm() {
   useEffect(() => {
     async function loadEntities() {
       try {
-        const response = await getEntity(); // Llama a tu API para obtener las entidades
+        const response = await getEntity();
         setEntities(response.data);
         console.log("Entidades obtenidas; ", response);
       } catch (error) {

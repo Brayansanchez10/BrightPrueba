@@ -41,3 +41,6 @@ export const toggleState = (userId) => axios.post(`/users/toggleState/${userId}`
 
 // Nueva Función para actualizar el estado de un curso en un usuario. 
 export const updateUserCourseState = (userId, courseId) => axios.put(`/users/updateState/${userId}/${courseId}`);
+
+//Nueva uncion para consultar el estado del curso del usuario:
+export const getRegisterUserCourse = (userId, courseId) => axios.get(`/users/registerUser/${userId}/${courseId}`);

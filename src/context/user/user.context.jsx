@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
-import { getAllUsers, ActivateAcc, toggleState, getUser, updateUser as updateUserApi, deleteUser as deleteUserApi, deleteUserConfirmation as deleteUserConfirmationApi, createUser as createUserApi, registerToCourse as registerToCourseApi, getUserCourses as getUserCoursesApi, changePassword as changePasswordApi, getUsersByCourse as getUsersByCourseApi, getPendingUsersByCourse as getPendingUsersByCourseApi, updateUserCourseState} from '../../api/user/user.request';
+import { getAllUsers, ActivateAcc, toggleState, getUser, updateUser as updateUserApi, deleteUser as deleteUserApi, deleteUserConfirmation as deleteUserConfirmationApi, createUser as createUserApi, registerToCourse as registerToCourseApi, getUserCourses as getUserCoursesApi, changePassword as changePasswordApi, getUsersByCourse as getUsersByCourseApi, getPendingUsersByCourse as getPendingUsersByCourseApi, updateUserCourseState, getRegisterUserCourse as getRegisterUserCourseApi} from '../../api/user/user.request';
 import { useAuth } from '../auth.context'; // Importa el contexto de autenticación
 import NewPassword from '../../components/Home/ChangePasswordUser';
 
@@ -187,6 +187,17 @@ export const UserProvider = ({ children }) => {
         }
     };
 
+    //Nueva funcion para consultar el estado del curso del usuario
+    const getRegisterUserCourse = async (userId, courseId) =>{
+        try {
+            const res= await getRegisterUserCourseApi(userId, courseId);
+            console.log('El estado del curso', res.data);
+            return res.data;
+        } catch (error) {
+            console.error('Error al obtener el estado', error);
+            return null;
+        }
+    };
 
     useEffect(() => {
         if (isAuthenticated()) {
@@ -213,7 +224,8 @@ export const UserProvider = ({ children }) => {
                 getUsersByCourse,
                 buttonActivate,
                 getPendingUsersByCourse,
-                buttonStateActivate
+                buttonStateActivate,
+                getRegisterUserCourse
             }}
         >
             {children}
