@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { Button, message } from "antd";
 import {
-  ReloadOutlined,
+  EditOutlined,
   InfoCircleOutlined,
   DeleteOutlined,
   FileAddOutlined,
@@ -406,32 +407,35 @@ const DataTablete = () => {
                   {t("courses.title")}
                 </h2>
                 <div className="flex items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
-                  {canCreate && (
-                    <Button
-                      type="primary"
-                      style={{ backgroundColor: "#4c1d95" }}
-                      onClick={handleCreateCourseClick}
-                      className="w-full md:w-auto rounded-lg order-2 md:order-1 mt-6 sm:mt-4 md:mt-0"
-                    >
-                      <b>{t("courses.createCourse")}</b>
-                    </Button>
-                  )}
+                <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-4">
+ 
+               <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg mb-1">
+              <FaSearch size={"18px"} className="mt-1 mr-2" />
+               <input
+                    type="search"
+                    className="bg-white outline-none w-full md:w-[280px] lg:w-[360px]"
+                    placeholder={t("datatable.SearchByName")}
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+               />
+               </div>
 
-                  <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
-                    <FaSearch size={"18px"} className="mt-1 mr-2" />
-                    <input
-                      type="search"
-                      className="bg-white outline-none w-full md:w-[280px] lg:w-[360px]"
-                      placeholder={t("datatable.SearchByName")}
-                      value={searchValue}
-                      onChange={(e) => setSearchValue(e.target.value)}
-                    />
+       {canCreate && (
+        <Button
+             type="primary"
+             style={{ backgroundColor: "#4c1d95" }}
+             onClick={handleCreateCourseClick}
+             className="w-full md:w-auto rounded-lg mt-2 sm:mt-2 md:mt-0 md:ml-4"
+         >
+              <b>{t("courses.createCourse")}</b>
+         </Button>
+         )}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Botones de para cambiar entre tablas */}
+            
             <div className="px-4 md:px-12 -mb-1 ml-2 mr-2">
               <div className="flex space-x-1">
                 <button
@@ -562,7 +566,7 @@ const DataTablete = () => {
                                       {canEdit && (
                                         <Button
                                           className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1 px-4 transition-colors duration-200 whitespace-nowrap"
-                                          icon={<ReloadOutlined />}
+                                          icon={<EditOutlined />}
                                           onClick={() => handleUpdateButtonClick(course)}
                                         >
                                           {/* Botón de Editar */}

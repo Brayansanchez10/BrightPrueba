@@ -9,7 +9,7 @@ const DeleteCategory = ({ visible, onClose, onConfirm, onConfirmOnly }) => {
   const { t } = useTranslation("global");
   const [loading, setLoading] = useState(false);
   const { getCategories } = useCategoryContext();
-  const [ categories, setCategories ] = useState();
+  const [categories, setCategories] = useState();
 
   const fetchCategories = async () => {
     try {
@@ -65,7 +65,7 @@ const DeleteCategory = ({ visible, onClose, onConfirm, onConfirmOnly }) => {
       </div>
 
       <div className="h-[125px] bg-gradient-to-r from-[#872626] to-red-500 flex justify-center items-center">
-      <img src={pulpoImage} alt="Pulpo" className="w-[162px] h-[148px] mt-6 object-contain" />
+        <img src={pulpoImage} alt="Pulpo" className="w-[162px] h-[148px] mt-6 object-contain" />
       </div>
 
       <div className="p-5 text-center">
@@ -79,9 +79,9 @@ const DeleteCategory = ({ visible, onClose, onConfirm, onConfirmOnly }) => {
           {t("deleteCategory.warningMessage")}
         </p>
 
-        <div className="flex justify-center space-x-4 mt-6">
+        <div className="flex flex-col sm:flex-row justify-center space-x-0 sm:space-x-4 mt-6">
           <button
-            className={`bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#ff2f22] transition-all duration-300 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#ff2f22] transition-all duration-300 ${loading ? "opacity-50 cursor-not-allowed" : ""} mb-4 sm:mb-0`}
             onClick={handleConfirm}
             disabled={loading}
             aria-busy={loading}
@@ -89,7 +89,7 @@ const DeleteCategory = ({ visible, onClose, onConfirm, onConfirmOnly }) => {
             {loading ? <Spin size="small" /> : t("deleteCategory.confirmButton")}
           </button>
           <button
-            className={`bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#ff2f22] transition-all duration-300 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`bg-[#FF4236] text-white font-bold text-lg rounded-2xl min-w-[133px] h-9 px-4 shadow-md hover:bg-[#ff2f22] transition-all duration-300 ${loading ? "opacity-50 cursor-not-allowed" : ""} mb-4 sm:mb-0`}
             onClick={handleConfirmOnly}
             disabled={loading}
             aria-busy={loading}

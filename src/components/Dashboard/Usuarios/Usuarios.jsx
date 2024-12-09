@@ -3,7 +3,7 @@ import { Button, Form } from "antd";
 import {
   CaretUpOutlined,
   CaretDownOutlined,
-  ReloadOutlined,
+  EditOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import {
@@ -512,7 +512,7 @@ const DataTable = () => {
                                 onClick={() => handleUpdateButtonClick(item)}
                                 className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
                                 style={{ minWidth: "50px" }}
-                                icon={<ReloadOutlined />}
+                                icon={<EditOutlined />}
                               />
                             }
                             

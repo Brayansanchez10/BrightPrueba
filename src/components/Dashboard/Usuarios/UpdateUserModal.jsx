@@ -56,7 +56,7 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
 
   return (
     <Modal
-      className={`custom-modal w-[544px] h-[989px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden ${shake ? "shake" : ""}`}
+      className={`custom-modal w-[544px] h-auto sm:h-[989px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden ${shake ? "shake" : ""}`}
       visible={visible}
       footer={null}
       closable={false}
@@ -153,7 +153,6 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
             ))}
           </Select>
         </Form.Item>
-        
 
         <Form.Item
           className="mb-4"
