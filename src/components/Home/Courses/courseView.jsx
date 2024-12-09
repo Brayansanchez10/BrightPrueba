@@ -109,7 +109,10 @@ export default function CourseView() {
       return;
     }
 
-    const unlockedIndex = Math.floor((currentProgress / percentagePerResource) + 1);
+    const unlockedIndex = Number.isInteger(currentProgress / percentagePerResource) 
+    ? Math.floor((currentProgress / percentagePerResource) + 0.000009) 
+    : Math.floor((currentProgress / percentagePerResource) + 1);
+
     const targetIndex = Math.min(unlockedIndex, totalResources - 1);
     const targetResource = resources[targetIndex];
   

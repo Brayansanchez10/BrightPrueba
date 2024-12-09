@@ -684,7 +684,7 @@ export default function ResourceView() {
     if (currentResourceIndex < resources.length - 1) {
       const nextResource = resources[currentResourceIndex + 1];
       const percentagePerResource = 100 / resources.length;
-      const newProgress = Math.round((currentResourceIndex + 1) * percentagePerResource);
+      const newProgress = Math.floor((currentResourceIndex + 1) * percentagePerResource);
       
       if (newProgress > currentProgress && currentProgress < 100) {
         await updateCourseProgress(user.data.id, courseId, newProgress);
@@ -738,11 +738,13 @@ export default function ResourceView() {
     const percentagePerResource = 100 / totalResources;
 
     return resources.map((res, index) => {
-      const requiredProgress = Math.round(index * percentagePerResource);
+      const requiredProgress = Math.floor(index * percentagePerResource);
       const isUnlocked = currentProgress >= requiredProgress;
       const currentResource = resources[currentResourceIndex];
       const isCurrentResourceQuiz = currentResource?.quizzes && currentResource.quizzes.length > 0;
-      const canAdvance = !isCurrentResourceQuiz || isQuizCompleted || attempts > 0;
+      
+      // Lógica para permitir acceso a recursos anteriores
+      const canAdvance = index <= currentResourceIndex || (!isCurrentResourceQuiz || isQuizCompleted || attempts > 0);
 
       return (
         <div
@@ -758,19 +760,19 @@ export default function ResourceView() {
                 flex items-center justify-center
                 w-10 h-10 rounded-full 
                 ${
-                  isUnlocked && canAdvance
+                  isUnlocked && (index <= currentResourceIndex || canAdvance)
                     ? "bg-white text-[#6D4F9E]"
                     : "bg-gray-500 text-gray-300 cursor-not-allowed"
                 }
                 text-sm font-bold
               `}
             >
-              {isUnlocked && canAdvance ? index + 1 : <FiLock />}
+              {isUnlocked && (index <= currentResourceIndex || canAdvance) ? index + 1 : <FiLock />}
             </div>
             {index < resources.length - 1 && (
               <div
                 className={`absolute left-[19px] top-8 w-0.5 h-10 ${
-                  isUnlocked && canAdvance ? "bg-white" : "bg-gray-500"
+                  isUnlocked && (index <= currentResourceIndex || canAdvance) ? "bg-white" : "bg-gray-500"
                 }`}
               />
             )}
@@ -778,7 +780,7 @@ export default function ResourceView() {
           {isOpen && (
             <span
               className={`mt-2 text-xs ${
-                isUnlocked && canAdvance ? "text-white font-bold" : "text-gray-500"
+                isUnlocked && (index <= currentResourceIndex || canAdvance) ? "text-white font-bold" : "text-gray-500"
               }`}
             >
               {res.title}
