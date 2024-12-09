@@ -47,6 +47,7 @@
         "username_min_length": "Username must be at least 4 characters long",
         "email_requires_at": "Email must contain '@'",
         "email_requires_com": "Email must end with '.com'",
+        "document_min_length": "The document name must have at least 6 numbers.",
         "register": "Register",
         "select_entity": "Select your entity",
         "choose_entity": "Select",
@@ -76,6 +77,7 @@
         "user_created": "User created successfully, Please check your email to activate your account",
         "email_exists": "Email already exists, please enter a different one",
         "username_exists": "Username already exists, please enter a different one",
+        "document_exists": "The document number already exists, please enter a different one.",
         "register_now": "Register Now",
         "future": "Be part of the future",
         "ready": "READY!",
@@ -85,7 +87,8 @@
         "entity_required": "Required",
         "firstNames_required" : "First name is required",
         "lastName_required": "Last name is required",
-        "entityId_required": "Entity is required"
+        "entityId_required": "Entity is required",
+        "document_required": "Document is required"
     },
     "reset_password": {
         "invalid_email": "Invalid email",
