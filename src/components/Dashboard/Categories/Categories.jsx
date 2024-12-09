@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form } from "antd";
 import {
-  ReloadOutlined,
+  EditOutlined,
   InfoCircleOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
@@ -385,7 +385,7 @@ const DataTablete = () => {
                               {canEdit &&
                                 <Button
                                   className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
-                                  icon={<ReloadOutlined />}
+                                  icon={<EditOutlined />}
                                   style={{ minWidth: "50px" }}
                                   onClick={() =>
                                     handleUpdateButtonClick(category)

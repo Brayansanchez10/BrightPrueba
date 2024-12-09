@@ -15,9 +15,11 @@ import NavigationBar from "../NavigationBar";
 import {updateComment, deleteComment,} from "../../../api/courses/comment.request";
 import {FiMenu,FiX,FiChevronLeft,FiChevronRight,FiSend,FiMoreVertical,FiEdit,FiTrash2,FiCheckCircle,FiPlus,FiEdit2,FiDownload,FiLock} from "react-icons/fi";
 import {FaCheckCircle,FaTimesCircle,FaQuestionCircle,FaStar,FaComment,FaUser,} from "react-icons/fa";
-import zorro from "../../../assets/img/Zorro.jpeg";
-import derechaabajo from "../../../assets/img/DerechaAbajo.jpeg";
-import izquierdaarriba from "../../../assets/img/IzquierdaArriba.jpeg";
+import zorro from '../../../assets/img/Insigniaa.png';
+import derechaabajo from '../../../assets/img/DerechaAbajo.png';
+import izquierdaarriba from '../../../assets/img/IzquierdaArriba.png';
+import estructura from '../../../assets/img/LineaEstructura.png';
+
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import { completeQuiz } from "../../../api/courses/resource.request";
@@ -43,6 +45,7 @@ export default function ResourceView() {
   const [currentProgress, setCurrentProgress] = useState(0);
   const { getUserById } = useUserContext();
   const [username, setUsername] = useState("");
+  const [userInfo, setUserInfo] = useState("");
   const { id, courseId } = useParams();
   const [resource, setResource] = useState(null);
   const [resources, setResources] = useState([]);
@@ -182,6 +185,7 @@ export default function ResourceView() {
         try {
           const userData = await getUserById(user.data.id);
           setUsername(userData.username);
+          setUserInfo(userData);
         } catch (error) {
           console.error("Error al obtener datos del usuario:", error);
           setError("Error al obtener datos del usuario.");
@@ -269,7 +273,9 @@ export default function ResourceView() {
       url.includes("youtube.com/watch") ||
       url.includes("youtu.be/") ||
       url.includes("vimeo.com/") ||
-      url.includes("drive.google.com/")
+      url.includes("drive.google.com/") ||
+      url.includes("1drv.ms/") || // OneDrive short links
+      url.includes("onedrive.live.com/") // OneDrive full links
     );
   };
 
@@ -292,6 +298,17 @@ export default function ResourceView() {
       return videoId
         ? `https://drive.google.com/file/d/${videoId}/preview`
         : "";
+    } else if (url.includes("1drv.ms/") || url.includes("onedrive.live.com/")) {
+      if (url.includes("1drv.ms/")) {
+        // Convert OneDrive short link to embed link and disable download
+        return url.replace("/?", "/embed?").concat("&wdAllowInteractivity=False");
+      } else if (url.includes("onedrive.live.com/")) {
+        // Force embed view for OneDrive full links and disable download
+        const embedUrl = new URL(url);
+        embedUrl.searchParams.set("action", "embedview");
+        embedUrl.searchParams.set("wdAllowInteractivity", "False");
+        return embedUrl.href;
+      }
     }
     return "";
   };
@@ -316,7 +333,7 @@ export default function ResourceView() {
         return (
           <div className="relative w-full" style={{ paddingBottom: "45%" }}>
             <div 
-              className="absolute top-0 right-0 w-[70px] h-[70px] z-10"
+              className="absolute top-0 right-0 w-[100%] h-[70px] z-10"
             />
             <iframe
               ref={videoRef}
@@ -698,7 +715,7 @@ export default function ResourceView() {
   // Funciones para la descarga de PDF
   const handleFinishCourse = async () => {
     await updateCourseProgress(user.data.id, courseId, 100);
-    generatePremiumCertificatePDF(username,course.title,zorro,derechaabajo,izquierdaarriba
+    generatePremiumCertificatePDF(username, course.title, zorro, derechaabajo, izquierdaarriba, userInfo.documentNumber, estructura
     );
     navigate(`/course/${courseId}`);
   };

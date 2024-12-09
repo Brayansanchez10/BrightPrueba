@@ -49,6 +49,10 @@ function RegisterForm() {
       .string()
       .min(4, t("register.username_min_length"))
       .required(t("register.username_required")),
+    documentNumber: yup
+      .string()
+      .min(6, t("register.document_min_length"))
+      .required(t("register.document_required")),
     email: yup
       .string()
       .email(t("register.invalid_email"))
@@ -77,6 +81,7 @@ function RegisterForm() {
       firstNames: "",
       lastNames: "",
       username: "",
+      documentNumber: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -103,6 +108,9 @@ function RegisterForm() {
             case "Username already exists":
               Swal.fire("Error", t("register.username_exists"), "error");
               break;
+            case "Document number already exists":
+              Swal.fire("Error", t("register.document_exists"), "error");
+              break;
             default:
               Swal.fire("Error", t("register.server_error"), "error");
           }
@@ -127,6 +135,9 @@ function RegisterForm() {
               break;
             case "Username already exists":
               Swal.fire("Error", t("register.username_exists"), "error");
+              break;
+            case "Document number already exists":
+              Swal.fire("Error", t("register.document_exists"), "error");
               break;
             default:
               Swal.fire("Error", t("register.server_error"), "error");
@@ -238,40 +249,82 @@ function RegisterForm() {
                   />
                 </div>
               </div>
-              
-              <div className="flex space-x-3">
-                <div className="w-full">
-                  <div className="flex items-center gap-2">
-                    <label className="text-lg font-bold text-gray-600">
-                      {t("register.username")}
-                    </label>
-                    {formik.touched.username && formik.errors.username && (
-                      <div className="relative group">
-                        <FontAwesomeIcon
-                          icon={faInfoCircle}
-                          className="text-red-500 cursor-help"
-                        />
-                        <div className="absolute hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
-                          {formik.errors.username}
+              <div className="flex flex-col space-y-3 md:flex-row md:space-x-3 md:space-y-0">   
+                  <div className="w-full md:w-1/2">
+                    <div className="flex items-center gap-2">
+                      <label className="text-lg font-bold text-gray-600">
+                        {t("register.username")}
+                      </label>
+                      {formik.touched.username && formik.errors.username && (
+                        <div className="relative group">
+                          <FontAwesomeIcon
+                            icon={faInfoCircle}
+                            className="text-red-500 cursor-help"
+                          />
+                          <div className="absolute hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
+                            {formik.errors.username}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                  <input
-                    type="text"
-                    name="username"
-                    value={formik.values.username}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
-                      formik.touched.username && formik.errors.username
-                        ? "border-red-500"
-                        : "border-purple-300"
-                    }`}
-                    placeholder={t("register.enter_username")}
-                  />
+                      )}
+                    </div>
+                    <input
+                      type="text"
+                      name="username"
+                      value={formik.values.username}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                        formik.touched.username && formik.errors.username
+                          ? "border-red-500"
+                          : "border-purple-300"
+                      }`}
+                      placeholder={t("register.enter_username")}
+                    />
                 </div>
-              </div>
+
+                  <div className="w-full md:w-1/2">
+                    <div className="flex items-center gap-2">
+                      <label className="text-lg font-bold text-gray-600">
+                        {t("register.documentNumber")}
+                      </label>
+                      {formik.touched.documentNumber && formik.errors.documentNumber && (
+                        <div className="relative group">
+                          <FontAwesomeIcon
+                            icon={faInfoCircle}
+                            className="text-red-500 cursor-help"
+                          />
+                          <div className="absolute hidden group-hover:block bg-red-100 text-red-500 p-2 rounded-lg text-sm w-48 top-0 left-6">
+                            {formik.errors.documentNumber}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <input
+                      type="number"
+                      inputMode="numeric" // Asegura el teclado numérico en móviles
+                      name="documentNumber"
+                      value={formik.values.documentNumber}
+                      onChange={(e) => {
+                        // Permitir solo números (removiendo caracteres no numéricos)
+                        const value = e.target.value.replace(/[^\d]/g, ""); 
+                        formik.setFieldValue("documentNumber", value);
+                      }}
+                      onKeyDown={(e) => {
+                        // Prevenir símbolos '+' y '-' y otras teclas no deseadas
+                        if (["-", "+", "e", "E"].includes(e.key)) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onBlur={formik.handleBlur}
+                      className={`w-full p-3 border rounded-2xl bg-purple-50 placeholder-purple-200 focus:outline-none ${
+                        formik.touched.documentNumber && formik.errors.documentNumber
+                          ? "border-red-500"
+                          : "border-purple-300"
+                      }`}
+                      placeholder={t("register.enter_documentNumber")}
+                    />
+                  </div>
+              </div>   
               
               <div>
                 <div className="flex items-center gap-2">

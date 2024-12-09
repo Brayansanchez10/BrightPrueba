@@ -47,6 +47,7 @@
         "username_min_length": "El nombre de usuario debe tener al menos 4 caracteres",
         "email_requires_at": "El correo debe contener un '@'",
         "email_requires_com": "El correo debe terminar en' .com'",
+        "document_min_length": "El nombre de documento debe tener al menos 6 números",
         "register": "Registrarse",
         "select_entity": "Selecciona tu entidad",
         "choose_entity": "Seleccionar",
@@ -59,7 +60,7 @@
         "enter_username": "Ingresa nombre de usuario",
         "enter_firstNames": "Ingresa nombres",
         "enter_lastNames": "Ingresa apellidos",
-        "enter_documentNumber": "Ingresa número de documento",
+        "enter_documentNumber": "Ingresa N. de documento",
         "username_required": "Nombre de usuario es requerido",
         "email": "Correo electrónico",
         "enter_email": "Ingresa correo electrónico",
@@ -76,13 +77,15 @@
         "user_created": "Usuario creado exitosamente, Por favor revisa tu correo para activar la cuenta",
         "email_exists": "El correo electrónico ya existe, por favor ingrese uno distinto",
         "username_exists": "El nombre de usuario ya existe, por favor ingrese uno distinto",
+        "document_exists": "El número de documento ya existe, por favor ingrese uno distinto",
         "register_now": "Regístrese ahora",
         "future": "Se parte del futuro",
         "ready": "PREPARADO!",
         "AlertPasswordCorro": "La contraseña no puede ser un correo electrónico",
         "firstNames_required" : "Nombre es requerido",
         "lastName_required": "Apellido es requerido",
-        "entityId_required": "Entidad es requerida"
+        "entityId_required": "Entidad es requerida",
+        "document_required": "Documento es requerido"
     },
     "reset_password": {
         "invalid_email": "Correo electrónico no válido",

@@ -24,11 +24,10 @@ const MAX_TITLE_LENGTH = 30;
 const { Panel } = Collapse;
 
 const ALLOWED_FILE_TYPES = [".pdf", ".jpg", ".jpeg", ".png"];
-const YOUTUBE_URL_REGEX =
-  /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
+const YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
 const VIMEO_URL_REGEX = /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)$/i;
-const GOOGLE_DRIVE_URL_REGEX =
-  /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
+const GOOGLE_DRIVE_URL_REGEX = /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
+const ONEDRIVE_URL_REGEX = /^(https?:\/\/)?(1drv\.ms\/[a-zA-Z0-9_-]+)/i;
 
 const CreateResourceModal = ({
   isVisible,
@@ -165,7 +164,8 @@ const CreateResourceModal = ({
     return (
       YOUTUBE_URL_REGEX.test(file) ||
       VIMEO_URL_REGEX.test(file) ||
-      GOOGLE_DRIVE_URL_REGEX.test(file)
+      GOOGLE_DRIVE_URL_REGEX.test(file) ||
+      ONEDRIVE_URL_REGEX.test(file)
     );
   };
 
@@ -173,7 +173,8 @@ const CreateResourceModal = ({
     return (
       YOUTUBE_URL_REGEX.test(url) ||
       VIMEO_URL_REGEX.test(url) ||
-      GOOGLE_DRIVE_URL_REGEX.test(url)
+      GOOGLE_DRIVE_URL_REGEX.test(url) ||
+      ONEDRIVE_URL_REGEX.test(url)
     );
   };
 
@@ -184,17 +185,30 @@ const CreateResourceModal = ({
         : new URL(file).searchParams.get("v");
       return `https://www.youtube.com/embed/${videoId}`;
     }
-
+  
     if (VIMEO_URL_REGEX.test(file)) {
       const videoId = file.match(VIMEO_URL_REGEX)[4];
       return `https://player.vimeo.com/video/${videoId}`;
     }
-
+  
     if (GOOGLE_DRIVE_URL_REGEX.test(file)) {
       const fileId = file.match(GOOGLE_DRIVE_URL_REGEX)[3];
       return `https://drive.google.com/file/d/${fileId}/preview`;
     }
-
+  
+    if (ONEDRIVE_URL_REGEX.test(file)) {
+      if (file.includes("1drv.ms")) {
+        // Convertir enlace corto de OneDrive a embed y deshabilitar la descarga
+        return file.replace("/?", "/embed?").concat("&wdAllowInteractivity=False");
+      } else if (file.includes("onedrive.live.com")) {
+        // Forzar vista embed para enlaces completos y deshabilitar la descarga
+        const embedUrl = new URL(file);
+        embedUrl.searchParams.set("action", "embedview");
+        embedUrl.searchParams.set("wdAllowInteractivity", "False");
+        return embedUrl.href;
+      }
+    }
+  
     return "";
   };
 

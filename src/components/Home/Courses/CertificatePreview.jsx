@@ -36,9 +36,6 @@ export default function CertificatePreview() {
         try {
           const courseData = await getCourse(courseId);
           setCourse(courseData);
-          const userInfo = await getUserById(userdata.id);
-          setUserData(userInfo);
-          console.log("Información Usuario",userInfo);
         } catch (err) {
           console.error('Error fetching course:', err);
           setError('Error al cargar el curso');
@@ -46,11 +43,18 @@ export default function CertificatePreview() {
       }
     };
     fetchCourse();
-  }, [courseId, getCourse, userData]);
+  }, [courseId, getCourse]);
 
   // Generar la vista previa del certificado
   useEffect(() => {
     const handleGeneratePreview = async () => {
+      try {
+        const userInfo = await getUserById(user.data.id);
+        setUserData(userInfo);
+        console.log("Información Usuario",userInfo);
+      } catch (error) {
+        console.error(error);
+      }
       setIsLoading(true);
       setError(null);
       try {
