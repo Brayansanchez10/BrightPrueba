@@ -94,6 +94,8 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
       }
     }
   };
+  
+  const isMobile = window.innerWidth <= 768;
 
   return (
     <Modal
@@ -108,7 +110,7 @@ const NotifyCourseModal = ({ visible, onClose, courseId }) => {
         padding: 0,
         borderRadius: "20px",
         overflow: "hidden",
-        height: expanded ? "540px" : "440px",
+        height: isMobile ? "480px" : expanded ? "540px" : "440px",
         transition: "height 0.3s ease",
         margin: 0,
       }}

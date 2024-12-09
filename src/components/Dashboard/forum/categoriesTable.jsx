@@ -7,7 +7,7 @@ import Navbar from "../NavBar";
 import { useForumCategories } from "../../../context/forum/forumCategories.context";
 import { useTranslation } from "react-i18next";
 import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
-import { ReloadOutlined, InfoCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, InfoCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import CreateForumCategoriesModal from "./createForumCategory.jsx";
 import UpdateCategoriesForum from "./updateForumCategory.jsx";
@@ -358,7 +358,7 @@ const DataTablete = () => {
                                                             {canEdit &&
                                                                 <Button
                                                                     className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
-                                                                    icon={<ReloadOutlined />}
+                                                                    icon={<EditOutlined />}
                                                                     style={{ minWidth: "50px" }}
                                                                     onClick={() =>
                                                                         handleUpdateButtonClick(category)
