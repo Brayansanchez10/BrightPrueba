@@ -208,6 +208,9 @@ const CreateTopicForm = ({ visible, onClose, onCreate, forumCategoryId, fetchFor
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
+                        <label className="text-lg font-bold block">
+                            {t("createTopic.title")}
+                        </label>
                         <Input 
                             value={title} 
                             onChange={(e) => setTitle(e.target.value)} 
@@ -222,6 +225,9 @@ const CreateTopicForm = ({ visible, onClose, onCreate, forumCategoryId, fetchFor
                         </div>
                     </div>
                     <div className="mb-4">
+                        <label className="text-lg font-bold block">
+                            {t("createTopic.description")}
+                        </label>
                         <Input 
                             value={description} 
                             onChange={(e) => setDescription(e.target.value)} 
@@ -237,6 +243,9 @@ const CreateTopicForm = ({ visible, onClose, onCreate, forumCategoryId, fetchFor
                     </div>
 
                     <div className="mb-6">
+                        <label className="text-lg font-bold block">
+                            {t("createTopic.content")}
+                        </label>
                         <div className="flex gap-2 flex-col sm:flex-row mb-2">
                             <Button 
                                 type="default"

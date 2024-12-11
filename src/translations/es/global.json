@@ -47,6 +47,7 @@
         "username_min_length": "El nombre de usuario debe tener al menos 4 caracteres",
         "email_requires_at": "El correo debe contener un '@'",
         "email_requires_com": "El correo debe terminar en' .com'",
+        "document_min_length": "El nombre de documento debe tener al menos 6 números",
         "register": "Registrarse",
         "select_entity": "Selecciona tu entidad",
         "choose_entity": "Seleccionar",
@@ -59,7 +60,7 @@
         "enter_username": "Ingresa nombre de usuario",
         "enter_firstNames": "Ingresa nombres",
         "enter_lastNames": "Ingresa apellidos",
-        "enter_documentNumber": "Ingresa número de documento",
+        "enter_documentNumber": "Ingresa N. de documento",
         "username_required": "Nombre de usuario es requerido",
         "email": "Correo electrónico",
         "enter_email": "Ingresa correo electrónico",
@@ -76,13 +77,15 @@
         "user_created": "Usuario creado exitosamente, Por favor revisa tu correo para activar la cuenta",
         "email_exists": "El correo electrónico ya existe, por favor ingrese uno distinto",
         "username_exists": "El nombre de usuario ya existe, por favor ingrese uno distinto",
+        "document_exists": "El número de documento ya existe, por favor ingrese uno distinto",
         "register_now": "Regístrese ahora",
         "future": "Se parte del futuro",
         "ready": "PREPARADO!",
         "AlertPasswordCorro": "La contraseña no puede ser un correo electrónico",
         "firstNames_required" : "Nombre es requerido",
         "lastName_required": "Apellido es requerido",
-        "entityId_required": "Entidad es requerida"
+        "entityId_required": "Entidad es requerida",
+        "document_required": "Documento es requerido"
     },
     "reset_password": {
         "invalid_email": "Correo electrónico no válido",
@@ -138,9 +141,9 @@
             "einstein_knowledge": "La única fuente de conocimiento es la experiencia."
         },
         "welcome": "Bienvenido a ",
-        "welcome_message": "¡Bienvenido a BRIGHTMIND! Somos una plataforma educativa que lleva el conocimiento tecnológico a todos, sin importar la ubicación o los recursos. Ofrecemos cursos accesibles en programación, inteligencia artificial y más, desde cualquier dispositivo, con talleres presenciales y programas de mentoría. Únete a nuestra comunidad y transforma tu futuro con el poder de la educación.",
+        "welcome_message": "¡Bienvenido a BrightMind! Somos una plataforma educativa dedicada a ofrecer aprendizaje de calidad para todos. Brindamos una amplia variedad de cursos en áreas como tecnología, artes, ciencias, ciencias sociales e idiomas, diseñados para que aprendas desde cualquier dispositivo y a tu propio ritmo.",
         "mission": "nuestra misión",
-        "mission_message": "Nuestra misión es democratizar la educación tecnológica, brindando acceso inclusivo y práctico a niños, jóvenes y adultos en zonas rurales y de bajos recursos. En Didáctica, capacitamos a las personas con habilidades digitales para su desarrollo personal y profesional.",
+        "mission_message": "Nuestra misión es proporcionar herramientas tecnológicas avanzadas que hagan posible un aprendizaje práctico y adaptado a las necesidades de los estudiantes. En BrightMind, trabajamos para ofrecer recursos educativos efectivos que integren tecnología, permitiendo a niños, jóvenes y adultos desarrollar habilidades clave para su crecimiento personal y profesional.",
         "experience_y": "Años de",
         "experience": "Experiencia",
         "total": "Total de",
@@ -151,24 +154,25 @@
         "quality": "Información de calidad",
         "quality_message": "Cursos de alta calidad, creados por expertos, con contenido práctico y relevante.",
         "online": "Curso en línea",
-        "online_message": "Aprende desde cualquier lugar y dispositivo, con opción de estudio sin conexión.",
-        "certificate": "Curso con certificado",
-        "certificate_message": "Recibe un certificado al completar cada curso para destacar tus habilidades.",
+        "online_message": "Aprende desde cualquier lugar y dispositivo, mantente actualizado en tiempo real.",
+        "certificate": "Constancia de Aprendizaje",
+        "certificate_message": "Recibe una constancia de aprendizaje al completar cada curso para destacar tus habilidades.",
         "diversity": "Diversidad de cursos",
-        "diversity_message": "Ofrecemos cursos en áreas como programación e inteligencia artificial para todos los niveles.",
+        "diversity_message": "Ofrecemos cursos en áreas como programación e inteligencia artificial para dferentes niveles.",
         "go_courses": "Ir a cursos",
-        "feature": "Nuestro Curso Destacado en ",
-        "js": "Cursos de JS",
-        "php": "Cursos de PHP",
-        "music": "Cursos de Música",
-        "art": "Cursos de Arte",
+        "feature": "Nuestros cursos ",
+        "Cience": "Cursos De Ciencia",
+        "CienceSocial": "Cursos De Ciencia Sociales",
+        "Tecnologia": "Cursos De Tecnología",
+        "art": "Cursos De Arte",
         "exercise": "Cursos de Ejercicio",
         "cooking": "Cursos de Cocina",
         "sport": "Cursos de Deporte",
         "ecology": "Cursos de Ecología",
-        "testimonial": "Nuestro Testimonio de ",
+        "testimonial": "Testimonios de ",
         "partners": "Socios",
-        "partners_message": "Esta empresa se caracteriza por su esfuerzo y dedicación, contribuyendo mucho a la sociedad."
+        "partners_message": "Esta empresa se caracteriza por su esfuerzo y dedicación, contribuyendo mucho a la sociedad.",
+        "brightmind": "brightmind"
     },
     "settingsBar": {
         "account_settings": "Configuración de la Cuenta",
@@ -224,7 +228,8 @@
         "configProfile": "Configurar perfil",
         "forum": "Foro",
         "theme": "Tema",
-        "view_profile": "Ver mi perfil"
+        "view_profile": "Ver mi perfil",
+        "change_password": "Cambiar Contraseña"
     },
     "newPasswordUser": {
         "change_password": "Cambiar Contraseña",
@@ -261,16 +266,16 @@
         "no_courses_available": "Próximamente",
         "check_back_later": "No hay cursos disponibles en este momento. ¡Próximamente, nuevos cursos estarán disponibles! Por favor, vuelve más tarde.",
         "no_courses_enrolled": "No estás inscrito en ningún curso aún.", 
-        "modalA": "¡Éxito!",
-        "modalM": "Te has registrado exitosamente",
+        "modalA": "Solicitud enviada exitosamente!",
+        "modalM": "Has pedido acceso a este curso, debes esperar a su confirmación para ver el contenido.",
         "title": "Cursos",
         "favorites": "Tus favoritos",
         "desFavorites": "Aquí se mostrarán tus cursos favoritos",
         "with": "Con",
         "hours": "horas",
         "sections": "secciones",
-        "registerM": "INSCRIBETE!",
-        "registering": "Inscribiendo...",
+        "registerM": "Solicita Acceso!",
+        "registering": "Solicitud Pendiente...",
         "yaregister": "YA REGISTRADO!",
         "progressbarra": "Progreso:"
     },
@@ -327,7 +332,14 @@
         "Activate": "Activar",
         "Desactivate": "Desactivar",
         "Active": "Activo",
-        "Inactive": "Inactivo"
+        "Inactive": "Inactivo",
+        "Username": "Nombre de usuario",
+        "Pending": "No hay usuarios pendientes por aceptar en este curso.",
+        "NoRegister": "No hay usuarios registrados en este curso.",
+        "DataError": "Error: datos de usuario no disponibles.",
+        "titleModal": "Usuarios Registrados",
+        "titleActivate": "Usuarios Registrados",
+        "titleInactive": "Solicitudes De Ingreso"
     },
     "userDetails": {
         "title": "Detalles del Usuario",
@@ -354,6 +366,8 @@
         "inactive": "Inactivo",
         "cancel": "Cancelar",
         "update": "Actualizar",
+        "userExists": "Ya existe un usuario con este nombre de usuario o correo electrónico",
+        "documentNumberExists": "Ya existe un usuario con este número de documento",
         "userUpdatedSuccess": "Usuario actualizado exitosamente",
         "usernameRequired": "Por favor ingrese un nombre de usuario",
         "emailRequired": "Por favor ingrese un correo electrónico",
@@ -375,7 +389,8 @@
         "cancel": "Cancelar",
         "create": "Crear",
         "userCreatedSuccess": "Usuario creado exitosamente",
-        "userExists": "Ya existe un usuario con este nombre de usuario, correo electrónico o número de documento",
+        "userExists": "Ya existe un usuario con este nombre de usuario o correo electrónico",
+        "documentNumberExists": "Ya existe un usuario con este número de documento",
         "usernameRequired": "Por favor ingrese un nombre de usuario",
         "firstNamesRequired": "Por favor ingrese los nombres",
         "lastNamesRequired": "Por favor ingrese los apellidos",
@@ -649,16 +664,16 @@
     "footer": {
         "text": "Descubre un mundo lleno de oportunidades y aprende a tu propio ritmo. Con nuestros cursos flexibles, podrás mejorar tus habilidades de manera práctica y efectiva, adaptando el aprendizaje a tus necesidades y tiempo disponible.",
         "title": "Aprende con Bright",
-        "developed": "Desarrollado en Disruptive",
-        "copy": "© 2024 Mesadoko - BrightMind. Todos los derechos reservados.",
+        "developed": "Mesadoko",
+        "copy": "© 2024 - BrightMind. Todos los derechos reservados.",
         "options": "Explora nuestro mundo",
         "courses": "Cursos disponibles",
         "blog": "Blog informativo",
         "yourCourses": "Tus cursos",
         "events": "Eventos",
         "Contact": "Contáctanos",
-        "description": "Mesadoko © Desarrollado por Disruptive IT",
-        "copy_right": "Copyright 2024"
+        "description": "© 2024 Mesadoko - BrightMind.",
+        "copy_right": "Desarrollado por Disruptive IT"
     },
     "UpdateResource": {
         "ValidateTitle": "El título debe tener al menos 3 caracteres.",
@@ -714,7 +729,12 @@
         "ButtonCreate": "Crear Recurso",
         "MaxOptionsAlert": "Limite de opciones",
         "MaxOptionsText": "Has alcanzado el número de opciones máximas.",
-        "PleaseSelectFileOrQuiz": "Por favor, sube un archivo o crea un quiz."
+        "PleaseSelectFileOrQuiz": "Por favor, sube un archivo o crea un quiz.",
+        "reorderSuccess": "Orden actualizado exitosamente",
+        "reorderError": "Error al actualizar el orden",
+        "cantMoveResource": "No se puede mover el recurso",
+        "resourceMoveError": "No puedes mover un recurso a otra sección, por favor para cambiarlo, edite el recurso y cambielo de sección.",
+        "ScorePercing": "Puntaje de aprobación"
     },
     "course_user": {
         "courseImageAlt": "Imagen del curso",
@@ -900,7 +920,10 @@
         "cancel": "Cancelar",
         "validateTitle": "Minimo de caracteres para el título es 3",
         "validateDescription": "Minimo de caracteres para la descripción es 30",
-        "validateContent": "Minimo de caracteres para el contenido es 8"
+        "validateContent": "Minimo de caracteres para el contenido es 8",
+        "title": "Titulo Del Tema: ",
+        "description": "Breve Descripción:",
+        "content": "Contenido:"
     },
     "updateTopic":{
         "updateAlert": "Tema actualizado exitosamente",
@@ -1120,5 +1143,19 @@
             "selectChat": "Selecciona un chat para empezar a interactuar",
             "typeMessage": "Escribe un mensaje",
             "searchPeople": "Busca personas..."
-        }
+        },
+    "notifications": {
+        "delete": "Eliminar",
+        "empty": "No hay notificaciones",
+        "mark_all_read": "Marcar todas como leídas",
+        "new_course": "Nuevo curso disponible",
+        "course_update": "Actualización de curso",
+        "view_all": "Ver todas",
+        "all_notifications": "Todas las notificaciones",
+        "back": "Volver",
+        "filter_all": "Todas las notificaciones",
+        "filter_courses": "Notificaciones de cursos",
+        "filter_forums": "Notificaciones del Foro",
+        "filter_resources": "Notificaciones de recursos"
+    }
 }

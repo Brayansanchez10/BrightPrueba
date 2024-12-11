@@ -89,7 +89,7 @@ const Modal = ({
                 </div>
                 <motion.button
                   onClick={onRegister}
-                  className={`bg-[#783CDA] text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${
+                  className={`bg-purple-900 text-white font-bold text-[13px] rounded-[5px] shadow-md px-3 !py-1 ${
                     isRegistered || isLoading
                       ? "opacity-50 cursor-not-allowed"
                       : ""

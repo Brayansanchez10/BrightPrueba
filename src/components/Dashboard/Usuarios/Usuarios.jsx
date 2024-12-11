@@ -3,7 +3,7 @@ import { Button, Form } from "antd";
 import {
   CaretUpOutlined,
   CaretDownOutlined,
-  ReloadOutlined,
+  EditOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import {
@@ -93,15 +93,14 @@ const DataTable = () => {
   }, [user]);
 
   useEffect(() => {
-    const filteredUser = usersData.filter(
-      (item) =>
-        item.username.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.password.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.role.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.documentNumber.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.firstNames.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.lastNames.toLowerCase().includes(searchValue.toLowerCase()) 
+    const filteredUser = usersData.filter((item) => 
+      (item.username && item.username.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.email && item.email.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.password && item.password.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.role && item.role.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.documentNumber && item.documentNumber.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.firstNames && item.firstNames.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.lastNames && item.lastNames.toLowerCase().includes(searchValue.toLowerCase()))
     );
 
     setTotalItems(filteredUser.length);
@@ -158,7 +157,7 @@ const DataTable = () => {
       (value) =>
         value &&
         typeof value === "string" &&
-        value.toLowerCase().includes(searchValue.toLowerCase())
+        value.toLowerCase().includes(searchValue?.toLowerCase() || "")
     )
   );
 
@@ -231,12 +230,12 @@ const DataTable = () => {
   // Lógica de filtrado y paginación
   const generateIds = () => {
     const searchFiltered = usersData.filter((item) => 
-      item.username.toLowerCase().includes(searchValue.toLowerCase()) ||
-      item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
-      item.role.toLowerCase().includes(searchValue.toLowerCase()) ||
-      item.documentNumber.toLowerCase().includes(searchValue.toLowerCase()) ||
-      item.firstNames.toLowerCase().includes(searchValue.toLowerCase()) ||
-      item.lastNames.toLowerCase().includes(searchValue.toLowerCase())
+      (item.username && item.username.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.email && item.email.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.role && item.role.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.documentNumber && item.documentNumber.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.firstNames && item.firstNames.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (item.lastNames && item.lastNames.toLowerCase().includes(searchValue.toLowerCase()))
     );
 
     // Filtrado por `entityId`, solo si `entityId` es distinto de `1`
@@ -513,7 +512,7 @@ const DataTable = () => {
                                 onClick={() => handleUpdateButtonClick(item)}
                                 className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
                                 style={{ minWidth: "50px" }}
-                                icon={<ReloadOutlined />}
+                                icon={<EditOutlined />}
                               />
                             }
                             

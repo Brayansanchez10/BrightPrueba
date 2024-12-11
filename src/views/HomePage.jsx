@@ -14,9 +14,9 @@ import {
   PiDesktopTower,
   PiNewspaperDuotone,
 } from "react-icons/pi";
-import PHPImage from "../assets/img/Courses_home/php.jpg";
-import JSImage from "../assets/img/Courses_home/js.jpg";
-import MusicImage from "../assets/img/Courses_home/music.jpg";
+import PHPImage from "../assets/img/Ciencias.jpg";
+import JSImage from "../assets/img/CienciasSociales.jpg";
+import MusicImage from "../assets/img/Tecnologia.jpg";
 import ArtImage from "../assets/img/Courses_home/art.jpg";
 import ExerciseImage from "../assets/img/Courses_home/exercise.jpg";
 import Cooking from "../assets/img/Courses_home/cooking.jpg";
@@ -218,8 +218,8 @@ export default function HomePage() {
               </h2>
               <p className="text-primary text-base md:text-lg lg:text-2xl text-justify mb-8">
                 {t("home.mission_message")}
-              </p>
-              <motion.div
+              </p> 
+              {/*<motion.div
                 className="flex flex-col md:flex-row gap-5 mx-4"
                 variants={staggerChildren}
               >
@@ -266,6 +266,7 @@ export default function HomePage() {
                   </motion.div>
                 ))}
               </motion.div>
+              */}
             </motion.div>
           </div>
         </AnimatedSection>
@@ -369,14 +370,11 @@ export default function HomePage() {
               variants={staggerChildren}
             >
               {[
-                { image: JSImage, title: "home.js" },
-                { image: PHPImage, title: "home.php" },
-                { image: MusicImage, title: "home.music" },
+                { image: PHPImage, title: "home.Cience" },
+                { image: JSImage, title: "home.CienceSocial" },
+                { image: MusicImage, title: "home.Tecnologia" },
                 { image: ArtImage, title: "home.art" },
-                { image: ExerciseImage, title: "home.exercise" },
-                { image: Cooking, title: "home.cooking" },
-                { image: Sport, title: "home.sport"   },
-                { image: Ecology, title: "home.ecology" },
+                
               ].map((item, index) => (
                 <motion.div
                   key={index}
@@ -408,7 +406,7 @@ export default function HomePage() {
               variants={fadeInFromLeft}
             >
               <span className="text-primary">{t("home.testimonial")}</span>{" "}
-              <span className="text-purple-900 dark:text-secondary">brightmind</span>
+              <span className="text-purple-900 dark:text-secondary">{t("home.brightmind")}</span>
             </motion.h2>
             <motion.div variants={fadeInFromLeft}>
               <Testimonials profiles={profiles} />

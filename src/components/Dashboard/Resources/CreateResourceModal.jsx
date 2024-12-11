@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, notification, Card, Collapse } from "antd";
+import { Modal, Button, Card, Collapse } from "antd";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { toast } from "react-toastify";
 import {
   createResource,
   getResource,
   deleteResource,
+  updateResourceOrder,
 } from "../../../api/courses/resource.request";
 import UpdateResourceForm from "./UpdateResourceForm";
-import { EditOutlined, DeleteFilled, FilePdfOutlined, LoadingOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteFilled, FilePdfOutlined, LoadingOutlined, SwapOutlined, HolderOutlined } from "@ant-design/icons";
+
 import { Typography } from "antd";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
@@ -21,11 +24,10 @@ const MAX_TITLE_LENGTH = 30;
 const { Panel } = Collapse;
 
 const ALLOWED_FILE_TYPES = [".pdf", ".jpg", ".jpeg", ".png"];
-const YOUTUBE_URL_REGEX =
-  /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
+const YOUTUBE_URL_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:watch\?v=|embed\/|playlist\?list=)|youtu\.be\/)[a-zA-Z0-9_-]{11}(?:\S*)?$/i;
 const VIMEO_URL_REGEX = /^(https?:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)$/i;
-const GOOGLE_DRIVE_URL_REGEX =
-  /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
+const GOOGLE_DRIVE_URL_REGEX = /^(https?:\/\/)?(drive\.google\.com\/file\/d\/)([a-zA-Z0-9_-]+)(\/[^?]*)(\?.*)?$/i;
+const ONEDRIVE_URL_REGEX = /^(https?:\/\/)?(1drv\.ms\/[a-zA-Z0-9_-]+)/i;
 
 const CreateResourceModal = ({
   isVisible,
@@ -37,6 +39,7 @@ const CreateResourceModal = ({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [attempts, setAttempts] = useState("");
+  const [percent, setPercent] = useState("");
   const [link, setLink] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [resources, setResources] = useState([]);
@@ -52,6 +55,7 @@ const CreateResourceModal = ({
   const [subcategoryId, setSubcategoryId] = useState("");
   const MAX_DESCRIPTION_LENGTH = 500;
   const [isLoading, setIsLoading] = useState(false);
+  const [isReorderingMode, setIsReorderingMode] = useState(false);
 
   const validateFields = () => {
     const newErrors = {};
@@ -160,7 +164,8 @@ const CreateResourceModal = ({
     return (
       YOUTUBE_URL_REGEX.test(file) ||
       VIMEO_URL_REGEX.test(file) ||
-      GOOGLE_DRIVE_URL_REGEX.test(file)
+      GOOGLE_DRIVE_URL_REGEX.test(file) ||
+      ONEDRIVE_URL_REGEX.test(file)
     );
   };
 
@@ -168,7 +173,8 @@ const CreateResourceModal = ({
     return (
       YOUTUBE_URL_REGEX.test(url) ||
       VIMEO_URL_REGEX.test(url) ||
-      GOOGLE_DRIVE_URL_REGEX.test(url)
+      GOOGLE_DRIVE_URL_REGEX.test(url) ||
+      ONEDRIVE_URL_REGEX.test(url)
     );
   };
 
@@ -179,17 +185,30 @@ const CreateResourceModal = ({
         : new URL(file).searchParams.get("v");
       return `https://www.youtube.com/embed/${videoId}`;
     }
-
+  
     if (VIMEO_URL_REGEX.test(file)) {
       const videoId = file.match(VIMEO_URL_REGEX)[4];
       return `https://player.vimeo.com/video/${videoId}`;
     }
-
+  
     if (GOOGLE_DRIVE_URL_REGEX.test(file)) {
       const fileId = file.match(GOOGLE_DRIVE_URL_REGEX)[3];
       return `https://drive.google.com/file/d/${fileId}/preview`;
     }
-
+  
+    if (ONEDRIVE_URL_REGEX.test(file)) {
+      if (file.includes("1drv.ms")) {
+        // Convertir enlace corto de OneDrive a embed y deshabilitar la descarga
+        return file.replace("/?", "/embed?").concat("&wdAllowInteractivity=False");
+      } else if (file.includes("onedrive.live.com")) {
+        // Forzar vista embed para enlaces completos y deshabilitar la descarga
+        const embedUrl = new URL(file);
+        embedUrl.searchParams.set("action", "embedview");
+        embedUrl.searchParams.set("wdAllowInteractivity", "False");
+        return embedUrl.href;
+      }
+    }
+  
     return "";
   };
 
@@ -306,6 +325,7 @@ const CreateResourceModal = ({
       link: selection === "link" ? link : null,
       file: selection === "file" ? selectedFile : null,
       attempts,
+      percent,
       quizzes: quizzes.map((quiz) => ({
         question: quiz.question,
         options: quiz.options,
@@ -428,6 +448,68 @@ const CreateResourceModal = ({
     setActiveTab(tab);
   };
 
+  const handleDragEnd = async (result) => {
+    if (!result.destination) return;
+
+    const { source, destination } = result;
+    const sourceSubcategoryId = parseInt(result.draggableId.split('-')[0]);
+    const destinationSubcategoryId = parseInt(result.destination.droppableId);
+
+    // Verificar si se está intentando mover a otra subcategoría
+    if (sourceSubcategoryId !== destinationSubcategoryId) {
+      Swal.fire({
+        icon: 'warning',
+        title: t('CreateResource.cantMoveResource'),
+        text: t('CreateResource.resourceMoveError'),
+        showConfirmButton: true,
+        timer: 3000
+      });
+      return;
+    }
+
+    // Obtener recursos de la subcategoría actual
+    const subcategoryResources = resources
+      .filter(resource => resource.subcategoryId === sourceSubcategoryId)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    // Crear una copia y reordenar
+    const reorderedResources = Array.from(subcategoryResources);
+    const [removed] = reorderedResources.splice(source.index, 1);
+    reorderedResources.splice(destination.index, 0, removed);
+
+    // Actualizar órdenes
+    const updatedResources = reorderedResources.map((resource, index) => ({
+      ...resource,
+      order: index
+    }));
+
+    // Actualizar estado local
+    setResources(prevResources => {
+      const newResources = prevResources.map(resource => {
+        const updatedResource = updatedResources.find(r => r.id === resource.id);
+        return updatedResource || resource;
+      });
+      return newResources;
+    });
+
+    try {
+      await updateResourceOrder({
+        resources: updatedResources.map(resource => ({
+          id: resource.id,
+          order: resource.order
+        }))
+      });
+    } catch (error) {
+      console.error('Error al actualizar el orden:', error);
+      Swal.fire({
+        icon: 'error',
+        title: t('CreateResource.reorderError'),
+        showConfirmButton: false,
+        timer: 2500
+      });
+    }
+  };
+
   return (
     <Modal
       title=""
@@ -482,71 +564,98 @@ const CreateResourceModal = ({
             </div>
             <h3 className="text-xl font-bold mt-6 text-center text-purple-900">
               {t("CreateResource.TitleResources")}
+              <Button
+                icon={<SwapOutlined />}
+                onClick={() => setIsReorderingMode(!isReorderingMode)}
+                className={`ml-4 rotate-90 ${
+                  isReorderingMode ? 'bg-gray-500' : 'bg-purple-600'
+                } text-white hover:opacity-90`}
+              />
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 p-4">
-              {subCategory.length > 0 ? (
-                subCategory.map((subcategory) => {
-                  // Filtrar los recursos por subcategoryId
-                  const filteredResources = resources.filter(
-                    (resource) => resource.subcategoryId === subcategory.id
-                  );
+            {isReorderingMode ? (
+              <DragDropContext onDragEnd={handleDragEnd}>
+                {subCategory.map((subcategory) => {
+                  const filteredResources = resources
+                    .filter((resource) => resource.subcategoryId === subcategory.id)
+                    .sort((a, b) => {
+                      if (a.order === null) return 1;
+                      if (b.order === null) return -1;
+                      return a.order - b.order;
+                    });
 
                   return (
-                    <div key={subcategory.id} className="mb-6">
-                      <h2 className="text-xl font-bold mb-4">
-                        {subcategory.title}
-                      </h2>
+                    <div key={subcategory.id} className="p-4">
+                      <h2 className="text-xl font-bold mb-4">{subcategory.title}</h2>
+                      <Droppable droppableId={`${subcategory.id}`}>
+                        {(provided) => (
+                          <div {...provided.droppableProps} ref={provided.innerRef}>
+                            {filteredResources.map((resource, index) => (
+                              <Draggable
+                                key={`${subcategory.id}-${resource.id}`}
+                                draggableId={`${subcategory.id}-${resource.id}`}
+                                index={index}
+                              >
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    className={`p-4 mb-2 border rounded-lg ${
+                                      snapshot.isDragging ? 'bg-purple-100' : 'bg-white'
+                                    }`}
+                                  > 
+                                    <div className="flex justify-between items-center">
+                                      <div className="flex items-center gap-2">
+                                        <HolderOutlined className="text-gray-600" />
+                                        <span>{resource.title}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                          </div>
+                        )}
+                      </Droppable>
+                    </div>
+                  );
+                })}
+              </DragDropContext>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 p-4">
+                {subCategory.length > 0 ? (
+                  subCategory.map((subcategory) => {
+                    const filteredResources = resources
+                      .filter((resource) => resource.subcategoryId === subcategory.id)
+                      .sort((a, b) => {
+                        if (a.order === null) return 1;
+                        if (b.order === null) return -1;
+                        return a.order - b.order;
+                      });
 
-                      {filteredResources.length > 0 ? (
+                    return (
+                      <div key={subcategory.id} className="mb-6">
+                        <h2 className="text-xl font-bold mb-4">{subcategory.title}</h2>
                         <Collapse accordion>
                           {filteredResources.map((resource) => (
-                        <Panel
-                        header={
-                          <div className="flex flex-col lg:flex-row justify-between items-center">
-                            <div className="w-full lg:w-3/4 break-words">
-                              {resource.title}
-                            </div>
-                            <div className="flex lg:w-1/4 justify-end mt-2 lg:mt-0">
-                              <Button
-                                icon={<EditOutlined />}
-                                onClick={() => openEditModal(resource)}
-                                className="bg-yellow-500 text-white hover:bg-yellow-600 mr-2"
-                                    ></Button>
+                            <Panel
+                              header={
+                                <div className="flex flex-col lg:flex-row justify-between items-center">
+                                  <div className="w-full lg:w-3/4 break-words">
+                                    {resource.title}
+                                  </div>
+                                  <div className="flex lg:w-1/4 justify-end mt-2 lg:mt-0">
+                                    <Button
+                                      icon={<EditOutlined />}
+                                      onClick={() => openEditModal(resource)}
+                                      className="bg-yellow-500 text-white hover:bg-yellow-600 mr-2"
+                                    />
                                     <Button
                                       icon={<DeleteFilled />}
-                                      onClick={() => {
-                                        Swal.fire({
-                                          title: t(
-                                            "CreateResource.AlertDeleteTitle"
-                                          ),
-                                          text: t(
-                                            "CreateResource.AlertDeleteText"
-                                          ),
-                                          icon: "warning",
-                                          showCancelButton: true,
-                                          confirmButtonColor: "#28a745",
-                                          cancelButtonColor: "#d35",
-                                          confirmButtonText: t(
-                                            "CreateResource.AlertDeleteConfir"
-                                          ),
-                                          reverseButtons: true,
-                                        }).then((result) => {
-                                          if (result.isConfirmed) {
-                                            handleRemoveResource(resource);
-                                            Swal.fire({
-                                              title: t(
-                                                "CreateResource.AlerteSuccesyDelete"
-                                              ),
-                                              text: t(
-                                                "CreateResource.DeleteResource"
-                                              ),
-                                              icon: "success",
-                                            });
-                                          }
-                                        });
-                                      }}
+                                      onClick={() => handleRemoveResource(resource)}
                                       className="bg-red-700 text-white hover:bg-red-600"
-                                    ></Button>
+                                    />
                                   </div>
                                 </div>
                               }
@@ -675,16 +784,14 @@ const CreateResourceModal = ({
                             </Panel>
                           ))}
                         </Collapse>
-                      ) : (
-                        <p>{t("CreateResource.NoResources")}</p>
-                      )}
-                    </div>
-                  );
-                })
-              ) : (
-                <p>{t("CreateResource.NoResources")}</p>
-              )}
-            </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p>{t("CreateResource.NoResources")}</p>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Formulario de creación a la derecha */}
@@ -993,37 +1100,70 @@ const CreateResourceModal = ({
                   >
                     {t("CreateResource.AddQuestion")}
                   </Button>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        htmlFor="attempts"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        {t("quizz.NumerQuizz")}
+                      </label>
+                      <input
+                        type="number"
+                        id="attempts"
+                        value={attempts}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value, 10);
 
-                  <div>
-                    <label
-                      htmlFor="attempts"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      {t("quizz.NumerQuizz")}
-                    </label>
-                    <input
-                      type="number"
-                      id="attempts"
-                      value={attempts}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value, 10);
+                          // Validar que el valor esté dentro del rango permitido
+                          if (value >= 1 && value <= 10) {
+                            setAttempts(value);
+                          } else if (value < 1) {
+                            setAttempts(1); // Si es menor que 1, establecer en 1
+                          } else if (value > 10) {
+                            setAttempts(10); // Si es mayor que 10, establecer en 10
+                          }
+                        }}
+                        min="1"
+                        max="10"
+                        inputMode="numeric" // Asegura el teclado numérico en móviles
+                        className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
+                        required
+                      />
+                    </div>
 
-                        // Validar que el valor esté dentro del rango permitido
-                        if (value >= 1 && value <= 10) {
-                          setAttempts(value);
-                        } else if (value < 1) {
-                          setAttempts(1); // Si es menor que 1, establecer en 1
-                        } else if (value > 10) {
-                          setAttempts(10); // Si es mayor que 10, establecer en 10
-                        }
-                      }}
-                      min="1"
-                      max="10"
-                      inputMode="numeric" // Asegura el teclado numérico en móviles
-                      className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
-                      required
-                    />
+                    <div>
+                      <label
+                        htmlFor="percent"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        {t("CreateResource.ScorePercing")}
+                      </label>
+                      <input
+                        type="number"
+                        id="percent"
+                        value={percent}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value, 10);
+
+                          // Validar que el valor esté dentro del rango permitido
+                          if (value >= 1 && value <= 100) {
+                            setPercent(value);
+                          } else if (value < 1) {
+                            setPercent(1); // Si es menor que 1, establecer en 1
+                          } else if (value > 100) {
+                            setPercent(10); // Si es mayor que 10, establecer en 10
+                          }
+                        }}
+                        min="1"
+                        max="100"
+                        inputMode="numeric" // Asegura el teclado numérico en móviles
+                        className={`mt-1 block w-full px-4 py-2 rounded-lg border`}
+                        required
+                      />
+                    </div>
                   </div>
+                  
                 </div>
               )}
 

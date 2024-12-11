@@ -93,7 +93,7 @@ export default function AllCourses() {
   const { courses } = useCoursesContext();
   const { ratings, fetchRatingsByCourse } = useRatingsContext();
   const { user } = useAuth();
-  const { registerToCourse, getUserCourses, getUserById } = useUserContext();
+  const { registerToCourse, getUserCourses, getUserById, getRegisterUserCourse } = useUserContext();
   const { favorites, toggleFavorite, loading: favoritesLoading } = useFavorite();
   const [userCourses, setUserCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -153,7 +153,7 @@ export default function AllCourses() {
     };
   
     loadRatings();
-  }, [courses, fetchRatingsByCourse, fetchCreatorName, fetchSubCategories]);
+  }, [courses]);
 
   const calculateAverageRating = (courseId) => {
     const courseRatings = ratings.filter(rating => rating.courseId === courseId);

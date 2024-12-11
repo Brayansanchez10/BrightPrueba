@@ -1,82 +1,84 @@
 import { jsPDF } from "jspdf";
 import Anothershabby_trial from "../../../../Tipografy/Anothershabby_trial-normal";
 
-export const generatePremiumCertificatePDF = (username, courseTitle, zorroImage, derechaabajo, izquierdaarriba) => {
+export const generatePremiumCertificatePDF = (username, documentNumber, courseTitle, zorroImage, derechaabajo, izquierdaarriba, estructura) => {
   const doc = new jsPDF({
     orientation: "landscape",
     unit: "cm",
     format: [28, 21.6],
   });
 
-  // Fondo
-  doc.setFillColor(240, 248, 255);
-  doc.rect(0, 0, 28, 21.6, "F");
+   // Fondo
+ doc.setFillColor(255, 255, 255);
+ doc.rect(0, 0, 28, 21.6, "F");
 
+ // Imagenes A
+ if (estructura) {
+  doc.addImage(estructura, "JPEG", 0, -0, 28, 23)
+  }
   // Imágenes decorativas
   if (izquierdaarriba) {
-    doc.addImage(izquierdaarriba, "JPEG", -1, -1, 10, 10);
+    doc.addImage(izquierdaarriba, "JPEG", -9, -3, 25, 20);
   }
   if (derechaabajo) {
-    doc.addImage(derechaabajo, "JPEG", 19, 13, 10, 10);
+    doc.addImage(derechaabajo, "JPEG", 12.5, 5, 25, 20);
   }
+ // Configuración de fuentes
+ doc.setFont("Arial", "normal");
 
-  // Configuración de fuentes
-  doc.setFont("Arial", "normal");
+ // Título principal
+ doc.setFont("times", "bold");
+ doc.setTextColor(0, 0, 0);
+ doc.setFontSize(25);
+ doc.text("BRIGHTMIND", 14, 4.5, { align: "center" });
 
-  // Título principal
-  doc.setTextColor(0, 0, 0);
-  doc.setFontSize(70);
-  doc.text("CONSTANCIA", 14, 4.5, { align: "center" });
+ // Título segundario
+ doc.setFont("times", "bold");
+ doc.setTextColor(0, 0, 0);
+ doc.setFontSize(25);
+ doc.text("CONSTANCIA DE APRENDIZAJE", 14, 5.5, { align: "center" });
 
-  // Subtítulo
-  doc.setFontSize(25);
-  doc.text("De aprendizaje", 18, 5.5, { align: "center" });
 
-  // Logo
-  if (zorroImage) {
-    doc.addImage(zorroImage, "JPEG", 12, 7, 4, 4);
+ // Logo
+ if (zorroImage) {
+  doc.addImage(zorroImage, "JPEG", 18, 5, 12, 8);
   }
 
   // Texto del certificado
-  doc.setFont("times", "bold");
-  doc.setFontSize(18);
-  doc.text("ESTE CERTIFICADO SE OTORGA A", 14, 13.0, { align: "center" });
+  doc.setFont("times", "normal");
+  doc.setFontSize(20);
+  doc.text(`Con No. Documento. ${documentNumber}`, 14, 14.0, { align: "center" });
 
   // Nombre del usuario
-  doc.setFontSize(65);
-  doc.setFont("Arial", "normal");
-  doc.text(`${username}`, 14, 15.5, { align: "center" });
+  doc.setFontSize(45);
+  doc.setFont("times", "bold");
+  doc.text(`${username}`, 14, 10, { align: "center" });
 
   // Línea decorativa
   doc.setLineWidth(0.1);
   doc.setDrawColor(0, 0, 0);
-  doc.line(6, 16, 22, 16);
+  doc.line(6, 11, 22, 11);
 
   // Texto descriptivo
   doc.setFont("times", "normal");
-  doc.setFontSize(14);
+  doc.setFontSize(20);
   doc.text(
     `Por completar exitosamente el curso "${courseTitle}". `,
     14,
-    17.5,
+    15.0,
     { align: "center" }
   );
 
-  doc.setFontSize(14);
-  doc.text("Gracias por tu dedicación y esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 18.0, {
-    align: "center",
-  });
-
-  // Pie de página
-  doc.setTextColor(192, 192, 192);
-  doc.text("Este certificado fue generado automáticamente.", 14, 19.5, {
+  doc.setFontSize(20);
+  doc.text("Gracias por tu dedicación y esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 16.0, {
     align: "center",
   });
 
   doc.save(`Certificado_${courseTitle}.pdf`);
+  
 };
 
-export const generateCertificatePreview = async (username, courseTitle, zorroImage, derechaabajo, izquierdaarriba, isCompleted = false) => {
+export const generateCertificatePreview = async (username, documentNumber, courseTitle, zorroImage, derechaabajo, izquierdaarriba, estructura, isCompleted = false) => {
   try {
     const doc = new jsPDF({
       orientation: "landscape",
@@ -88,58 +90,66 @@ export const generateCertificatePreview = async (username, courseTitle, zorroIma
     doc.setFillColor(240, 248, 255);
     doc.rect(0, 0, 28, 21.6, "F");
 
+    // Imagenes A
+    if (estructura) {
+      doc.addImage(estructura, "JPEG", 0, -0, 28, 23)
+    }
     // Imágenes decorativas
     if (izquierdaarriba) {
-      doc.addImage(izquierdaarriba, "JPEG", -1, -1, 10, 10);
+      doc.addImage(izquierdaarriba, "JPEG", -9, -3, 25, 20);
     }
     if (derechaabajo) {
-      doc.addImage(derechaabajo, "JPEG", 19, 13, 10, 10);
+      doc.addImage(derechaabajo, "JPEG", 12.5, 5, 25, 20);
     }
 
     // Configuración de fuentes
     doc.setFont("Arial", "normal");
 
     // Título principal
+    doc.setFont("times", "bold");
     doc.setTextColor(0, 0, 0);
-    doc.setFontSize(70);
-    doc.text("CONSTANCIA", 14, 4.5, { align: "center" });
-
-    // Subtítulo
     doc.setFontSize(25);
-    doc.text("De aprendizaje", 18, 5.5, { align: "center" });
+    doc.text("BRIGHTMIND", 14, 4.5, { align: "center" });
+
+    // Título segundario
+    doc.setFont("times", "bold");
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(25);
+    doc.text("CONSTANCIA DE APRENDIZAJE", 14, 5.5, { align: "center" });
+
 
     // Logo
     if (zorroImage) {
-      doc.addImage(zorroImage, "JPEG", 12, 7, 4, 4);
+      doc.addImage(zorroImage, "JPEG", 18, 5, 12, 8);
     }
 
     // Texto del certificado
-    doc.setFont("times", "bold");
-    doc.setFontSize(18);
-    doc.text("ESTE CERTIFICADO SE OTORGA A", 14, 13.0, { align: "center" });
+    doc.setFont("times", "normal");
+    doc.setFontSize(20);
+    doc.text(`Con No. Documento. ${documentNumber}`, 14, 14.0, { align: "center" });
 
     // Nombre del usuario
-    doc.setFontSize(65);
-    doc.setFont("Arial", "normal");
-    doc.text(`${username}`, 14, 15.5, { align: "center" });
+    doc.setFontSize(45);
+    doc.setFont("times", "bold");
+    doc.text(`${username}`, 14, 10, { align: "center" });
 
     // Línea decorativa
     doc.setLineWidth(0.1);
     doc.setDrawColor(0, 0, 0);
-    doc.line(6, 16, 22, 16);
+    doc.line(6, 11, 22, 11);
 
     // Texto descriptivo
     doc.setFont("times", "normal");
-    doc.setFontSize(14);
+    doc.setFontSize(20);
     doc.text(
       `Por completar exitosamente el curso "${courseTitle}". `,
       14,
-      17.5,
+      15.0,
       { align: "center" }
     );
 
-    doc.setFontSize(14);
-    doc.text("Gracias por tu dedicación y esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 18.0, {
+    doc.setFontSize(20);
+    doc.text("Gracias por tu dedicación y esfuerzo. ¡Sigue aprendiendo y mejorando!", 14, 16.0, {
       align: "center",
     });
 

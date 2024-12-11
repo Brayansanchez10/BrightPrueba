@@ -37,10 +37,11 @@ function ProtectedRoute({ allowedRoles }) {
         return <Navigate to="/notFound" />;
     }
 
-    // Verificar si el rol del usuario está disponible y coincide con el rol requerido
+    const allowedRolesArray = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
+
     const userRole = role;
-    if (allowedRoles && (!userRole || !allowedRoles.includes(userRole))) {
-        console.log(`User role (${userRole}) does not match allowed roles (${allowedRoles.join(', ')}), redirecting to /notFound`);
+    if (allowedRolesArray && (!userRole || !allowedRolesArray.includes(userRole))) {
+        console.log(`User role (${userRole}) does not match allowed roles (${allowedRolesArray.join(', ')}), redirecting to /notFound`);
         return <Navigate to="/notFound" />;
     }
 

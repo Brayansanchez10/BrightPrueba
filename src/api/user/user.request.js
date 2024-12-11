@@ -30,8 +30,17 @@ export const createUser = (userData) => axios.post(`/users/createUser`, userData
 
 export const changePassword = (email, newPassword) => axios.post(`/users/changePassword`, { email, newPassword });
 
-// Nueva función para obtener los usuarios registrados en un Curso
+// Nueva función para obtener los usuarios registrados en un Curso con el estado en True
 export const getUsersByCourse = (courseId) => axios.get(`/users/courses/${courseId}/users`);
+
+// Nueva función para obtener los usuarios registrados en un Curso con el estado en False
+export const getPendingUsersByCourse = (courseId) => axios.get(`/users/coursesPending/${courseId}/users`);
 
 // Nueva función para el botón de activar y desactivar cuenta
 export const toggleState = (userId) => axios.post(`/users/toggleState/${userId}`);
+
+// Nueva Función para actualizar el estado de un curso en un usuario. 
+export const updateUserCourseState = (userId, courseId) => axios.put(`/users/updateState/${userId}/${courseId}`);
+
+//Nueva uncion para consultar el estado del curso del usuario:
+export const getRegisterUserCourse = (userId, courseId) => axios.get(`/users/registerUser/${userId}/${courseId}`);

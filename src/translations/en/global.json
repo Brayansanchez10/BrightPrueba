@@ -47,6 +47,7 @@
         "username_min_length": "Username must be at least 4 characters long",
         "email_requires_at": "Email must contain '@'",
         "email_requires_com": "Email must end with '.com'",
+        "document_min_length": "The document name must have at least 6 numbers.",
         "register": "Register",
         "select_entity": "Select your entity",
         "choose_entity": "Select",
@@ -76,6 +77,7 @@
         "user_created": "User created successfully, Please check your email to activate your account",
         "email_exists": "Email already exists, please enter a different one",
         "username_exists": "Username already exists, please enter a different one",
+        "document_exists": "The document number already exists, please enter a different one.",
         "register_now": "Register Now",
         "future": "Be part of the future",
         "ready": "READY!",
@@ -85,7 +87,8 @@
         "entity_required": "Required",
         "firstNames_required" : "First name is required",
         "lastName_required": "Last name is required",
-        "entityId_required": "Entity is required"
+        "entityId_required": "Entity is required",
+        "document_required": "Document is required"
     },
     "reset_password": {
         "invalid_email": "Invalid email",
@@ -142,9 +145,9 @@
         },
         "bringmind": "brightmind",
         "welcome": "Welcome to ",
-        "welcome_message": "Welcome to BRIGHTMIND! We are an educational platform that brings technological knowledge to everyone, regardless of location or resources. We offer accessible courses in programming, artificial intelligence, and more, from any device, with in-person workshops and mentoring programs. Join our community and transform your future with the power of education.",
+        "welcome_message": "Welcome to BrightMind! We are an educational platform dedicated to providing quality learning for everyone. We offer a wide variety of courses in areas such as technology, arts, sciences, social sciences and languages, designed for you to learn from any device and at your own pace.",
         "mission": "our mission",
-        "mission_message": "Our mission is to democratize technological education, providing inclusive and practical access to children, youth, and adults in rural and low-resource areas. At Didáctica, we empower individuals with digital skills for their personal and professional development.",
+        "mission_message": "Our mission is to provide advanced technological tools that enable hands-on learning tailored to the needs of students. At BrightMind, we work to provide effective educational resources that integrate technology, enabling children, youth and adults to develop key skills for personal and professional growth.",
         "experience_y": "Year",
         "experience": "Experience",
         "total": "Total",
@@ -155,24 +158,27 @@
         "quality": "Quality information",
         "quality_message": "High-quality courses created by experts, with practical and relevant content.",
         "online": "Online course",
-        "online_message": "Learn from anywhere and any device, with offline study options.",
-        "certificate": "Certificate course",
-        "certificate_message": "Receive a certificate upon completing each course to showcase your skills.",
+        "online_message": "Learn from any place and device, stay updated in real time.",
+        "certificate": "Certificate of Learning",
+        "certificate_message": "Receive a learning certificate upon completion of each course to highlight your skills.",
         "diversity": "Diversity of courses",
-        "diversity_message": "We offer courses in areas such as programming and artificial intelligence for all levels.",
+        "diversity_message": "We offer courses in areas such as programming and artificial intelligence for different levels.",
         "go_courses": "Go to courses",
-        "feature": "Our Featured Course at ",
-        "js": "JS Courses",
-        "php": "PHP Courses",
-        "music": "Music Courses",
+        "feature": "Our courses of ",
+        "Cience": "Science Courses",
+        "CienceSocial": "Social Science Courses",
+        "Tecnologia": "Technology Courses",
         "art": "Art Courses",
         "exercise": "Exercise Courses",
         "cooking": "Cooking Courses",
         "sport": "Sport Courses",
         "ecology": "Ecology Courses",
-        "testimonial": "Our Testimonial at ",
+        "testimonial": "brightmind ",
         "partners": "Partners",
-        "partners_message": "This company is characterized by its effort and dedication, contributing a lot to society."
+        "partners_message": "This company is characterized by its effort and dedication, contributing a lot to society.",
+        "noDescription": "The creator of the course does not have a description yet.",
+        "noSpecialties": "The creator has not yet added specialties.",
+        "brightmind": "Testimonials"
 
     },
     "settingsBar": {
@@ -229,7 +235,8 @@
         "configProfile": "Configure Profile",
         "forum": "Forum",
         "theme": "Theme",
-        "view_profile": "View my profile"
+        "view_profile": "View my profile",
+        "change_password": "Change Password"
     },
     "newPasswordUser": {
         "change_password": "Change Password",
@@ -266,16 +273,16 @@
         "no_courses_available": "Coming soon",
         "check_back_later": "There are no courses available at the moment. New courses will be available soon! Please check back later.",
         "no_courses_enrolled": "You are not enrolled in any courses yet.",
-        "modalA": "¡Success!",
-        "modalM": "You have successfully registered",
+        "modalA": "¡Request successfully submitted!",
+        "modalM": "You have requested access to this course, you must wait for confirmation to view the content.",
          "title": "Courses",
          "favorites": "Your favorites",
          "desFavorites": "Here will be shown your favorite courses.",
          "with": "With",
          "hours": "hours",
          "sections": "sections",
-         "registerM": "RESGISTER!",
-         "registering": "Registering...",
+         "registerM": "Request Access!",
+         "registering": "Application Pending...",
          "yaregister": "ALREADY REGISTERED!", 
          "progressbarra": "Progress:"
 
@@ -333,7 +340,14 @@
         "Activate": "Activate",
         "Desactivate": "Desactivate",
         "Active": "Active",
-        "Inactive": "Inactive"
+        "Inactive": "Inactive",
+        "Username": "Username",
+        "Pending": "There are no pending users to accept in this course.",
+        "NoRegister": "There are no registered users in this course.",
+        "DataError": "Error: user data not available.",
+        "titleModal": "Registered Users",
+        "titleActivate": "Registered Users",
+        "titleInactive": "Applications for Admission"
     },
     "userDetails": {
         "title": "User Details",
@@ -360,6 +374,8 @@
         "inactive": "Inactive",
         "cancel": "Cancel",
         "update": "Update",
+        "userExists": "A user with this username or email already exists",
+        "documentNumberExists": "A user with this document number already exists",
         "userUpdatedSuccess": "User updated successfully",
         "usernameRequired": "Please enter a username",
         "emailRequired": "Please enter an email",
@@ -381,7 +397,8 @@
         "cancel": "Cancel",
         "create": "Create",
         "userCreatedSuccess": "User created successfully",
-        "userExists": "A user with this username, email or document number already exists",
+        "userExists": "A user with this username or email already exists",
+        "documentNumberExists": "A user with this document number already exists",
         "usernameRequired": "Please enter a username",
         "firstNamesRequired": "Please enter the first names",
         "lastNamesRequired": "Please enter the last names",
@@ -655,16 +672,16 @@
     "footer": {
         "text": "Discover a world full of opportunities and learn at your own pace. With our flexible courses, you can improve your skills practically and effectively, adapting learning to your needs and available time.",
         "title": "Learn with Bright",
-        "developed": "Developed at Disruptive",
-        "copy": "© 2024 Mesadoko - BrightMind. All rights reserved.",
+        "developed": "Mesadoko",
+        "copy": "© 2024 - BrightMind. All rights reserved.",
         "options": "Explore our world",
         "courses": "Available courses",
         "blog": "Informative blog",
         "yourCourses": "Your courses",
         "events": "Events",
         "Contact": "Contact us",
-        "description": "Mesadoko © developed by Disruptive IT",
-        "copy_right": "Copyright 2024"
+        "description": "© 2024 Mesadoko - BrightMind.",
+        "copy_right": "Developed by Disruptive IT"
     },
     "UpdateResource": {
        "ValidateTitle": "The title must be at least 3 characters long.",
@@ -720,7 +737,12 @@
         "ButtonCreate": "Create Resource",
         "MaxOptionsAlert": "Options Limit",
         "MaxOptionsText": "You have reached the maximum number of options.",
-        "PleaseSelectFileOrQuiz": "Please upload a file or create a quiz."
+        "PleaseSelectFileOrQuiz": "Please upload a file or create a quiz.",
+        "reorderSuccess": "Order updated successfully",
+        "reorderError": "Error updating order",
+        "cantMoveResource": "Cannot move resource",
+        "resourceMoveError": "You cannot move a resource to another section, please edit the resource and move it to another section to change it.",
+        "ScorePercing": "Passing score"
     },
     "course_user": {
         "courseImageAlt": "Course Image",
@@ -905,7 +927,10 @@
         "cancel": "Cancel",
         "validateTitle": "Minimum characters for the title is 3",
         "validateDescription": "Minimum characters for the description is 30",
-        "validateContent": "Minimum characters for the content is 8"
+        "validateContent": "Minimum characters for the content is 8",
+        "title": "Title Of The Topic: ",
+        "description": "Brief Description:",
+        "content": "Content:"
     },
     "updateTopic": {
         "updateAlert": "Topic successfully updated",
@@ -1131,5 +1156,19 @@
             "selectChat": "Select a chat to start interacting",
             "typeMessage": "Write a message",
             "searchPeople": "Search for people..."       
+        },
+    "notifications": {
+        "delete": "Delete",
+        "empty": "No notifications",
+        "mark_all_read": "Mark all as read",
+        "new_course": "New course available",
+        "course_update": "Course update",
+        "view_all": "Show all",
+        "all_notifications": "All notifications",
+        "back": "Back",
+        "filter_all": "All notifications",
+        "filter_courses": "Courses notifications",
+        "filter_forums": "Forums notifications",
+        "filter_resources": "Resources notifications"
     }
 }

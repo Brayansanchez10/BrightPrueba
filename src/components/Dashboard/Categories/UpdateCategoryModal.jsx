@@ -12,14 +12,13 @@ const UpdateCategoryModal = ({
 }) => {
   const { t } = useTranslation("global");
 
-
   const validateFields = (values) => {
     const errors = {};
     if (!values.name) {
       errors.name = t('updateCategoryModal.namePlaceholder'); 
     } else if (values.name.length < 3) {
       errors.name = t('updateCategoryModal.nameShort');
-    } else if (values.name.length > 20) {
+    } else if (values.name.length > 30) {
       errors.name = t('updateCategoryModal.nameLong');
     }
 
@@ -48,7 +47,7 @@ const UpdateCategoryModal = ({
 
   return (
     <Modal
-      className="custom-modal w-[544px] h-[495px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden"
+      className="custom-modal w-[544px] h-auto sm:h-[495px] rounded-3xl bg-white flex flex-col justify-between overflow-hidden"
       visible={visible}
       closable={false}
       style={{ top: '10%' }}
@@ -83,21 +82,19 @@ const UpdateCategoryModal = ({
           className="text-lg font-bold text-black mb-2"
           name="name"
           label={t('updateCategoryModal.nameLabel')}
-          rules={[{ required: true, message: t('updateCategoryModal.namePlaceholder') }]}
-        >
-          <Input maxLength={20} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
+          rules={[{ required: true, message: t('updateCategoryModal.namePlaceholder') }]}>
+          <Input maxLength={30} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
 
         <Form.Item
           className="text-lg font-bold text-black mb-2"
           name="description"
           label={t('updateCategoryModal.descriptionLabel')}
-          rules={[{ required: true, message: t('updateCategoryModal.descriptionPlaceholder') }]}
-        >
+          rules={[{ required: true, message: t('updateCategoryModal.descriptionPlaceholder') }]}>
           <Input.TextArea rows={3} maxLength={100} className="w-full h-[34px] rounded-xl bg-white shadow-md px-3" />
         </Form.Item>
 
-        <div className="flex justify-center space-x-4 mt-6">
+        <div className="flex justify-center space-x-4 mt-6 sm:mt-8">
           <button
             type="submit"
             className="bg-[#350b48] hover:bg-[#2d0a3d] text-white font-semibold px-4 py-2 rounded-lg"

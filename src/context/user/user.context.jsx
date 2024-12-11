@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
-import { getAllUsers, ActivateAcc, toggleState, getUser, updateUser as updateUserApi, deleteUser as deleteUserApi, deleteUserConfirmation as deleteUserConfirmationApi, createUser as createUserApi, registerToCourse as registerToCourseApi, getUserCourses as getUserCoursesApi, changePassword as changePasswordApi, getUsersByCourse as getUsersByCourseApi } from '../../api/user/user.request';
+import { getAllUsers, ActivateAcc, toggleState, getUser, updateUser as updateUserApi, deleteUser as deleteUserApi, deleteUserConfirmation as deleteUserConfirmationApi, createUser as createUserApi, registerToCourse as registerToCourseApi, getUserCourses as getUserCoursesApi, changePassword as changePasswordApi, getUsersByCourse as getUsersByCourseApi, getPendingUsersByCourse as getPendingUsersByCourseApi, updateUserCourseState, getRegisterUserCourse as getRegisterUserCourseApi} from '../../api/user/user.request';
 import { useAuth } from '../auth.context'; // Importa el contexto de autenticación
 import NewPassword from '../../components/Home/ChangePasswordUser';
 
@@ -26,9 +26,19 @@ export const UserProvider = ({ children }) => {
         }
     };
 
-    const checkIfUserExists = (username, email) => {
-        return usersData.some(user => user.username === username || user.email === email);
+    const checkIfUserExists = (username, email, userId) => {
+        return usersData.some(
+            user => (user.username === username || user.email === email) &&
+            user.id !== userId // Ignorar al usuario actual
+        );
     };
+      
+    const checkIfDocumentExists = (documentNumber, userId) => {
+        return usersData.some(
+            user => user.documentNumber === documentNumber &&
+            user.id !== userId // Ignorar al usuario actual
+        );
+    };      
 
     const activateAccount = async (_id) => {
         try {
@@ -44,7 +54,15 @@ export const UserProvider = ({ children }) => {
             await toggleState(userId);
             getUsers();
         } catch (error) {
-            
+            console.error(error); 
+        }
+    }
+
+    const buttonStateActivate = async(userId, courseId) => {
+        try {
+            await updateUserCourseState(userId, courseId);
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -79,7 +97,7 @@ export const UserProvider = ({ children }) => {
         }
     };
 
-    const updateUserPartial = async (_id, { username, firstNames, lastNames, documentNumber, email, userImage, entityId, descripcion, especialidades }) => {
+    const updateUserPartial = async (_id, { username, firstNames, lastNames, documentNumber, email, userImage, entityId, description, specialties }) => {
         try {
             const { data: currentUserData } = await getUser(_id);
     
@@ -93,8 +111,8 @@ export const UserProvider = ({ children }) => {
                 role: currentUserData.role,
                 userImage: userImage !== undefined ? userImage : currentUserData.userImage,
                 entityId: entityId || currentUserData.entityId,
-                descripcion: descripcion || currentUserData.descripcion, 
-                especialidades: especialidades || currentUserData.especialidades,
+                description: description || currentUserData.description, 
+                specialties: specialties || currentUserData.specialties,
             };
     
             const formData = new FormData();
@@ -155,7 +173,7 @@ export const UserProvider = ({ children }) => {
         }
     };
 
-    // Nueva función para obtener los usuarios registrados en un Curso
+    // Nueva función para obtener los usuarios registrados en un Curso con el estado en True
     const getUsersByCourse = async (courseId) => {
         try {
             const res = await getUsersByCourseApi(courseId);
@@ -163,6 +181,30 @@ export const UserProvider = ({ children }) => {
             return res.data;
         } catch (error) {
             console.error('Error al obteneer el curso', error);
+            return null;
+        }
+    };
+
+    // Nueva función para obtener los usuarios registrados en un Curso con el estado en False
+    const getPendingUsersByCourse = async (courseId) => {
+        try {
+            const res = await getPendingUsersByCourseApi(courseId);
+            console.log('Curso Obtenido', res.data);
+            return res.data;
+        } catch (error) {
+            console.error('Error al obteneer el curso', error);
+            return null;
+        }
+    };
+
+    //Nueva funcion para consultar el estado del curso del usuario
+    const getRegisterUserCourse = async (userId, courseId) =>{
+        try {
+            const res= await getRegisterUserCourseApi(userId, courseId);
+            console.log('El estado del curso', res.data);
+            return res.data;
+        } catch (error) {
+            console.error('Error al obtener el estado', error);
             return null;
         }
     };
@@ -179,6 +221,7 @@ export const UserProvider = ({ children }) => {
                 usersData,
                 getUsers,
                 checkIfUserExists,
+                checkIfDocumentExists,
                 activateAccount,
                 getUserById,
                 updateUser,
@@ -191,6 +234,9 @@ export const UserProvider = ({ children }) => {
                 changePassword,
                 getUsersByCourse,
                 buttonActivate,
+                getPendingUsersByCourse,
+                buttonStateActivate,
+                getRegisterUserCourse
             }}
         >
             {children}

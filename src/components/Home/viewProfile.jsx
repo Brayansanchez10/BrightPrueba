@@ -8,6 +8,7 @@ import { useFavorite } from "../../context/courses/favorites.context";
 import { useCourseProgressContext } from "../../context/courses/progress.context";
 import { FaUser, FaEnvelope, FaGraduationCap, FaHeart, FaMapMarkerAlt, FaCalendar } from 'react-icons/fa';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import NavigationBar from "../../components/Home/NavigationBar";
 import Footer from "../footer";
 import Modal from "./Cards/Modal";
@@ -52,6 +53,9 @@ export default function ViewProfile() {
   const sliderRef = useRef(null);
   const completedSliderRef = useRef(null);
 
+  const handleResize = useCallback(() => {
+    setWindowWidth(window.innerWidth);
+  }, []);
   const handleResize = useCallback(() => {
     setWindowWidth(window.innerWidth);
   }, []);
@@ -107,7 +111,7 @@ export default function ViewProfile() {
     } finally {
       setLoading(false);
     }
-  }, [id, authUser, getUserById, getUserCourses, getCourseProgress]);
+  }, [id, authUser, getUserById]);
 
   useEffect(() => {
     fetchUserData();
@@ -147,9 +151,32 @@ export default function ViewProfile() {
     infinite: false,
     speed: 500,
     slidesToShow: 4,
+    slidesToShow: 4,
     slidesToScroll: 1,
     arrows: false,
     beforeChange: (_, newIndex) => setCurrentSlide(newIndex + 1),
+    responsive: [
+      {
+        breakpoint: 1280,
+        settings: {
+          slidesToShow: 3,
+        }
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        }
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+          centerMode: true,
+          centerPadding: '40px',
+        }
+      }
+    ]
     responsive: [
       {
         breakpoint: 1280,
@@ -186,17 +213,23 @@ export default function ViewProfile() {
 
   const maxSlide = Math.ceil(courses.length / (windowWidth >= 1280 ? 4 : windowWidth >= 1024 ? 3 : windowWidth >= 640 ? 2 : 1));
   const maxCompletedSlide = Math.ceil(completedCourses.length / (windowWidth >= 1280 ? 4 : windowWidth >= 1024 ? 3 : windowWidth >= 640 ? 2 : 1));
+  const maxSlide = Math.ceil(courses.length / (windowWidth >= 1280 ? 4 : windowWidth >= 1024 ? 3 : windowWidth >= 640 ? 2 : 1));
+  const maxCompletedSlide = Math.ceil(completedCourses.length / (windowWidth >= 1280 ? 4 : windowWidth >= 1024 ? 3 : windowWidth >= 640 ? 2 : 1));
 
   const renderCourseCards = (courseList, sliderRef, currentSlide, maxSlide, handlePrev, handleNext) => (
     <div className="relative overflow-hidden">
       <Slider ref={sliderRef} {...sliderSettings} className="mx-auto">
+      <Slider ref={sliderRef} {...sliderSettings} className="mx-auto">
         {courseList.map((course) => (
           <div key={course.id} className="px-2 sm:px-3 md:px-4">
+          <div key={course.id} className="px-2 sm:px-3 md:px-4">
             <div
+              className="cursor-pointer rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 mb-4 mx-auto bg-white"
               className="cursor-pointer rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 mb-4 mx-auto bg-white"
               onClick={() => handleCardClick(course)}
               style={{
                 width: "100%",
+                maxWidth: "280px",
                 maxWidth: "280px",
                 height: "220px",
               }}
@@ -205,6 +238,8 @@ export default function ViewProfile() {
                 className="relative"
                 style={{
                   overflow: "hidden",
+                  borderTopLeftRadius: "0.5rem",
+                  borderTopRightRadius: "0.5rem",
                   borderTopLeftRadius: "0.5rem",
                   borderTopRightRadius: "0.5rem",
                   height: "175px",
@@ -220,6 +255,7 @@ export default function ViewProfile() {
                 <h3 className="text-primary font-bold text-sm truncate flex-1 mr-2">{course.title}</h3>
                 <FaHeart
                   className={`cursor-pointer flex-shrink-0 ${favorites.some(fav => fav.courseId === course.id) ? "text-red-500" : "text-gray-500"} transition-colors duration-300`}
+                  className={`cursor-pointer flex-shrink-0 ${favorites.some(fav => fav.courseId === course.id) ? "text-red-500" : "text-gray-500"} transition-colors duration-300`}
                   onClick={(e) => handleFavoriteToggle(course.id, e)}
                   style={{ fontSize: "16px" }}
                 />
@@ -230,8 +266,10 @@ export default function ViewProfile() {
       </Slider>
       {courseList.length > sliderSettings.slidesToShow && (
         <div className="flex justify-center items-center mt-4 text-[#CFCFCF]">
+        <div className="flex justify-center items-center mt-4 text-[#CFCFCF]">
           <button
             onClick={handlePrev}
+            className={`flex items-center mr-2 font-bold ${
             className={`flex items-center mr-2 font-bold ${
               currentSlide <= 1
                 ? "opacity-50 cursor-not-allowed"
@@ -252,9 +290,20 @@ export default function ViewProfile() {
             <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
               <span className="text-white font-bold">{maxSlide}</span>
             </div>
+          <div className="flex items-center mx-2">
+            <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
+              <span className="text-white font-bold">
+                {currentSlide}
+              </span>
+            </div>
+            <span className="mx-2 text-[#B99CEA]">de</span>
+            <div className="bg-[#B99CEA] w-6 h-6 flex items-center justify-center rounded">
+              <span className="text-white font-bold">{maxSlide}</span>
+            </div>
           </div>
           <button
             onClick={handleNext}
+            className={`flex items-center ml-2 font-bold ${
             className={`flex items-center ml-2 font-bold ${
               currentSlide >= maxSlide
                 ? "opacity-50 cursor-not-allowed"
@@ -293,6 +342,7 @@ export default function ViewProfile() {
             <div className="container mx-auto px-4">
               <div className="flex flex-col items-center">
                 <div className="flex flex-col md:flex-row items-center md:items-start justify-center w-full mb-6 space-y-6 md:space-y-0 md:space-x-8">
+                  <div className="relative md:mt-6">
                   <div className="relative md:mt-6">
                     <div className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center border-4 border-white shadow-lg">
                       {user.userImage ? (
@@ -342,7 +392,7 @@ export default function ViewProfile() {
           className="mt-8"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">{t('viewProfile.registration')}</h2>
+          <h2 className="text-2xl dark:text-secondary font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">{t('viewProfile.registration')}</h2>
           <div className="max-w-7xl mx-auto">
             {courses.length > 0 ? 
               renderCourseCards(courses, sliderRef, currentSlide, maxSlide, handlePrev, handleNext)
@@ -356,7 +406,7 @@ export default function ViewProfile() {
           className="mt-16"
           variants={fadeInFromLeft}
         >
-          <h2 className="text-2xl font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">{t('viewProfile.complete')}</h2>
+          <h2 className="text-2xl dark:text-secondary font-roboto text-[#303956] mb-6 font-bold text-center sm:text-left">{t('viewProfile.complete')}</h2>
           <div className="max-w-7xl mx-auto">
             {completedCourses.length > 0 ?
               renderCourseCards(completedCourses, completedSliderRef, currentCompletedSlide, maxCompletedSlide, handleCompletedPrev, handleCompletedNext)

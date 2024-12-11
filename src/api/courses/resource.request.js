@@ -16,7 +16,7 @@ export const getResourceWithQuizzes = (id) => axios.get(`/resource/getResourceWi
 export const getUserResourceProgress = (userId, resourceId) => axios.get(`/resource/user/${userId}/resource/${resourceId}/progress`);
 
 // Nueva función para eliminar un progreso de un usuario de un quiz.
-export const deleteResourceProgress = (userId, resourceId) => axios.delete(`/resource/user/${userId}/resource/${resourceId}/progress`);
+export const deleteResourceProgress = async (userId, resourceId) => axios.delete(`/resource/user/${userId}/resource/${resourceId}/progress`);
 
 // Función para crear un recurso
 export const createResource = async (resourceData) => {
@@ -27,6 +27,7 @@ export const createResource = async (resourceData) => {
         if (resourceData.subcategoryId) formData.append('subcategoryId', resourceData.subcategoryId);
         if (resourceData.description) formData.append('description', resourceData.description);
         if (resourceData.attempts) formData.append('attempts', resourceData.attempts);
+        if (resourceData.percent) formData.append('percent', resourceData.percent);
         if (resourceData.file) formData.append('file', resourceData.file);
         if (resourceData.link) formData.append('link', resourceData.link);
 
@@ -60,6 +61,7 @@ export const updateResource = async (id, resourceData) => {
         if (resourceData.subcategoryId) formData.append('subcategoryId', resourceData.subcategoryId);
         if (resourceData.description) formData.append('description', resourceData.description);
         if (resourceData.attempts) formData.append('attempts', Number(resourceData.attempts));
+        if (resourceData.percent) formData.append('percent', resourceData.percent);
         if (resourceData.file) formData.append('file', resourceData.file);
         if (resourceData.link) formData.append('link', resourceData.link);
 
@@ -103,3 +105,14 @@ export const completeQuiz = async (userId, resourceId, score) => {
     }
 };
 
+export const updateResourceOrder = async (data) => {
+  try {
+    return await axios.put('/resource/updateResourceOrder', data);
+  } catch (error) {
+    console.error('Error al actualizar el orden de los recursos:', error);
+    throw error;
+  }
+};
+
+// Función para obtener un recurso especifico de un curso
+export const getResourceById = (courseId, resourceId) => axios.get(`/resource/courses/${courseId}/resources/${resourceId}`);

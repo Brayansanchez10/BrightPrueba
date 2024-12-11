@@ -15,9 +15,11 @@ import NavigationBar from "../NavigationBar";
 import {updateComment, deleteComment,} from "../../../api/courses/comment.request";
 import {FiMenu,FiX,FiChevronLeft,FiChevronRight,FiSend,FiMoreVertical,FiEdit,FiTrash2,FiCheckCircle,FiPlus,FiEdit2,FiDownload,FiLock} from "react-icons/fi";
 import {FaCheckCircle,FaTimesCircle,FaQuestionCircle,FaStar,FaComment,FaUser,} from "react-icons/fa";
-import zorro from "../../../assets/img/Zorro.jpeg";
-import derechaabajo from "../../../assets/img/DerechaAbajo.jpeg";
-import izquierdaarriba from "../../../assets/img/IzquierdaArriba.jpeg";
+import zorro from '../../../assets/img/Insigniaa.png';
+import derechaabajo from '../../../assets/img/DerechaAbajo.png';
+import izquierdaarriba from '../../../assets/img/IzquierdaArriba.png';
+import estructura from '../../../assets/img/LineaEstructura.png';
+
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
 import { completeQuiz } from "../../../api/courses/resource.request";
@@ -43,6 +45,7 @@ export default function ResourceView() {
   const [currentProgress, setCurrentProgress] = useState(0);
   const { getUserById } = useUserContext();
   const [username, setUsername] = useState("");
+  const [userInfo, setUserInfo] = useState("");
   const { id, courseId } = useParams();
   const [resource, setResource] = useState(null);
   const [resources, setResources] = useState([]);
@@ -77,7 +80,7 @@ export default function ResourceView() {
   const [userExistingRating, setUserExistingRating] = useState(null);
   const [creator, setCreator] = useState(null);
   const { getCourse } = useCoursesContext();
-  const { getResourceUser, getResource, getUserResourceProgress } = useResourceContext();
+  const { getResourceUser, getResource, getUserResourceProgress, loadResource, currentResource } = useResourceContext();
   const { getCourseProgress, updateCourseProgress } = useCourseProgressContext();
   const {comments,fetchCommentsByResource,addComment,editComment,removeComment,} = useCommentContext();
   const {ratings,fetchRatingsByResource, addRating,  editRating,  removeRating,} = useRatingsContext();
@@ -182,6 +185,7 @@ export default function ResourceView() {
         try {
           const userData = await getUserById(user.data.id);
           setUsername(userData.username);
+          setUserInfo(userData);
         } catch (error) {
           console.error("Error al obtener datos del usuario:", error);
           setError("Error al obtener datos del usuario.");
@@ -269,7 +273,9 @@ export default function ResourceView() {
       url.includes("youtube.com/watch") ||
       url.includes("youtu.be/") ||
       url.includes("vimeo.com/") ||
-      url.includes("drive.google.com/")
+      url.includes("drive.google.com/") ||
+      url.includes("1drv.ms/") || // OneDrive short links
+      url.includes("onedrive.live.com/") // OneDrive full links
     );
   };
 
@@ -292,6 +298,17 @@ export default function ResourceView() {
       return videoId
         ? `https://drive.google.com/file/d/${videoId}/preview`
         : "";
+    } else if (url.includes("1drv.ms/") || url.includes("onedrive.live.com/")) {
+      if (url.includes("1drv.ms/")) {
+        // Convert OneDrive short link to embed link and disable download
+        return url.replace("/?", "/embed?").concat("&wdAllowInteractivity=False");
+      } else if (url.includes("onedrive.live.com/")) {
+        // Force embed view for OneDrive full links and disable download
+        const embedUrl = new URL(url);
+        embedUrl.searchParams.set("action", "embedview");
+        embedUrl.searchParams.set("wdAllowInteractivity", "False");
+        return embedUrl.href;
+      }
     }
     return "";
   };
@@ -316,7 +333,7 @@ export default function ResourceView() {
         return (
           <div className="relative w-full" style={{ paddingBottom: "45%" }}>
             <div 
-              className="absolute top-0 right-0 w-[70px] h-[70px] z-10"
+              className="absolute top-0 right-0 w-[100%] h-[70px] z-10"
             />
             <iframe
               ref={videoRef}
@@ -466,6 +483,15 @@ export default function ResourceView() {
             </span>
           </div>
         )}
+
+        <div className="flex flex-col items-center p-4 bg-blue-50 rounded-xl"> 
+            <span className="text-lg sm:text-xl font-medium text-green-700">
+              {t("CreateResource.ScorePercing")}:
+            </span>
+            <span className="text-2xl sm:text-3xl font-bold text-green-900">
+              {resource.percent}
+            </span> 
+        </div>
 
         {attempts < resource?.attempts ? (
           <button
@@ -619,6 +645,15 @@ export default function ResourceView() {
           </div>
         )}
 
+        <div className="flex flex-col items-center p-4 bg-blue-50 rounded-xl"> 
+            <span className="text-lg sm:text-xl font-medium text-green-700">
+              {t("CreateResource.ScorePercing")}:
+            </span>
+            <span className="text-2xl sm:text-3xl font-bold text-green-900">
+              {resource.percent}
+            </span> 
+        </div>
+
         {attempts < resource?.attempts ? (
           <button
             onClick={handleRetakeQuiz}
@@ -666,7 +701,8 @@ export default function ResourceView() {
     if (currentResourceIndex < resources.length - 1) {
       const nextResource = resources[currentResourceIndex + 1];
       const percentagePerResource = 100 / resources.length;
-      const newProgress = (currentResourceIndex + 1) * percentagePerResource;
+      const newProgress = Math.floor((currentResourceIndex + 1) * percentagePerResource);
+      
       if (newProgress > currentProgress && currentProgress < 100) {
         await updateCourseProgress(user.data.id, courseId, newProgress);
         setCurrentProgress(newProgress);
@@ -679,7 +715,7 @@ export default function ResourceView() {
   // Funciones para la descarga de PDF
   const handleFinishCourse = async () => {
     await updateCourseProgress(user.data.id, courseId, 100);
-    generatePremiumCertificatePDF(username,course.title,zorro,derechaabajo,izquierdaarriba
+    generatePremiumCertificatePDF(username, course.title, zorro, derechaabajo, izquierdaarriba, userInfo.documentNumber, estructura
     );
     navigate(`/course/${courseId}`);
   };
@@ -693,10 +729,29 @@ export default function ResourceView() {
     setIsOpen(!isOpen);
   };
 
-  const handleResourceClick = (resourceId, courseId) => {
-    console.log("Course ID: ", courseId);
-    console.log("Resource ID: ", resourceId);
-    window.location.href = `/course/${courseId}/resource/${resourceId}`;
+  const handleResourceClick = async (resourceId) => {
+    try {
+      // Cargar el recurso sin cambiar de página
+      const resourceData = await loadResource(resourceId);
+      setResource(resourceData);
+
+      setUserRating(0);
+      setRatingComment('');
+      setUserExistingRating(null);
+      
+      // Actualizar la URL sin recargar la página
+      navigate(`/course/${courseId}/resource/${resourceId}`, { replace: true });
+      
+      // Resetear estados necesarios para quizzes si es necesario
+      if (resourceData?.quizzes && resourceData.quizzes.length > 0) {
+        setCurrentQuestionIndex(0);
+        setAnswers({});
+        setIsQuizCompleted(false);
+        setIsQuizStarted(false);
+      }
+    } catch (error) {
+      console.error('Error al cargar el recurso:', error);
+    }
   };
   
   const renderResourceList = () => {
@@ -708,7 +763,9 @@ export default function ResourceView() {
       const isUnlocked = currentProgress >= requiredProgress;
       const currentResource = resources[currentResourceIndex];
       const isCurrentResourceQuiz = currentResource?.quizzes && currentResource.quizzes.length > 0;
-      const canAdvance = !isCurrentResourceQuiz || isQuizCompleted || attempts > 0;
+      
+      // Lógica para permitir acceso a recursos anteriores
+      const canAdvance = index <= currentResourceIndex || (!isCurrentResourceQuiz || isQuizCompleted || attempts > 0);
 
       return (
         <div
@@ -716,7 +773,7 @@ export default function ResourceView() {
           className={`flex items-start mb-6 cursor-pointer ${
             isOpen ? "pr-4" : "justify-center"
           }`}
-          onClick={() => isUnlocked && canAdvance && handleResourceClick(res.id, res.courseId)}
+          onClick={() => isUnlocked && canAdvance && handleResourceClick(res.id)}
         >
           <div className="relative mr-2.5">
             <div
@@ -724,19 +781,19 @@ export default function ResourceView() {
                 flex items-center justify-center
                 w-10 h-10 rounded-full 
                 ${
-                  isUnlocked && canAdvance
+                  isUnlocked && (index <= currentResourceIndex || canAdvance)
                     ? "bg-white text-[#6D4F9E]"
                     : "bg-gray-500 text-gray-300 cursor-not-allowed"
                 }
                 text-sm font-bold
               `}
             >
-              {isUnlocked && canAdvance ? index + 1 : <FiLock />}
+              {isUnlocked && (index <= currentResourceIndex || canAdvance) ? index + 1 : <FiLock />}
             </div>
             {index < resources.length - 1 && (
               <div
                 className={`absolute left-[19px] top-8 w-0.5 h-10 ${
-                  isUnlocked && canAdvance ? "bg-white" : "bg-gray-500"
+                  isUnlocked && (index <= currentResourceIndex || canAdvance) ? "bg-white" : "bg-gray-500"
                 }`}
               />
             )}
@@ -744,7 +801,7 @@ export default function ResourceView() {
           {isOpen && (
             <span
               className={`mt-2 text-xs ${
-                isUnlocked && canAdvance ? "text-white font-bold" : "text-gray-500"
+                isUnlocked && (index <= currentResourceIndex || canAdvance) ? "text-white font-bold" : "text-gray-500"
               }`}
             >
               {res.title}

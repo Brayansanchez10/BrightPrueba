@@ -15,7 +15,7 @@ import Footer from "../../footer";
 export default function UserCourses() {
   const { t } = useTranslation("global");
   const { user } = useAuth();
-  const { getUserCourses } = useUserContext();
+  const { getUserCourses, getUsersByCourse } = useUserContext();
   const { getCourseProgress, deleteCourseProgress } = useCourseProgressContext();
   const { unregisterFromCourse } = useCoursesContext();
   const [userCourses, setUserCourses] = useState([]);
@@ -216,7 +216,7 @@ export default function UserCourses() {
                         </div>
                         <button
                           onClick={(e) => handleUnregister(e, course)}
-                          className="bg-[#B209EB] text-white rounded-full p-2 hover:bg-[#9908c9] transition-colors z-10"
+                          className="bg-[#B209EB] text-white rounded-full p-2 hover:bg-[#9908c9] transition-colors"
                           aria-label={t("coursesComponent.unregister")}
                         >
                           <FaTimes />

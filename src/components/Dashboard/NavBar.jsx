@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { FaBars, FaEdit, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
+import { FaBars, FaEdit, FaSave, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import { useUserContext } from "../../context/user/user.context.jsx";
 import { useAuth } from "../../context/auth.context.jsx";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import LeftBar from "./LeftBar";
 import { useTranslation } from "react-i18next";
 import Logo from "../../assets/img/hola.png";
 import ThemeToggle from '../themes/ThemeToggle.jsx';
+import NotificationBell from "../Notifications/NotificationBell.jsx";
 
 const Navbar = () => {
   const { t } = useTranslation("global");
@@ -102,6 +103,7 @@ const Navbar = () => {
 
           {/* Imagen y nombre de usuario solo en pantallas más grandes */}
           <div className="hidden sm:flex items-center font-bungee ml-auto mr-4 relative tracking-wide">
+            <NotificationBell />
             <span className="text-white text-lg mr-4">{username}<ThemeToggle /></span>
             <div className="relative">
               {userImage ? (
@@ -128,6 +130,12 @@ const Navbar = () => {
                       <FaEdit size="20px" className="mr-2" />
                       <Link to="/ProfileEditor">
                         {t("navigationBar.configure_profile")}
+                      </Link>
+                    </li>
+                    <li className="flex px-4 py-3 hover:bg-gray-600 cursor-pointer text-white rounded">
+                      <FaSave size="20px" className="mr-2" />
+                      <Link to="/ChangePassword">
+                        {t("navigationBar.change_password")}
                       </Link>
                     </li>
                     <li

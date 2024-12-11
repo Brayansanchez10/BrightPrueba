@@ -10,7 +10,8 @@ import {
   FaBook,
   FaGraduationCap,
   FaComments,
-  FaEnvelope
+  FaEnvelope,
+  FaSave
 } from "react-icons/fa";
 import Logo from "../../assets/img/hola.png";
 import { useAuth } from "../../context/auth.context";
@@ -23,6 +24,7 @@ import fondoMiscursos from "../../assets/img/fondo_miscursos.png";
 import fondoForo from "../../assets/img/fondo_cursos.png";
 import ThemeToggle from '../themes/ThemeToggle';
 import { useForumCategories } from "../../context/forum/forumCategories.context";
+import NotificationBell from "../Notifications/NotificationBell";
 
 export default function NavigationBar() {
   const { t } = useTranslation("global");
@@ -223,6 +225,7 @@ export default function NavigationBar() {
           )}
         </div>
         <div className="hidden lg:flex items-center">
+          <NotificationBell />
           <div className="flex flex-col items-end mr-4">
             <div className="relative text-white text-lg font-bold cursor-pointer max-w-[200px] truncate">
               {username}
@@ -269,6 +272,13 @@ export default function NavigationBar() {
                 >
                   <FaEnvelope className="mr-2" />
                   Mensajes
+                </Link>
+                <Link
+                  to="/ChangePasswordUser"
+                  className="flex items-center px-4 py-2 text-white hover:text-black hover:bg-gray-200"
+                >
+                  <FaSave className="mr-2" /> 
+                  {t("navigationBar.change_password")}
                 </Link>
                 <div
                   onClick={handleLogout}

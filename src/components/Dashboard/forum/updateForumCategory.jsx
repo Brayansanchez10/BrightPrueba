@@ -34,7 +34,6 @@ const UpdateCategoriesForum = ({ visible, onClose, onUpdate, form, currentCatego
     form.setFieldsValue({ icons: iconName }); // Actualiza el campo del formulario
   };
 
-
     const validateFields = (values) => {
         const errors = {};
         if (!values.name) {
@@ -74,19 +73,19 @@ const UpdateCategoriesForum = ({ visible, onClose, onUpdate, form, currentCatego
     
     return (
         <Modal
-        className="custom-modal w-[544px] h-auto rounded-3xl bg-white"
+        className="custom-modal w-full max-w-lg h-auto rounded-3xl bg-white"
         visible={visible}
         closable={false}
         centered
         footer={null}
         onCancel={onClose}
-        style={{ marginTop: "-8%"}}
+        style={{ marginTop: "3%" }} 
         >
         <div className="relative w-full h-[125px] bg-gradient-to-r from-[#350b48] to-[#905be8] rounded-t-2xl flex items-center justify-center">
             <img 
             src={zorroImage} 
             alt="Imagen de la cabecera"
-            className="w-[189.69px] h-[148px] object-contain mt-8" 
+            className="w-[150px] md:w-[189.69px] h-[148px] object-contain mt-8" 
             />
             <button
             type="button"
