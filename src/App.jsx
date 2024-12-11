@@ -27,6 +27,8 @@ import { AnswersProvider } from "./context/forum/answers.context.jsx";
 import { BookmarkProvider } from "./context/forum/bookmark.context.jsx";
 import { ThemeProvider } from "./components/themes/theme.context.jsx";
 import { EntityProvider } from './context/user/entities.context.jsx';
+import { ChatProvider } from './context/user/chat.context.jsx';
+import { FriendsProvider } from './context/user/friends.context.jsx';
 
 // Pages
 import LoginForm from "./views/LoginForm";
@@ -64,13 +66,14 @@ import ActivationComponent from "./components/Activate";
 import DeleteAccountConfirmation from "./components/Dashboard/ProfileAdmin/eliminatedCode";
 import Entities from "./components/Dashboard/Entities/EntitiesTable.jsx";
 import CertificatePreview from "./components/Home/Courses/CertificatePreview";
+import Chat from "./components/Home/chat.jsx"; 
+import Friends from "./components/Home/friends.jsx";
 
 function App() {
-  const [forumActive, setForumActive] = useState(true); // Activado por defecto
+  const [forumActive, setForumActive] = useState(true); 
 
   useEffect(() => {
     const forumState = localStorage.getItem("forumActive");
-    // Si hay un valor en localStorage, actualizamos el estado; si no, queda en `true`
     setForumActive(forumState === null ? true : forumState === "true");
   }, []);
 
@@ -98,6 +101,8 @@ function App() {
                                           <ForumCommentProvider>
                                             <AnswersProvider>
                                               <EntityProvider> 
+                                                <ChatProvider>
+                                                  <FriendsProvider>
                                                 <Routes>
                                                   <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
                                                     <Route path="/" element={<LoginForm />} />
@@ -128,6 +133,9 @@ function App() {
                                                         )}
                                                     <Route path="/profile/:id" element={<ViewProfile />} />
                                                     <Route path="/prevUser/:id" element={<PrevUser />} />
+                                                    <Route path="/chat" element={<Chat />} /> 
+                                                    <Route path="/chat/:chatId" element={<Chat />} />
+                                                    <Route path="/friends" element={<Friends />} />
                                                   </Route>
 
                                                   <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor']} />}>
@@ -137,7 +145,7 @@ function App() {
                                                     <Route path="/Categories" element={<Categories />} />
                                                     <Route path="/ForumCategories" element={<ForumCategories />} />
                                                     <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
-                                                      <Route path='/Entities' element={<Entities />} />
+                                                    <Route path='/Entities' element={<Entities />} />
                                                     </Route>
                                                     <Route path="/roles" element={<Roles />} />
                                                     <Route path="/ProfileEditor" element={<ProfileEditor />} />
@@ -149,6 +157,8 @@ function App() {
                                                   <Route path="/activate/:id" element={<ActivationComponent />} />
                                                   <Route path="*" element={<Navigate to="/notFound" />} />
                                                 </Routes>
+                                                </FriendsProvider>
+                                                </ChatProvider>
                                               </EntityProvider>
                                             </AnswersProvider>
                                           </ForumCommentProvider>

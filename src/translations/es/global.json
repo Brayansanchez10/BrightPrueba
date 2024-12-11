@@ -742,11 +742,8 @@
         "web": "Desarrollador web",
         "desing": "Diseño UX/UI",
         "programming": "Programacion avanzada",
-        "description1": "es un visionario en su campo, con una habilidad única para transformar ideas en conocimiento práctico.",
-        "description2": "es una autoridad respetada, reconocido por su capacidad de simplificar temas complejos.",
-        "description3": "es un apasionado del aprendizaje continuo, siempre buscando perfeccionar sus habilidades y compartirlas con los demás.",
-        "description4": "es un profesional admirado, con una carrera marcada por logros significativos y un compromiso inquebrantable con la educación.",
-        "description5": "es un líder intelectual, dedicado a influir positivamente en su comunidad a través de la enseñanza."
+        "noDescription": "El creador del curso no tiene descripcion aun.",
+        "noSpecialties": "El creador aun no ha agregado especialidades."
     },
     "certificate": {
         "preview": "Previsualización del certificado",
@@ -1117,5 +1114,11 @@
         "message2": "Esta acción no se puede deshacer.",
         "confirm": "Si, eliminar",
         "cancel": "No, cancelar"
-} 
+    },
+        "chat": {
+            "search": "Buscar...",
+            "selectChat": "Selecciona un chat para empezar a interactuar",
+            "typeMessage": "Escribe un mensaje",
+            "searchPeople": "Busca personas..."
+        }
 }

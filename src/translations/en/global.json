@@ -747,12 +747,8 @@
         "specialties": "Specialties:",
         "web": "Web development",
         "desing": "UX/UI Design",
-        "programming": "Advanced programming",
-        "description1": "is a visionary in their field, with a unique ability to transform ideas into practical knowledge.",
-        "description2": "is a respected authority, recognized for their ability to simplify complex topics.",
-        "description3": "is passionate about continuous learning, always seeking to refine their skills and share them with others.",
-        "description4": "is an admired professional, with a career marked by significant achievements and an unwavering commitment to education.",
-        "description5": "is an intellectual leader, dedicated to positively influencing their community through teaching."
+        "noDescription": "The creator of the course does not have a description yet.",
+        "noSpecialties": "The creator has not yet added specialties."
     },
     "certificate": {
         "preview": "Certificate Preview",
@@ -1129,5 +1125,11 @@
             "message2": "Esta acción no se puede deshacer.",
             "confirm": "Yes, delete",
             "cancel": "No, cancel"
-}
+    },
+       "chat": {
+            "search": "Search...",
+            "selectChat": "Select a chat to start interacting",
+            "typeMessage": "Write a message",
+            "searchPeople": "Search for people..."       
+    }
 }
