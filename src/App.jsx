@@ -67,7 +67,7 @@ import DeleteAccountConfirmation from "./components/Dashboard/ProfileAdmin/elimi
 import Entities from "./components/Dashboard/Entities/EntitiesTable.jsx";
 import CertificatePreview from "./components/Home/Courses/CertificatePreview";
 import Chat from "./components/Home/chat.jsx"; 
-/* import Friends from "./components/Home/friends.jsx"; */
+import Friends from './components/Home/Friends.jsx';
 import AllNotifications from './components/Notifications/AllNotifications.jsx';
 
 function App() {
@@ -136,9 +136,9 @@ function App() {
                                                             )}
                                                         <Route path="/profile/:id" element={<ViewProfile />} />
                                                         <Route path="/prevUser/:id" element={<PrevUser />} />
-                                                    <Route path="/chat" element={<Chat />} /> 
-                                                    <Route path="/chat/:chatId" element={<Chat />} />
-                                                    <Route path="/friends" element={<Friends />} />
+                                                        <Route path="/chat" element={<Chat />} /> 
+                                                        <Route path="/chat/:chatId" element={<Chat />} />
+                                                        <Route path="/friends" element={<Friends />} />
                                                       </Route>
 
                                                       <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor']} />}>
