@@ -10,6 +10,7 @@ import {
   FaBook,
   FaGraduationCap,
   FaComments,
+  FaSave,
 } from "react-icons/fa";
 import Logo from "../../assets/img/hola.png";
 import { useAuth } from "../../context/auth.context";
@@ -257,6 +258,13 @@ export default function NavigationBar() {
                 >
                   <FaUserCog className="mr-2" /> 
                   {t("navigationBar.configProfile")}
+                </Link>
+                <Link
+                  to="/ChangePasswordUser"
+                  className="flex items-center px-4 py-2 text-white hover:text-black hover:bg-gray-200"
+                >
+                  <FaSave className="mr-2" /> 
+                  {t("navigationBar.change_password")}
                 </Link>
                 <div
                   onClick={handleLogout}

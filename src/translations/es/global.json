@@ -228,7 +228,8 @@
         "configProfile": "Configurar perfil",
         "forum": "Foro",
         "theme": "Tema",
-        "view_profile": "Ver mi perfil"
+        "view_profile": "Ver mi perfil",
+        "change_password": "Cambiar Contraseña"
     },
     "newPasswordUser": {
         "change_password": "Cambiar Contraseña",
@@ -365,6 +366,8 @@
         "inactive": "Inactivo",
         "cancel": "Cancelar",
         "update": "Actualizar",
+        "userExists": "Ya existe un usuario con este nombre de usuario o correo electrónico",
+        "documentNumberExists": "Ya existe un usuario con este número de documento",
         "userUpdatedSuccess": "Usuario actualizado exitosamente",
         "usernameRequired": "Por favor ingrese un nombre de usuario",
         "emailRequired": "Por favor ingrese un correo electrónico",
@@ -386,7 +389,8 @@
         "cancel": "Cancelar",
         "create": "Crear",
         "userCreatedSuccess": "Usuario creado exitosamente",
-        "userExists": "Ya existe un usuario con este nombre de usuario, correo electrónico o número de documento",
+        "userExists": "Ya existe un usuario con este nombre de usuario o correo electrónico",
+        "documentNumberExists": "Ya existe un usuario con este número de documento",
         "usernameRequired": "Por favor ingrese un nombre de usuario",
         "firstNamesRequired": "Por favor ingrese los nombres",
         "lastNamesRequired": "Por favor ingrese los apellidos",

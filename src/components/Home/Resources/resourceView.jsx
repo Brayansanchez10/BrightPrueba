@@ -734,6 +734,10 @@ export default function ResourceView() {
       // Cargar el recurso sin cambiar de página
       const resourceData = await loadResource(resourceId);
       setResource(resourceData);
+
+      setUserRating(0);
+      setRatingComment('');
+      setUserExistingRating(null);
       
       // Actualizar la URL sin recargar la página
       navigate(`/course/${courseId}/resource/${resourceId}`, { replace: true });
