@@ -52,6 +52,38 @@ const Friends = ({ onClose, onChatCreated, initialTab }) => {
           {activeTab === 'search' && "Buscar amigos"}
           {activeTab === 'friends' && "Amigos"}
         </h2>
+        <div className="flex justify-center space-x-4 mb-4">
+          <button
+            onClick={() => setActiveTab('requests')}
+            className={`px-2 py-2 text-sm sm:px-4 sm:py-2 sm:text-base rounded-full transition-colors ${
+              activeTab === 'requests' 
+                ? 'bg-[#00D8A1] text-white' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            Solicitudes
+          </button>
+          <button
+            onClick={() => setActiveTab('friends')}
+            className={`px-2 py-2 text-sm sm:px-4 sm:py-2 sm:text-base rounded-full transition-colors ${
+              activeTab === 'friends' 
+                ? 'bg-[#00D8A1] text-white' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            Amigos
+          </button>
+          <button
+            onClick={() => setActiveTab('search')}
+            className={`px-2 py-2 text-sm sm:px-4 sm:py-2 sm:text-base rounded-full transition-colors ${
+              activeTab === 'search' 
+                ? 'bg-[#00D8A1] text-white' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            Buscar
+          </button>
+        </div>
         <div className="relative">
           <input
             type="text"

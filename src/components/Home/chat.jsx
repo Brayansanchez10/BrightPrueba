@@ -360,10 +360,10 @@ export default function Chat() {
     return (
       <div
         key={message.id}
-        className={`mb-4 flex ${isCurrentUser ? "justify-end" : "justify-start"} mx-8`}
+        className={`mb-4 flex ${isCurrentUser ? "justify-end" : "justify-start"} sm:mx-8 mx-2`}
       >
         <div className={`flex items-start ${isCurrentUser ? 'flex-row-reverse' : 'flex-row'} max-w-[70%]`}>
-          <div className={`w-10 h-10 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center flex-shrink-0 ${isCurrentUser ? 'ml-2' : 'mr-2'}`}>
+          <div className={`sm:w-10 w-8 sm:h-10 h-8 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center flex-shrink-0 ${isCurrentUser ? 'sm:ml-2 ml-1' : 'sm:mr-2 mr-1'}`}>
             {(isCurrentUser ? user.data : selectedChat.participants.find((p) => p.userId === message.senderId)?.user)?.userImage ? (
               <img 
                 src={(isCurrentUser ? user.data : selectedChat.participants.find((p) => p.userId === message.senderId)?.user).userImage} 
@@ -380,7 +380,7 @@ export default function Chat() {
                 <button
                   onClick={() => toggleMessageMenu(message.id)}
                   className={`absolute top-1/2 -translate-y-1/2 ${
-                    isCurrentUser ? "left-0 -ml-8" : "right-0 -mr-8"
+                    isCurrentUser ? "left-0 sm:-ml-8 -ml-6" : "right-0 sm:-mr-8 -mr-6"
                   } p-1 rounded-full bg-gray-200 opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
                 >
                   <RiMoreLine className="text-gray-600 text-lg" />
@@ -393,7 +393,11 @@ export default function Chat() {
                 </div>
               )}
               <div
-                className={`p-4 rounded-[15px] ${replyContent && !message.isDeleted ? "rounded-t-none" : ""} bg-white shadow-md`}
+                className={`sm:p-4 p-3 rounded-[15px] ${
+                  replyContent && !message.isDeleted ? "rounded-t-none" : ""
+                } ${
+                  isCurrentUser ? "bg-[#E8E2F7]" : "bg-white"
+                } shadow-md`}
               >
                 {message.isDeleted ? (
                   <p className="flex items-center text-black">
@@ -467,7 +471,7 @@ export default function Chat() {
     setActiveSection('friends');
     setFriendsTab(tab);
     if (isMobileView) {
-      setShowSidebar(false);
+      setShowSidebar(true);
     }
   }, [isMobileView]);
 
@@ -487,16 +491,18 @@ export default function Chat() {
     if (section !== 'chats') {
       setSelectedChat(null);
     }
-    if (isMobileView) {
+    if (isMobileView && section === 'chats' && selectedChat) {
       setShowSidebar(false);
+    } else if (isMobileView) {
+      setShowSidebar(true);
     }
-  }, [isMobileView]);
+  }, [isMobileView, selectedChat]);
 
   const handleFriendsTabChange = useCallback((tab) => {
     setFriendsTab(tab);
     setActiveSection('friends');
     if (isMobileView) {
-      setShowSidebar(false);
+      setShowSidebar(true);
     }
   }, [isMobileView]);
 
@@ -513,32 +519,32 @@ export default function Chat() {
     switch (activeSection) {
       case 'chats':
         return (
-          <div className="bg-white rounded-[20px] shadow-md flex-grow flex flex-col overflow-hidden">
+          <div className="bg-white rounded-[20px] shadow-md flex-grow flex flex-col overflow-hidden md:mb-0 mb-7">
             <div className="p-4 border-b border-gray-200">
               <h2 className="text-2xl font-bungee text-center mb-4 text-[#00D8A1]">Chats</h2>
               <div className="relative">
                 <input
                   type="text"
                   placeholder={t("chat.search")}
-                  className="w-full py-3 pl-12 pr-4 rounded-full bg-gray-100 text-lg shadow-md"
+                  className="w-full sm:py-3 py-2 pl-12 pr-4 rounded-full bg-gray-100 sm:text-lg text-base shadow-md"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600 text-xl" />
+                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600 sm:text-xl text-lg" />
               </div>
             </div>
             <div className="flex-grow overflow-y-auto">
               {filteredChats.map((chat) => (
                 <div
                   key={chat.id}
-                  className={`p-4 cursor-pointer transition-all duration-300 ${
+                  className={`sm:p-4 p-3 cursor-pointer transition-all duration-300 ${
                     selectedChat && selectedChat.id === chat.id 
                       ? "bg-[#A98CD9] text-white rounded-tr-[20px] rounded-br-[20px] shadow-lg relative z-10" 
                       : "hover:bg-gray-100"
                   } flex items-start`}
                   onClick={() => handleChatSelect(chat)}
                 >
-                  <div className="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3">
                     {chat.participants.find((p) => p.userId !== user.data.id)?.user.userImage ? (
                       <img 
                         src={chat.participants.find((p) => p.userId !== user.data.id).user.userImage} 
@@ -546,7 +552,7 @@ export default function Chat() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <FaUser className="text-purple-900 text-2xl" />
+                      <FaUser className="text-purple-900 sm:text-2xl text-xl" />
                     )}
                   </div>
                   <div className="flex-grow min-w-0">
@@ -594,10 +600,14 @@ export default function Chat() {
             zIndex: -1
           }}
         />
-        <div className={`${isMobileView ? (showSidebar ? 'w-full' : 'hidden') : 'w-1/4'} flex flex-col h-full px-4 pb-4 relative z-10`}>
+        <div className={`${
+          isMobileView 
+            ? (showSidebar ? 'w-full' : 'hidden') 
+            : 'w-[400px] xl:w-[460px] min-w-[400px]'
+        } flex flex-col h-full px-4 pb-4 relative z-10`}>
           <div className="p-4 flex items-center justify-between">
             <div className="flex items-center">
-              <div className="w-16 h-16 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3 mt-4">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3 mt-4">
                 {user.data.userImage ? (
                   <img 
                     src={user.data.userImage} 
@@ -605,32 +615,24 @@ export default function Chat() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <FaUser className="text-purple-900 text-2xl" />
+                  <FaUser className="text-purple-900 sm:text-2xl text-xl" />
                 )}
               </div>
-              <h2 className="text-[22px] font-roboto font-bold text-black">{user.data.username}</h2>
+              <h2 className="sm:text-[22px] text-lg font-roboto font-bold text-black">{user.data.username}</h2>
             </div>
             <div className="flex items-center space-x-4">
               <button 
-                className={`text-black hover:text-gray-700 transition-colors ${activeSection === 'friends' && friendsTab === 'search' ? 'text-[#00D8A1]' : ''}`}
-                onClick={() => handleFriendsClick('search')}
-              >
-                <FaSearch className="text-2xl" />
-              </button>
-              <button 
-                className={`text-black hover:text-gray-700 transition-colors ${activeSection === 'friends' && friendsTab === 'friends' ? 'text-[#00D8A1]' : ''}`}
+                className={`text-black hover:text-gray-700 transition-colors ${
+                  activeSection === 'friends' ? 'text-[#00D8A1]' : ''
+                }`}
                 onClick={() => handleFriendsClick('friends')}
               >
                 <FaUsers className="text-2xl" />
               </button>
               <button 
-                className={`text-black hover:text-gray-700 transition-colors ${activeSection === 'friends' && friendsTab === 'requests' ? 'text-[#00D8A1]' : ''}`}
-                onClick={() => handleFriendsClick('requests')}
-              >
-                <FaUserPlus className="text-2xl" />
-              </button>
-              <button 
-                className={`text-black hover:text-gray-700 transition-colors ${activeSection === 'chats' ? 'text-[#00D8A1]' : ''}`}
+                className={`text-black hover:text-gray-700 transition-colors ${
+                  activeSection === 'chats' ? 'text-[#00D8A1]' : ''
+                }`}
                 onClick={() => handleSectionChange('chats')}
               >
                 <FaEnvelope className="text-2xl" />
@@ -639,16 +641,16 @@ export default function Chat() {
           </div>
           {renderSidebarContent()}
         </div>
-        <div className={`${isMobileView ? (showSidebar ? 'hidden' : 'w-full') : 'w-3/4'} flex flex-col h-full relative z-10`}>
-          <div 
-            className="absolute inset-0 bg-cover bg-no-repeat opacity-30" 
-            style={{backgroundImage: `url(${backgroundImage})`}}
-          ></div>
+        <div className={`${
+          isMobileView 
+            ? (showSidebar ? 'hidden' : 'w-full') 
+            : 'flex-1'
+        } flex flex-col h-full relative z-10`}>
           <div className="relative z-10 flex flex-col h-full bg-transparent">
             {selectedChat ? (
               <>
                 <div className="bg-white rounded-[15px] shadow-md m-4">
-                  <div className="max-w-[98%] h-[79px] mx-auto flex items-center justify-center px-4">
+                  <div className="max-w-[98%] h-[60px] sm:h-[79px] mx-auto flex items-center justify-center px-4">
                     {isMobileView && (
                       <button 
                         onClick={() => setShowSidebar(true)} 
@@ -660,7 +662,7 @@ export default function Chat() {
                       </button>
                     )}
                     <div className="flex items-center">
-                      <div className="w-16 h-16 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-4">
+                      <div className="sm:w-16 sm:h-16 w-12 h-12 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-4">
                         {selectedChat.participants.find((p) => p.userId !== user.data.id)?.user.userImage ? (
                           <img 
                             src={selectedChat.participants.find((p) => p.userId !== user.data.id).user.userImage} 
@@ -668,17 +670,17 @@ export default function Chat() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <FaUser className="text-purple-900 text-3xl" />
+                          <FaUser className="text-purple-900 sm:text-3xl text-2xl" />
                         )}
                       </div>
                       <div className="text-center">
                         <Link
                           to={`/profile/${selectedChat.participants.find((p) => p.userId !== user.data.id).userId}`}
-                          className="font-bungee text-[22px] text-black hover:underline block"
+                          className="font-bungee sm:text-[22px] text-lg text-black hover:underline block"
                         >
                           {selectedChat.participants.find((p) => p.userId !== user.data.id)?.user.username}
                         </Link>
-                        <p className="text-[13px] text-[#BBBBBB] font-roboto">
+                        <p className="sm:text-[13px] text-xs text-[#BBBBBB] font-roboto">
                           {selectedChat.participants.find((p) => p.userId !== user.data.id)?.user.email}
                         </p>
                       </div>
@@ -727,7 +729,7 @@ export default function Chat() {
                       </p>
                     </div>
                   )}
-                  <div className="flex items-center relative">
+                  <div className="flex items-center relative sm:-mr-0 -mr-7">
                     <input
                       type="text"
                       value={messageInput}
@@ -739,13 +741,13 @@ export default function Chat() {
                         }
                       }}
                       placeholder={t("chat.typeMessage")}
-                      className="w-full h-[65px] py-3 px-4 bg-white text-gray-700 rounded-[25px] focus:outline-none focus:ring-2 focus:ring-[#008BD8] pr-16 shadow-2xl mr-12" 
+                      className="w-full sm:h-[65px] h-[55px] sm:text-base text-sm py-3 px-4 bg-white text-gray-700 rounded-[25px] focus:outline-none focus:ring-2 focus:ring-[#008BD8] pr-16 shadow-2xl sm:mr-12 -mr-0 sm:mb-0 mb-3" 
                     />
                     <button
                       type="submit"
-                      className="absolute right-7 top-1/2 transform -translate-y-1/2 bg-[#008BD8] text-white rounded-full w-[45px] h-[45px] flex items-center justify-center transition-colors focus:outline-none hover:bg-[#0073B1] mr-12"
+                      className="absolute sm:right-6 right-4 sm:top-1/2 top-7 transform -translate-y-1/2 bg-[#008BD8] text-white rounded-full sm:w-[45px] sm:h-[45px] w-[35px] h-[35px] flex items-center justify-center transition-colors focus:outline-none hover:bg-[#0073B1] sm:mr-12 mr-0"
                     >
-                      <FaPaperPlane className="w-5 h-5" />
+                      <FaPaperPlane className="sm:w-5 sm:h-5 w-4 h-4" />
                     </button>
                   </div>
                 </form>
