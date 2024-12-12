@@ -199,27 +199,36 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleChatSelect = useCallback(async (chat) => {
-    if (selectedChat) {
-      leaveChat(selectedChat.id);
-    }
-    setSelectedChat(chat);
-    const fetchedMessages = await getChatMessages(chat.id);
-    setLocalMessages(fetchedMessages);
-    initSocket(chat.id);
-    if (user?.data?.id) {
-      await markMessagesAsRead(user.data.id, chat.id);
-      localStorage.setItem('selectedChatId', chat.id.toString());
-    }
-  
-    if (isMobileView) {
-      setShowSidebar(false);
-    }
-  }, [selectedChat, getChatMessages, isMobileView, user?.data?.id, markMessagesAsRead]);
+  const handleChatSelect = useCallback(
+    async (chat) => {
+      if (selectedChat) {
+        leaveChat(selectedChat.id);
+      }
+      setSelectedChat(chat);
+      const fetchedMessages = await getChatMessages(chat.id);
+      setLocalMessages(fetchedMessages);
+      initSocket(chat.id);
+      if (user?.data?.id) {
+        await markMessagesAsRead(user.data.id, chat.id);
+        localStorage.setItem("selectedChatId", chat.id.toString());
+      }
+
+      if (isMobileView) {
+        setShowSidebar(false);
+      }
+    },
+    [
+      selectedChat,
+      getChatMessages,
+      isMobileView,
+      user?.data?.id,
+      markMessagesAsRead,
+    ]
+  );
 
   useEffect(() => {
     return () => {
-      localStorage.removeItem('selectedChatId');
+      localStorage.removeItem("selectedChatId");
     };
   }, []);
 
