@@ -1,29 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { FaUser, FaCheck, FaTimes, FaTrash, FaEnvelope, FaUserPlus, FaSearch, FaInbox, FaUserFriends } from 'react-icons/fa';
-import { useFriends } from '../../context/user/friends.context';
-import { useAuth } from '../../context/auth.context';
-import { useChat } from '../../context/user/chat.context';
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Swal from 'sweetalert2';
+import React, { useState, useEffect } from "react";
+import {
+  FaUser,
+  FaCheck,
+  FaTimes,
+  FaTrash,
+  FaEnvelope,
+  FaUserPlus,
+  FaSearch,
+  FaInbox,
+  FaUserFriends,
+} from "react-icons/fa";
+import { useFriends } from "../../context/user/friends.context";
+import { useAuth } from "../../context/auth.context";
+import { useChat } from "../../context/user/chat.context";
+import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Friends = ({ onClose, onChatCreated, initialTab }) => {
-  const [activeTab, setActiveTab] = useState(initialTab || 'requests');
+  const [activeTab, setActiveTab] = useState(initialTab || "requests");
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const { t } = useTranslation("global");
 
   const showNotification = (message, type) => {
     switch (type) {
-      case 'success':
+      case "success":
         toast.success(message);
         break;
-      case 'error':
+      case "error":
         toast.error(message);
         break;
-      case 'info':
+      case "info":
         toast.info(message);
         break;
       default:
@@ -33,11 +44,13 @@ const Friends = ({ onClose, onChatCreated, initialTab }) => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'requests':
+      case "requests":
         return <FriendRequests searchTerm={searchTerm} />;
-      case 'friends':
-        return <FriendsList onChatCreated={onChatCreated} searchTerm={searchTerm} />;
-      case 'search':
+      case "friends":
+        return (
+          <FriendsList onChatCreated={onChatCreated} searchTerm={searchTerm} />
+        );
+      case "search":
         return <SearchPeople searchTerm={searchTerm} />;
       default:
         return null;
@@ -48,9 +61,9 @@ const Friends = ({ onClose, onChatCreated, initialTab }) => {
     <div className="bg-white rounded-[20px] shadow-md flex-grow flex flex-col overflow-hidden h-full">
       <div className="p-4 border-b border-gray-200">
         <h2 className="text-2xl font-bungee text-center mb-4 text-[#00D8A1]">
-          {activeTab === 'requests' && "Solicitudes"}
-          {activeTab === 'search' && "Buscar amigos"}
-          {activeTab === 'friends' && "Amigos"}
+          {activeTab === "requests" && "Solicitudes"}
+          {activeTab === "search" && "Buscar amigos"}
+          {activeTab === "friends" && "Amigos"}
         </h2>
         <div className="flex justify-center space-x-4 mb-4">
           <button
@@ -95,9 +108,7 @@ const Friends = ({ onClose, onChatCreated, initialTab }) => {
           <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600 text-xl" />
         </div>
       </div>
-      <div className="flex-grow overflow-y-auto">
-        {renderContent()}
-      </div>
+      <div className="flex-grow overflow-y-auto">{renderContent()}</div>
       <ToastContainer
         position="bottom-left"
         autoClose={3000}
@@ -120,7 +131,12 @@ const Friends = ({ onClose, onChatCreated, initialTab }) => {
 };
 
 const FriendRequests = ({ searchTerm }) => {
-  const { pendingRequests, getPendingFriendRequests, acceptFriendRequest, rejectFriendRequest } = useFriends();
+  const {
+    pendingRequests,
+    getPendingFriendRequests,
+    acceptFriendRequest,
+    rejectFriendRequest,
+  } = useFriends();
   const { user } = useAuth();
   const [filteredRequests, setFilteredRequests] = useState([]);
 
@@ -132,7 +148,7 @@ const FriendRequests = ({ searchTerm }) => {
 
   useEffect(() => {
     setFilteredRequests(
-      pendingRequests.filter(request =>
+      pendingRequests.filter((request) =>
         request.sender.username.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
@@ -143,20 +159,32 @@ const FriendRequests = ({ searchTerm }) => {
       await acceptFriendRequest(requestId);
       getPendingFriendRequests(user.data.id);
       Swal.fire({
-        icon: 'success',
-        title: 'Solicitud aceptada',
-        text: 'La solicitud de amistad ha sido aceptada exitosamente.',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK'
+        icon: "success",
+        title: "¡Solicitud aceptada!",
+        text: "La solicitud de amistad ha sido aceptada exitosamente.",
+        confirmButtonText: "Entendido",
+        confirmButtonColor: "#00D8A1",
+        background: "#fff",
+        customClass: {
+          popup: "rounded-[20px]",
+          title: "font-bungee text-[#00D8A1]",
+          content: "font-roboto",
+        },
       });
     } catch (error) {
       console.error("Error al aceptar la solicitud:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo aceptar la solicitud de amistad.',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK'
+        icon: "error",
+        title: "¡Error!",
+        text: "No se pudo aceptar la solicitud de amistad.",
+        confirmButtonText: "Intentar de nuevo",
+        confirmButtonColor: "#DC3545",
+        background: "#fff",
+        customClass: {
+          popup: "rounded-[20px]",
+          title: "font-bungee text-[#DC3545]",
+          content: "font-roboto",
+        },
       });
     }
   };
@@ -166,20 +194,32 @@ const FriendRequests = ({ searchTerm }) => {
       await rejectFriendRequest(requestId);
       getPendingFriendRequests(user.data.id);
       Swal.fire({
-        icon: 'info',
-        title: 'Solicitud rechazada',
-        text: 'La solicitud de amistad ha sido rechazada.',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK'
+        icon: "info",
+        title: "Solicitud rechazada",
+        text: "La solicitud de amistad ha sido rechazada.",
+        confirmButtonText: "Entendido",
+        confirmButtonColor: "#0DCAF0",
+        background: "#fff",
+        customClass: {
+          popup: "rounded-[20px]",
+          title: "font-bungee text-[#0DCAF0]",
+          content: "font-roboto",
+        },
       });
     } catch (error) {
       console.error("Error al rechazar la solicitud:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo rechazar la solicitud de amistad.',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK'
+        icon: "error",
+        title: "¡Error!",
+        text: "No se pudo rechazar la solicitud de amistad.",
+        confirmButtonText: "Intentar de nuevo",
+        confirmButtonColor: "#DC3545",
+        background: "#fff",
+        customClass: {
+          popup: "rounded-[20px]",
+          title: "font-bungee text-[#DC3545]",
+          content: "font-roboto",
+        },
       });
     }
   };
@@ -193,7 +233,10 @@ const FriendRequests = ({ searchTerm }) => {
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center justify-center text-center pt-32"
         >
-          <FaInbox className="text-6xl mb-4" style={{ fill: 'url(#gradient)' }} />
+          <FaInbox
+            className="text-6xl mb-4"
+            style={{ fill: "url(#gradient)" }}
+          />
           <h3 className="font-bungee text-2xl text-transparent bg-clip-text bg-gradient-to-r from-[#783CDA] to-[#00D8A1]">
             No hay solicitudes pendientes
           </h3>
@@ -207,9 +250,9 @@ const FriendRequests = ({ searchTerm }) => {
             >
               <div className="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3">
                 {request.sender.userImage ? (
-                  <img 
-                    src={request.sender.userImage} 
-                    alt={request.sender.username} 
+                  <img
+                    src={request.sender.userImage}
+                    alt={request.sender.username}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -226,7 +269,9 @@ const FriendRequests = ({ searchTerm }) => {
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <p className="text-sm truncate">Solicitud de amistad pendiente</p>
+                  <p className="text-sm truncate">
+                    Solicitud de amistad pendiente
+                  </p>
                   <div>
                     <button
                       onClick={() => handleAccept(request.id)}
@@ -256,6 +301,7 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
   const { user } = useAuth();
   const { createChat, getUserChats } = useChat();
   const [filteredFriends, setFilteredFriends] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user && user.data && user.data.id) {
@@ -265,7 +311,7 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
 
   useEffect(() => {
     setFilteredFriends(
-      friends.filter(friend =>
+      friends.filter((friend) =>
         friend.username.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
@@ -273,32 +319,54 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
 
   const handleDeleteFriend = async (friendId) => {
     const result = await Swal.fire({
-      title: '¿Estás seguro?',
+      title: "¿Estás seguro?",
       text: "¿Quieres eliminar a este amigo?",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      confirmButtonColor: "#FF8C00",
+      cancelButtonColor: "#6C757D",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      background: "#fff",
+      customClass: {
+        popup: "rounded-[20px]",
+        title: "font-bungee text-[#FF8C00]",
+        content: "font-roboto",
+      },
     });
 
     if (result.isConfirmed) {
       try {
         await deleteFriend(user.data.id, friendId);
         getFriendsList(user.data.id);
-        Swal.fire(
-          'Eliminado',
-          'El amigo ha sido eliminado.',
-          'success'
-        );
+        Swal.fire({
+          title: "¡Eliminado!",
+          text: "El amigo ha sido eliminado de tu lista.",
+          icon: "success",
+          confirmButtonText: "Entendido",
+          confirmButtonColor: "#00D8A1",
+          background: "#fff",
+          customClass: {
+            popup: "rounded-[20px]",
+            title: "font-bungee text-[#00D8A1]",
+            content: "font-roboto",
+          },
+        });
       } catch (error) {
         console.error("Error al eliminar amigo:", error);
-        Swal.fire(
-          'Error',
-          'No se pudo eliminar al amigo.',
-          'error'
-        );
+        Swal.fire({
+          title: "¡Error!",
+          text: "No se pudo eliminar al amigo.",
+          icon: "error",
+          confirmButtonText: "Intentar de nuevo",
+          confirmButtonColor: "#DC3545",
+          background: "#fff",
+          customClass: {
+            popup: "rounded-[20px]",
+            title: "font-bungee text-[#DC3545]",
+            content: "font-roboto",
+          },
+        });
       }
     }
   };
@@ -306,38 +374,93 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
   const handleSendMessage = async (friendId) => {
     try {
       const response = await createChat(user.data.id, friendId);
-      if (response && response.data && response.data.id) {
+
+      if (response && response.data) {
         const updatedChats = await getUserChats(user.data.id);
-        onChatCreated(updatedChats, response.data.id);
-      } else {
-        console.error("Error: El chat creado no tiene un ID válido");
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo iniciar el chat.',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'OK'
-        });
+        const chatToOpen = response.data.id
+          ? response.data
+          : updatedChats.find((chat) =>
+              chat.participants.some((p) => p.userId === friendId)
+            );
+
+        if (chatToOpen) {
+          await onChatCreated(updatedChats, chatToOpen.id);
+          Swal.fire({
+            icon: "success",
+            title: "Chat creado",
+            text: "El chat ha sido creado exitosamente",
+            confirmButtonText: "Ir al chat",
+            confirmButtonColor: "#00D8A1",
+            showCancelButton: true,
+            cancelButtonText: "Aceptar",
+            cancelButtonColor: "#6C757D",
+            background: "#fff",
+            customClass: {
+              popup: "rounded-[20px]",
+              title: "font-bungee text-[#00D8A1]",
+              content: "font-roboto",
+            },
+          }).then((result) => {
+            navigate("/chat");
+            if (result.isConfirmed) {
+              setTimeout(() => {
+                const chatEvent = new CustomEvent("openChat", {
+                  detail: { chatId: chatToOpen.id },
+                });
+                window.dispatchEvent(chatEvent);
+              }, 300);
+            }
+          });
+        }
       }
     } catch (error) {
       console.error("Error al crear chat:", error);
-      if (error.response && error.response.status === 400 && error.response.data.error === "Ya existe un chat entre estos usuarios") {
+      if (
+        error.response?.status === 400 &&
+        error.response?.data?.error === "Ya existe un chat entre estos usuarios"
+      ) {
         const updatedChats = await getUserChats(user.data.id);
-        const existingChat = updatedChats.find(chat => 
-          chat.participants.some(p => p.userId === friendId)
+        const existingChat = updatedChats.find((chat) =>
+          chat.participants.some((p) => p.userId === friendId)
         );
+
         if (existingChat) {
-          onChatCreated(updatedChats, existingChat.id);
-        } else {
-          onChatCreated(updatedChats);
+          await onChatCreated(updatedChats, existingChat.id);
+
+          Swal.fire({
+            icon: "info",
+            title: "Chat existente",
+            text: "Ya tienes un chat con este usuario",
+            confirmButtonText: "Ir al chat",
+            confirmButtonColor: "#00D8A1",
+            showCancelButton: true,
+            cancelButtonText: "Ver lista de chats",
+            cancelButtonColor: "#6C757D",
+            background: "#fff",
+            customClass: {
+              popup: "rounded-[20px]",
+              title: "font-bungee text-[#00D8A1]",
+              content: "font-roboto",
+            },
+          }).then((result) => {
+            navigate("/chat");
+            if (result.isConfirmed) {
+              setTimeout(() => {
+                const chatEvent = new CustomEvent("openChat", {
+                  detail: { chatId: existingChat.id },
+                });
+                window.dispatchEvent(chatEvent);
+              }, 300);
+            }
+          });
         }
       } else {
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo iniciar el chat.',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'OK'
+          icon: "error",
+          title: "Error",
+          text: "No se pudo crear el chat",
+          confirmButtonColor: "#DC3545",
+          confirmButtonText: "OK",
         });
       }
     }
@@ -352,7 +475,10 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center justify-center text-center pt-32"
         >
-          <FaUserFriends className="text-6xl mb-4" style={{ fill: 'url(#gradient)' }} />
+          <FaUserFriends
+            className="text-6xl mb-4"
+            style={{ fill: "url(#gradient)" }}
+          />
           <h3 className="font-bungee text-2xl text-transparent bg-clip-text bg-gradient-to-r from-[#783CDA] to-[#00D8A1]">
             No se encontraron amigos
           </h3>
@@ -366,9 +492,9 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
             >
               <div className="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3">
                 {friend.userImage ? (
-                  <img 
-                    src={friend.userImage} 
-                    alt={friend.username} 
+                  <img
+                    src={friend.userImage}
+                    alt={friend.username}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -431,21 +557,33 @@ const SearchPeople = ({ searchTerm }) => {
       try {
         await sendFriendRequest(user.data.id, receiverId);
         Swal.fire({
-          icon: 'success',
-          title: 'Solicitud enviada',
-          text: 'La solicitud de amistad ha sido enviada exitosamente.',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'OK'
+          icon: "success",
+          title: "¡Solicitud enviada!",
+          text: "La solicitud de amistad ha sido enviada exitosamente.",
+          confirmButtonText: "Entendido",
+          confirmButtonColor: "#00D8A1",
+          background: "#fff",
+          customClass: {
+            popup: "rounded-[20px]",
+            title: "font-bungee text-[#00D8A1]",
+            content: "font-roboto",
+          },
         });
         getFriendsList(user.data.id);
       } catch (error) {
         console.error("Error al enviar la solicitud de amistad:", error);
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo enviar la solicitud de amistad.',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'OK'
+          icon: "error",
+          title: "¡Error!",
+          text: "No se pudo enviar la solicitud de amistad.",
+          confirmButtonText: "Intentar de nuevo",
+          confirmButtonColor: "#DC3545",
+          background: "#fff",
+          customClass: {
+            popup: "rounded-[20px]",
+            title: "font-bungee text-[#DC3545]",
+            content: "font-roboto",
+          },
         });
       }
     }
@@ -460,7 +598,10 @@ const SearchPeople = ({ searchTerm }) => {
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center justify-center text-center pt-32"
         >
-          <FaSearch className="text-6xl mb-4" style={{ fill: 'url(#gradient)' }} />
+          <FaSearch
+            className="text-6xl mb-4"
+            style={{ fill: "url(#gradient)" }}
+          />
           <h3 className="font-bungee text-2xl text-transparent bg-clip-text bg-gradient-to-r from-[#783CDA] to-[#00D8A1]">
             Busca aquí tus amigos o profesores
           </h3>
@@ -472,7 +613,10 @@ const SearchPeople = ({ searchTerm }) => {
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center justify-center text-center pt-32"
         >
-          <FaSearch className="text-6xl mb-4" style={{ fill: 'url(#gradient)' }} />
+          <FaSearch
+            className="text-6xl mb-4"
+            style={{ fill: "url(#gradient)" }}
+          />
           <h3 className="font-bungee text-2xl text-transparent bg-clip-text bg-gradient-to-r from-[#783CDA] to-[#00D8A1]">
             No se encontraron resultados
           </h3>
@@ -486,9 +630,9 @@ const SearchPeople = ({ searchTerm }) => {
             >
               <div className="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3">
                 {result.userImage ? (
-                  <img 
-                    src={result.userImage} 
-                    alt={result.username} 
+                  <img
+                    src={result.userImage}
+                    alt={result.username}
                     className="w-full h-full object-cover"
                   />
                 ) : (
