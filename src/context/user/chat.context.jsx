@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext, useEffect, useCallback } from 'react';
+import React, { useState, createContext, useContext, useEffect, useCallback, useRef } from 'react';
 import { 
   createChat as createChatApi,
   getUserChats as getUserChatsApi,
@@ -11,6 +11,8 @@ import {
   markMessagesAsRead as markMessagesAsReadApi
 } from '../../api/user/chat.request';
 import { socket, initSocket } from '../../utils/socket';
+import { useAuth } from '../auth.context';
+import { io } from 'socket.io-client';
 
 export const ChatContext = createContext();
 
@@ -23,17 +25,95 @@ export const useChat = () => {
 };
 
 export const ChatProvider = ({ children }) => {
+  const { user } = useAuth();
   const [chats, setChats] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [unreadCounts, setUnreadCounts] = useState({});
+  const socket = useRef();
+
+  useEffect(() => {
+    if (!user?.data?.id) return; 
+    window.updateUnreadCount = (chatId) => {
+      setUnreadCounts(prev => ({
+        ...prev,
+        [chatId]: (prev[chatId] || 0) + 1
+      }));
+    };
+  
+    window.updateMessagesRead = (chatId, userId) => {
+      if (userId !== user?.data?.id) {
+        setUnreadCounts(prev => ({
+          ...prev,
+          [chatId]: 0
+        }));
+      }
+    };
+  
+    return () => {
+      delete window.updateUnreadCount;
+      delete window.updateMessagesRead;
+    };
+  }, [user?.data?.id]);
+
+  useEffect(() => {
+    if (!user?.data?.id) return;
+  
+    socket.current = io(import.meta.env.VITE_SOCKET_URL);
+    socket.current.on('connect', () => {
+      socket.current.emit('join', user.data.id);
+    });
+  
+    socket.current.on('private message', async (message) => {
+      setMessages(prevMessages => [...prevMessages, message]);
+      if (message.receiverId === user.data.id) {
+        setUnreadCounts(prev => ({
+          ...prev,
+          [message.chatId]: (prev[message.chatId] || 0) + 1
+        }));
+        setChats(prevChats => 
+          prevChats.map(chat => {
+            if (chat.id === message.chatId) {
+              return {
+                ...chat,
+                messages: [message, ...(chat.messages || [])]
+              };
+            }
+            return chat;
+          })
+        );
+      }
+    });
+  
+    socket.current.on('message read', ({ chatId, userId }) => {
+      if (userId === user.data.id) {
+        setUnreadCounts(prev => ({
+          ...prev,
+          [chatId]: 0
+        }));
+      }
+    });
+  
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
+  }, [user?.data?.id]);
 
   const createChat = useCallback(async (userId1, userId2) => {
     try {
       const res = await createChatApi(userId1, userId2);
-      setChats(prevChats => [...prevChats, res.data]);
-      return res.data;
+      if (res && res.data) {
+        const updatedChats = await getUserChatsApi(userId1);
+        if (updatedChats && updatedChats.data) {
+          setChats(updatedChats.data);
+        }
+        return res;
+      }
+      return null;
     } catch (error) {
       console.error("Error al crear chat:", error);
-      return null;
+      throw error;
     }
   }, []);
 
@@ -53,6 +133,7 @@ export const ChatProvider = ({ children }) => {
     try {
       await markMessagesAsReadApi(userId, chatId);
       setUnreadCounts(prev => ({ ...prev, [chatId]: 0 }));
+      socket.current?.emit('messages read', { chatId, userId });
     } catch (error) {
       console.error("Error al marcar los mensajes como leídos:", error);
     }
@@ -61,35 +142,54 @@ export const ChatProvider = ({ children }) => {
   const getUserChats = useCallback(async (userId) => {
     try {
       const res = await getUserChatsApi(userId);
-      setChats(res.data);
-      return res.data;
+      if (res && res.data) {
+        setChats(res.data);
+        res.data.forEach(async (chat) => {
+          const count = await getUnreadMessageCount(userId, chat.id);
+          setUnreadCounts(prev => ({
+            ...prev,
+            [chat.id]: count
+          }));
+        });
+        return res;
+      }
+      return null;
     } catch (error) {
       console.error("Error al obtener chats del usuario:", error);
-      return [];
+      throw error;
     }
-  }, []);
+  }, [getUnreadMessageCount]);
 
-  const sendMessage = useCallback(async (chatId, senderId, receiverId, content) => {
+  const sendMessage = useCallback(async (messageData) => {
     try {
-      const res = await sendMessageApi(chatId, senderId, receiverId, content);
-      setMessages(prevMessages => [...prevMessages, res.data]);
-      setChats(prevChats => 
-        prevChats.map(chat => {
-          if (chat.id === chatId) {
-            return {
-              ...chat,
-              messages: [res.data, ...(chat.messages || [])]
-            };
-          }
-          return chat;
-        })
-      );
-      return res.data;
+        const response = await sendMessageApi(
+            messageData.chatId,
+            messageData.senderId,
+            messageData.receiverId,
+            messageData.content
+        );
+        const newMessage = response.data;
+        
+        setMessages(prev => [...prev, newMessage]);
+        setChats(prevChats => 
+            prevChats.map(chat => {
+                if (chat.id === messageData.chatId) {
+                    return {
+                        ...chat,
+                        messages: [newMessage, ...(chat.messages || [])]
+                    };
+                }
+                return chat;
+            })
+        );
+
+        socket.current?.emit('private message', newMessage);
+        return newMessage;
     } catch (error) {
-      console.error("Error al enviar mensaje:", error);
-      return null;
+        console.error("Error al enviar mensaje:", error);
+        throw error;
     }
-  }, []);
+}, []);
 
   const getChatMessages = useCallback(async (chatId) => {
     try {
@@ -143,11 +243,11 @@ export const ChatProvider = ({ children }) => {
         return [...prevMessages, updatedMessage];
       }
     });
-
+    
     setChats(prevChats => 
       prevChats.map(chat => {
         if (chat.id === updatedMessage.chatId) {
-          const updatedMessages = chat.messages || [];
+          const updatedMessages = [...(chat.messages || [])];
           const messageIndex = updatedMessages.findIndex(m => m.id === updatedMessage.id);
           
           if (messageIndex !== -1) {
@@ -164,17 +264,55 @@ export const ChatProvider = ({ children }) => {
         return chat;
       })
     );
-  }, []);
+  
+    const selectedChatId = localStorage.getItem('selectedChatId');
+    if (user?.data?.id && 
+        updatedMessage.senderId !== user.data.id && 
+        !updatedMessage.isRead && 
+        updatedMessage.chatId !== parseInt(selectedChatId)) {
+      setUnreadCounts(prev => ({
+        ...prev,
+        [updatedMessage.chatId]: (prev[updatedMessage.chatId] || 0) + 1
+      }));
+    }
+  }, [user?.data?.id]);
 
   useEffect(() => {
+    if (!user?.data?.id) return;
+  
     window.updateReceivedMessage = (newMessage) => {
+      const selectedChatId = parseInt(localStorage.getItem('selectedChatId'));
+      
+      // Actualizar el mensaje localmente
       updateLocalMessage(newMessage);
+      
+      // Actualizar el contador de mensajes no leídos solo si:
+      // 1. El mensaje es para el usuario actual
+      // 2. No es un mensaje enviado por el usuario actual
+      // 3. El chat no está seleccionado actualmente
+      if (newMessage.receiverId === user.data.id && 
+          newMessage.senderId !== user.data.id && 
+          newMessage.chatId !== selectedChatId) {
+        setUnreadCounts(prev => ({
+          ...prev,
+          [newMessage.chatId]: (prev[newMessage.chatId] || 0) + 1
+        }));
+      }
+    };
+  
+    window.updateMessagesRead = (chatId, userId) => {
+      if (userId === user.data.id) {
+        setUnreadCounts(prev => ({
+          ...prev,
+          [chatId]: 0
+        }));
+      }
     };
 
     window.updateEditedMessage = (editedMessage) => {
       updateLocalMessage(editedMessage);
     };
-
+  
     window.updateDeletedMessage = (deletedMessageId) => {
       updateLocalMessage({
         id: deletedMessageId,
@@ -182,11 +320,12 @@ export const ChatProvider = ({ children }) => {
         isDeleted: true
       });
     };
-
+  
     const socketInstance = initSocket();
-
+  
     return () => {
       delete window.updateReceivedMessage;
+      delete window.updateMessagesRead;
       delete window.updateEditedMessage;
       delete window.updateDeletedMessage;
       
@@ -196,12 +335,13 @@ export const ChatProvider = ({ children }) => {
         socketInstance.off('message deleted');
       }
     };
-  }, [updateLocalMessage]);
+  }, [user?.data?.id, updateLocalMessage]);
 
   return (
     <ChatContext.Provider value={{
       chats,
       messages,
+      unreadCounts,
       createChat,
       getUserChats,
       sendMessage,

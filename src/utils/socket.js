@@ -13,10 +13,16 @@ export const initSocket = (chatId) => {
 
     socket.on('message received', (newMessage) => {
       const userId = localStorage.getItem('userId');
-      if (newMessage.senderId !== parseInt(userId)) {
-        if (typeof window.updateReceivedMessage === 'function') {
-          window.updateReceivedMessage(newMessage);
-        } 
+      const selectedChatId = parseInt(localStorage.getItem('selectedChatId'));
+      
+      if (typeof window.updateReceivedMessage === 'function') {
+        window.updateReceivedMessage(newMessage);
+      }
+      if (newMessage.senderId !== parseInt(userId) && 
+          newMessage.chatId !== selectedChatId) {
+        if (typeof window.updateUnreadCount === 'function') {
+          window.updateUnreadCount(newMessage.chatId);
+        }
       }
     });
 
@@ -31,10 +37,17 @@ export const initSocket = (chatId) => {
         window.updateDeletedMessage(deletedMessageId);
       }
     });
+
+    socket.on('messages read', ({ chatId, userId }) => {
+      if (typeof window.updateMessagesRead === 'function') {
+        window.updateMessagesRead(chatId, userId);
+      }
+    });
   }
 
   if (chatId) {
     socket.emit('join chat', chatId);
+    localStorage.setItem('selectedChatId', chatId);
   }
 
   return socket;
@@ -43,8 +56,10 @@ export const initSocket = (chatId) => {
 export const leaveChat = (chatId) => {
   if (socket) {
     socket.emit('leave chat', chatId);
+    localStorage.removeItem('selectedChatId');
   }
 };
+
 
 export const sendMessage = (message) => {
   if (socket) {
@@ -73,6 +88,12 @@ export const emitEditMessage = (editedMessage) => {
 export const emitDeleteMessage = (messageId, chatId) => {
   if (socket) {
     socket.emit('delete message', { messageId, chatId });
+  }
+};
+
+export const emitMessagesRead = (chatId, userId) => {
+  if (socket) {
+    socket.emit('messages read', { chatId, userId });
   }
 };
 

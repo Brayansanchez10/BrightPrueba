@@ -17,19 +17,19 @@ export const getUserChats = (userId) => axios.get(`/chat/getUserChats/${userId}`
 
 export const sendMessage = async (chatId, senderId, receiverId, content) => {
     try {
+        console.log('Enviando mensaje:', { chatId, senderId, receiverId, content }); 
+
         const messageData = {
-            chatId,
-            senderId,
-            receiverId,
-            content
+            chatId: parseInt(chatId),
+            senderId: parseInt(senderId),
+            receiverId: parseInt(receiverId),
+            content: content.trim()
         };
-        return axios.post('/chat/sendMessage', messageData, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+
+        const response = await axios.post('/chat/sendMessage', messageData);
+        return response;
     } catch (error) {
-        console.error("Error al enviar un mensaje:", error);
+        console.error("Error al enviar un mensaje:", error.response?.data || error);
         throw error;
     }
 };

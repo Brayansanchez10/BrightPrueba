@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const Friends = ({ onClose, onChatCreated, initialTab }) => {
   const [activeTab, setActiveTab] = useState(initialTab || 'requests');
@@ -112,23 +113,35 @@ const FriendRequests = ({ searchTerm }) => {
       getPendingFriendRequests(user.data.id);
       Swal.fire({
         icon: 'success',
-        title: 'Solicitud aceptada',
+        title: '¡Solicitud aceptada!',
         text: 'La solicitud de amistad ha sido aceptada exitosamente.',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#00D8A1', 
+        background: '#fff',
+        customClass: {
+          popup: 'rounded-[20px]',
+          title: 'font-bungee text-[#00D8A1]',
+          content: 'font-roboto'
+        }
       });
     } catch (error) {
       console.error("Error al aceptar la solicitud:", error);
       Swal.fire({
         icon: 'error',
-        title: 'Error',
+        title: '¡Error!',
         text: 'No se pudo aceptar la solicitud de amistad.',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'Intentar de nuevo',
+        confirmButtonColor: '#DC3545', 
+        background: '#fff',
+        customClass: {
+          popup: 'rounded-[20px]',
+          title: 'font-bungee text-[#DC3545]',
+          content: 'font-roboto'
+        }
       });
     }
   };
-
+  
   const handleReject = async (requestId) => {
     try {
       await rejectFriendRequest(requestId);
@@ -137,17 +150,29 @@ const FriendRequests = ({ searchTerm }) => {
         icon: 'info',
         title: 'Solicitud rechazada',
         text: 'La solicitud de amistad ha sido rechazada.',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#0DCAF0', 
+        background: '#fff',
+        customClass: {
+          popup: 'rounded-[20px]',
+          title: 'font-bungee text-[#0DCAF0]',
+          content: 'font-roboto'
+        }
       });
     } catch (error) {
       console.error("Error al rechazar la solicitud:", error);
       Swal.fire({
         icon: 'error',
-        title: 'Error',
+        title: '¡Error!',
         text: 'No se pudo rechazar la solicitud de amistad.',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'Intentar de nuevo',
+        confirmButtonColor: '#DC3545',
+        background: '#fff',
+        customClass: {
+          popup: 'rounded-[20px]',
+          title: 'font-bungee text-[#DC3545]',
+          content: 'font-roboto'
+        }
       });
     }
   };
@@ -224,6 +249,7 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
   const { user } = useAuth();
   const { createChat, getUserChats } = useChat();
   const [filteredFriends, setFilteredFriends] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user && user.data && user.data.id) {
@@ -245,28 +271,50 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
       text: "¿Quieres eliminar a este amigo?",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#FF8C00',
+      cancelButtonColor: '#6C757D', 
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
+      background: '#fff',
+      customClass: {
+        popup: 'rounded-[20px]',
+        title: 'font-bungee text-[#FF8C00]',
+        content: 'font-roboto'
+      }
     });
-
+  
     if (result.isConfirmed) {
       try {
         await deleteFriend(user.data.id, friendId);
         getFriendsList(user.data.id);
-        Swal.fire(
-          'Eliminado',
-          'El amigo ha sido eliminado.',
-          'success'
-        );
+        Swal.fire({
+          title: '¡Eliminado!',
+          text: 'El amigo ha sido eliminado de tu lista.',
+          icon: 'success',
+          confirmButtonText: 'Entendido',
+          confirmButtonColor: '#00D8A1',
+          background: '#fff',
+          customClass: {
+            popup: 'rounded-[20px]',
+            title: 'font-bungee text-[#00D8A1]',
+            content: 'font-roboto'
+          }
+        });
       } catch (error) {
         console.error("Error al eliminar amigo:", error);
-        Swal.fire(
-          'Error',
-          'No se pudo eliminar al amigo.',
-          'error'
-        );
+        Swal.fire({
+          title: '¡Error!',
+          text: 'No se pudo eliminar al amigo.',
+          icon: 'error',
+          confirmButtonText: 'Intentar de nuevo',
+          confirmButtonColor: '#DC3545',
+          background: '#fff',
+          customClass: {
+            popup: 'rounded-[20px]',
+            title: 'font-bungee text-[#DC3545]',
+            content: 'font-roboto'
+          }
+        });
       }
     }
   };
@@ -274,37 +322,88 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
   const handleSendMessage = async (friendId) => {
     try {
       const response = await createChat(user.data.id, friendId);
-      if (response && response.data && response.data.id) {
+      
+      if (response && response.data) {
         const updatedChats = await getUserChats(user.data.id);
-        onChatCreated(updatedChats, response.data.id);
-      } else {
-        console.error("Error: El chat creado no tiene un ID válido");
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo iniciar el chat.',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'OK'
-        });
+        const chatToOpen = response.data.id ? response.data : 
+          updatedChats.find(chat => 
+            chat.participants.some(p => p.userId === friendId)
+          );
+  
+        if (chatToOpen) {
+          await onChatCreated(updatedChats, chatToOpen.id);
+          Swal.fire({
+            icon: 'success',
+            title: 'Chat creado',
+            text: 'El chat ha sido creado exitosamente',
+            confirmButtonText: 'Ir al chat',
+            confirmButtonColor: '#00D8A1',
+            showCancelButton: true,
+            cancelButtonText: 'Aceptar',
+            cancelButtonColor: '#6C757D',
+            background: '#fff',
+            customClass: {
+              popup: 'rounded-[20px]',
+              title: 'font-bungee text-[#00D8A1]',
+              content: 'font-roboto'
+            }
+          }).then((result) => {
+            navigate('/chat');
+            if (result.isConfirmed) {
+              setTimeout(() => {
+                const chatEvent = new CustomEvent('openChat', { 
+                  detail: { chatId: chatToOpen.id } 
+                });
+                window.dispatchEvent(chatEvent);
+              }, 300); 
+            }
+          });
+        }
       }
     } catch (error) {
       console.error("Error al crear chat:", error);
-      if (error.response && error.response.status === 400 && error.response.data.error === "Ya existe un chat entre estos usuarios") {
+      if (error.response?.status === 400 && error.response?.data?.error === "Ya existe un chat entre estos usuarios") {
         const updatedChats = await getUserChats(user.data.id);
         const existingChat = updatedChats.find(chat => 
           chat.participants.some(p => p.userId === friendId)
         );
+        
         if (existingChat) {
-          onChatCreated(updatedChats, existingChat.id);
-        } else {
-          onChatCreated(updatedChats);
+          await onChatCreated(updatedChats, existingChat.id);
+          
+          Swal.fire({
+            icon: 'info',
+            title: 'Chat existente',
+            text: 'Ya tienes un chat con este usuario',
+            confirmButtonText: 'Ir al chat',
+            confirmButtonColor: '#00D8A1',
+            showCancelButton: true,
+            cancelButtonText: 'Ver lista de chats',
+            cancelButtonColor: '#6C757D',
+            background: '#fff',
+            customClass: {
+              popup: 'rounded-[20px]',
+              title: 'font-bungee text-[#00D8A1]',
+              content: 'font-roboto'
+            }
+          }).then((result) => {
+            navigate('/chat');
+            if (result.isConfirmed) {
+              setTimeout(() => {
+                const chatEvent = new CustomEvent('openChat', { 
+                  detail: { chatId: existingChat.id } 
+                });
+                window.dispatchEvent(chatEvent);
+              }, 300);
+            }
+          });
         }
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'No se pudo iniciar el chat.',
-          confirmButtonColor: '#3085d6',
+          text: 'No se pudo crear el chat',
+          confirmButtonColor: '#DC3545',
           confirmButtonText: 'OK'
         });
       }
@@ -400,20 +499,32 @@ const SearchPeople = ({ searchTerm }) => {
         await sendFriendRequest(user.data.id, receiverId);
         Swal.fire({
           icon: 'success',
-          title: 'Solicitud enviada',
+          title: '¡Solicitud enviada!',
           text: 'La solicitud de amistad ha sido enviada exitosamente.',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'Entendido',
+          confirmButtonColor: '#00D8A1',
+          background: '#fff',
+          customClass: {
+            popup: 'rounded-[20px]',
+            title: 'font-bungee text-[#00D8A1]',
+            content: 'font-roboto'
+          }
         });
         getFriendsList(user.data.id);
       } catch (error) {
         console.error("Error al enviar la solicitud de amistad:", error);
         Swal.fire({
           icon: 'error',
-          title: 'Error',
+          title: '¡Error!',
           text: 'No se pudo enviar la solicitud de amistad.',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'Intentar de nuevo',
+          confirmButtonColor: '#DC3545',
+          background: '#fff',
+          customClass: {
+            popup: 'rounded-[20px]',
+            title: 'font-bungee text-[#DC3545]',
+            content: 'font-roboto'
+          }
         });
       }
     }
