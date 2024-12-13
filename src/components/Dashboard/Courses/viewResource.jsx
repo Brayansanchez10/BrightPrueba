@@ -74,7 +74,7 @@ export default function ViewResource(){
   const [userExistingRating, setUserExistingRating] = useState(null);
   const [creator, setCreator] = useState(null);
   const { getCourse } = useCoursesContext();
-  const { getResourceUser, getResource, getUserResourceProgress } = useResourceContext();
+  const { getResourceUser, getResource, getUserResourceProgress, loadResource } = useResourceContext();
   const { getCourseProgress, updateCourseProgress } = useCourseProgressContext();
   const {comments,fetchCommentsByResource,addComment,editComment,removeComment,} = useCommentContext();
   const {ratings,fetchRatingsByResource, addRating,  editRating,  removeRating,} = useRatingsContext();
@@ -720,10 +720,29 @@ export default function ViewResource(){
     setIsOpen(!isOpen);
   };
 
-  const handleResourceClick = (resourceId, courseId) => {
-    console.log("Course ID: ", courseId);
-    console.log("Resource ID: ", resourceId);
-    window.location.href = `/course/${courseId}/resource/${resourceId}/A`;
+  const handleResourceClick = async (resourceId, courseId) => {
+    try {
+      // Cargar el recurso sin cambiar de página
+      const resourceData = await loadResource(resourceId);
+      setResource(resourceData);
+
+      setUserRating(0);
+      setRatingComment('');
+      setUserExistingRating(null);
+      
+      // Actualizar la URL sin recargar la página
+      navigate(`/course/${courseId}/resource/${resourceId}/A`, { replace: true });
+      
+      // Resetear estados necesarios para quizzes si es necesario
+      if (resourceData?.quizzes && resourceData.quizzes.length > 0) {
+        setCurrentQuestionIndex(0);
+        setAnswers({});
+        setIsQuizCompleted(false);
+        setIsQuizStarted(false);
+      }
+    } catch (error) {
+      console.error('Error al cargar el recurso:', error);
+    }
   };
   
   const renderResourceList = () => {
