@@ -824,6 +824,13 @@ export default function ResourceView() {
   };
 
   const renderRightSideContent = () => {
+    const viewOrder = (resourceNotes, resources) => {
+      console.log("Recursos:", resources);
+      console.log("Notas:", resourceNotes);
+      
+    };
+    viewOrder(resourceNotes, resources);
+
     return (
       <div className="space-y-4">
         <div ref={scrollContainerRef} className="flex space-x-4 custom-scrollbar-x pb-2">
