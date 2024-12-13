@@ -235,7 +235,8 @@
         "configProfile": "Configure Profile",
         "forum": "Forum",
         "theme": "Theme",
-        "view_profile": "View my profile"
+        "view_profile": "View my profile",
+        "change_password": "Change Password"
     },
     "newPasswordUser": {
         "change_password": "Change Password",
@@ -373,6 +374,8 @@
         "inactive": "Inactive",
         "cancel": "Cancel",
         "update": "Update",
+        "userExists": "A user with this username or email already exists",
+        "documentNumberExists": "A user with this document number already exists",
         "userUpdatedSuccess": "User updated successfully",
         "usernameRequired": "Please enter a username",
         "emailRequired": "Please enter an email",
@@ -394,7 +397,8 @@
         "cancel": "Cancel",
         "create": "Create",
         "userCreatedSuccess": "User created successfully",
-        "userExists": "A user with this username, email or document number already exists",
+        "userExists": "A user with this username or email already exists",
+        "documentNumberExists": "A user with this document number already exists",
         "usernameRequired": "Please enter a username",
         "firstNamesRequired": "Please enter the first names",
         "lastNamesRequired": "Please enter the last names",
@@ -765,12 +769,8 @@
         "specialties": "Specialties:",
         "web": "Web development",
         "desing": "UX/UI Design",
-        "programming": "Advanced programming",
-        "description1": "is a visionary in their field, with a unique ability to transform ideas into practical knowledge.",
-        "description2": "is a respected authority, recognized for their ability to simplify complex topics.",
-        "description3": "is passionate about continuous learning, always seeking to refine their skills and share them with others.",
-        "description4": "is an admired professional, with a career marked by significant achievements and an unwavering commitment to education.",
-        "description5": "is an intellectual leader, dedicated to positively influencing their community through teaching."
+        "noDescription": "The creator of the course does not have a description yet.",
+        "noSpecialties": "The creator has not yet added specialties."
     },
     "certificate": {
         "preview": "Certificate Preview",
@@ -1164,6 +1164,12 @@
             "confirm": "Yes, delete",
             "cancel": "No, cancel"
     },
+       "chat": {
+            "search": "Search...",
+            "selectChat": "Select a chat to start interacting",
+            "typeMessage": "Write a message",
+            "searchPeople": "Search for people..."       
+        },
     "notifications": {
         "delete": "Delete",
         "empty": "No notifications",

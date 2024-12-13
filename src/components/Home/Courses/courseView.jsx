@@ -7,8 +7,8 @@ import { useAuth } from "../../../context/auth.context";
 import { useUserContext } from "../../../context/user/user.context";
 import { Collapse } from "antd";
 import NavigationBar from "../NavigationBar";
-import { FaArrowLeft, FaSadTear, FaPlay, FaUser, FaUsers, FaGraduationCap, FaDownload, FaCertificate } from "react-icons/fa";
-import { MdPlayCircleOutline } from "react-icons/md";
+import { FaArrowLeft, FaSadTear, FaPlay, FaUser, FaUsers, FaGraduationCap, FaDownload, FaCertificate, FaVideo, FaImage, FaFilePdf, FaQuestionCircle } from "react-icons/fa";
+import { MdPlayCircleOutline, MdQuiz } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import Footer from "../../footer.jsx";
 import { motion, AnimatePresence } from "framer-motion";
@@ -109,7 +109,10 @@ export default function CourseView() {
       return;
     }
 
-    const unlockedIndex = Math.floor((currentProgress / percentagePerResource) + 1);
+    const unlockedIndex = Number.isInteger(currentProgress / percentagePerResource) 
+    ? Math.floor((currentProgress / percentagePerResource) + 0.000009) 
+    : Math.floor((currentProgress / percentagePerResource) + 1);
+
     const targetIndex = Math.min(unlockedIndex, totalResources - 1);
     const targetResource = resources[targetIndex];
   
@@ -124,6 +127,33 @@ export default function CourseView() {
 
   const navigateToCertificatePreview = () => {
     navigate(`/course/${courseId}/certificate-preview`);
+  };
+
+  const getFileIcon = (files) => {
+    console.log('Recurso URL:', files);
+    
+    if (!files) {
+      console.log('No hay URL');
+      return <MdQuiz className="text-green-600 text-xl" />;
+    }
+    
+    const urlLower = files.toLowerCase();
+    
+    // Videos
+    if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be') || 
+        urlLower.includes('1drv.ms') || urlLower.includes('onedrive') || 
+        urlLower.includes('drive.google.com')) {
+      return <FaVideo className="text-blue-600 text-xl" />;
+    }
+    
+    if (urlLower.match(/\.(jpg|jpeg|png)$/)) {
+      return <FaImage className="text-purple-500 text-xl" />;
+    }
+
+    // PDF
+    if (urlLower.endsWith('.pdf')) {
+      return <FaFilePdf className="text-red-500 text-xl" />;
+    }
   };
 
   if (isLoading) {
@@ -320,7 +350,8 @@ export default function CourseView() {
                                       <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
                                         {index + 1}
                                       </div>
-                                      <span className="text-lg font-medium text-primary">
+                                      <span className="text-lg font-medium text-primary flex items-center gap-2">
+                                        {getFileIcon(resource.files)}
                                         {resource.title}
                                       </span>
                                     </motion.div>

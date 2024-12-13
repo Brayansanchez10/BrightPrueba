@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { FaBars, FaEdit, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
+import { FaBars, FaEdit, FaSave, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import { useUserContext } from "../../context/user/user.context.jsx";
 import { useAuth } from "../../context/auth.context.jsx";
 import { Link } from "react-router-dom";
@@ -130,6 +130,12 @@ const Navbar = () => {
                       <FaEdit size="20px" className="mr-2" />
                       <Link to="/ProfileEditor">
                         {t("navigationBar.configure_profile")}
+                      </Link>
+                    </li>
+                    <li className="flex px-4 py-3 hover:bg-gray-600 cursor-pointer text-white rounded">
+                      <FaSave size="20px" className="mr-2" />
+                      <Link to="/ChangePassword">
+                        {t("navigationBar.change_password")}
                       </Link>
                     </li>
                     <li

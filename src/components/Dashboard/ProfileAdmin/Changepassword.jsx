@@ -10,6 +10,7 @@ import { useAuth } from "../../../context/auth.context";
 import { useTranslation } from "react-i18next";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Save, ArrowLeft } from 'lucide-react';
+import profile_fondo from "../../../assets/img/profile_fondo.png";
 
 function Changepassword() {
   const { t } = useTranslation("global");
@@ -112,15 +113,16 @@ function Changepassword() {
       <div className={`w-full transition-all duration-300 ${isLeftBarVisible ? "ml-44" : ""}`}>
         <Navbar />
         <div className="flex justify-center items-center mx-4 mt-8 mb-8">
-          <div className="w-full max-w-lg bg-secondaryAdmin rounded-xl shadow-lg overflow-hidden">
-            <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-4 px-6">
-              <h2 className="text-center font-black text-white text-2xl md:text-3xl">
+          <div className="w-full max-w-xl bg-white rounded-3xl shadow-lg overflow-hidden">
+            <div className="flex flex-col justify-center items-center bg-[#783CDA] py-10 px-6 sm:px-10 mt-0"
+            style={{ backgroundImage: `url(${profile_fondo})` }}>
+              <h2 className="text-center font-bungee text-white text-2xl md:text-3xl">
                 {t("newPasswordUser.change_password")}
               </h2>
             </div>
             <form onSubmit={formik.handleSubmit} className="p-6 space-y-6">
               <div>
-                <label className="text-base font-bold text-primary block mb-2">
+                <label className="text-base font-bold block mb-2">
                   {t("newPasswordUser.email")}
                 </label>
                 <input
@@ -133,7 +135,7 @@ function Changepassword() {
                 />
               </div>
               <div>
-                <label className="text-base font-bold text-primary block mb-2">
+                <label className="text-base font-bold block mb-2">
                   {t("newPasswordUser.new_password")}
                 </label>
                 <div className="relative">
@@ -159,7 +161,7 @@ function Changepassword() {
                 )}
               </div>
               <div>
-                <label className="text-base font-bold text-primary block mb-2">
+                <label className="text-base font-bold block mb-2">
                   {t("newPasswordUser.confirm_password")}
                 </label>
                 <div className="relative">

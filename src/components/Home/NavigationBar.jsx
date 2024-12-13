@@ -10,6 +10,8 @@ import {
   FaBook,
   FaGraduationCap,
   FaComments,
+  FaEnvelope,
+  FaSave
 } from "react-icons/fa";
 import Logo from "../../assets/img/hola.png";
 import { useAuth } from "../../context/auth.context";
@@ -169,6 +171,12 @@ export default function NavigationBar() {
     setIsMobileMenuOpen(false);
   };
 
+  const handleChatNavigation = () => {
+    navigate('/chat');
+    setIsMenuVisible(false);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <>
       <nav
@@ -257,6 +265,20 @@ export default function NavigationBar() {
                 >
                   <FaUserCog className="mr-2" /> 
                   {t("navigationBar.configProfile")}
+                </Link>
+                <Link
+                  to="/chat"
+                  className="flex items-center px-4 py-2 text-white hover:text-black hover:bg-gray-200"
+                >
+                  <FaEnvelope className="mr-2" />
+                  Mensajes
+                </Link>
+                <Link
+                  to="/ChangePasswordUser"
+                  className="flex items-center px-4 py-2 text-white hover:text-black hover:bg-gray-200"
+                >
+                  <FaSave className="mr-2" /> 
+                  {t("navigationBar.change_password")}
                 </Link>
                 <div
                   onClick={handleLogout}
@@ -407,6 +429,26 @@ export default function NavigationBar() {
                         </div>
                       </Link>
                     )}
+                    <Link
+                      to="/chat"
+                      className="flex items-center py-2 w-full justify-center text-blue-400 text-2xl font-bold"
+                      onClick={toggleMobileMenu}
+                    >
+                      <div
+                        className="flex items-center justify-center w-[250px] h-[90px] rounded-lg shadow-lg"
+                        style={{
+                          backgroundImage: `url(${fondoForo})`,
+                          backgroundSize: "cover",
+                          backgroundColor: "white",
+                          backgroundPosition: "center",
+                        }}
+                      >
+                        <FaEnvelope className="mr-2 text-blue-400 h-6 w-6" />
+                        <span className="text-2xl font-bungee text-blue-400">
+                          Mensajes
+                        </span>
+                      </div>
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -4,7 +4,7 @@ import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { MailIcon, ChevronUpIcon, BookOpenIcon, GlobeIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "../assets/img/hola.png";
-import { Link } from "react-router-dom";
+import doko from "../assets/img/dokoimg.png";
 
 const Footer = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -61,7 +61,7 @@ const Footer = () => {
                     {t('footer.text')}
                   </p>
                   <div className="flex space-x-2 sm:space-x-4">
-                    {["https://www.facebook.com/MesaDavisEnterprises/", "https://x.com/MesaDavisEnt", "https://www.instagram.com/mesadoko"].map((social) => (
+                    {["https://www.facebook.com/MesaDavisEnterprises/", "https://x.com/MesaDavisEnt", "https://www.instagram.com/mesadoko", "https://mesadoko.com/mesadoko-app.html"].map((social) => (
                       <motion.a
                         key={social}
                         href={`${social}`}
@@ -71,13 +71,19 @@ const Footer = () => {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                       >
-                        {social === "https://www.facebook.com/MesaDavisEnterprises/" && <FaFacebook size="12px" className="sm:text-base" />}
+                        {social === "https://www.facebook.com/MesaDavisEnterprises/" && <FaFacebook size="16px" className="sm:text-base" />}
                         {social === "https://x.com/MesaDavisEnt" && (
-                          <svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 512 512" className="sm:h-4">
+                          <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 512 512" className="sm:h-4">
                             <path fill="currentColor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
                           </svg>
                         )}
-                        {social === "https://www.instagram.com/mesadoko" && <FaInstagram size="12px" className="sm:text-base" />}
+                        {social === "https://www.instagram.com/mesadoko" && <FaInstagram size="16px" className="sm:text-base" />}
+                        {social === "https://mesadoko.com/mesadoko-app.html" && (
+                          <img 
+                            src={doko} 
+                            className="text-xl h-[20px] [filter:brightness(0)_saturate(100%)_invert(35%)_sepia(69%)_saturate(1401%)_hue-rotate(232deg)_brightness(94%)_contrast(93%)] hover:[filter:invert(1)_brightness(100)] transition-all duration-300"
+                          />
+                        )}
                       </motion.a>                   
                       ))}
                     </div>

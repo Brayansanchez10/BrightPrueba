@@ -152,7 +152,11 @@ const CourseNotes = ({
                 )}
                 {resourceNotes && resourceNotes.length > 0 ? (
                   resourceNotes
-                    .sort((a, b) => a.resourceId - b.resourceId)
+                    .sort((a, b) => {
+                      const indexA = resources.findIndex(r => r.id === a.resourceId);
+                      const indexB = resources.findIndex(r => r.id === b.resourceId);
+                      return indexA - indexB;
+                    })
                     .map((resourceNote, index) => {
                       const correspondingResource = resources.find(
                         (resource) => resource.id === resourceNote.resourceId

@@ -1,19 +1,26 @@
 import React, { useState, useEffect } from "react";
 import NavigationBar from "../Home/NavigationBar";
-import SettingsBar from "../Home/SettingsUser";
 import { useUserContext } from "../../context/user/user.context";
 import { useAuth } from "../../context/auth.context";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { Trash2 } from "lucide-react";
+import { Trash2, CircleUserRound, Edit } from "lucide-react";
 import { getEntity } from "../../api/user/entities.request";
 import Footer from "../footer";
+import background from "../../assets/img/background.png";
+import profile_fondo from "../../assets/img/profile_fondo.png";
+import user_icon from "../../assets/img/user.png";
+import email_icon from "../../assets/img/email.png";
+import last_name_icon from "../../assets/img/apellido.png";
+import name_icon from "../../assets/img/nombre.png";
+import entity_icon from "../../assets/img/entidad.png";
 
 const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
   const { t } = useTranslation("global");
-  const { updateUserPartial, getUserById } = useUserContext();
+  const { updateUserPartial, getUserById, deleteUser } = useUserContext();
   const { user } = useAuth();
-
+  const navigate = useNavigate();
   const [name, setName] = useState(initialName);
   const [email, setEmail] = useState(initialEmail);
   const [firstNames, setFirstNames] = useState("");
@@ -209,186 +216,241 @@ const UserProfileSettings = ({ name: initialName, email: initialEmail }) => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    Swal.fire({
+      title: t("settingsBar.are_you_sure"),
+      text: t("settingsBar.cannot_undo"),
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: t("settingsBar.yes_delete_account"),
+      cancelButtonText: t("settingsBar.cancel"),
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteUser(user.data.id);
+          navigate("/UserDeleteAccount");
+        } catch (error) {
+          console.error(error);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: t("settingsBar.problem_deleting"),
+          });
+        }
+      }
+    });
+  };
+
   return (
-    <div className="bg-primary min-h-screen">
+    <div className="bg-primary min-h-screen"
+    style={{ backgroundImage: `url(${background})` }}>
       <NavigationBar />
       <div className="justify-center items-center pt-16 w-full">
         <div className="md:mt-3 mt-5 px-4 pb-3 rounded-lg md:flex md:justify-center">
-          <div className="max-w-lg w-full mx-auto bg-secondary rounded-lg shadow-lg overflow-hidden md:mr-2">
-            <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-4 px-6 md:px-10">
-              <h1 className="text-center font-black text-white md:text-xl lg:text-2xl">
-                {t("userProfileSettings.edit_profile")}
-              </h1>
-            </div>
-            <div className="p-6 md:px-10 md:py-6">
-              <div className="flex items-center mb-4">
-                <div className="relative flex-shrink-0">
-                  {previewProfileImage && (
-                    <img
-                      src={previewProfileImage}
-                      alt="Preview"
-                      className="w-14 h-14 sm:w-20 sm:h-20 rounded-full shadow-lg"
-                    />
+          <div className="max-w-7xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden md:mr-2">
+            <div className="flex flex-col justify-center items-center bg-[#24ff8781] py-5 px-6 sm:px-10 mt-0 rounded-3xl"
+            style={{ backgroundImage: `url(${profile_fondo})` }}>
+              <div className="flex flex-col items-center">
+                {previewProfileImage ? (
+                  <img
+                    src={previewProfileImage}
+                    alt="Vista previa"
+                    className="w-28 h-28 sm:w-36 sm:h-36 rounded-full shadow-lg object-cover"
+                  />
+                ) : (
+                    <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full shadow-lg object-cover">
+                      <CircleUserRound className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-white" />
+                    </div>
                   )}
+                <div className="flex justify-center items-center space-x-24 sm:space-x-40 -mt-10">
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="profileImage"
+                      accept="image/*"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={handleImageChange}
+                    />
+                    <label
+                      htmlFor="profileImage"
+                      className="flex items-center justify-center text-white w-10 h-10 bg-blue-400 rounded-full cursor-pointer hover:bg-blue-500 transition duration-300"
+                    >
+                      <Edit size={20} />
+                    </label>
+                  </div>
                   {previewProfileImage && (
                     <button
                       type="button"
-                      className="absolute bottom-0 right-0 bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
+                      className="flex w-10 h-10 items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition duration-300"
                       onClick={handleDeleteImage}
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={20} />
                     </button>
                   )}
                 </div>
-                <div className={`${!previewProfileImage ? 'flex-grow' : 'ml-4'}`}>
-                  <input
-                    type="file"
-                    id="profileImage"
-                    accept="image/*"
-                    className="w-full border text-sm border-gray-300 dark:border-purple-800 rounded-md p-2 dark:text-primary hover:bg-primary transition-colors duration-300"
-                    onChange={handleImageChange}
-                  />
-                  {errors.image && (
-                    <p className="text-red-500 text-sm mt-1">{errors.image}</p>
-                  )}
-                </div>
               </div>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label
-                    htmlFor="name"
-                    className="text-base font-bold text-primary block mb-2"
-                  >
-                    {t("userProfileSettings.name")}
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                  {errors.name && (
-                    <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-                  )}
+            </div>
+            <div className="p-6 px-6 sm:px-16">
+              <form onSubmit={handleSubmit} className="relative grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-6">
+              <div className="flex flex-col space-y-3">
+                <div className="flex flex-col items-center">
+                  <img src={user_icon} alt="Nombre de usuario" className="w-[70px] h-[70px] mb-1" />
+                    <label
+                      htmlFor="name"
+                      className="text-sm font-medium text-gray-700 block mb-1"
+                    >
+                      {t("userProfileSettings.name")}
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                    {errors.name && (
+                      <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <img src={name_icon} alt="Nombres" className="w-[70px] h-[70px] mb-1" />
+                    <label
+                      htmlFor="firstNames"
+                      className="text-sm font-medium text-gray-700 block mb-1"
+                    >
+                      {t("userProfileSettings.firstNames")}
+                    </label>
+                    <input
+                      type="text"
+                      id="firstNames"
+                      className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                      value={firstNames}
+                      onChange={(e) => setFirstNames(e.target.value)}
+                    />
+                    {errors.firstNames && (
+                      <p className="text-red-500 text-sm mt-1">{errors.firstNames}</p>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <img src={user_icon} alt="Numero de documento" className="w-[70px] h-[70px] mb-1" />
+                    <label
+                      htmlFor="documentNumber"
+                      className="text-sm font-medium text-gray-700 block mb-1"
+                    >
+                      {t("userProfileSettings.documentNumber")}
+                    </label>
+                    <input
+                      type="text"
+                      id="documentNumber"
+                      className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                      value={documentNumber}
+                      onChange={(e) => setDocumentNumber(e.target.value)}
+                    />
+                    {errors.documentNumber && (
+                      <p className="text-red-500 text-sm mt-1">{errors.documentNumber}</p>
+                    )}
+                  </div>
                 </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="documentNumber"
-                    className="text-base font-bold text-primary block mb-2"
-                  >
-                    {t("userProfileSettings.documentNumber")}
-                  </label>
-                  <input
-                    type="text"
-                    id="documentNumber"
-                    className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
-                    value={documentNumber}
-                    onChange={(e) => setDocumentNumber(e.target.value)}
-                  />
-                  {errors.documentNumber && (
-                    <p className="text-red-500 text-sm mt-1">{errors.documentNumber}</p>
-                  )}
+
+                {/* Línea divisora */}
+                <div className="hidden sm:flex justify-center items-center w-36 -mt-1">
+                  <div className="h-[480px] w-1 bg-gray-300"></div>
                 </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="firstNames"
-                    className="text-base font-bold text-primary block mb-2"
-                  >
-                    {t("userProfileSettings.firstNames")}
-                  </label>
-                  <input
-                    type="text"
-                    id="firstNames"
-                    className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
-                    value={firstNames}
-                    onChange={(e) => setFirstNames(e.target.value)}
-                  />
-                  {errors.firstNames && (
-                    <p className="text-red-500 text-sm mt-1">{errors.firstNames}</p>
-                  )}
+
+                <div className="flex flex-col space-y-3">
+                  <div className="flex flex-col items-center">
+                    <img src={email_icon} alt="Email" className="w-[70px] h-[70px] mb-1" />
+                    <label
+                      htmlFor="email"
+                      className="text-sm font-medium text-gray-700 block mb-1"
+                    >
+                      {t("userProfileSettings.email")}
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      className="mt-2 p-2 w-full text-sm border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <img src={last_name_icon} alt="Apellidos" className="w-[70px] h-[70px] mb-1" />
+                    <label
+                      htmlFor="lastNames"
+                      className="text-sm font-medium text-gray-700 block mb-1"
+                    >
+                      {t("userProfileSettings.lastNames")}
+                    </label>
+                    <input
+                      type="text"
+                      id="lastNames"
+                      className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
+                      value={lastNames}
+                      onChange={(e) => setLastNames(e.target.value)}
+                    />
+                    {errors.lastNames && (
+                      <p className="text-red-500 text-sm mt-1">{errors.lastNames}</p>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <img src={entity_icon} alt="Entidad" className="w-[70px] h-[70px] mb-1" />
+                    <label
+                      htmlFor="entityId"
+                      className="text-sm font-medium text-gray-700 block mb-1"
+                    >
+                      {t("userProfileSettings.entities")}
+                    </label>
+                    <select
+                      name="entityId"
+                      value={entityId}
+                      onChange={(e) => setEntityId(e.target.value)}
+                      className={`mt-2 p-2 w-full text-sm border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100 ${
+                        entityId && errors.entityId ? "border-white" : "border-white-300"
+                      }`}
+                    >
+                      <option value="" label={t("register.choose_entity")} />
+                      {entities &&
+                        entities.length > 0 &&
+                        entities
+                          .filter((entity) => entity.id !== 1) // Filtra la entidad con id 1
+                          .map((entity) => (
+                            <option key={entity.id} value={entity.id}>
+                              {entity.name}
+                            </option>
+                          ))}
+                    </select>
+                    {entityId && errors.entityId && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.entityId}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="lastNames"
-                    className="text-base font-bold text-primary block mb-2"
-                  >
-                    {t("userProfileSettings.lastNames")}
-                  </label>
-                  <input
-                    type="text"
-                    id="lastNames"
-                    className="mt-2 p-2 text-sm w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
-                    value={lastNames}
-                    onChange={(e) => setLastNames(e.target.value)}
-                  />
-                  {errors.lastNames && (
-                    <p className="text-red-500 text-sm mt-1">{errors.lastNames}</p>
-                  )}
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="email"
-                    className="text-base font-bold text-primary block mb-2"
-                  >
-                    {t("userProfileSettings.email")}
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="mt-2 p-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                  {errors.email && (
-                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-                  )}
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="entityId"
-                    className="text-base font-bold text-primary block mb-2"
-                  >
-                    {t("userProfileSettings.entities")}
-                  </label>
-                  <select
-                    name="entityId"
-                    value={entityId}
-                    onChange={(e) => setEntityId(e.target.value)}
-                    className={`mt-2 p-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 hover:bg-gray-100 ${
-                      entityId && errors.entityId ? "border-white" : "border-white-300"
-                    }`}
-                  >
-                    <option value="" label={t("register.choose_entity")} />
-                    {entities &&
-                      entities.length > 0 &&
-                      entities
-                        .filter((entity) => entity.id !== 1) // Filtra la entidad con id 1
-                        .map((entity) => (
-                          <option key={entity.id} value={entity.id}>
-                            {entity.name}
-                          </option>
-                        ))}
-                  </select>
-                  {entityId && errors.entityId && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.entityId}
-                    </p>
-                  )}
-                </div>
-                <div className="flex justify-between items-center mt-6">
+                <div className="sm:col-span-3 flex justify-center items-center gap-4 mt-5">
                   <button
-                    className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    className="bg-[#2dc572] hover:bg-[#24ff87] text-white font-bungee text-sm py-2 w-[200px] rounded-xl transition duration-300"
                     type="submit"
                   >
-                    {t("userProfileSettings.save")}
+                    Guardar
+                  </button>
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white font-bungee text-sm py-2 w-[200px] rounded-xl transition duration-300"
+                    type="button"
+                    onClick={handleDeleteAccount}
+                  >
+                    Eliminar cuenta
                   </button>
                 </div>
               </form>
             </div>
           </div>
-          <SettingsBar />
         </div>
       </div>
       <div className="pt-12">

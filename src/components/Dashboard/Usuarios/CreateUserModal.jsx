@@ -11,7 +11,7 @@ const { Option } = Select;
 
 const CreateUserModal = ({ visible, onCancel, onCreate }) => {
   const { rolesData } = useRoleContext();
-  const { checkIfUserExists } = useUserContext();
+  const { checkIfUserExists, checkIfDocumentExists } = useUserContext();
   const [form] = Form.useForm();
   const { t } = useTranslation("global");
   const [shake, setShake] = useState(false);
@@ -41,10 +41,19 @@ const CreateUserModal = ({ visible, onCancel, onCreate }) => {
       const values = await form.validateFields();
       const { username, email, documentNumber } = values;
 
-      if (checkIfUserExists(username, email, documentNumber)) {
+      if (checkIfUserExists(username, email)) {
         Swal.fire({
           icon: "error",
           title: t("CreateUserModal.userExists"),
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
+      if (checkIfDocumentExists(documentNumber)) {
+        Swal.fire({
+          icon: "error",
+          title: t("CreateUserModal.documentNumberExists"),
           confirmButtonText: "OK",
         });
         return;

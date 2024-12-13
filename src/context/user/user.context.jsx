@@ -26,9 +26,19 @@ export const UserProvider = ({ children }) => {
         }
     };
 
-    const checkIfUserExists = (username, email) => {
-        return usersData.some(user => user.username === username || user.email === email);
+    const checkIfUserExists = (username, email, userId) => {
+        return usersData.some(
+            user => (user.username === username || user.email === email) &&
+            user.id !== userId // Ignorar al usuario actual
+        );
     };
+      
+    const checkIfDocumentExists = (documentNumber, userId) => {
+        return usersData.some(
+            user => user.documentNumber === documentNumber &&
+            user.id !== userId // Ignorar al usuario actual
+        );
+    };      
 
     const activateAccount = async (_id) => {
         try {
@@ -211,6 +221,7 @@ export const UserProvider = ({ children }) => {
                 usersData,
                 getUsers,
                 checkIfUserExists,
+                checkIfDocumentExists,
                 activateAccount,
                 getUserById,
                 updateUser,
