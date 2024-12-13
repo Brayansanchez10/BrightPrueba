@@ -12,7 +12,7 @@ const { Option } = Select;
 
 const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
   const { rolesData } = useRoleContext();
-  const { checkIfUserExists } = useUserContext();
+  const { checkIfUserExists, checkIfDocumentExists } = useUserContext();
   const [form] = Form.useForm();
   const { t } = useTranslation("global");
   const [shake, setShake] = useState(false);
@@ -40,19 +40,47 @@ const UpdateUserModal = ({ visible, onCancel, onUpdate, user }) => {
   const handleFormSubmit = async () => {
     try {
       const values = await form.validateFields();
+      const { username, email, documentNumber } = values;
+  
+      const currentUserId = user?.id;
+  
+      // Verifica si existe otro usuario con el mismo username o email
+      if (checkIfUserExists(username, email, currentUserId)) {
+        Swal.fire({
+          icon: "error",
+          title: t("UpdateUserModal.userExists"),
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+  
+      // Verifica si existe otro usuario con el mismo número de documento
+      if (checkIfDocumentExists(documentNumber, currentUserId)) {
+        Swal.fire({
+          icon: "error",
+          title: t("UpdateUserModal.documentNumberExists"),
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+  
+      // Actualiza la información del usuario
       onUpdate(values);
       console.log("Datos enviados del update:", values);
+  
       Swal.fire({
-        icon: 'success',
-        title: t('UpdateUserModal.userUpdatedSuccess'),
+        icon: "success",
+        title: t("UpdateUserModal.userUpdatedSuccess"),
         showConfirmButton: false,
         timer: 1500,
       });
-      onCancel(); // Close the modal
+  
+      form.resetFields();
+      onCancel(); // Cierra el modal
     } catch (error) {
       console.error("Failed to update user:", error);
     }
-  };
+  };  
 
   return (
     <Modal

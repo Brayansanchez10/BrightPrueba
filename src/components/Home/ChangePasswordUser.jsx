@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Save, ArrowLeft } from 'lucide-react';
 import NavigationBar from "./NavigationBar";
+import profile_fondo from "../../assets/img/profile_fondo.png";
 
 function NewPassword() {
   const { t } = useTranslation("global");
@@ -102,12 +103,13 @@ function NewPassword() {
   }, [formik.values.password, formik.values.confirmPassword]);
   
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-primary">
       <div className="flex justify-center h-full w-full mx-4 mt-8 mb-8">
         <NavigationBar />
-        <div className="w-full max-w-lg bg-white rounded-xl shadow-lg overflow-hidden mt-16">
-          <div className="bg-gradient-to-r from-[#783CDA] to-[#200E3E] py-4 px-6">
-            <h2 className="text-center font-black text-white text-2xl md:text-3xl">
+        <div className="w-full max-w-xl bg-white rounded-3xl shadow-lg overflow-hidden mt-16">
+          <div className="flex flex-col justify-center items-center bg-[#783CDA] py-10 px-6 sm:px-10 mt-0"
+          style={{ backgroundImage: `url(${profile_fondo})` }}>
+            <h2 className="text-center font-bungee text-white text-2xl md:text-3xl">
               {t("newPasswordUser.change_password")}
             </h2>
           </div>

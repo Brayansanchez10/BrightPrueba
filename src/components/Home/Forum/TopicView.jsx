@@ -31,13 +31,13 @@ export default function TopicViewComponente() {
   const { t } = useTranslation("global");
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [topic, setTopic] = useState({});
+  const [ topic, setTopic ] = useState({});
   const { topicId } = useParams();
-  const [comments, setComments] = useState([]);
+  const [ comments, setComments ] = useState([]);
   const { getTopicById } = useForumTopic();
   const { getCommentsByTopic } = useForumComments();
   const { getAnswersByComment } = useAnswers();
-  const [answersByComment, setAnswersByComment] = useState({});
+  const [ answersByComment, setAnswersByComment ] = useState({});
 
   const { likes, toggleLikes, loading: likesLoading } = useLikes();
   const { bookmark, toggleBookmark, loading: bookmarkLoading } = useBookMark();
