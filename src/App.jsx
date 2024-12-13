@@ -27,7 +27,8 @@ import { AnswersProvider } from "./context/forum/answers.context.jsx";
 import { BookmarkProvider } from "./context/forum/bookmark.context.jsx";
 import { ThemeProvider } from "./components/themes/theme.context.jsx";
 import { EntityProvider } from './context/user/entities.context.jsx';
-import { NotificationsProvider } from './context/user/notification.context';
+import { NotificationsProvider } from './context/user/notification.context.jsx';
+import { AnswersQuestionProvider } from './context/courses/answerQuestion.contex.jsx';
 // Pages
 import LoginForm from "./views/LoginForm";
 import RegisterForm from "./views/RegisterForm";
@@ -65,6 +66,8 @@ import DeleteAccountConfirmation from "./components/Dashboard/ProfileAdmin/elimi
 import Entities from "./components/Dashboard/Entities/EntitiesTable.jsx";
 import CertificatePreview from "./components/Home/Courses/CertificatePreview";
 import AllNotifications from './components/Notifications/AllNotifications.jsx';
+import ViewResource from './components/Dashboard/Courses/viewResource.jsx';
+import ForumViewAdmin from './components/Dashboard/forum/forumViewAdmin.jsx';
 
 function App() {
   const [forumActive, setForumActive] = useState(true); // Activado por defecto
@@ -100,59 +103,67 @@ function App() {
                                               <ForumCommentProvider>
                                                 <AnswersProvider>
                                                   <EntityProvider> 
-                                                    <Routes>
-                                                      <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
-                                                        <Route path="/" element={<LoginForm />} />
-                                                        <Route path="/register" element={<RegisterForm />} />
-                                                        <Route path="/reset" element={<ResetPasswordForm />} />
-                                                        <Route path="/code" element={<ResetPasswordVerifyForm />} />
-                                                        <Route path="/newPassword" element={<NewPassword />} />
-                                                      </Route>
-
-                                                      <Route element={<ProtectedRoute allowedRoles="usuario"/>}>
-                                                        <Route path="/Home" element={<HomePage />} />
-                                                        <Route path="/MyCourses" element={<MyCourses />} />
-                                                        <Route path="/CoursesHome" element={<CoursesHome />} />
-                                                        <Route path="/course/:courseId" element={<CourseView />} />
-                                                        <Route path="/course/:courseId/certificate-preview" element={<CertificatePreview />} />
-                                                        <Route path="/course/:courseId/resource/:id" element={<ResourceView />} />
-                                                        <Route path="/Account" element={<ProfileUser />} />
-                                                        <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />
-                                                        <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />
-                                                        <Route path="/AllCourses" element={<AllCourses />}/>
-                                                        <Route path="/notifications" element={<AllNotifications />}/>
-                                                        <Route path="/CourseCategory/:category" element={<CourseCategory />} />
-                                                            {forumActive && (
-                                                                <>
-                                                                <Route path="/Forum" element={<ForumCategoriesComponent />} />
-                                                                <Route path="/categories/:forumCategoryId" element={<TopicComponent />} />
-                                                                <Route path="/topic/:topicId" element={<TopicViewComponente />} />
-                                                                </>
-                                                            )}
-                                                        <Route path="/profile/:id" element={<ViewProfile />} />
-                                                        <Route path="/prevUser/:id" element={<PrevUser />} />
-                                                      </Route>
-
-                                                      <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor']} />}>
-                                                        <Route path="/admin" element={<Dashboard />} />
-                                                        <Route path="/Usuarios" element={<Usuarios />} />
-                                                        <Route path="/Courses" element={<Courses />} />
-                                                        <Route path="/Categories" element={<Categories />} />
-                                                        <Route path="/ForumCategories" element={<ForumCategories />} />
-                                                        <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
-                                                          <Route path='/Entities' element={<Entities />} />
+                                                    <AnswersQuestionProvider>
+                                                      <Routes>
+                                                        <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
+                                                          <Route path="/" element={<LoginForm />} />
+                                                          <Route path="/register" element={<RegisterForm />} />
+                                                          <Route path="/reset" element={<ResetPasswordForm />} />
+                                                          <Route path="/code" element={<ResetPasswordVerifyForm />} />
+                                                          <Route path="/newPassword" element={<NewPassword />} />
                                                         </Route>
-                                                        <Route path="/roles" element={<Roles />} />
-                                                        <Route path="/ProfileEditor" element={<ProfileEditor />} />
-                                                        <Route path="/ChangePassword" element={<ChangePassword />} />
-                                                        <Route path="/eliminatedCode" element={<DeleteAccountConfirmation />} />
-                                                        <Route path="/adminNotifications" element={<AllNotifications />}/>
-                                                      </Route>
 
-                                                      <Route path="/notFound" element={<NotFoundPage />} />
-                                                      <Route path="/activate/:id" element={<ActivationComponent />} />
-                                                      <Route path="*" element={<Navigate to="/notFound" />} />
-                                                    </Routes>
+                                                        <Route element={<ProtectedRoute allowedRoles="usuario"/>}>
+                                                          <Route path="/Home" element={<HomePage />} />
+                                                          <Route path="/MyCourses" element={<MyCourses />} />
+                                                          <Route path="/CoursesHome" element={<CoursesHome />} />
+                                                          <Route path="/course/:courseId" element={<CourseView />} />
+                                                          <Route path="/course/:courseId/certificate-preview" element={<CertificatePreview />} />
+                                                          
+                                                          <Route path="/Account" element={<ProfileUser />} />
+                                                          <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />
+                                                          <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />
+                                                          <Route path="/AllCourses" element={<AllCourses />}/>
+                                                          <Route path="/notifications" element={<AllNotifications />}/>
+                                                          <Route path="/CourseCategory/:category" element={<CourseCategory />} />
+                                                              {forumActive && (
+                                                                  <>
+                                                                  <Route path="/Forum" element={<ForumCategoriesComponent />} />
+                                                                  <Route path="/categories/:forumCategoryId" element={<TopicComponent />} />
+                                                                  <Route path="/topic/:topicId" element={<TopicViewComponente />} />
+                                                                  </>
+                                                              )}
+                                                          <Route path="/profile/:id" element={<ViewProfile />} />
+                                                          <Route path="/prevUser/:id" element={<PrevUser />} />
+                                                        </Route>
+
+                                                        <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor']} />}>
+                                                          <Route path="/admin" element={<Dashboard />} />
+                                                          <Route path="/Usuarios" element={<Usuarios />} />
+                                                          <Route path="/Courses" element={<Courses />} />
+                                                          <Route path="/Categories" element={<Categories />} />
+                                                          <Route path="/ForumCategories" element={<ForumCategories />} />
+                                                          <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+                                                            <Route path='/Entities' element={<Entities />} />
+                                                          </Route>
+                                                          <Route path="/roles" element={<Roles />} />
+                                                          <Route path="/ProfileEditor" element={<ProfileEditor />} />
+                                                          <Route path="/ChangePassword" element={<ChangePassword />} />
+                                                          <Route path="/eliminatedCode" element={<DeleteAccountConfirmation />} />
+                                                          <Route path="/adminNotifications" element={<AllNotifications />}/>
+                                                          <Route path="/StatisticsForum/:id" element={<ForumViewAdmin />}/>
+                                                        </Route>
+
+                                                        <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor', 'usuario']} />}>
+                                                          <Route path="/course/:courseId/resource/:id" element={<ResourceView />} />
+                                                          <Route path="/course/:courseId/resource/:id/A" element={<ViewResource />} />
+                                                        </Route>
+
+                                                        <Route path="/notFound" element={<NotFoundPage />} />s
+                                                        <Route path="/activate/:id" element={<ActivationComponent />} />
+                                                        <Route path="*" element={<Navigate to="/notFound" />} />
+                                                      </Routes>
+                                                    </AnswersQuestionProvider>
                                                   </EntityProvider>
                                                 </AnswersProvider>
                                               </ForumCommentProvider>

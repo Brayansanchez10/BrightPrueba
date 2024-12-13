@@ -815,7 +815,20 @@
         "addNote": "Create",
         "noNotes": "There are no notes for this course yet",
         "noResourceNotes": "There are no notes for this resource yet",
-        "resourceNoteExists": "There is already a note for this resource. You can edit it if you wish."
+        "resourceNoteExists": "There is already a note for this resource. You can edit it if you wish.",
+        "AnswerSubmitAlertTitle": "Answer Sent",
+        "AnswerSubmitAlertText": "Your answer has been published successfully.",
+        "AnswerUpdateAlertTitle": "Answer Updated",
+        "AnswerUpdateAlertText": "Your answer has been updated successfully.",
+        "AnswerDeleteAlertTitle": "Answer Deleted, ",
+        "AnswerDeleteAlertText": "Your answer has been deleted.",
+        "AnswerDeleteAlertError": "An error occurred while deleting your response. Please try again later.",
+        "AnswerSubmit": "Reply to",
+        "AnswerPlaceHolder": "Type your answer: ",
+        "loading": "Loading",
+        "noReplies": "No answers",
+        "hideReplies": "Hide answers",
+        "showReplies": "Show answers"
     },
     "announcement": {
         "comingSoon": "Course User Comments",

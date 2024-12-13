@@ -809,7 +809,20 @@
         "addNote": "Crear",
         "noNotes": "Aún no hay apuntes en este curso",
         "noResourceNotes": "Aún no hay apuntes en este recurso",
-        "resourceNoteExists": "Ya hay un apunte para este recurso. Puedes editarlo si lo deseas."
+        "resourceNoteExists": "Ya hay un apunte para este recurso. Puedes editarlo si lo deseas.",
+        "AnswerSubmitAlertTitle": "Respuesta Enviada",
+        "AnswerSubmitAlertText": "Tu respuesta ha sido publicado exitosamente",
+        "AnswerUpdateAlertTitle": "Respuesta actualizada",
+        "AnswerUpdateAlertText": "Tu respuesta ha sido actualizada exitosamente.",
+        "AnswerDeleteAlertTitle": "Respuesta Eliminada, ",
+        "AnswerDeleteAlertText": "Tu respuesta ha sido eliminada.",
+        "AnswerDeleteAlertError": "Ocurrió un error al eliminar respuesta. Por favor, intenta de nuevo más tarde",
+        "AnswerSubmit": "Responder",
+        "AnswerPlaceHolder": "Escribe tu respuesta: ",
+        "loading": "Cargando",
+        "noReplies": "No hay respuestas",
+        "hideReplies": "Ocultar respuestas",
+        "showReplies": "Mostrar respuestas"
     },
     "announcement": {
         "comingSoon": "Comentarios de los usuarios",

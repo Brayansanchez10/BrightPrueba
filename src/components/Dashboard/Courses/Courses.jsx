@@ -1,14 +1,7 @@
-
+import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
 import { Button, message } from "antd";
-import {
-  EditOutlined,
-  InfoCircleOutlined,
-  DeleteOutlined,
-  FileAddOutlined,
-  BellOutlined,
-  QrcodeOutlined,
-  MoreOutlined,
+import { EditOutlined, InfoCircleOutlined, DeleteOutlined, FileAddOutlined, BellOutlined, QrcodeOutlined, MoreOutlined,
 } from "@ant-design/icons";
 import LeftBar from "../../Dashboard/LeftBar";
 import { useUserContext } from "../../../context/user/user.context";
@@ -22,12 +15,14 @@ import CourseDetailsModal from "./CourseDetailsModal";
 import NotifyCourseModal from "./NotifyCourseModal";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaSearch, FaRegEye, } from "react-icons/fa";
 import CreateSubCategoryForm from "../SubCategories/CreateSubCategoryForm";
 import AdminCoursesModal from "./AdminCoursesModal";
+import Swal from "sweetalert2";
 
 import { useAuth } from "../../../context/auth.context";
 import { usePermissionContext } from "../../../context/user/permissions.context";
+import { useResourceContext } from "../../../context/courses/resource.contex";
 
 const DataTablete = () => {
   const { t } = useTranslation("global");
@@ -40,6 +35,7 @@ const DataTablete = () => {
     crearRecurso,
     createCourse,
   } = useCoursesContext();
+  const { getResource } = useResourceContext();
   const [searchValue, setSearchValue] = useState("");
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
@@ -62,16 +58,12 @@ const DataTablete = () => {
   const [subCategoryForm, setSubCategoryForm] = useState(false);
   const [entityId, setEntityId] = useState(null);
   const [viewMode, setViewMode] = useState('myCourses'); // 'myCourses' o 'allEntityCourses'
+  const navigate = useNavigate();
+  const [resources, setResources] = useState([]);
 
   const { user } = useAuth();
   const [username, setUsername] = useState("");
-  const {
-    permissionsData,
-    rolePermissions,
-    loading,
-    error,
-    getPermissionsByRole,
-  } = usePermissionContext();
+  const { ermissionsData, rolePermissions, loading, error, getPermissionsByRole, } = usePermissionContext();
   const [permisosByRol, setPermisosByRol] = useState("");
   const [openMenus, setOpenMenus] = useState({});
   const menuRef = useRef(null);
@@ -331,16 +323,25 @@ const DataTablete = () => {
   const toggleDropdown = (courseId, event) => {
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
-
-    if (openMenus[courseId]) {
-      setOpenMenus((prev) => ({ ...prev, [courseId]: false }));
-    } else {
-      setMenuPosition({
-        top: rect.top + window.scrollY,
-        left: rect.right + window.scrollX,
-      });
-      setOpenMenus((prev) => ({ ...prev, [courseId]: true }));
-    }
+  
+    setMenuPosition({
+      top: rect.top + window.scrollY,
+      left: rect.right + window.scrollX,
+    });
+  
+    setOpenMenus((prev) => {
+      // Crear un nuevo estado donde todos los menús están cerrados
+      const newState = Object.keys(prev).reduce((acc, key) => {
+        acc[key] = false;
+        return acc;
+      }, {});
+  
+      // Abrir solo el menú actual o cerrarlo si ya está abierto
+      return {
+        ...newState,
+        [courseId]: !prev[courseId],
+      };
+    });
   };
 
   // Cerrar el menú cuando se hace clic fuera
@@ -369,6 +370,37 @@ const DataTablete = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  
+  const handleResourceClick = async (course) => {
+    try {
+        // Obtiene todos los recursos del curso
+        const resourceData = await getResource(course.id);
+
+        if (resourceData && resourceData.length > 0) {
+            // Toma el primer recurso
+            const firstResource = resourceData[0];
+
+            // Actualiza el estado con los recursos obtenidos
+            setResources(resourceData);
+
+            // Establece el curso seleccionado
+            setSelectedCourseId(course.id);
+
+            // Navega hacia la ruta del primer recurso
+            navigate(`/course/${course.id}/resource/${firstResource.id}/A`);
+        } else {
+            Swal.fire({
+              icon: "info",
+              title: "Sin recursos disponibles",
+              text: "No se encontraron recursos para este curso. Por favor, cree uno para previsualizar los recursos.",
+              confirmButtonText: "Entendido",
+          });
+        }
+    } catch (error) {
+        console.error("Error al obtener recursos:", error);
+    }
+};
 
   if (loading) return <p>Cargando permisos del rol...</p>;
   if (error) return <p>{error}</p>;
@@ -551,7 +583,7 @@ const DataTablete = () => {
                                       onClick={(e) => toggleDropdown(course.id, e)}
                                     />
                                     <div
-                                      className={`fixed transform transition-transform duration-150 ease-out bg-white border rounded-md shadow-lg z-50 flex flex-col space-y-1 ${
+                                      className={`fixed transform transition-transform duration-150 ease-out bg-white border rounded-md shadow-lg z-50 flex flex-col space-y-2 ${
                                         openMenus[course.id]
                                           ? "translate-x-0 opacity-100"
                                           : "translate-x-2 opacity-0 pointer-events-none"
@@ -565,7 +597,7 @@ const DataTablete = () => {
                                     >
                                       {canEdit && (
                                         <Button
-                                          className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1 px-4 transition-colors duration-200 whitespace-nowrap"
+                                          className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1 px-4 transition-colors duration-200 whitespace-nowrap rounded-3xl"
                                           icon={<EditOutlined />}
                                           onClick={() => handleUpdateButtonClick(course)}
                                         >
@@ -574,25 +606,34 @@ const DataTablete = () => {
                                       )}
                                       {canShow && (
                                         <Button
-                                          className="bg-purple-500 hover:bg-zinc-300 text-white font-bold py-1 px-4"
+                                          className="bg-purple-500 hover:bg-zinc-300 text-white font-bold rounded-3xl py-1 px-4"
                                           icon={<InfoCircleOutlined />}
                                           onClick={() => handleDetailsButtonClick(course)}
                                         >
                                           {/* Botón de Ver Detalles */}
                                         </Button>
                                       )}
+                                       {canShow && (
+                                        <Button
+                                          className="bg-blue-900 hover:bg-zinc-300 text-white font-bold rounded-3xl py-1 px-4"
+                                          icon={<FaRegEye />}
+                                          onClick={() => handleResourceClick(course)}
+                                        >
+                                          {/* Botón de Ver Detalles */}
+                                        </Button>
+                                      )}
                                       {canNotify && (
                                         <Button
-                                          className="bg-orange-500 hover:bg-zinc-300 text-white font-bold py-1 px-4"
+                                          className="bg-orange-500 hover:bg-zinc-300 text-white font-bold rounded-3xl py-1 px-4"
                                           icon={<BellOutlined />}
-                                          onClick={() => handleNotifyButtonClick(course)}
+                                          onClick={() => handleNotifyButtonClick(course.id)}
                                         >
                                           {/* Botón de Notificar */}
                                         </Button>
                                       )}
                                       {canDelete && (
                                         <Button
-                                          className="bg-red-500 hover:bg-zinc-300 text-white font-bold py-1 px-4"
+                                          className="bg-red-500 hover:bg-zinc-300 text-white font-bold rounded-3xl py-1 px-4"
                                           icon={<DeleteOutlined />}
                                           onClick={() => handleDeleteButtonClick(course)}
                                         >
