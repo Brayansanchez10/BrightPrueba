@@ -92,6 +92,12 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
     if (!category.description || category.description.length < 30) {
       errors.description = t("createCategoryForm.descriptionTooShort");
     }
+    if (!username?.entityId) {
+      console.error("Error: entityId is undefined for the user.");
+      message.error("Entity ID is missing. Please check your user data.");
+      setIsSubmitting(false);
+      return;
+    }
     if (categories.some((existingCategory) => existingCategory.name === category.name)) {
       errors.name = t("createCategoryForm.nameExists")
     }
@@ -210,3 +216,4 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
 };
 
 export default CreateCategoryForm;
+

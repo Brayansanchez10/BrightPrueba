@@ -6,7 +6,7 @@ import Navbar from "../NavBar";
 
 import Swal from "sweetalert2";
 import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
-import { ReloadOutlined, InfoCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, InfoCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import CreateEntityModal from "./createEntity.jsx";
 import UpdateEntityModal from "./updateEntity.jsx";
@@ -240,7 +240,7 @@ const DataTablete = () => {
 
                                                                 <Button
                                                                     className="bg-blue-500 hover:bg-sky-700 text-white font-bold py-1.5 px-4 rounded-3xl shadow-md shadow-gray-400"
-                                                                    icon={<ReloadOutlined />}
+                                                                    icon={<EditOutlined />}
                                                                     style={{ minWidth: "50px" }}
                                                                     onClick={() =>
                                                                         handleUpdateButtonClick(entities)
