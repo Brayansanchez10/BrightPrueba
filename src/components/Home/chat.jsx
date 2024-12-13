@@ -4,35 +4,11 @@ import NavigationBar from "./NavigationBar";
 import { useChat } from "../../context/user/chat.context";
 import { useAuth } from "../../context/auth.context";
 import { useTranslation } from "react-i18next";
-import {
-  FaUser,
-  FaSearch,
-  FaPaperPlane,
-  FaUserPlus,
-  FaUsers,
-  FaLock,
-  FaEnvelope,
-  FaComments,
-} from "react-icons/fa";
-import {
-  RiReplyLine,
-  RiPencilLine,
-  RiDeleteBinLine,
-  RiMoreLine,
-  RiCloseLine,
-} from "react-icons/ri";
+import { FaUser, FaSearch, FaPaperPlane, FaUserPlus,FaUsers, FaLock, FaEnvelope, FaComments } from "react-icons/fa";
+import { RiReplyLine,  RiPencilLine,  RiDeleteBinLine,  RiMoreLine,  RiCloseLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import backgroundImage from "../../assets/img/chat.png";
-import {
-  socket,
-  initSocket,
-  leaveChat,
-  sendMessage as emitMessage,
-  startTyping,
-  stopTyping,
-  emitEditMessage,
-  emitDeleteMessage,
-} from "../../utils/socket";
+import {  socket,  initSocket,  leaveChat,  sendMessage as emitMessage,  startTyping,  stopTyping,  emitEditMessage,  emitDeleteMessage } from "../../utils/socket";
 import Friends from "./Friends";
 import { MessageSquare } from "lucide-react";
 import Swal from "sweetalert2";
@@ -40,19 +16,7 @@ import Swal from "sweetalert2";
 export default function Chat() {
   const { t } = useTranslation("global");
   const { user } = useAuth();
-  const {
-    chats,
-    messages,
-    unreadCounts,
-    getUserChats,
-    getChatMessages,
-    sendMessage,
-    editMessage,
-    deleteMessage,
-    updateLocalMessage,
-    markMessagesAsRead,
-    getUnreadMessageCount,
-  } = useChat();
+  const {chats,  messages,  unreadCounts,  getUserChats,  getChatMessages,  sendMessage,  editMessage,  deleteMessage,  updateLocalMessage,  markMessagesAsRead,  getUnreadMessageCount } = useChat();
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const [editingMessage, setEditingMessage] = useState(null);
@@ -179,7 +143,7 @@ export default function Chat() {
         });
       };
 
-      socket.on("message received", handleMessageReceived);
+      socket.on("private message", handleMessageReceived);
       socket.on("typing", handleTyping);
       socket.on("stop typing", handleStopTyping);
       socket.on("message edited", handleMessageEdited);
@@ -367,18 +331,26 @@ export default function Chat() {
     }
   }, [messageToDelete, deleteMessage, selectedChat, updateLocalMessage]);
 
+  const toggleMessageMenu = useCallback((messageId) => {
+    setActiveMessageMenu(activeMessageMenu === messageId ? null : messageId);
+  }, [activeMessageMenu]);
+  
   const handleReplyMessage = useCallback((message) => {
-    setReplyingTo(message);
+    let replyContent = message.content;
+    try {
+      const parsedContent = JSON.parse(message.content);
+      if (parsedContent.content) {
+        replyContent = parsedContent.content;
+      }
+    } catch (e) {}
+    
+    setReplyingTo({
+      ...message,
+      content: replyContent
+    });
     setMessageInput("");
     setEditingMessage(null);
   }, []);
-
-  const toggleMessageMenu = useCallback(
-    (messageId) => {
-      setActiveMessageMenu(activeMessageMenu === messageId ? null : messageId);
-    },
-    [activeMessageMenu]
-  );
 
   const formatDate = useCallback((date) => {
     const today = new Date();
@@ -475,16 +447,13 @@ export default function Chat() {
 
   const renderSidebarMessage = useCallback((message) => {
     if (!message) return "No hay mensajes aún";
-
     let content = message.content;
-
     try {
       const parsedContent = JSON.parse(content);
       if (parsedContent.replyTo) {
         content = parsedContent.content;
       }
     } catch (e) {}
-
     return content.length > 50 ? content.slice(0, 50) + "..." : content;
   }, []);
 
@@ -501,9 +470,15 @@ export default function Chat() {
             const repliedMessage = localMessages.find(
               (msg) => msg.id === parsedContent.replyTo
             );
-            replyContent = repliedMessage
-              ? repliedMessage.content
-              : "Mensaje no disponible";
+            let originalContent = repliedMessage?.content;
+            try {
+              const parsedReplyContent = JSON.parse(originalContent);
+              if (parsedReplyContent.content) {
+                originalContent = parsedReplyContent.content;
+              }
+            } catch (e) {}
+            
+            replyContent = repliedMessage ? originalContent : "Mensaje no disponible";
             replyUserName =
               repliedMessage.senderId === user.data.id
                 ? "Tú"
@@ -534,28 +509,19 @@ export default function Chat() {
                 isCurrentUser ? "sm:ml-2 ml-1" : "sm:mr-2 mr-1"
               }`}
             >
-              {(isCurrentUser
-                ? user.data
-                : selectedChat.participants.find(
-                    (p) => p.userId === message.senderId
-                  )?.user
-              )?.userImage ? (
+              {selectedChat.participants.find(
+                (p) => p.userId === message.senderId
+              )?.user?.userImage ? (
                 <img
                   src={
-                    (isCurrentUser
-                      ? user.data
-                      : selectedChat.participants.find(
-                          (p) => p.userId === message.senderId
-                        )?.user
-                    ).userImage
+                    selectedChat.participants.find(
+                      (p) => p.userId === message.senderId
+                    ).user.userImage
                   }
                   alt={
-                    (isCurrentUser
-                      ? user.data
-                      : selectedChat.participants.find(
-                          (p) => p.userId === message.senderId
-                        )?.user
-                    ).username
+                    selectedChat.participants.find(
+                      (p) => p.userId === message.senderId
+                    ).user.username
                   }
                   className="w-full h-full object-cover"
                 />
@@ -587,7 +553,7 @@ export default function Chat() {
                     replyContent && !message.isDeleted ? "rounded-t-none" : ""
                   
                 } ${
-                  isCurrentUser ? "bg-[#E8E2F7]" : "bg-white"
+                  isCurrentUser ? "bg-[#FFF]" : "bg-white"
                 } shadow-md`}
                 >
                   {message.isDeleted ? (
@@ -844,7 +810,7 @@ export default function Chat() {
                         chat.id !==
                           parseInt(localStorage.getItem("selectedChatId")) && (
                           <div className="bg-[#24FF87] rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
-                            <span className="font-bungee text-white text-sm">
+                            <span className="font-bungee text-black text-sm">
                               {unreadCounts[chat.id]}
                             </span>
                           </div>
@@ -899,12 +865,16 @@ export default function Chat() {
             ? (showSidebar ? 'w-full' : 'hidden') 
             : 'w-[400px] xl:w-[460px] min-w-[400px]'
         } flex flex-col h-full px-4 pb-4 relative z-10`}>
-          <div className="p-4 flex items-center justify-between">
+        <div className="p-4 flex items-center justify-between">
             <div className="flex items-center">
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3 mt-4 flex-shrink-0">
-                {user.data.userImage ? (
+                {chats?.[0]?.participants?.find(
+                  (p) => p.userId === user.data.id
+                )?.user?.userImage ? (
                   <img 
-                    src={user.data.userImage} 
+                    src={chats[0].participants.find(
+                      (p) => p.userId === user.data.id
+                    ).user.userImage} 
                     alt={user.data.username} 
                     className="w-full h-full object-cover"
                   />
@@ -916,7 +886,6 @@ export default function Chat() {
                 {user.data.username}
               </h2>
             </div>
-            
             <div className="flex items-center space-x-6 mt-2">
               <button
                 className={`text-[#726F7B] hover:text-gray-700 transition-colors ${
@@ -1091,7 +1060,7 @@ export default function Chat() {
                         }
                       }}
                       placeholder={t("chat.typeMessage")}
-                      className="w-full sm:h-[65px] h-[55px] sm:text-base text-sm py-3 px-4 bg-white text-gray-700 rounded-[25px] focus:outline-none focus:ring-2 focus:ring-[#008BD8] pr-16 shadow-2xl sm:mr-12 -mr-0 sm:mb-0 mb-3"
+                      className="w-full sm:h-[65px] h-[55px] sm:text-base text-sm py-3 px-4 bg-white text-gray-700 rounded-[25px] focus:outline-none focus:ring-2 focus:ring-[#008BD8] pr-16 shadow-md shadow-gray-500/80 sm:mr-12 -mr-0 sm:mb-0 mb-3"
                     />
                     <button
                       type="submit"
@@ -1099,7 +1068,7 @@ export default function Chat() {
                     >
                       <FaPaperPlane className="sm:w-5 sm:h-5 w-4 h-4" />
                     </button>
-                  </div>
+                </div>
                 </form>
               </>
             ) : (

@@ -20,10 +20,9 @@ export const initSocket = (chatId) => {
       if (typeof window.updateReceivedMessage === "function") {
         window.updateReceivedMessage(newMessage);
       }
-      if (
-        newMessage.senderId !== parseInt(userId) &&
-        newMessage.chatId !== selectedChatId
-      ) {
+
+      if (newMessage.receiverId === parseInt(userId) && 
+          newMessage.chatId !== selectedChatId) {
         if (typeof window.updateUnreadCount === "function") {
           window.updateUnreadCount(newMessage.chatId);
         }
@@ -45,6 +44,32 @@ export const initSocket = (chatId) => {
     socket.on("messages read", ({ chatId, userId }) => {
       if (typeof window.updateMessagesRead === "function") {
         window.updateMessagesRead(chatId, userId);
+      }
+    });
+    
+    socket.on("update unread count", async ({ chatId, userId }) => {
+      try {
+        const response = await fetch(`${SOCKET_URL}/chat/getUnreadMessageCount/${userId}/${chatId}`);
+        const data = await response.json();
+        const count = data.count;
+        
+        if (typeof window.updateUnreadCount === "function") {
+          window.updateUnreadCount(chatId, count);
+        }
+      } catch (error) {
+        console.error("Error al actualizar conteo:", error);
+      }
+    });
+
+    socket.on("typing", ({ chatId, userId }) => {
+      if (typeof window.updateTypingStatus === "function") {
+        window.updateTypingStatus(chatId, userId, true);
+      }
+    });
+
+    socket.on("stop typing", ({ chatId, userId }) => {
+      if (typeof window.updateTypingStatus === "function") {
+        window.updateTypingStatus(chatId, userId, false);
       }
     });
   }
@@ -97,6 +122,12 @@ export const emitDeleteMessage = (messageId, chatId) => {
 export const emitMessagesRead = (chatId, userId) => {
   if (socket) {
     socket.emit("messages read", { chatId, userId });
+  }
+};
+
+export const updateUnreadCount = (chatId, userId) => {
+  if (socket) {
+    socket.emit("update unread count", { chatId, userId });
   }
 };
 
