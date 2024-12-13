@@ -4,13 +4,15 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['chunk-TNILSUSL.js']
+    include: ['socket.io-client']
   },
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-      },
-    },
+  server: {
+    port: 5173,
+    host: true
   },
+  resolve: {
+    alias: {
+      '@': '/src'
+    }
+  }
 });

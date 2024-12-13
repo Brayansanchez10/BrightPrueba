@@ -30,16 +30,20 @@ export const generateNotesPDF = (notes, resourceNotes, resources) => {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(12);
 
-  resourceNotes.forEach((resourceNote) => {
-    const resource = resources.find(r => r.id === resourceNote.resourceId);
-    const resourceTitle = resource ? resource.title : `Recurso desconocido (ID: ${resourceNote.resourceId})`;
-
+  // Iterar sobre todos los recursos para asegurar que se incluyan incluso los que no tienen notas
+  resources.forEach((resource) => {
+    const resourceNote = resourceNotes.find(note => note.resourceId === resource.id);
+    
     doc.setFont('helvetica', 'bold');
-    doc.text(resourceTitle, 20, yOffset);
+    doc.text(resource.title, 20, yOffset);
     yOffset += 10;
 
     doc.setFont('helvetica', 'normal');
-    const splitContent = doc.splitTextToSize(resourceNote.content, 170);
+    const content = resourceNote 
+      ? resourceNote.content 
+      : "No se agregó información en este recurso";
+    
+    const splitContent = doc.splitTextToSize(content, 170);
     
     if (yOffset + splitContent.length * 7 > 260) { // Ajustado para dejar espacio al pie de página
       doc.addPage();

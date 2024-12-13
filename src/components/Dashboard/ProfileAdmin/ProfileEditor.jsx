@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import LeftBar from './../LeftBar';
-import SettingsBar from './SettingsBar';
 import ProfileForm from './EditProfileForm';
 import Navbar from './../NavBar';
 import { useUserContext } from "../../../context/user/user.context";
 import { useAuth } from "../../../context/auth.context";
+import background from "../../../assets/img/background.png";
 
 export default function ProfileEditor() {
   const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
@@ -51,7 +51,8 @@ export default function ProfileEditor() {
   };
 
   return (
-    <div className="bg-primaryAdmin flex min-h-screen overflow-hidden">
+    <div className="bg-primaryAdmin flex min-h-screen overflow-hidden"
+    style={{ backgroundImage: `url(${background})` }}>
       <LeftBar onVisibilityChange={handleLeftBarVisibilityChange} />
       <div className={`w-full transition-all duration-300 ${isLeftBarVisible ? 'ml-56' : ''}`}>
         <Navbar />
@@ -66,7 +67,6 @@ export default function ProfileEditor() {
               entityId={userData.entityId}
               onUserDataChange={handleUserDataChange}
             />
-            <SettingsBar />
           </div>
         </div>
       </div>

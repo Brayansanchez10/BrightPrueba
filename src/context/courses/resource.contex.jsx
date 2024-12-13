@@ -26,6 +26,8 @@ export const useResourceContext = () => {
 // Proveedor del contexto
 export const ResourceProvider = ({ children }) => {
     const [resources, setResources] = useState([]);
+    const [currentResource, setCurrentResource] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     // Función para obtener todos los recursos: 
     const getAllResources = async () => {
@@ -37,6 +39,20 @@ export const ResourceProvider = ({ children }) => {
         } catch (error) {
             console.error(error);
             return null;
+        }
+    };
+
+    const loadResource = async (id) => {
+        try {
+            setIsLoading(true);
+            const res = await getResourceUserApi(id);
+            setCurrentResource(res.data);
+            return res.data;
+        } catch (error) {
+            console.error("Error al cargar recurso:", error);
+            return null;
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -162,7 +178,19 @@ export const ResourceProvider = ({ children }) => {
     }, []);
 
     return (
-        <ResourceContext.Provider value={{ resources, getResource, createResource, updateResource, deleteResource, getResourceUser, completeQuiz, getUserResourceProgress}}>
+        <ResourceContext.Provider value={{ 
+            resources, 
+            currentResource,
+            isLoading,
+            getResource, 
+            createResource, 
+            updateResource, 
+            deleteResource, 
+            getResourceUser,
+            loadResource,
+            completeQuiz, 
+            getUserResourceProgress
+        }}>
             {children}
         </ResourceContext.Provider>
     );

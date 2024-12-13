@@ -6,13 +6,14 @@ import Swal from "sweetalert2";
 import Navbar from "../NavBar";
 import { useForumCategories } from "../../../context/forum/forumCategories.context";
 import { useTranslation } from "react-i18next";
-import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaSearch, FaRegEye } from "react-icons/fa";
 import { EditOutlined, InfoCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import CreateForumCategoriesModal from "./createForumCategory.jsx";
 import UpdateCategoriesForum from "./updateForumCategory.jsx";
 import DetailsCategoryForumModal from "./DetailsCategoriesForum.jsx";
 import DeleteForumCategory from "./deleteForumCategories.jsx";
+import ForumViewAdmin from "./forumViewAdmin.jsx";
 
 import { useAuth } from "../../../context/auth.context.jsx";
 import { useUserContext } from "../../../context/user/user.context.jsx";
@@ -46,6 +47,7 @@ const DataTablete = () => {
     const [ permisosByRol, setPermisosByRol ] = useState("");
 
     const [entityId, setEntityId] = useState(null);
+    const navigate = useNavigate();
 
     const [forumActive, setForumActive] = useState(true);
 
@@ -242,6 +244,12 @@ const DataTablete = () => {
         setSelectedCategory(null);
       };
 
+      // Función para vista del foro admin: 
+      const handleClickForumViewAdmin = (category) => {
+          // Navega hacia la ruta de la vita foros
+          navigate(`/StatisticsForum/${category.id}`);
+      };
+
       if (loading) return <p>Cargando permisos del rol...</p>;
       if (error) return <p>{error}</p>;
     
@@ -363,6 +371,15 @@ const DataTablete = () => {
                                                                     onClick={() =>
                                                                         handleUpdateButtonClick(category)
                                                                     }
+                                                                />
+                                                            }
+
+                                                            {canShow &&
+                                                                <Button
+                                                                    className="bg-blue-900 hover:bg-zinc-300 text-white font-bold py-1.5 px-4 rounded-3xl ml-2 shadow-md shadow-gray-400"
+                                                                    icon={<FaRegEye />}
+                                                                    style={{ minWidth: "50px" }}
+                                                                    onClick={() => handleClickForumViewAdmin(category)}
                                                                 />
                                                             }
                                                             

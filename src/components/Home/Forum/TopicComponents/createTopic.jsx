@@ -10,7 +10,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../Custom.css'
 
-const CreateTopicForm = ({ visible, onClose, onCreate, forumCategoryId, fetchForumTopic }) => {
+const CreateTopicForm = ({ visible, onClose, onCreate, forumCategoryId, fetchForumTopic, fetchDataTopic }) => {
     const { getUserById } = useUserContext();
     const { user } = useAuth();
     const { createForumTopic } = useForumTopic(); // Función para crear tema en el contexto

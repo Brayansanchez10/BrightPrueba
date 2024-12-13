@@ -22,7 +22,7 @@ const LanguageSwitcher = () => {
   };
 
   return (
-    <div className="fixed bottom-2 right-4 flex items-center bg-white p-1 rounded-full shadow-lg border border-gray-300">
+    <div className="fixed bottom-2 right-4 flex items-center bg-white p-1 rounded-full shadow-lg border border-gray-300 z-10">
       <div className="flex items-center space-x-1">
         <span className="text-gray-700 font-medium text-sm">{isEnglish ? 'EN' : 'ES'}</span>
         <label className="relative inline-flex items-center cursor-pointer">
