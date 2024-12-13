@@ -291,6 +291,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                             value={course.name}
                             onChange={handleChange}
                             maxLength={30}
+                            placeholder={t("createCourseForm.namePlaceholder")}
                             required
                         />
                         {errorMessage.name && (
@@ -330,6 +331,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                             value={course.description}
                             onChange={handleChange}
                             maxLength={MAX_DESCRIPTION_LENGTH}
+                            placeholder={t("createCourseForm.descriptionPlaceholder")}
                             style={{ minHeight: "80px" }}
                             required
                         />
@@ -369,6 +371,7 @@ export default function CreateCourseForm({ visible = false, onClose = () => {}, 
                             onChange={handleChange}
                             min="0"
                             max="99"
+                            placeholder={t("createCourseForm.durationPlaceholder")}
                             required
                         />
                         {errorMessage.duracion && (

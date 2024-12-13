@@ -169,6 +169,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
             value={category.name}
             onChange={handleChange}
             maxLength={20}
+            placeholder={t("createCategoryForm.namePlaceholder")}
             required
           />
           {errorMessage.name && (
@@ -185,7 +186,8 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
             value={category.description}
             onChange={handleChange}
             maxLength={MAX_DESCRIPTION_LENGTH}
-            style={{ minHeight: "60px" }} 
+            style={{ minHeight: "60px" }}
+            placeholder={t("createCategoryForm.descriptionPlaceholder")}
             required
           />
           <div className="text-gray-300 text-right">

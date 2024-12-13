@@ -354,6 +354,7 @@ const CreateSubCategoryForm = ({
                   className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
                     errors.title ? "border-red-500" : "border-gray-300"
                   } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
+                  placeholder={t('subCategory.titleSection')}
                   maxLength={30}
                   required
                 ></input>
@@ -376,6 +377,7 @@ const CreateSubCategoryForm = ({
                   className={`mt-1 block w-full px-4 py-2 rounded-lg border ${
                     errors.description ? "border-red-500" : "border-gray-300"
                   } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50`}
+                  placeholder={t('subCategory.descriptionSection')}
                   required
                 />
                 {errors.description && (

@@ -266,27 +266,29 @@ const AdminCoursesModal = ({ visible, onClose, courseId }) => {
     return (
         <Modal
             title={
-                <div className="flex flex-col md:flex-row items-center w-full md:w-auto space-y-4 md:space-y-0 md:space-x-[750px]"> 
-                    <div className="text-3xl font-bungee mb-4 md:mb-0"
+                <div className="flex flex-col md:flex-row items-center w-full md:justify-between space-y-4 md:space-y-0">
+                 <div
+                 className="text-3xl font-bungee text-center md:text-left"
                     style={{
                         background: "linear-gradient(to right, #783CDA, #200E3E)",
                         WebkitBackgroundClip: "text",
                         color: "transparent",
                     }}
-                    >
-                    {t("datatable.titleModal")}
-                    </div>
-                    <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg order-1 md:order-2">
+                >
+                {t("datatable.titleModal")}
+             </div>
+                    <div className="flex w-full md:w-auto px-4 py-2 border bg-white border-gray-300 rounded-xl shadow-lg">
                         <FaSearch size={"18px"} className="mt-1 mr-2" />
                             <input
-                                type="search"
-                                className="bg-white outline-none w-full md:w-[280px] lg:w-[360px]"
-                                placeholder={t("datatable.SearchByName")}
-                                value={searchValue}
-                                onChange={(e) => setSearchValue(e.target.value)}
-                            />
+                         type="search"
+                         className="bg-white outline-none w-full sm:w-[200px] md:w-[280px] lg:w-[360px]"
+                            placeholder={t("datatable.SearchByName")}
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                        />
                     </div>
                 </div>
+
             }
             visible={visible}
             onCancel={onClose}
