@@ -139,11 +139,6 @@ function App() {
                                                                   <Route path="/topic/:topicId" element={<TopicViewComponente />} />
                                                                   </>
                                                               )}
-                                                          <Route path="/profile/:id" element={<ViewProfile />} />
-                                                          <Route path="/prevUser/:id" element={<PrevUser />} />
-                                                          <Route path="/chat" element={<Chat />} /> 
-                                                        <Route path="/chat/:chatId" element={<Chat />} />
-                                                        <Route path="/friends" element={<Friends />} />
                                                       </Route>
 
                                                         <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor']} />}>
@@ -166,9 +161,15 @@ function App() {
                                                         <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor', 'usuario']} />}>
                                                           <Route path="/course/:courseId/resource/:id" element={<ResourceView />} />
                                                           <Route path="/course/:courseId/resource/:id/A" element={<ViewResource />} />
+                                                          
+                                                          <Route path="/profile/:id" element={<ViewProfile />} />
+                                                          <Route path="/prevUser/:id" element={<PrevUser />} />
+                                                          <Route path="/chat" element={<Chat />} /> 
+                                                          <Route path="/chat/:chatId" element={<Chat />} />
+                                                          <Route path="/friends" element={<Friends />} />
                                                         </Route>
 
-                                                        <Route path="/notFound" element={<NotFoundPage />} />s
+                                                        <Route path="/notFound" element={<NotFoundPage />} />
                                                         <Route path="/activate/:id" element={<ActivationComponent />} />
                                                         <Route path="*" element={<Navigate to="/notFound" />} />
                                                       </Routes>
