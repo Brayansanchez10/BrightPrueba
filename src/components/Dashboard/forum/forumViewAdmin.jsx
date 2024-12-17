@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useForumTopic } from "../../../context/forum/topic.context";
 import { useForumComments } from "../../../context/forum/forumComments.context";
+import { useUserContext } from "../../../context/user/user.context";
 import { useAnswers } from "../../../context/forum/answers.context";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../../context/auth.context";
@@ -11,6 +12,11 @@ import LeftBar from "../LeftBar";
 import { motion } from "framer-motion";
 import { FaEdit, FaTrash, FaRegUserCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
+
+import DonuChart from "./statisticsGraphs/CommentsAsnwers";
+import TopCommentsChart from "./statisticsGraphs/TopCommentsChart";
+import TopUsersChart from "./statisticsGraphs/TopUsersChart";
+import TopUsersCommentsChart from "./statisticsGraphs/TopUsersCommentsChart";
 
 import CreateTopicForm from "../../Home/Forum/TopicComponents/createTopic";
 import UpdateForumTopicForm from "../../Home/Forum/TopicComponents/updateTopic";
@@ -22,6 +28,7 @@ const ForumViewAdmin = () => {
     const { getForumTopicByCategoryId, deleteForumTopic } = useForumTopic();
     const { getCommentsByTopic } = useForumComments();
     const { getAnswersByComment } = useAnswers();
+    const { getUserById } = useUserContext();
     const [topic, setTopic] = useState([]);
     const [comments, setComments] = useState([]);
     const [answersByComment, setAnswersByComment] = useState({});
@@ -70,9 +77,19 @@ const ForumViewAdmin = () => {
                         });
 
                         // Crear el top 5 de comentarios con más respuestas
-                        const top5Comments = commentsWithAnswersCount
-                            .sort((a, b) => b.answersCount - a.answersCount)
-                            .slice(0, 5);
+                        const top5Comments = await Promise.all(
+                            commentsWithAnswersCount
+                                .sort((a, b) => b.answersCount - a.answersCount)
+                                .slice(0, 5) // Tomar los 5 comentarios con más respuestas
+                                .map(async (comment) => {
+                                    const userData = await getUserById(comment.userId); // Obtener el username del autor del comentario
+                                    return {
+                                        ...comment,
+                                        username: userData.username, // Agregar el nombre de usuario
+                                    };
+                                })
+                        );
+                            
 
                         // Contar el total de respuestas por usuario
                         const userAnswerCount = commentsWithAnswersCount.reduce((acc, comment) => {
@@ -92,15 +109,20 @@ const ForumViewAdmin = () => {
                             count,
                         }));
         
-                        // Obtener el top 5 usuarios más comentadores
-                        const topUsers = Object.entries(userCommentCount)
-                            .sort(([, a], [, b]) => b - a) // Ordenar por número de comentarios (descendente)
-                            .slice(0, 5) // Tomar solo los primeros 5 usuarios
-                            .map(([userId, count]) => ({
-                                userId,
-                                count,
-                            }));
-    
+                         // Obtener el top 5 usuarios más comentadores
+                        const topUsers = await Promise.all(
+                            Object.entries(userCommentCount)
+                                .sort(([, a], [, b]) => b - a)
+                                .slice(0, 5) // Tomar solo los primeros 5 usuarios
+                                .map(async ([userId, count]) => {
+                                    const userData = await getUserById(userId); // Consultar información del usuario
+                                    return {
+                                        userId,
+                                        username: userData.username, // Agregar el nombre de usuario
+                                        count,
+                                    };
+                                })
+                        );
                         return {
                             ...topic,
                             commentsCount: commentCount,
@@ -283,46 +305,60 @@ const ForumViewAdmin = () => {
                                         <div className="p-6 border rounded-lg shadow-lg bg-white flex-1">
                                             <p className="text-gray-600">Comentarios: {topic.commentsCount}</p>
                                             <p className="text-gray-600">Respuestas: {topic.topUsersAnswer.reduce((acc, user) => acc + user.count, 0)}</p>
-                                            <h3 className="text-lg font-semibold text-gray-800">Top 5 Usuarios</h3>
+                                            <DonuChart topic={topic} />
+                                        </div>
+
+                                        <div className="p-6 border rounded-lg shadow-lg bg-white flex-1">
+                                            <h3 className="text-lg font-semibold text-gray-800">Top 5 Usuarios con más comentarios</h3>
                                             <ul className="mt-3">
-                                                {topic.topUsers.map((user) => (
-                                                    <li key={user.userId} className="text-gray-600">
-                                                        Usuario (ID: {user.userId}): {user.count} comentarios
-                                                    </li>
-                                                ))}
+                                                {topic.topUsers && topic.topUsers.length > 0 ? (
+                                                    topic.topUsers.map((user) => (
+                                                        <li key={user.userId} className="text-gray-600 text-xs">
+                                                            ID: ({user.userId}) {user.username}: {user.count} comentarios
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li className="text-gray-500 text-lg">No hay usuarios con más comentarios</li>
+                                                )}
+                                                
                                             </ul>
+                                            <TopUsersCommentsChart topic={topic} />
                                         </div>
 
                                         {/* Top 5 comentarios con más respuestas */}
                                         <div className="p-6 border rounded-lg shadow-lg bg-white flex-1">
-                                            <h3 className="text-gray-600">Top 5 Comentarios con más respuestas:</h3>
+                                            <h3 className="text-lg font-semibold text-gray-800">Top 5 Comentarios con más respuestas:</h3>
                                             <ul>
                                                 {topic.top5Comments && topic.top5Comments.length > 0 ? (
                                                     topic.top5Comments.slice(0, 5).map((comment) => (
-                                                        <li key={comment.id}>
-                                                            Comentario: {comment.title} - Respuestas: {comment.answersCount}
+                                                        <li key={comment.id} className="text-gray-600 text-xs">
+                                                             Comentario: {comment.content.length > 10 
+                                                                ? `${comment.content.substring(0, 10)}...` 
+                                                                : comment.content} - Respuestas: {comment.answersCount}
                                                         </li>
                                                     ))
                                                 ) : (
-                                                    <li>No hay comentarios destacados</li>
+                                                    <li className="text-gray-500 text-lg">No hay comentarios destacados</li>
                                                 )}
                                             </ul>
+                                            <TopCommentsChart topic={topic} />
                                         </div>
 
                                         {/* Top 5 usuarios con más respuestas */}
                                         <div className="p-6 border rounded-lg shadow-lg bg-white flex-1">
-                                            <h3 className="text-gray-600">Top 5 Usuarios con más respuestas:</h3>
+                                            <h3 className="text-lg font-semibold text-gray-800">Top 5 Usuarios con más respuestas:</h3>
                                             <ul>
                                                 {topic.topUsers && topic.topUsers.length > 0 ? (
                                                     topic.topUsers.map((user) => (
-                                                        <li key={user.userId}>
-                                                            Usuario ID: {user.userId} - Respuestas: {user.count}
+                                                        <li key={user.userId} className="text-gray-600 text-xs">
+                                                           ID: ({user.userId}) {user.username}: {user.count} respuestas
                                                         </li>
                                                     ))
                                                 ) : (
-                                                    <li>No hay usuarios con más respuestas</li>
+                                                    <li className="text-gray-500 text-lg">No hay usuarios con más respuestas</li>
                                                 )}
                                             </ul>
+                                            <TopUsersChart topic={topic} />
                                         </div>
 
                                     </div>
