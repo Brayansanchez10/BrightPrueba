@@ -1080,6 +1080,10 @@
 
     "forumCrud": {
         "button": "Crear foro",
+        "name": "Nombre",
+        "namePlaceholder":"Introduzca el nombre del foro",
+        "description": "Descripción",
+        "descriptionPlaceholder":"Proporcione una descripción detallada",
         "title": "Categorias de foros",
         "createTitle": "Crear categoria de foro",
         "updateTitle": "Actualizar foro",
