@@ -193,7 +193,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
                 </h1>
                 <div className="text-left mb-4">
                     <label className="text-lg font-bold text-[#000000] block">
-                        {t("createCourseForm.name")}
+                        {t("forumCrud.name")}
                     </label>
                     <input
                         className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200"
@@ -202,6 +202,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
                         value={categories.name}
                         onChange={handleChange}
                         maxLength={MAX_COURSE_NAME_LENGTH}
+                        placeholder= {t("forumCrud.namePlaceholder")}
                         required
                     />
                     <div className="text-gray-500 text-sm">{`${categories.name.length}/${MAX_COURSE_NAME_LENGTH}`}</div>
@@ -211,7 +212,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
                 </div>
                 <div className="text-left mb-4">
                     <label className="text-lg font-bold text-[#000000] block">
-                        {t("createCourseForm.description")}
+                        {t("forumCrud.description")}
                     </label>
                     <textarea
                         className="w-full py-2 px-4 border border-gray-300 rounded-lg mt-2 shadow-sm focus:ring-2 focus:ring-blue-500 transition-all duration-200 resize-none"
@@ -220,6 +221,7 @@ const CreateForumCategoriesModal = ({ visible, onClose, onCreate }) => {
                         onChange={handleChange}
                         maxLength={MAX_DESCRIPTION_LENGTH}
                         style={{ minHeight: "80px" }}
+                        placeholder= {t("forumCrud.descriptionPlaceholder")}
                         required
                     />
                     <div className="text-gray-500 text-sm">{`${categories.description.length}/${MAX_DESCRIPTION_LENGTH}`}</div>

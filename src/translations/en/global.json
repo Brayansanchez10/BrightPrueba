@@ -1094,6 +1094,10 @@
         "forumCrud": {
             "button": "Create forum",
             "title": "Forum Categories",
+            "name": "Name",
+            "namePlaceholder":"Enter the name of the forum",
+            "description": "Description",
+            "descriptionPlaceholder":"Provide a detailed description",
             "createTitle": "Create forum category",
             "updateTitle": "Update forum",
             "detailsTitle": "Forum details",
