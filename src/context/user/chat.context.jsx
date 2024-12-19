@@ -298,7 +298,6 @@ export const ChatProvider = ({ children }) => {
           icon: 'error',
           title: "Error - Micrófono",
           text: "No se ha detectado ningun micrófono, conecta un micrófono y vuelve a intentarlo.",
-          icon: "error",
           confirmButtonText: "Entendido",
           confirmButtonColor: "#EF5959",
           background: "#fff",
@@ -313,7 +312,6 @@ export const ChatProvider = ({ children }) => {
           icon: 'error',
           title: "Error - Permisos",
           text: "Necesitamos permiso para acceder al micrófono. Por favor, permite el acceso en la configuración de tu navegador.",
-          icon: "error",
           confirmButtonText: "Entendido",
           confirmButtonColor: "#EF5959",
           background: "#fff",
@@ -328,7 +326,6 @@ export const ChatProvider = ({ children }) => {
           icon: 'error',
           title: "Error",
           text: "Ocurrió un error al intentar grabar audio. Por favor, intenta de nuevo.",
-          icon: "error",
           confirmButtonText: "Entendido",
           confirmButtonColor: "#EF5959",
           background: "#fff",
@@ -478,22 +475,27 @@ export const ChatProvider = ({ children }) => {
   const updateLocalMessage = useCallback(
     (updatedMessage) => {
       const selectedChatId = parseInt(localStorage.getItem("selectedChatId"));
-      
       if (updatedMessage.chatId === selectedChatId) {
         setMessages((prevMessages) => {
           const messageExists = prevMessages.some(
             (msg) => msg.id === updatedMessage.id
           );
+          
           if (messageExists) {
             return prevMessages.map((msg) =>
               msg.id === updatedMessage.id ? { ...msg, ...updatedMessage } : msg
             );
           } else {
-            return [...prevMessages, updatedMessage];
+            const isDuplicate = prevMessages.some(
+              (msg) => 
+                msg.content === updatedMessage.content && 
+                Math.abs(new Date(msg.createdAt) - new Date(updatedMessage.createdAt)) < 1000
+            );
+            return isDuplicate ? prevMessages : [...prevMessages, updatedMessage];
           }
         });
       }
-
+  
       setChats((prevChats) =>
         prevChats.map((chat) => {
           if (chat.id === updatedMessage.chatId) {
@@ -501,22 +503,22 @@ export const ChatProvider = ({ children }) => {
             const messageIndex = updatedMessages.findIndex(
               (m) => m.id === updatedMessage.id
             );
-
+  
             if (messageIndex !== -1) {
               updatedMessages[messageIndex] = updatedMessage;
             } else {
               updatedMessages.unshift(updatedMessage);
             }
-
+  
             return {
               ...chat,
-              messages: updatedMessages.slice(0, 1),
+              messages: updatedMessages.slice(0, 1), 
             };
           }
           return chat;
         })
       );
-
+  
       if (
         user?.data?.id &&
         updatedMessage.senderId !== user.data.id &&
@@ -575,30 +577,46 @@ export const ChatProvider = ({ children }) => {
 
   useEffect(() => {
     if (!user?.data?.id) return;
-
+  
     window.updateReceivedMessage = (newMessage) => {
       const selectedChatId = parseInt(localStorage.getItem("selectedChatId")) || null;
       
-      if (selectedChatId && newMessage.chatId === selectedChatId) { // Si el mensaje es del chat actual
-        setMessages(prevMessages => [...prevMessages, newMessage]); // Agregar el mensaje
-        markMessagesAsRead(user.data.id, newMessage.chatId); // Marcar los mensajes como leídos
+      if (selectedChatId && newMessage.chatId === selectedChatId) { 
+        setMessages(prevMessages => {
+          const messageExists = prevMessages.some(
+            msg => msg.id === newMessage.id || 
+                  (msg.content === newMessage.content && 
+                   Math.abs(new Date(msg.createdAt) - new Date(newMessage.createdAt)) < 1000)
+          );
+          return messageExists ? prevMessages : [...prevMessages, newMessage];
+        }); 
+        
+        markMessagesAsRead(user.data.id, newMessage.chatId);
       } else {
         if (newMessage.receiverId === user.data.id && 
-            newMessage.senderId !== user.data.id) { // Si el usuario está en otro chat o ningún chat
+            newMessage.senderId !== user.data.id) {
           setUnreadCounts(prev => ({
             ...prev,
-            [newMessage.chatId]: (prev[newMessage.chatId] || 0) + 1, // Incrementar el contador de mensajes no leídos
+            [newMessage.chatId]: (prev[newMessage.chatId] || 0) + 1,
           }));
         }
       }
-      
-      // Actualizar la lista de chats con el mensaje mas reciente
       setChats(prevChats =>
         prevChats.map(chat => {
           if (chat.id === newMessage.chatId) {
+            const messageExists = chat.messages?.some(
+              msg => msg.id === newMessage.id ||
+                    (msg.content === newMessage.content && 
+                     Math.abs(new Date(msg.createdAt) - new Date(newMessage.createdAt)) < 1000)
+            );
+  
+            if (messageExists) {
+              return chat;
+            }
+  
             return {
               ...chat,
-              messages: [newMessage, ...(chat.messages || [])].slice(0, 1) // Mensaje mas reciente
+              messages: [newMessage] 
             };
           }
           return chat;

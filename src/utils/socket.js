@@ -14,17 +14,21 @@ export const initSocket = (chatId) => {
     });
 
     socket.on("message received", (newMessage) => {
-      const userId = localStorage.getItem("userId");
-      const selectedChatId = parseInt(localStorage.getItem("selectedChatId"));
-
-      if (typeof window.updateReceivedMessage === "function") {
-        window.updateReceivedMessage(newMessage);
-      }
-
-      if (newMessage.receiverId === parseInt(userId) && 
-          newMessage.chatId !== selectedChatId) {
-        if (typeof window.updateUnreadCount === "function") {
-          window.updateUnreadCount(newMessage.chatId);
+      if (!window.lastMessageId || window.lastMessageId !== newMessage.id) {
+        window.lastMessageId = newMessage.id;
+        
+        if (typeof window.updateReceivedMessage === "function") {
+          window.updateReceivedMessage(newMessage);
+        }
+    
+        const userId = localStorage.getItem("userId");
+        const selectedChatId = parseInt(localStorage.getItem("selectedChatId"));
+    
+        if (newMessage.receiverId === parseInt(userId) && 
+            newMessage.chatId !== selectedChatId) {
+          if (typeof window.updateUnreadCount === "function") {
+            window.updateUnreadCount(newMessage.chatId);
+          }
         }
       }
     });
