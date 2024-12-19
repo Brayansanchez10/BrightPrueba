@@ -16,10 +16,20 @@ import {
   getLastMessageDate as getLastMessageDateApi,
   getUnreadMessageCount as getUnreadMessageCountApi,
   markMessagesAsRead as markMessagesAsReadApi,
+  createGroupChat as createGroupChatApi,
+  addParticipants as addParticipantsApi,
+  removeParticipant as removeParticipantApi,
+  makeAdmin as makeAdminApi,
+  leaveGroup as leaveGroupApi,
+  updateGroupInfo as updateGroupInfoApi,
+  startTyping as startTypingApi,
+  stopTyping as stopTypingApi,
 } from "../../api/user/chat.request";
-import { socket, initSocket } from "../../utils/socket";
+import { socket as socketInstance, initSocket } from "../../utils/socket";
 import { useAuth } from "../auth.context";
 import { io } from "socket.io-client";
+import Swal from "sweetalert2";
+import axios from 'axios';
 
 export const ChatContext = createContext();
 
@@ -36,7 +46,10 @@ export const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [messages, setMessages] = useState([]);
   const [unreadCounts, setUnreadCounts] = useState({});
-  const socket = useRef();
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
+  const mediaRecorderRef = useRef(null);
+  const socketRef = useRef();
 
   useEffect(() => {
     if (!user?.data?.id) return;
@@ -65,12 +78,12 @@ export const ChatProvider = ({ children }) => {
   useEffect(() => {
     if (!user?.data?.id) return;
 
-    socket.current = io(import.meta.env.VITE_SOCKET_URL);
-    socket.current.on("connect", () => {
-      socket.current.emit("join", user.data.id);
+    socketRef.current = io(import.meta.env.VITE_SOCKET_URL);
+    socketRef.current.on("connect", () => {
+      socketRef.current.emit("join", user.data.id);
     });
 
-    socket.current.on("private message", async (message) => {
+    socketRef.current.on("private message", async (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
       if (message.receiverId === user.data.id) {
         setUnreadCounts((prev) => ({
@@ -91,7 +104,7 @@ export const ChatProvider = ({ children }) => {
       }
     });
 
-    socket.current.on("message read", ({ chatId, userId }) => {
+    socketRef.current.on("message read", ({ chatId, userId }) => {
       if (userId === user.data.id) {
         setUnreadCounts((prev) => ({
           ...prev,
@@ -101,25 +114,28 @@ export const ChatProvider = ({ children }) => {
     });
 
     return () => {
-      if (socket.current) {
-        socket.current.disconnect();
+      if (socketRef.current) {
+        socketRef.current.disconnect();
       }
     };
   }, [user?.data?.id]);
 
   const createChat = useCallback(async (userId1, userId2) => {
     try {
-      const res = await createChatApi(userId1, userId2);
-      if (res && res.data) {
-        const updatedChats = await getUserChatsApi(userId1);
-        if (updatedChats && updatedChats.data) {
-          setChats(updatedChats.data);
+      const response = await createChatApi(userId1, userId2);
+      if (response?.data) {
+        const updatedChatsResponse = await getUserChatsApi(userId1);
+        if (updatedChatsResponse?.data) {
+          setChats(updatedChatsResponse.data);
         }
-        return res;
+        return response;
       }
       return null;
     } catch (error) {
       console.error("Error al crear chat:", error);
+      if (error.response?.status === 400) {
+        throw error; 
+      }
       throw error;
     }
   }, []);
@@ -139,7 +155,7 @@ export const ChatProvider = ({ children }) => {
     try {
       await markMessagesAsReadApi(userId, chatId);
       setUnreadCounts((prev) => ({ ...prev, [chatId]: 0 }));
-      socket.current?.emit("messages read", { chatId, userId });
+      socketRef.current?.emit("messages read", { chatId, userId });
     } catch (error) {
       console.error("Error al marcar los mensajes como leídos:", error);
     }
@@ -148,22 +164,52 @@ export const ChatProvider = ({ children }) => {
   const getUserChats = useCallback(
     async (userId) => {
       try {
+        if (!userId) {
+          console.error("userId es requerido");
+          return null;
+        }
+  
         const res = await getUserChatsApi(userId);
-        if (res && res.data) {
-          setChats(res.data);
-          res.data.forEach(async (chat) => {
-            const count = await getUnreadMessageCount(userId, chat.id);
-            setUnreadCounts((prev) => ({
-              ...prev,
-              [chat.id]: count,
-            }));
-          });
+        
+        if (res?.data) {
+          const validChats = Array.isArray(res.data) ? res.data : [];
+          setChats(validChats);
+  
+          if (validChats.length > 0) {
+            const unreadPromises = validChats.map(chat => 
+              getUnreadMessageCount(userId, chat.id)
+                .catch(err => {
+                  console.error(`Error al obtener conteo no leído para chat ${chat.id}:`, err);
+                  return 0;
+                })
+            );
+  
+            const unreadCounts = await Promise.all(unreadPromises);
+            const newUnreadCounts = validChats.reduce((acc, chat, index) => {
+              acc[chat.id] = unreadCounts[index];
+              return acc;
+            }, {});
+  
+            setUnreadCounts(newUnreadCounts);
+          }
           return res;
         }
+        
+        setChats([]);
+        setUnreadCounts({});
         return null;
       } catch (error) {
         console.error("Error al obtener chats del usuario:", error);
-        throw error;
+        setChats([]); 
+        setUnreadCounts({});
+        
+        if (error.response?.status === 500) {
+          console.error("Error del servidor:", error.response.data);
+        } else if (error.request) {
+          console.error("Error de red:", error.message);
+        }
+        
+        return null;
       }
     },
     [getUnreadMessageCount]
@@ -171,31 +217,215 @@ export const ChatProvider = ({ children }) => {
 
   const sendMessage = useCallback(async (messageData) => {
     try {
-      const response = await sendMessageApi(
-        messageData.chatId,
-        messageData.senderId,
-        messageData.receiverId,
-        messageData.content
-      );
-      const newMessage = response.data;
+        if (!messageData || !messageData.chatId || !messageData.senderId || !messageData.receiverId) {
+            throw new Error('Faltan datos requeridos para el mensaje');
+        }
 
-      setMessages((prev) => [...prev, newMessage]);
-      setChats((prevChats) =>
-        prevChats.map((chat) => {
-          if (chat.id === messageData.chatId) {
-            return {
-              ...chat,
-              messages: [newMessage, ...(chat.messages || [])],
-            };
-          }
-          return chat;
-        })
-      );
+        if (messageData.type === 'AUDIO' && !messageData.audioFile) {
+            throw new Error('Falta archivo de audio');
+        }
 
-      socket.current?.emit("private message", newMessage);
-      return newMessage;
+        if (messageData.type === 'TEXT' && !messageData.content) {
+            throw new Error('Falta contenido del mensaje');
+        }
+
+        const response = await sendMessageApi(messageData);
+
+        if (!response?.data) {
+            throw new Error('Respuesta del servidor inválida');
+        }
+
+        const newMessage = response.data;
+
+  
+        setMessages(prev => [...prev, newMessage]);
+        setChats(prevChats => 
+            prevChats.map(chat => {
+                if (chat.id === parseInt(messageData.chatId)) {
+                    return {
+                        ...chat,
+                        lastMessage: newMessage,
+                        messages: [...(chat.messages || []), newMessage]
+                    };
+                }
+                return chat;
+            })
+        );
+
+        return response;
     } catch (error) {
-      console.error("Error al enviar mensaje:", error);
+        console.error("Error al enviar mensaje:", error);
+        throw error;
+    }
+}, []);
+
+  const handleAudioRecording = async (action) => {
+    try {
+      if (action === 'start') {
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+          audio: true,
+          video: false 
+        });
+
+        const mediaRecorder = new MediaRecorder(stream);
+        const audioChunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+          setAudioBlob(audioBlob);
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorderRef.current = mediaRecorder;
+        mediaRecorder.start();
+        setIsRecording(true);
+
+      } else if (action === 'stop' && mediaRecorderRef.current) {
+        mediaRecorderRef.current.stop();
+        setIsRecording(false);
+      }
+    } catch (error) {
+      console.error('Error en la grabación:', error);
+      
+      if (error.name === 'NotFoundError') {
+        Swal.fire({
+          icon: 'error',
+          title: "Error - Micrófono",
+          text: "No se ha detectado ningun micrófono, conecta un micrófono y vuelve a intentarlo.",
+          icon: "error",
+          confirmButtonText: "Entendido",
+          confirmButtonColor: "#EF5959",
+          background: "#fff",
+          customClass: {
+          popup: "rounded-[20px]",
+          title: "font-bungee text-[#EF5959]",
+          content: "font-roboto",
+        },
+        });
+      } else if (error.name === 'NotAllowedError') {
+        Swal.fire({
+          icon: 'error',
+          title: "Error - Permisos",
+          text: "Necesitamos permiso para acceder al micrófono. Por favor, permite el acceso en la configuración de tu navegador.",
+          icon: "error",
+          confirmButtonText: "Entendido",
+          confirmButtonColor: "#EF5959",
+          background: "#fff",
+          customClass: {
+          popup: "rounded-[20px]",
+          title: "font-bungee text-[#EF5959]",
+          content: "font-roboto",
+        },
+      });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: "Error",
+          text: "Ocurrió un error al intentar grabar audio. Por favor, intenta de nuevo.",
+          icon: "error",
+          confirmButtonText: "Entendido",
+          confirmButtonColor: "#EF5959",
+          background: "#fff",
+          customClass: {
+          popup: "rounded-[20px]",
+          title: "font-bungee text-[#EF5959]",
+          content: "font-roboto",
+        },
+      });
+      }   
+      
+      setIsRecording(false);
+    }
+  };
+
+  const removeParticipant = useCallback(async (chatId, userId) => {
+    try {
+      const response = await removeParticipantApi(chatId, userId);
+      if (response.data) {
+        setChats((prevChats) =>
+          prevChats.map((chat) => {
+            if (chat.id === chatId) {
+              return {
+                ...chat,
+                participants: chat.participants.filter(
+                  (participant) => participant.id !== userId
+                ),
+              };
+            }
+            return chat;
+          })
+        );
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Error al eliminar participante:", error);
+      throw error;
+    }
+  }, []);
+
+  const makeAdmin = useCallback(async (chatId, userId) => {
+    try {
+      const response = await makeAdminApi(chatId, userId);
+      if (response.data) {
+        setChats((prevChats) =>
+          prevChats.map((chat) => {
+            if (chat.id === chatId) {
+              return {
+                ...chat,
+                admins: [...chat.admins, userId],
+              };
+            }
+            return chat;
+          })
+        );
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Error al hacer admin:", error);
+      throw error;
+    }
+  }, []);
+
+  const leaveGroup = useCallback(async (chatId, userId) => {
+    try {
+      const response = await leaveGroupApi(chatId, userId);
+      if (response.data) {
+        setChats((prevChats) => 
+          prevChats.filter(chat => chat.id !== chatId)
+        );
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Error al salir del grupo:", error);
+      throw error;
+    }
+  }, []);
+
+  const updateGroupInfo = useCallback(async (chatId, groupData) => {
+    try {
+      const response = await updateGroupInfoApi(chatId, groupData);
+      if (response.data) {
+        setChats((prevChats) =>
+          prevChats.map((chat) => {
+            if (chat.id === chatId) {
+              return {
+                ...chat,
+                ...groupData,
+              };
+            }
+            return chat;
+          })
+        );
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Error al actualizar información del grupo:", error);
       throw error;
     }
   }, []);
@@ -299,6 +529,47 @@ export const ChatProvider = ({ children }) => {
     [user?.data?.id]
   );
 
+  const createGroupChat = useCallback(async (groupData) => {
+    try {
+      const res = await createGroupChatApi(groupData);
+      if (res && res.data) {
+        const updatedChats = await getUserChatsApi(user.data.id);
+        setChats(updatedChats.data);
+        return res.data;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error al crear grupo:", error);
+      throw error;
+    }
+  }, [user?.data?.id]);
+
+  const addParticipants = useCallback(async (chatId, participants) => {
+    try {
+      const res = await addParticipantsApi(chatId, participants);
+      return res.data;
+    } catch (error) {
+      console.error("Error al añadir participantes:", error);
+      throw error;
+    }
+  }, []);
+
+  const startTyping = useCallback(({ chatId, userId }) => {
+    try {
+      socketRef.current?.emit('typing', { chatId, userId });
+    } catch (error) {
+      console.error('Error en startTyping:', error);
+    }
+  }, []);
+  
+  const stopTyping = useCallback(({ chatId, userId }) => {
+    try {
+      socketRef.current?.emit('stop typing', { chatId, userId });
+    } catch (error) {
+      console.error('Error en stopTyping:', error);
+    }
+  }, []); 
+
   useEffect(() => {
     if (!user?.data?.id) return;
 
@@ -370,6 +641,19 @@ export const ChatProvider = ({ children }) => {
         updateLocalMessage,
         getUnreadMessageCount,
         markMessagesAsRead,
+        createGroupChat,
+        addParticipants,
+        removeParticipant,
+        makeAdmin,
+        leaveGroup,
+        updateGroupInfo,
+        handleAudioRecording,
+        isRecording,
+        setIsRecording,
+        audioBlob,
+        setAudioBlob,
+        startTyping,
+        stopTyping,
       }}
     >
       {children}

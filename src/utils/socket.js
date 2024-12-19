@@ -72,6 +72,15 @@ export const initSocket = (chatId) => {
         window.updateTypingStatus(chatId, userId, false);
       }
     });
+
+    socket.on("audio message received", (audioMessage) => {
+      if (typeof window.updateReceivedMessage === "function") {
+        window.updateReceivedMessage({
+          ...audioMessage,
+          type: 'audio'
+        });
+      }
+    });
   }
 
   if (chatId) {
@@ -89,9 +98,18 @@ export const leaveChat = (chatId) => {
   }
 };
 
-export const sendMessage = (message) => {
+export const emitMessage = (message) => {
   if (socket) {
     socket.emit("new message", message);
+  }
+};
+
+export const emitAudioMessage = (audioMessage) => {
+  if (socket) {
+    socket.emit("audio message", {
+      ...audioMessage,
+      type: 'audio'
+    });
   }
 };
 
