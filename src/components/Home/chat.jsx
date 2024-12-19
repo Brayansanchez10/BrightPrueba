@@ -168,6 +168,8 @@ export default function Chat() {
       socket.on("stop typing", handleStopTyping);
       socket.on("message edited", handleMessageEdited);
       socket.on("message deleted", handleMessageDeleted);
+      socket.on("message received", handleMessageReceived);
+      socket.on("update unread count");
 
       return () => {
         socket.off("message received", handleMessageReceived);
@@ -175,6 +177,7 @@ export default function Chat() {
         socket.off("stop typing", handleStopTyping);
         socket.off("message edited", handleMessageEdited);
         socket.off("message deleted", handleMessageDeleted);
+        socket.off("update unread count");
       };
     }
   }, [selectedChat, user.data.id, updateLocalMessage]);

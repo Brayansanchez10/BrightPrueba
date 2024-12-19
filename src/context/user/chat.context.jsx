@@ -298,7 +298,6 @@ export const ChatProvider = ({ children }) => {
           icon: 'error',
           title: "Error - Micrófono",
           text: "No se ha detectado ningun micrófono, conecta un micrófono y vuelve a intentarlo.",
-          icon: "error",
           confirmButtonText: "Entendido",
           confirmButtonColor: "#EF5959",
           background: "#fff",
@@ -313,7 +312,6 @@ export const ChatProvider = ({ children }) => {
           icon: 'error',
           title: "Error - Permisos",
           text: "Necesitamos permiso para acceder al micrófono. Por favor, permite el acceso en la configuración de tu navegador.",
-          icon: "error",
           confirmButtonText: "Entendido",
           confirmButtonColor: "#EF5959",
           background: "#fff",
@@ -328,7 +326,6 @@ export const ChatProvider = ({ children }) => {
           icon: 'error',
           title: "Error",
           text: "Ocurrió un error al intentar grabar audio. Por favor, intenta de nuevo.",
-          icon: "error",
           confirmButtonText: "Entendido",
           confirmButtonColor: "#EF5959",
           background: "#fff",
@@ -579,27 +576,28 @@ export const ChatProvider = ({ children }) => {
     window.updateReceivedMessage = (newMessage) => {
       const selectedChatId = parseInt(localStorage.getItem("selectedChatId")) || null;
       
-      if (selectedChatId && newMessage.chatId === selectedChatId) { // Si el mensaje es del chat actual
-        setMessages(prevMessages => [...prevMessages, newMessage]); // Agregar el mensaje
-        markMessagesAsRead(user.data.id, newMessage.chatId); // Marcar los mensajes como leídos
-      } else {
-        if (newMessage.receiverId === user.data.id && 
-            newMessage.senderId !== user.data.id) { // Si el usuario está en otro chat o ningún chat
-          setUnreadCounts(prev => ({
-            ...prev,
-            [newMessage.chatId]: (prev[newMessage.chatId] || 0) + 1, // Incrementar el contador de mensajes no leídos
-          }));
-        }
-      }
+      if (selectedChatId && newMessage.chatId === selectedChatId) {
+        setMessages(prevMessages => [...prevMessages, newMessage]);
+        markMessagesAsRead(user.data.id, newMessage.chatId);
+      } 
       
-      // Actualizar la lista de chats con el mensaje mas reciente
       setChats(prevChats =>
         prevChats.map(chat => {
           if (chat.id === newMessage.chatId) {
-            return {
+            const updatedChat = {
               ...chat,
-              messages: [newMessage, ...(chat.messages || [])].slice(0, 1) // Mensaje mas reciente
+              messages: [newMessage, ...(chat.messages || [])].slice(0, 1)
             };
+
+            if (newMessage.receiverId === user.data.id && 
+                newMessage.chatId !== selectedChatId) {
+              setUnreadCounts(prev => ({
+                ...prev,
+                [newMessage.chatId]: (prev[newMessage.chatId] || 0) + 1
+              }));
+            }
+
+            return updatedChat;
           }
           return chat;
         })
