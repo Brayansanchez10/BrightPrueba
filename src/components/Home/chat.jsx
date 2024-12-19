@@ -4,19 +4,37 @@ import NavigationBar from "./NavigationBar";
 import { useChat } from "../../context/user/chat.context";
 import { useAuth } from "../../context/auth.context";
 import { useTranslation } from "react-i18next";
-import { FaUser, FaSearch, FaPaperPlane, FaUserPlus,FaUsers, FaLock, FaEnvelope, FaComments } from "react-icons/fa";
-import { RiReplyLine,  RiPencilLine,  RiDeleteBinLine,  RiMoreLine,  RiCloseLine } from "react-icons/ri";
+import { 
+  initSocket, 
+  leaveChat, 
+  emitMessage, 
+  emitEditMessage, 
+  emitDeleteMessage,
+  socket 
+} from "../../utils/socket";
+import { 
+  FaMicrophone, 
+  FaUser, 
+  FaSearch, 
+  FaPaperPlane, 
+  FaUserPlus,
+  FaUsers, 
+  FaLock, 
+  FaEnvelope, 
+  FaComments 
+} from "react-icons/fa";
+import { RiReplyLine, RiPencilLine, RiDeleteBinLine, RiMoreLine, RiCloseLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import backgroundImage from "../../assets/img/chat.png";
-import {  socket,  initSocket,  leaveChat,  sendMessage as emitMessage,  startTyping,  stopTyping,  emitEditMessage,  emitDeleteMessage } from "../../utils/socket";
 import Friends from "./Friends";
 import { MessageSquare } from "lucide-react";
+import { FaStop, FaTimes } from 'react-icons/fa';
 import Swal from "sweetalert2";
 
 export default function Chat() {
   const { t } = useTranslation("global");
   const { user } = useAuth();
-  const {chats,  messages,  unreadCounts,  getUserChats,  getChatMessages,  sendMessage,  editMessage,  deleteMessage,  updateLocalMessage,  markMessagesAsRead,  getUnreadMessageCount } = useChat();
+  const {chats,  messages,  unreadCounts,  getUserChats,  getChatMessages,  sendMessage,  editMessage,  deleteMessage,  updateLocalMessage,  markMessagesAsRead,  getUnreadMessageCount, handleAudioRecording, isRecording,audioBlob, setAudioBlob, setIsRecording, startTyping, stopTyping  } = useChat();
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageInput, setMessageInput] = useState("");
   const [editingMessage, setEditingMessage] = useState(null);
@@ -198,82 +216,79 @@ export default function Chat() {
 
   const handleSendMessage = useCallback(
     async (e) => {
-      e.preventDefault();
-      if (messageInput.trim() && selectedChat) {
-        try {
-          let content = messageInput;
-          if (replyingTo) {
-            content = JSON.stringify({
-              replyTo: replyingTo.id,
-              content: messageInput,
-            });
-          }
+      if (e) e.preventDefault();
+      if ((!messageInput.trim() && !audioBlob) || !selectedChat) return;
+      
+      try {
+        const receiverId = selectedChat.participants.find(
+          p => p.userId !== user.data.id
+        )?.userId;
 
-          console.log("Preparando envío de mensaje:", {
-            chatId: selectedChat.id,
-            senderId: user.data.id,
-            receiverId: selectedChat.participants.find(
-              (p) => p.userId !== user.data.id
-            ).userId,
-            content,
+        if (!receiverId) {
+          console.error('Datos del chat:', {
+            selectedChat,
+            participants: selectedChat.participants,
+            userId: user.data.id
           });
-
-          if (editingMessage) {
-            const updatedMessage = await editMessage(
-              editingMessage.id,
-              content
-            );
-            if (updatedMessage) {
-              emitEditMessage(updatedMessage);
-              setLocalMessages((prevMessages) =>
-                prevMessages.map((msg) =>
-                  msg.id === updatedMessage.id ? updatedMessage : msg
-                )
-              );
-              updateLocalMessage(updatedMessage);
-            }
-            setEditingMessage(null);
-          } else {
-            const newMessage = await sendMessage({
-              chatId: selectedChat.id,
-              senderId: user.data.id,
-              receiverId: selectedChat.participants.find(
-                (p) => p.userId !== user.data.id
-              ).userId,
-              content,
-            });
-
-            if (newMessage) {
-              emitMessage(newMessage);
-              setLocalMessages((prevMessages) => [...prevMessages, newMessage]);
-              updateLocalMessage(newMessage);
-            }
-          }
-
-          setMessageInput("");
-          setReplyingTo(null);
-          stopTyping({ chatId: selectedChat.id, userId: user.data.id });
-        } catch (error) {
-          console.error("Error en handleSendMessage:", error);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "No se pudo enviar el mensaje. Por favor, intenta de nuevo.",
-          });
+          throw new Error('No se pudo determinar el destinatario');
         }
+
+        const messageData = {
+          chatId: selectedChat.id,
+          senderId: user.data.id,
+          receiverId: receiverId
+        };
+
+        let newMessage;
+
+        if (audioBlob) {
+          messageData.type = 'AUDIO';
+          messageData.audioFile = audioBlob;
+        } else if (messageInput.trim()) {
+          messageData.type = 'TEXT';
+          messageData.content = replyingTo ? 
+            JSON.stringify({
+              replyTo: replyingTo.id,
+              content: messageInput.trim()
+            }) : 
+            messageInput.trim();
+        }
+
+        if (editingMessage) {
+          newMessage = await editMessage(editingMessage.id, messageData.content);
+          if (newMessage?.data) {
+            emitEditMessage(newMessage.data);
+          }
+          setEditingMessage(null);
+        } else {
+          newMessage = await sendMessage(messageData);
+        }
+
+        if (newMessage?.data) {
+          emitMessage(newMessage.data);
+          setLocalMessages(prev => [...prev, newMessage.data]);
+          updateLocalMessage(newMessage.data);
+          setMessageInput("");
+          setAudioBlob(null);
+          setIsRecording(false);
+          setReplyingTo(null);
+          await stopTyping(selectedChat.id, user.data.id);
+        }
+
+      } catch (error) {
+        console.error("Error en handleSendMessage:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo enviar el mensaje. Por favor, intenta de nuevo.",
+          confirmButtonColor: "#EF5959"
+        });
       }
     },
-    [
-      messageInput,
-      selectedChat,
-      replyingTo,
-      editingMessage,
-      editMessage,
-      sendMessage,
-      user.data.id,
-      updateLocalMessage,
-    ]
-  );
+    [messageInput, selectedChat, user.data.id, audioBlob, replyingTo, 
+     editingMessage, sendMessage, editMessage, updateLocalMessage, 
+     emitMessage, emitEditMessage, stopTyping]
+);
 
   const handleInputChange = useCallback(
     (e) => {
@@ -445,8 +460,47 @@ export default function Chat() {
 
   const groupedMessages = groupMessagesByDate(localMessages);
 
+  const formatAudioDuration = (seconds) => {
+    if (!seconds) return '0:00';
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
   const renderSidebarMessage = useCallback((message) => {
     if (!message) return "No hay mensajes aún";
+    
+    const formatAudioDuration = (duration) => {
+      if (!duration) return 'Audio';
+      const minutes = Math.floor(duration / 60);
+      const seconds = Math.floor(duration % 60);
+      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    };
+    
+    if (message.messageType === 'AUDIO') {
+      console.log('Mensaje de audio completo:', message); 
+      console.log('Duración del audio:', message.duration); 
+      return (
+        <div className="flex items-center text-gray-600">
+          <div className="flex items-center gap-1.5">
+            <FaMicrophone className="text-[#783CDA] text-sm" />
+            <span className="text-xs">
+              {message.duration ? formatAudioDuration(message.duration) : 'Audio'}
+            </span>
+          </div>
+        </div>
+      );
+    }
+  
+    if (message.isDeleted) {
+      return (
+        <span className="text-gray-500 italic flex items-center gap-1">
+          <FaLock size={12} />
+          Mensaje eliminado
+        </span>
+      );
+    }
+    
     let content = message.content;
     try {
       const parsedContent = JSON.parse(content);
@@ -454,7 +508,12 @@ export default function Chat() {
         content = parsedContent.content;
       }
     } catch (e) {}
-    return content.length > 50 ? content.slice(0, 50) + "..." : content;
+    
+    return (
+      <span className="text-gray-600">
+        {content.length > 50 ? content.slice(0, 50) + "..." : content}
+      </span>
+    );
   }, []);
 
   const renderMessage = useCallback(
@@ -549,18 +608,26 @@ export default function Chat() {
                 )}
                 <div
                   className={`sm:p-4 p-3 rounded-[15px] ${
-                  
                     replyContent && !message.isDeleted ? "rounded-t-none" : ""
-                  
-                } ${
-                  isCurrentUser ? "bg-[#FFF]" : "bg-white"
-                } shadow-md`}
+                  } ${
+                    isCurrentUser ? "bg-[#FFF]" : "bg-white"
+                  } shadow-md`}
                 >
                   {message.isDeleted ? (
                     <p className="flex items-center text-black">
                       <FaLock className="mr-2" />
                       {messageContent}
                     </p>
+                  ) : message.messageType === 'AUDIO' ? ( 
+                    <div className="flex flex-col">
+                      <audio 
+                        controls 
+                        src={message.audioUrl} 
+                        className="max-w-[200px] h-8"
+                      >
+                        Tu navegador no soporta el elemento de audio.
+                      </audio>
+                    </div>
                   ) : (
                     <>
                       {messageContent.split("\n").map((paragraph, index) => (
@@ -744,7 +811,7 @@ export default function Chat() {
                   key={chat.id}
                   className={`sm:p-4 p-3 cursor-pointer transition-all duration-300 ${
                     selectedChat && selectedChat.id === chat.id
-                      ? "bg-[#A98CD9] text-white rounded-tr-[20px] rounded-br-[20px] shadow-lg relative z-10"
+                      ? "bg-[#A98CD9] text-white rounded-tr-[20px] rounded-br-[20px] shadow-lg relative z-10 hover:pt-5 hover:pb-3"
                       : "hover:bg-gray-100"
                   } flex items-start relative`}
                   onClick={() => handleChatSelect(chat)}
@@ -770,7 +837,7 @@ export default function Chat() {
                     )}
                   </div>
                   <div className="flex-grow min-w-0">
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center mt-1">
                       <h3
                         className={`font-semibold truncate mr-2 ${
                           selectedChat && selectedChat.id === chat.id
@@ -1008,68 +1075,95 @@ export default function Chat() {
                     Tu amigo está escribiendo...
                   </div>
                 )}
-                <form
-                  onSubmit={handleSendMessage}
-                  className="px-8 pb-8 pr-16 -mb-4"
-                >
-                  {(editingMessage || replyingTo) && (
-                    <div className="mb-2 bg-purple-50 p-2 rounded-lg shadow-sm">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium text-[#783CDA]">
-                          {editingMessage
-                            ? "Editar mensaje"
-                            : `Respondiendo a ${
-                                replyingTo.senderId === user.data.id
-                                  ? "ti mismo"
-                                  : selectedChat.participants.find(
-                                      (p) => p.userId === replyingTo.senderId
-                                    )?.user.username
-                              }`}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditingMessage(null);
-                            setReplyingTo(null);
-                          }}
-                          className="text-[#783CDA] hover:text-purple-700 transition-colors"
-                        >
-                          {editingMessage ? (
-                            <RiPencilLine size={18} />
-                          ) : (
-                            <RiCloseLine size={18} />
-                          )}
-                        </button>
-                      </div>
-                      <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+          <form onSubmit={handleSendMessage} className="px-8 pb-8 pr-16 -mb-4">
+                {(editingMessage || replyingTo) && (
+                  <div className="mb-2 bg-purple-50 p-2 rounded-lg shadow-sm">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium text-[#783CDA]">
                         {editingMessage
-                          ? editingMessage.content
-                          : replyingTo.content}
-                      </p>
+                          ? "Editar mensaje"
+                          : `Respondiendo a ${
+                              replyingTo.senderId === user.data.id
+                                ? "ti mismo"
+                                : selectedChat.participants.find(
+                                    (p) => p.userId === replyingTo.senderId
+                                  )?.user.username
+                            }`}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingMessage(null);
+                          setReplyingTo(null);
+                        }}
+                        className="text-[#783CDA] hover:text-purple-700 transition-colors"
+                      >
+                        {editingMessage ? (
+                          <RiPencilLine size={18} />
+                        ) : (
+                          <RiCloseLine size={18} />
+                        )}
+                      </button>
                     </div>
-                  )}
-                  <div className="flex items-center relative sm:-mr-0 -mr-7">
-                    <input
-                      type="text"
-                      value={messageInput}
-                      onChange={handleInputChange}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                          e.preventDefault();
-                          handleSendMessage(e);
-                        }
-                      }}
-                      placeholder={t("chat.typeMessage")}
-                      className="w-full sm:h-[65px] h-[55px] sm:text-base text-sm py-3 px-4 bg-white text-gray-700 rounded-[25px] focus:outline-none focus:ring-2 focus:ring-[#008BD8] pr-16 shadow-md shadow-gray-500/80 sm:mr-12 -mr-0 sm:mb-0 mb-3"
-                    />
-                    <button
-                      type="submit"
-                      className="absolute sm:right-6 right-4 sm:top-1/2 top-7 transform -translate-y-1/2 bg-[#008BD8] text-white rounded-full sm:w-[45px] sm:h-[45px] w-[35px] h-[35px] flex items-center justify-center transition-colors focus:outline-none hover:bg-[#0073B1] sm:mr-12 mr-0"
-                    >
+                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                      {editingMessage ? editingMessage.content : replyingTo.content}
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex items-center relative sm:-mr-0 -mr-7">
+                  <input
+                    type="text"
+                    value={messageInput}
+                    onChange={handleInputChange}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage(e);
+                      }
+                    }}
+                    placeholder={t("chat.typeMessage")}
+                    className="w-full sm:h-[65px] h-[55px] sm:text-base text-sm py-3 px-4 bg-white text-gray-700 rounded-[25px] focus:outline-none focus:ring-2 focus:ring-[#008BD8] pr-16 shadow-md shadow-gray-500/80 sm:mr-12 -mr-0 sm:mb-0 mb-3"
+                    disabled={isRecording}
+                  />
+                  
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      if (isRecording) {
+                        handleAudioRecording('stop');
+                      } else if (!messageInput.trim() && !audioBlob) {
+                        e.preventDefault();
+                        handleAudioRecording('start');
+                      } else {
+                        handleSendMessage(e);
+                      }
+                    }}
+                    className="absolute sm:right-6 right-4 sm:top-1/2 top-7 transform -translate-y-1/2 bg-[#008BD8] text-white rounded-full sm:w-[45px] sm:h-[45px] w-[35px] h-[35px] flex items-center justify-center transition-colors focus:outline-none hover:bg-[#0073B1] sm:mr-12 mr-0"
+                  >
+                    {isRecording ? (
+                      <FaStop className="sm:w-5 sm:h-5 w-4 h-4" />
+                    ) : messageInput.trim() || audioBlob ? (
                       <FaPaperPlane className="sm:w-5 sm:h-5 w-4 h-4" />
-                    </button>
+                    ) : (
+                      <FaMicrophone className="sm:w-5 sm:h-5 w-4 h-4" />
+                    )}
+                  </button>
                 </div>
-                </form>
+
+                {audioBlob && !isRecording && (
+                  <div className="mt-2 flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
+                    <audio src={URL.createObjectURL(audioBlob)} controls className="flex-1" />
+                    <button
+                      type="button"
+                      onClick={() => setAudioBlob(null)}
+                      className="p-1 rounded-full hover:bg-gray-200"
+                    >
+                      <FaTimes className="w-4 h-4 text-gray-600" />
+                    </button>
+                  </div>
+                )}
+              </form>
               </>
             ) : (
               <div className="flex-grow flex flex-col items-center justify-center">
