@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext } from 'react';
-import { loginRequest, verifyTokenRequest } from '../api/auth.js';
+import { loginRequest, verifyTokenRequest, googleLoginRequest } from '../api/auth.js';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 export const AuthContext = createContext();
@@ -101,8 +101,50 @@ export const AuthProvider = ({ children }) => {
     const isAuthenticated = () => {
         return !!user;
     };
+
+    const loginWithGoogle = async (googleData) => {
+        setLoading(true);
+        try {
+            const response = await googleLoginRequest({
+                email: googleData.profileObj.email,
+                googleId: googleData.googleId,
+                name: googleData.profileObj.name,
+                givenName:googleData.profileObj.givenName,
+                familyName:googleData.profileObj.familyName,
+                image:googleData.profileObj.imageUrl,
+            });
+
+            const user = response.data;
+            
+            localStorage.setItem("authToken", user.data.token);
+            
+            setUser(user);
+            setLoading(false);
+            setAuthenticated(true);
+            setRole(user.data.role);
+
+            return { success: true, user };
+        } catch (error) {
+            console.error("Error en login con Google:", error);
+            setLoading(false);
+            return { 
+                success: false, 
+                message: error.response?.data?.message || 'Error al iniciar sesión con Google'
+            };
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, loading, role, login, logout, isAuthenticated, authenticated }}>
+        <AuthContext.Provider value={{ 
+            user, 
+            loading, 
+            role, 
+            login,
+            loginWithGoogle,
+            logout, 
+            isAuthenticated, 
+            authenticated 
+        }}>
             {children}
         </AuthContext.Provider>
     );

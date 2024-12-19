@@ -13,15 +13,53 @@ import imagen from "../assets/img/torch.png";
 import LoginFond from "../assets/img/Login.png"
 import "../css/animations.css";
 
+import { gapi } from "gapi-script";
+import GoogleLogin from "react-google-login";
+
 const LoginForm = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [userRole, setUserRole] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const { t } = useTranslation("global");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const clientID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+  useEffect(() => {
+    const start = () => {
+      gapi.client.init({
+        clientId: clientID,
+        scope: "email profile"
+      });
+    };
+    gapi.load("client:auth2", start);
+  }, []);
+
+  const onSuccess = async (response) => {
+    console.log("Login exitoso de Google:", response.profileObj);
+    try {
+        const loginResponse = await loginWithGoogle(response);
+        
+    } catch (error) {
+        console.error("Error en proceso de login con Google:", error);
+        Swal.fire({
+            icon: 'error',
+            title: t("login.titleE"),
+            text: t("login.messageE")
+        });
+    }
+  };
+
+  const onFailure = (error) => {
+    console.log("Error en login de Google:", error);
+    Swal.fire({
+      icon: 'error',
+      title: t("login.titleE"),
+      text: 'Error al iniciar sesión con Google'
+    });
+  };
 
   const validationSchema = yup.object().shape({
     email: yup
@@ -227,17 +265,14 @@ const LoginForm = () => {
               <div className="border-t border-gray-300 flex-grow"></div>
             </div>
             <div className="flex justify-center">
-              <a
-                href={`${import.meta.env.VITE_API_URL}/PE/google`}
-                className="flex items-center justify-center gap-2 w-56 py-2 text-gray-700 rounded-xl font-bold text-lg border-2 border-gray-300 hover:bg-gray-50 transition-all duration-200"
-              >
-                <img 
-                  src="https://www.google.com/favicon.ico" 
-                  alt="Google logo" 
-                  className="w-6 h-6"
-                />
-                {t("login.google")}
-              </a>
+              <GoogleLogin 
+                clientId={clientID}
+                buttonText="Iniciar sesión con Google"
+                onSuccess={onSuccess}
+                onFailure={onFailure}
+                cookiePolicy={'single_host_policy'}
+                className="google-login-button"
+              />
             </div>
             <div className="mb-5 mt-5 text-lg text-center font-semibold">
               <Link

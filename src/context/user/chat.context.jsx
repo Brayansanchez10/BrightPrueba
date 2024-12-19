@@ -247,18 +247,22 @@ export const ChatProvider = ({ children }) => {
 
   const updateLocalMessage = useCallback(
     (updatedMessage) => {
-      setMessages((prevMessages) => {
-        const messageExists = prevMessages.some(
-          (msg) => msg.id === updatedMessage.id
-        );
-        if (messageExists) {
-          return prevMessages.map((msg) =>
-            msg.id === updatedMessage.id ? { ...msg, ...updatedMessage } : msg
+      const selectedChatId = parseInt(localStorage.getItem("selectedChatId"));
+      
+      if (updatedMessage.chatId === selectedChatId) {
+        setMessages((prevMessages) => {
+          const messageExists = prevMessages.some(
+            (msg) => msg.id === updatedMessage.id
           );
-        } else {
-          return [...prevMessages, updatedMessage];
-        }
-      });
+          if (messageExists) {
+            return prevMessages.map((msg) =>
+              msg.id === updatedMessage.id ? { ...msg, ...updatedMessage } : msg
+            );
+          } else {
+            return [...prevMessages, updatedMessage];
+          }
+        });
+      }
 
       setChats((prevChats) =>
         prevChats.map((chat) => {
@@ -276,19 +280,18 @@ export const ChatProvider = ({ children }) => {
 
             return {
               ...chat,
-              messages: updatedMessages,
+              messages: updatedMessages.slice(0, 1),
             };
           }
           return chat;
         })
       );
 
-      const selectedChatId = localStorage.getItem("selectedChatId");
       if (
         user?.data?.id &&
         updatedMessage.senderId !== user.data.id &&
         !updatedMessage.isRead &&
-        updatedMessage.chatId !== parseInt(selectedChatId)
+        updatedMessage.chatId !== selectedChatId
       ) {
         setUnreadCounts((prev) => ({
           ...prev,
@@ -303,18 +306,33 @@ export const ChatProvider = ({ children }) => {
     if (!user?.data?.id) return;
 
     window.updateReceivedMessage = (newMessage) => {
-      const selectedChatId = parseInt(localStorage.getItem("selectedChatId"));
-      updateLocalMessage(newMessage);
-      if (
-        newMessage.receiverId === user.data.id &&
-        newMessage.senderId !== user.data.id &&
-        newMessage.chatId !== selectedChatId
-      ) {
-        setUnreadCounts((prev) => ({
-          ...prev,
-          [newMessage.chatId]: (prev[newMessage.chatId] || 0) + 1,
-        }));
+      const selectedChatId = parseInt(localStorage.getItem("selectedChatId")) || null;
+      
+      if (selectedChatId && newMessage.chatId === selectedChatId) { // Si el mensaje es del chat actual
+        setMessages(prevMessages => [...prevMessages, newMessage]); // Agregar el mensaje
+        markMessagesAsRead(user.data.id, newMessage.chatId); // Marcar los mensajes como leídos
+      } else {
+        if (newMessage.receiverId === user.data.id && 
+            newMessage.senderId !== user.data.id) { // Si el usuario está en otro chat o ningún chat
+          setUnreadCounts(prev => ({
+            ...prev,
+            [newMessage.chatId]: (prev[newMessage.chatId] || 0) + 1, // Incrementar el contador de mensajes no leídos
+          }));
+        }
       }
+      
+      // Actualizar la lista de chats con el mensaje mas reciente
+      setChats(prevChats =>
+        prevChats.map(chat => {
+          if (chat.id === newMessage.chatId) {
+            return {
+              ...chat,
+              messages: [newMessage, ...(chat.messages || [])].slice(0, 1) // Mensaje mas reciente
+            };
+          }
+          return chat;
+        })
+      );
     };
 
     window.updateMessagesRead = (chatId, userId) => {
@@ -352,7 +370,7 @@ export const ChatProvider = ({ children }) => {
         socketInstance.off("message deleted");
       }
     };
-  }, [user?.data?.id, updateLocalMessage]);
+  }, [user?.data?.id, updateLocalMessage, markMessagesAsRead]);
 
   return (
     <ChatContext.Provider

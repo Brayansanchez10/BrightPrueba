@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import NavigationBar from "./NavigationBar";
 import Navbar from "../Dashboard/NavBar";
@@ -13,6 +13,7 @@ import {  socket,  initSocket,  leaveChat,  sendMessage as emitMessage,  startTy
 import Friends from "./Friends";
 import { MessageSquare } from "lucide-react";
 import Swal from "sweetalert2";
+import "./Resources/resourceView.css"
 
 export default function Chat() {
   const { t } = useTranslation("global");
@@ -424,25 +425,27 @@ export default function Chat() {
   );
 
   const sortChatsByLatestMessage = useCallback((chats) => {
-    return [...chats].sort((a, b) => {
-      const latestMessageA = a.messages[0]?.createdAt || a.createdAt;
-      const latestMessageB = b.messages[0]?.createdAt || b.createdAt;
+    return [...(chats || [])].sort((a, b) => {
+      const latestMessageA = a.messages?.[0]?.createdAt || a.createdAt;
+      const latestMessageB = b.messages?.[0]?.createdAt || b.createdAt;
       return new Date(latestMessageB) - new Date(latestMessageA);
     });
   }, []);
 
-  const filteredChats = sortChatsByLatestMessage(
-    chats?.filter((chat) => {
-      const otherParticipant = chat.participants?.find(
-        (p) => p.userId !== user.data.id
-      )?.user;
-      return (
-        otherParticipant?.username
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ?? false
-      );
-    }) ?? []
-  );
+  const filteredChats = useMemo(() => {
+    return sortChatsByLatestMessage(
+      chats?.filter((chat) => {
+        const otherParticipant = chat.participants?.find(
+          (p) => p.userId !== user.data.id
+        )?.user;
+        return (
+          otherParticipant?.username
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ?? false
+        );
+      }) ?? []
+    );
+  }, [chats, searchTerm, user.data.id, sortChatsByLatestMessage]);
 
   const groupedMessages = groupMessagesByDate(localMessages);
 
@@ -554,7 +557,7 @@ export default function Chat() {
                     replyContent && !message.isDeleted ? "rounded-t-none" : ""
                   
                 } ${
-                  isCurrentUser ? "bg-[#FFF]" : "bg-white"
+                  isCurrentUser ? "bg-[#F0EBFF]" : "bg-white"
                 } shadow-md`}
                 >
                   {message.isDeleted ? (
@@ -723,8 +726,8 @@ export default function Chat() {
     switch (activeSection) {
       case "chats":
         return (
-          <div className="bg-white rounded-[20px] shadow-md flex-grow flex flex-col overflow-hidden md:mb-0 mb-7">
-            <div className="p-4 border-b border-gray-200">
+          <div className="bg-white dark:bg-secondary rounded-[20px] shadow-md flex-grow flex flex-col overflow-hidden md:mb-0 mb-7">
+            <div className="p-4 border-b border-gray-200 dark:border-[#6037a1]">
               <h2 className="text-2xl font-bungee text-center mb-4 text-[#00D8A1]">
                 Chats
               </h2>
@@ -732,21 +735,21 @@ export default function Chat() {
                 <input
                   type="text"
                   placeholder={t("chat.search")}
-                  className="w-full sm:py-3 py-2 pl-12 pr-4 rounded-full bg-gray-100 sm:text-lg text-base shadow-md"
+                  className="w-full sm:py-3 py-2 pl-12 pr-4 rounded-full bg-gray-100 dark:bg-primary dark:text-primary sm:text-lg text-base shadow-md"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600 sm:text-xl text-lg" />
+                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-primary sm:text-xl text-lg" />
               </div>
             </div>
-            <div className="flex-grow overflow-y-auto">
+            <div className="flex-grow overflow-y-auto custom-scrollbar-y">
               {filteredChats.map((chat) => (
                 <div
                   key={chat.id}
                   className={`sm:p-4 p-3 cursor-pointer transition-all duration-300 ${
                     selectedChat && selectedChat.id === chat.id
-                      ? "bg-[#A98CD9] text-white rounded-tr-[20px] rounded-br-[20px] shadow-lg relative z-10"
-                      : "hover:bg-gray-100"
+                      ? "bg-[#A98CD9] dark:bg-[#7444bb] text-white rounded-tr-[20px] rounded-br-[20px] shadow-lg relative z-10"
+                      : "hover:bg-gray-100 dark:hover:bg-primary"
                   } flex items-start relative`}
                   onClick={() => handleChatSelect(chat)}
                 >
@@ -776,7 +779,7 @@ export default function Chat() {
                         className={`font-semibold truncate mr-2 ${
                           selectedChat && selectedChat.id === chat.id
                             ? "text-white"
-                            : "text-gray-900"
+                            : "text-gray-900 dark:text-primary"
                         }`}
                       >
                         {
@@ -789,7 +792,7 @@ export default function Chat() {
                         className={`text-xs whitespace-nowrap ${
                           selectedChat && selectedChat.id === chat.id
                             ? "text-white"
-                            : "text-gray-600"
+                            : "text-gray-600 dark:text-primary"
                         }`}
                       >
                         {formatSidebarTime(
@@ -802,7 +805,7 @@ export default function Chat() {
                         className={`text-sm truncate mr-2 ${
                           selectedChat && selectedChat.id === chat.id
                             ? "text-white"
-                            : "text-gray-600"
+                            : "text-gray-600 dark:text-gray-300"
                         }`}
                       >
                         {renderSidebarMessage(chat.messages[0])}
@@ -852,13 +855,12 @@ export default function Chat() {
         transition={{ duration: 0.5 }}
       >
         <div
-          className="absolute inset-0 bg-white"
+          className="absolute inset-0 bg-white dark:bg-primary opacity-30 dark:opacity-100"
           style={{
             backgroundImage: `url(${backgroundImage})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            opacity: 0.3,
             zIndex: -1,
           }}
         />
@@ -884,13 +886,13 @@ export default function Chat() {
                   <FaUser className="text-purple-900 sm:text-2xl text-xl" />
                 )}
               </div>
-              <h2 className="sm:text-[22px] text-lg font-roboto font-bold text-black mt-2">
+              <h2 className="sm:text-[22px] text-lg font-roboto font-bold text-primary mt-2">
                 {user.data.username}
               </h2>
             </div>
             <div className="flex items-center space-x-6 mt-2">
               <button
-                className={`text-[#726F7B] hover:text-gray-700 transition-colors ${
+                className={`text-[#726F7B] dark:text-primary hover:text-gray-700 dark:hover:text-gray-600 transition-colors ${
                   activeSection === "friends" && friendsTab === "friends"
                     ? "text-[#00D8A1]"
                     : ""
@@ -900,7 +902,7 @@ export default function Chat() {
                 <FaUsers className="text-2xl" />
               </button>
               <button
-                className={`text-[#726F7B] hover:text-gray-700 transition-colors ${
+                className={`text-[#726F7B] dark:text-primary hover:text-gray-700 dark:hover:text-gray-600 transition-colors ${
                   activeSection === "chats" ? "text-[#00D8A1]" : ""
                 }`}
                 onClick={() => handleSectionChange("chats")}
@@ -915,16 +917,16 @@ export default function Chat() {
           isMobileView 
             ? (showSidebar ? 'hidden' : 'w-full') 
             : 'flex-1'
-        } flex flex-col h-full relative z-10`}>
+        } flex flex-col h-full relative z-10 pb-4`}>
           <div className="relative z-10 flex flex-col h-full bg-transparent">
             {selectedChat ? (
               <>
-                <div className="bg-white rounded-[15px] shadow-md m-4">
+                <div className="bg-white dark:bg-secondary rounded-[15px] shadow-md m-4">
                   <div className="max-w-[98%] h-[60px] sm:h-[79px] mx-auto flex items-center justify-center px-4">
                     {isMobileView && (
                       <button
                         onClick={() => setShowSidebar(true)}
-                        className="absolute left-4 text-gray-600 hover:text-gray-800"
+                        className="absolute left-4 text-gray-600 dark:text-primary hover:text-gray-800 dark:hover:text-gray-600"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -971,7 +973,7 @@ export default function Chat() {
                               (p) => p.userId !== user.data.id
                             ).userId
                           }`}
-                          className="font-bungee sm:text-[22px] text-lg text-black hover:underline block"
+                          className="font-bungee sm:text-[22px] text-lg text-primary hover:underline block"
                         >
                           {
                             selectedChat.participants.find(
@@ -990,7 +992,7 @@ export default function Chat() {
                     </div>
                   </div>
                 </div>
-                <div className="flex-grow overflow-y-auto px-6 py-4 custom-scrollbar">
+                <div className="flex-grow overflow-y-auto px-6 py-4 custom-scrollbar-y">
                   <div className="max-w-[98%] mx-auto">
                     {Object.entries(groupedMessages).map(
                       ([date, dateMessages]) => (
@@ -1006,7 +1008,7 @@ export default function Chat() {
                   <div ref={messagesEndRef} />
                 </div>
                 {isTyping && (
-                  <div className="px-6 py-2 text-sm text-gray-500">
+                  <div className="px-6 py-2 text-sm text-gray-500 dark:text-primary">
                     Tu amigo está escribiendo...
                   </div>
                 )}
@@ -1062,11 +1064,11 @@ export default function Chat() {
                         }
                       }}
                       placeholder={t("chat.typeMessage")}
-                      className="w-full sm:h-[65px] h-[55px] sm:text-base text-sm py-3 px-4 bg-white text-gray-700 rounded-[25px] focus:outline-none focus:ring-2 focus:ring-[#008BD8] pr-16 shadow-md shadow-gray-500/80 sm:mr-12 -mr-0 sm:mb-0 mb-3"
+                      className="w-full sm:h-[65px] h-[55px] sm:text-base text-sm py-3 px-4 bg-white dark:placeholder:text-gray-300 dark:bg-secondary text-gray-700 dark:text-primary rounded-[25px] focus:outline-none focus:ring-2 focus:ring-[#5d2fa8] pr-16 shadow-md shadow-gray-500/80 dark:shadow-[#5d2fa8a4] sm:mr-12 -mr-0 sm:mb-0 mb-3"
                     />
                     <button
                       type="submit"
-                      className="absolute sm:right-6 right-4 sm:top-1/2 top-7 transform -translate-y-1/2 bg-[#008BD8] text-white rounded-full sm:w-[45px] sm:h-[45px] w-[35px] h-[35px] flex items-center justify-center transition-colors focus:outline-none hover:bg-[#0073B1] sm:mr-12 mr-0"
+                      className="absolute sm:right-6 right-4 sm:top-1/2 top-7 transform -translate-y-1/2 bg-[#5d2fa8] text-white rounded-full sm:w-[45px] sm:h-[45px] w-[35px] h-[35px] flex items-center justify-center transition-colors focus:outline-none hover:bg-[#8142e7] sm:mr-12 mr-0"
                     >
                       <FaPaperPlane className="sm:w-5 sm:h-5 w-4 h-4" />
                     </button>

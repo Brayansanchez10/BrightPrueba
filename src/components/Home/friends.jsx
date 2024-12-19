@@ -58,8 +58,8 @@ const Friends = ({ onClose, onChatCreated, initialTab }) => {
   };
 
   return (
-    <div className="bg-white rounded-[20px] shadow-md flex-grow flex flex-col overflow-hidden h-full">
-      <div className="p-4 border-b border-gray-200">
+    <div className="bg-white dark:bg-secondary rounded-[20px] shadow-md flex-grow flex flex-col overflow-hidden h-full">
+      <div className="p-4 border-b border-gray-200 dark:border-[#6037a1]">
         <h2 className="text-2xl font-bungee text-center mb-4 text-[#00D8A1]">
           {activeTab === "requests" && "Solicitudes"}
           {activeTab === "search" && "Buscar amigos"}
@@ -71,7 +71,7 @@ const Friends = ({ onClose, onChatCreated, initialTab }) => {
             className={`px-2 py-2 text-sm sm:px-4 sm:py-2 sm:text-base rounded-full transition-colors ${
               activeTab === 'requests' 
                 ? 'bg-[#00D8A1] text-white' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-primary text-gray-600 dark:text-white hover:bg-gray-200 dark:hover:bg-[#4ecfaf]'
             }`}
           >
             Solicitudes
@@ -81,7 +81,7 @@ const Friends = ({ onClose, onChatCreated, initialTab }) => {
             className={`px-2 py-2 text-sm sm:px-4 sm:py-2 sm:text-base rounded-full transition-colors ${
               activeTab === 'friends' 
                 ? 'bg-[#00D8A1] text-white' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-primary text-gray-600 dark:text-white hover:bg-gray-200 dark:hover:bg-[#4ecfaf]'
             }`}
           >
             Amigos
@@ -91,7 +91,7 @@ const Friends = ({ onClose, onChatCreated, initialTab }) => {
             className={`px-2 py-2 text-sm sm:px-4 sm:py-2 sm:text-base rounded-full transition-colors ${
               activeTab === 'search' 
                 ? 'bg-[#00D8A1] text-white' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-primary text-gray-600 dark:text-white hover:bg-gray-200 dark:hover:bg-[#4ecfaf]'
             }`}
           >
             Buscar
@@ -101,14 +101,14 @@ const Friends = ({ onClose, onChatCreated, initialTab }) => {
           <input
             type="text"
             placeholder={t("chat.searchPeople")}
-            className="w-full py-3 pl-12 pr-4 rounded-full bg-gray-100 text-lg shadow-md"
+            className="w-full py-3 pl-12 pr-4 rounded-full bg-gray-100 dark:bg-primary dark:text-primary text-lg shadow-md"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600 text-xl" />
+          <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-primary text-xl" />
         </div>
       </div>
-      <div className="flex-grow overflow-y-auto">{renderContent()}</div>
+      <div className="flex-grow overflow-y-auto custom-scrollbar-y">{renderContent()}</div>
       <ToastContainer
         position="bottom-left"
         autoClose={3000}
@@ -246,7 +246,7 @@ const FriendRequests = ({ searchTerm }) => {
           {filteredRequests.map((request) => (
             <div
               key={request.id}
-              className="p-4 cursor-pointer transition-all duration-300 hover:bg-gray-100 flex items-start"
+              className="p-4 cursor-pointer transition-all duration-300 hover:bg-gray-100 dark:hover:bg-primary flex items-start"
             >
               <div className="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3">
                 {request.sender.userImage ? (
@@ -261,14 +261,14 @@ const FriendRequests = ({ searchTerm }) => {
               </div>
               <div className="flex-grow min-w-0">
                 <div className="flex justify-between items-center mb-1">
-                  <h3 className="font-semibold truncate mr-2">
+                  <h3 className="font-semibold truncate mr-2 dark:text-primary">
                     {request.sender.username}
                   </h3>
-                  <span className="text-xs whitespace-nowrap flex-shrink-0">
+                  <span className="text-xs whitespace-nowrap flex-shrink-0 dark:text-gray-200">
                     {new Date(request.createdAt).toLocaleString()}
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center dark:text-gray-200">
                   <p className="text-sm truncate">
                     Solicitud de amistad pendiente
                   </p>
@@ -488,7 +488,7 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
           {filteredFriends.map((friend) => (
             <div
               key={friend.id}
-              className="p-4 cursor-pointer transition-all duration-300 hover:bg-gray-100 flex items-start"
+              className="p-4 cursor-pointer transition-all duration-300 hover:bg-gray-100 dark:hover:bg-primary flex items-start"
             >
               <div className="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3">
                 {friend.userImage ? (
@@ -503,11 +503,11 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
               </div>
               <div className="flex-grow min-w-0">
                 <div className="flex justify-between items-center mb-1">
-                  <h3 className="font-semibold truncate mr-2">
+                  <h3 className="font-semibold truncate mr-2 dark:text-white">
                     {friend.username}
                   </h3>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center dark:text-gray-200">
                   <p className="text-sm truncate">Amigo</p>
                   <div>
                     <button
@@ -626,7 +626,7 @@ const SearchPeople = ({ searchTerm }) => {
           {searchResults.map((result) => (
             <div
               key={result.id}
-              className="p-4 cursor-pointer transition-all duration-300 hover:bg-gray-100 flex items-start"
+              className="p-4 cursor-pointer transition-all duration-300 hover:bg-gray-100 dark:hover:bg-primary flex items-start"
             >
               <div className="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-purple-100 flex items-center justify-center mr-3">
                 {result.userImage ? (
@@ -641,11 +641,11 @@ const SearchPeople = ({ searchTerm }) => {
               </div>
               <div className="flex-grow min-w-0">
                 <div className="flex justify-between items-center mb-1">
-                  <h3 className="font-semibold truncate mr-2">
+                  <h3 className="font-semibold truncate mr-2 dark:text-primary">
                     {result.username}
                   </h3>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center dark:text-gray-200">
                   <p className="text-sm truncate">Usuario encontrado</p>
                   <button
                     onClick={() => handleSendRequest(result.id)}
