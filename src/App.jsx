@@ -136,7 +136,6 @@ function App() {
                                                                   <>
                                                                   <Route path="/Forum" element={<ForumCategoriesComponent />} />
                                                                   <Route path="/categories/:forumCategoryId" element={<TopicComponent />} />
-                                                                  <Route path="/topic/:topicId" element={<TopicViewComponente />} />
                                                                   </>
                                                               )}
                                                       </Route>
@@ -167,6 +166,8 @@ function App() {
                                                           <Route path="/chat" element={<Chat />} /> 
                                                           <Route path="/chat/:chatId" element={<Chat />} />
                                                           <Route path="/friends" element={<Friends />} />
+
+                                                          <Route path="/topic/:topicId" element={<TopicViewComponente />} />
                                                         </Route>
 
                                                         <Route path="/notFound" element={<NotFoundPage />} />

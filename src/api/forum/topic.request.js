@@ -9,6 +9,9 @@ export const getForumTopicByCategoryId = (forumCategoryId) => axios.get(`/forumT
 // Función para obtener un tema por su ID
 export const getTopicById = (id) => axios.get(`/forumTopic/topic/${id}`);
 
+// Función para actualizar las views del foro.
+export const incrementForumViews = (id) => axios.put(`/forumTopic/forums/${id}/views`);
+
 // Función para crear un nuevo tema
 export const createForumTopic = async (topicData) => {
   try {

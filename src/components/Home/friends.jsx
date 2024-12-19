@@ -374,7 +374,7 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
   const handleSendMessage = async (friendId) => {
     try {
       const response = await createChat(user.data.id, friendId);
-
+  
       if (response && response.data) {
         const updatedChats = await getUserChats(user.data.id);
         const chatToOpen = response.data.id
@@ -382,7 +382,7 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
           : updatedChats.find((chat) =>
               chat.participants.some((p) => p.userId === friendId)
             );
-
+  
         if (chatToOpen) {
           await onChatCreated(updatedChats, chatToOpen.id);
           Swal.fire({
@@ -415,18 +415,18 @@ const FriendsList = ({ onChatCreated, searchTerm }) => {
       }
     } catch (error) {
       console.error("Error al crear chat:", error);
+      
       if (
         error.response?.status === 400 &&
         error.response?.data?.error === "Ya existe un chat entre estos usuarios"
       ) {
-        const updatedChats = await getUserChats(user.data.id);
+        const updatedChats = await getUserChats(user.data.id); 
         const existingChat = updatedChats.find((chat) =>
           chat.participants.some((p) => p.userId === friendId)
         );
-
+  
         if (existingChat) {
           await onChatCreated(updatedChats, existingChat.id);
-
           Swal.fire({
             icon: "info",
             title: "Chat existente",

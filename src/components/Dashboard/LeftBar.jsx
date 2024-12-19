@@ -5,7 +5,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import logo from '../../assets/img/hola.png';
 import { useAuth } from '../../context/auth.context.jsx';
 import { useTranslation } from 'react-i18next';
-import { FaBook, FaDiceD20, FaEdit, FaHome, FaSignOutAlt, FaTags, FaUsers, FaUserCircle, FaBars, FaHeadSideVirus, FaCity } from 'react-icons/fa';
+import { FaBook, FaDiceD20, FaEdit, FaHome, FaSignOutAlt, FaTags, FaUsers, FaUserCircle, FaBars, FaHeadSideVirus, FaCity, FaEnvelope } from 'react-icons/fa';
 import { useUserContext } from '../../context/user/user.context.jsx';
 import ThemeToggle from '../themes/ThemeToggle';
 
@@ -176,6 +176,9 @@ const LeftBar = ({ onVisibilityChange }) => {
         </Link>
         <Link to="/ProfileEditor" className={`group flex rounded-xl my-1 py-2 px-4 md:px-6 text-left shadow-lg w-full transition duration-300 ${location.pathname === '/ProfileEditor' ? 'shadow-gray-500 bg-white text-purple-700' : 'hover:shadow-gray-500 hover:bg-white hover:text-purple-700'}`}>
           <FaEdit size="20px" className={`mr-2 h-5 ${location.pathname === '/ProfileEditor' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('leftBarComponent.profileEditor')}
+        </Link>
+        <Link to="/chat" className={`group flex rounded-xl my-1 py-2 px-4 md:px-6 text-left shadow-lg w-full transition duration-300 ${location.pathname === '/chat' ? 'shadow-gray-500 bg-white text-purple-700' : 'hover:shadow-gray-500 hover:bg-white hover:text-purple-700'}`}>
+          <FaEnvelope size="20px" className={`mr-2 h-5 ${location.pathname === '/chat' ? 'text-purple-700' : 'text-[#00D8A1] group-hover:text-purple-700'}`} />{t('Mensajes')}
         </Link>
       </div>
 

@@ -3,11 +3,12 @@ import { motion } from "framer-motion";
 import { BsFillReplyFill } from "react-icons/bs";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { FaBookmark, FaUser, FaRegUserCircle } from "react-icons/fa";
+import { FaBookmark, FaUser, FaRegUserCircle, FaArrowLeft } from "react-icons/fa";
 import { Button, Modal } from "antd";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../context/auth.context.jsx";
 import NavigationBar from "../NavigationBar.jsx";
+import Navbar from "../../Dashboard/NavBar.jsx";
 import { useTranslation } from "react-i18next";
 import { useForumTopic } from "../../../context/forum/topic.context.jsx";
 import { useForumComments } from "../../../context/forum/forumComments.context.jsx";
@@ -206,7 +207,8 @@ export default function TopicViewComponente() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <NavigationBar />
+      {user?.data?.role === "usuario" && <NavigationBar />}
+      {(user?.data?.role === "Admin" || user?.data?.role === "instructor") && <Navbar />}
 
       <motion.div 
         className="py-16 px-4 md:px-6 lg:px-8 flex flex-col md:flex-row"
@@ -215,17 +217,32 @@ export default function TopicViewComponente() {
         transition={{ delay: 0.2, duration: 0.5 }}
       >
         <div className="flex-grow mb-8 md:mb-0 md:mr-[300px] w800:mr-[330px] w900:mr-[380px] w1000:mr-[410px] w1200:mr-[420px] w-full">
+          <div className={`${(user?.data?.role === "Admin" || user?.data?.role === "instructor") ? '-mt-16' : 'mt-6'}`}>
+            
+          </div>
+          
           <motion.div 
             className="w-full bg-[#783CDA] rounded-[10px] p-6 mb-8 mt-6 overflow-y-auto"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}
           >
-            <div className="flex justify-between items-start mb-4">
-              <h1 className="font-bungee text-white text-left text-3xl pr-16 break-words">
-                {topic.title}
-              </h1>
-            </div>
+            <div className="flex flex-col items-start mb-4">
+            <Link
+              to={
+                user?.data?.role === "usuario"
+                  ? `/categories/${topic.forumCategoryId}`
+                  : `/StatisticsForum/${topic.forumCategoryId}`
+              }
+              className="inline-flex items-center text-white dark:text-white hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200 mb-6"
+            >
+              <FaArrowLeft className="mr-2 text-white dark:text-white" />
+              {t("course_user.back")}
+            </Link>
+            <h1 className="font-bungee text-white text-left text-3xl pr-16 break-words">
+              {topic.title}
+            </h1>
+          </div>
             <ReactQuill
               value={topic.Content}
               readOnly={true}

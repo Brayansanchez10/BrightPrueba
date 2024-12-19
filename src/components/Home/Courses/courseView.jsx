@@ -7,13 +7,14 @@ import { useAuth } from "../../../context/auth.context";
 import { useUserContext } from "../../../context/user/user.context";
 import { Collapse } from "antd";
 import NavigationBar from "../NavigationBar";
-import { FaArrowLeft, FaSadTear, FaPlay, FaUser, FaUsers, FaGraduationCap, FaDownload, FaCertificate, FaVideo, FaImage, FaFilePdf, FaQuestionCircle } from "react-icons/fa";
+import { FaArrowLeft, FaSadTear, FaPlay, FaUser, FaUsers, FaGraduationCap, FaDownload, FaCertificate, FaVideo, FaImage, FaFilePdf, FaQuestionCircle, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdPlayCircleOutline, MdQuiz } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import Footer from "../../footer.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSubCategoryCourseId } from "../../../api/courses/subCategory.requst.js";
 import { generateStudyPlanPDF } from "./components/studyPlan";
+import { Disclosure } from "@headlessui/react";
 
 const { Panel } = Collapse;
 
@@ -307,84 +308,103 @@ export default function CourseView() {
                 </h2>
 
                 {subCategory.length > 0 ? (
-                  <Collapse
-                    accordion
-                    className="bg-secondary border-none shadow-lg rounded-lg overflow-hidden"
-                    expandIconPosition="right"
-                  >
-                    {subCategory.map((subcategory, index) => {
-                      const filteredResources = resources
-                        .filter((resource) => resource.subcategoryId === subcategory.id)
-                        .sort((a, b) => (a.order || 0) - (b.order || 0));
+                <div className="bg-secondary border-none shadow-lg rounded-lg overflow-hidden">
+                  {subCategory.map((subcategory, index) => {
+                    const filteredResources = resources.filter(
+                      (resource) => resource.subcategoryId === subcategory.id
+                    );
 
-                      return (
-                        <Panel
-                          header={
-                            <motion.div 
-                              className="flex items-center py-3"
+                  return (
+                    <Disclosure key={subcategory.id}>
+                      {({ open }) => (
+                        <>
+                          {/* Subcategory Header */}
+                          <Disclosure.Button className="flex w-full items-center py-3 rounded-lg shadow-md transition-all duration-300 bg-primary bg-secondary border-b-2 border-transparent shadow-[0_2px_4px_rgba(0,0,0,0.2)]">
+                            <motion.div
+                              className="flex items-center w-full mr-5"
                               whileHover={{ x: 5 }}
                             >
-                              <div className="w-8 h-8 bg-purple-800 dark:bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                              <div className="w-8 h-8 bg-purple-800 dark:bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4 ml-2">
                                 {index + 1}
                               </div>
-                              <span className="text-lg font-medium text-primary">
+                              <span className="text-lg font-medium text-primary dark:text-text-primary">
                                 {subcategory.title}
                               </span>
+                              {/* Flecha que cambia de dirección según el estado open */}
+                              <div className="ml-auto">
+                                {open ? (
+                                  <FaChevronUp className="text-primary dark:text-text-primary" />
+                                ) : (
+                                  <FaChevronDown className="text-primary dark:text-text-primary" />
+                                )}
+                              </div>
                             </motion.div>
-                          }
-                          key={subcategory.id}
-                        >
-                          {filteredResources.length > 0 ? (
-                            <Collapse
-                              accordion
-                              className="bg-secondary border-none shadow-lg rounded-lg overflow-hidden"
-                              expandIconPosition="right"
-                            >
-                              {filteredResources.map((resource, index) => (
-                                <Panel
-                                  header={
-                                    <motion.div 
-                                      className="flex items-center py-3"
-                                      whileHover={{ x: 5 }}
-                                    >
-                                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                                        {index + 1}
-                                      </div>
-                                      <span className="text-lg font-medium text-primary flex items-center gap-2">
-                                        {getFileIcon(resource.files)}
-                                        {resource.title}
-                                      </span>
-                                    </motion.div>
-                                  }
-                                  key={resource.id}
-                                >
-                                  <motion.div 
-                                    className="p-4 bg-secondary"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ duration: 0.3 }}
-                                  >
-                                    <p className="text-gray-600 dark:text-primary mb-2">
-                                      {resource.description}
-                                    </p>
-                                  </motion.div>
-                                </Panel>
-                              ))}
-                            </Collapse>
-                          ) : (
-                            <motion.p 
-                              className="p-4 text-gray-600 dark:text-primary"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ duration: 0.3 }}
-                            >
-                              {t("CreateResource.NoResources")}
-                            </motion.p>
-                          )}
-                        </Panel>
-                      );
-                    })}
-                  </Collapse>
+                          </Disclosure.Button>
+
+                          {/* Subcategory Content */}
+                          <Disclosure.Panel className="p-4 rounded-lg transition-all duration-300 bg-secondary dark:bg-primary-admin text-primary dark:text-text-Basic">
+                            {filteredResources.length > 0 ? (
+                              <div className="bg-secondary dark:bg-primary-admin border-none rounded-lg">
+                                {filteredResources.map((resource, resourceIndex) => (
+                                  <Disclosure key={resource.id}>
+                                    {({ open }) => (
+                                      <>
+                                        {/* Resource Header */}
+                                        <Disclosure.Button className="flex w-full items-center py-3 hover:bg-secondary-light dark:hover:bg-secondary-light rounded-lg transition-all duration-300 border-b-2 border-transparent shadow-[0_2px_4px_rgba(0,0,0,0.2)]">
+                                          <motion.div
+                                            className="flex items-center w-full mr-5"
+                                            whileHover={{ x: 5 }}
+                                          >
+                                            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4 ml-2 ">
+                                              {resourceIndex + 1}
+                                            </div>
+                                            <span className="text-lg font-medium text-primary dark:text-text-primary flex items-center gap-2">
+                                              {getFileIcon(resource.files)} {/* Si deseas agregar iconos de archivo */}
+                                              {resource.title}
+                                            </span>
+                                            {/* Flecha que cambia de dirección para los recursos */}
+                                            <div className="ml-auto">
+                                              {open ? (
+                                                <FaChevronUp className="text-primary dark:text-text-primary" />
+                                              ) : (
+                                                <FaChevronDown className="text-primary dark:text-text-primary" />
+                                              )}
+                                            </div>
+                                          </motion.div>
+                                        </Disclosure.Button>
+
+                                        {/* Resource Content */}
+                                        <Disclosure.Panel className="p-4 bg-secondary dark:bg-primary-admin text-primary dark:text-text-Basic rounded-lg transition-all duration-300 bg-secondary border-b-2 border-transparent shadow-[0_2px_4px_rgba(0,0,0,0.2)] ml-2">
+                                          <motion.p
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ duration: 0.3 }}
+                                          >
+                                            {resource.description}
+                                          </motion.p>
+                                        </Disclosure.Panel>
+                                      </>
+                                    )}
+                                  </Disclosure>
+                                ))}
+                              </div>
+                            ) : (
+                              <motion.p
+                                className="p-4 text-gray-600 dark:text-Basic"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                {t("CreateResource.NoResources")}
+                              </motion.p>
+                            )}
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
+                    );
+                  })}
+                </div>
                 ) : (
                   <motion.div 
                     className="bg-white shadow-lg rounded-lg p-8 text-center"

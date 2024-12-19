@@ -18,7 +18,9 @@ export const getNotificationBorderColor = (type) => {
     case 'APPLICATION':
       return 'border-blue-600';
     case 'ACCEPTED':
-      return 'border-green-500';  
+      return 'border-green-500'; 
+    case 'FRIENDS':
+      return 'border-orange-500'; 
     default:
       return 'border-gray-500';
   }

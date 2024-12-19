@@ -4,7 +4,7 @@ import { useForumTopic } from "../../../context/forum/topic.context";
 import { useForumComments } from "../../../context/forum/forumComments.context";
 import { useUserContext } from "../../../context/user/user.context";
 import { useAnswers } from "../../../context/forum/answers.context";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/auth.context";
 import { Button } from "antd";
 import Navbar from "../NavBar";
@@ -25,6 +25,7 @@ const ForumViewAdmin = () => {
     const { t } = useTranslation("global");
     const { id } = useParams();
     const { user } = useAuth();
+      const navigate = useNavigate();
     const { getForumTopicByCategoryId, deleteForumTopic } = useForumTopic();
     const { getCommentsByTopic } = useForumComments();
     const { getAnswersByComment } = useAnswers();
@@ -189,6 +190,16 @@ const ForumViewAdmin = () => {
         : topic // Todos los foros
     : [];
 
+    const handleTopicClick = async (topic) => {
+        console.log("Tema ID", topic.id);
+        navigate(`/topic/${topic.id}`);
+        try {
+          await incrementForumViews(topic.id);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
     return (
         <div className="bg-primaryAdmin min-h-screen overflow-hidden">
             <div className="flex h-full">
@@ -234,7 +245,7 @@ const ForumViewAdmin = () => {
                         <div className="grid grid-cols-1 gap-6">
                             {Array.isArray(filteredTopics) && filteredTopics.length > 0 ? (
                                  filteredTopics.map((topic) => (
-                                    <div key={topic.id} className="flex gap-6">
+                                    <div key={topic.id} className="flex gap-6" onClick={() => handleTopicClick(topic)}>
                                         {/* Card de foro */}
                                         <div className="flex items-start p-6 border rounded-lg shadow-lg bg-white flex-1">
                                             {topic.user.userImage ? (
