@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import NavigationBar from "./NavigationBar";
+import Navbar from "../Dashboard/NavBar";
 import { useChat } from "../../context/user/chat.context";
 import { useAuth } from "../../context/auth.context";
 import { useTranslation } from "react-i18next";
@@ -18,7 +19,7 @@ import {
   FaSearch, 
   FaPaperPlane, 
   FaUserPlus,
-  FaUsers, 
+   FaUsers, 
   FaLock, 
   FaEnvelope, 
   FaComments 
@@ -909,9 +910,10 @@ export default function Chat() {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-      <NavigationBar />
+      {user?.data?.role === "usuario" && <NavigationBar />}
+      {(user?.data?.role === "Admin" || user?.data?.role === "instructor") && <Navbar />}
       <motion.div
-        className="h-[calc(100vh-4rem)] mt-16 flex relative"
+        className={`h-[calc(100vh-4rem)] ${(user?.data?.role === "Admin" || user?.data?.role === "instructor") ? 'mt-0' : 'mt-16'} flex relative`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}

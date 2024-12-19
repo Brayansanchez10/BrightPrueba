@@ -92,6 +92,12 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
     if (!category.description || category.description.length < 30) {
       errors.description = t("createCategoryForm.descriptionTooShort");
     }
+    if (!username?.entityId) {
+      console.error("Error: entityId is undefined for the user.");
+      message.error("Entity ID is missing. Please check your user data.");
+      setIsSubmitting(false);
+      return;
+    }
     if (categories.some((existingCategory) => existingCategory.name === category.name)) {
       errors.name = t("createCategoryForm.nameExists")
     }
@@ -169,6 +175,7 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
             value={category.name}
             onChange={handleChange}
             maxLength={20}
+            placeholder={t("createCategoryForm.namePlaceholder")}
             required
           />
           {errorMessage.name && (
@@ -185,7 +192,8 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
             value={category.description}
             onChange={handleChange}
             maxLength={MAX_DESCRIPTION_LENGTH}
-            style={{ minHeight: "60px" }} 
+            style={{ minHeight: "60px" }}
+            placeholder={t("createCategoryForm.descriptionPlaceholder")}
             required
           />
           <div className="text-gray-300 text-right">
@@ -210,3 +218,4 @@ const CreateCategoryForm = ({ visible, onClose, onCreate }) => {
 };
 
 export default CreateCategoryForm;
+

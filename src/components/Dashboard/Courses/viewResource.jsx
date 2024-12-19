@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { useParams, useNavigate } from "react-router-dom";
-// Contextos
+//Contextos: 
 import { useResourceContext } from "../../../context/courses/resource.contex";
 import { useCoursesContext } from "../../../context/courses/courses.context";
 import { useAuth } from "../../../context/auth.context";
@@ -9,36 +9,30 @@ import { useCourseProgressContext } from "../../../context/courses/progress.cont
 import { useCommentContext } from "../../../context/courses/comment.context";
 import { useRatingsContext } from "../../../context/courses/ratings.context";
 import { useGeneralCommentContext } from "../../../context/courses/generalComment.context";
-import {updateRating, deleteRating,} from "../../../api/courses/ratings.request";
-// Importaciones
-import NavigationBar from "../NavigationBar";
-import {updateComment, deleteComment,} from "../../../api/courses/comment.request";
-import {FiMenu,FiX,FiChevronLeft,FiChevronRight,FiSend,FiMoreVertical,FiEdit,FiTrash2,FiCheckCircle,FiPlus,FiEdit2,FiDownload,FiLock} from "react-icons/fi";
-import {FaCheckCircle,FaTimesCircle,FaQuestionCircle,FaStar,FaComment,FaUser,} from "react-icons/fa";
-import zorro from '../../../assets/img/Insigniaa.png';
-import derechaabajo from '../../../assets/img/DerechaAbajo.png';
-import izquierdaarriba from '../../../assets/img/IzquierdaArriba.png';
-import estructura from '../../../assets/img/LineaEstructura.png';
-
-import Swal from "sweetalert2";
-import { useTranslation } from "react-i18next";
+import { updateRating, deleteRating } from "../../../api/courses/ratings.request";
+import { updateComment, deleteComment } from "../../../api/courses/comment.request";
 import { completeQuiz } from "../../../api/courses/resource.request";
 import { useNotesContext } from "../../../context/courses/notes.context";
+import { useTranslation } from "react-i18next";
+// Importaciones:
+import Navbar from "../NavBar";
+import LeftBar from "../LeftBar.jsx";
+import {FiMenu,FiX,FiChevronLeft,FiChevronRight,FiSend,FiMoreVertical,FiEdit,FiTrash2,FiCheckCircle,FiPlus,FiEdit2,FiDownload,FiLock} from "react-icons/fi";
+import {FaCheckCircle,FaTimesCircle,FaQuestionCircle,FaStar,FaComment,FaUser,} from "react-icons/fa";
+import { useHorizontalScroll } from "../../Home/Resources/horizontalScroll";
+import { generateNotesPDF } from "../../Home/Resources/notesDownload";
+import Swal from "sweetalert2";
 import "./resourceView.css";
-import { useHorizontalScroll } from "./horizontalScroll.jsx";
-import { generateNotesPDF } from "./notesDownload.jsx";
-import CommentsSection from "./Funtions/CommentSection.jsx";
-import RatingsComponent from "./Funtions/RatingsComponent.jsx";
-import GeneralComments from "./Funtions/GeneralComments.jsx";
-import CourseNotes from "./Funtions/CourseNotes.jsx";
-import ContentResourceView from "./Funtions/ContentResourceView.jsx";
-import { generatePremiumCertificatePDF } from "./Funtions/CertificateGenerator.js";
-import RatingActions from "./Funtions/HandlesFuntions/RatingActions.jsx";
-import CommentActions from "./Funtions/HandlesFuntions/ComentsActions.jsx";
-import CourseNotesHandler from "./Funtions/HandlesFuntions/CourseNotesHandler.jsx";
-import GeneralCommentsActions from "./Funtions/HandlesFuntions/GeneralCommentsActions.jsx";
+import CommentsSection from "../../Home/Resources/Funtions/CommentSection";
+import RatingsComponent from "../../Home/Resources/Funtions/RatingsComponent";
+import GeneralComments from "../../Home/Resources/Funtions/GeneralComments";
+import CourseNotes from "../../Home/Resources/Funtions/CourseNotes";
+import RatingActions from "../../Home/Resources/Funtions/HandlesFuntions/RatingActions";
+import CommentActions from "../../Home/Resources/Funtions/HandlesFuntions/ComentsActions";
+import CourseNotesHandler from "../../Home/Resources/Funtions/HandlesFuntions/CourseNotesHandler";
+import GeneralCommentsActions from "../../Home/Resources/Funtions/HandlesFuntions/GeneralCommentsActions";
 
-export default function ResourceView() {
+export default function ViewResource(){
   const { t } = useTranslation("global");
   const { user } = useAuth();
  
@@ -80,7 +74,7 @@ export default function ResourceView() {
   const [userExistingRating, setUserExistingRating] = useState(null);
   const [creator, setCreator] = useState(null);
   const { getCourse } = useCoursesContext();
-  const { getResourceUser, getResource, getUserResourceProgress, loadResource, currentResource } = useResourceContext();
+  const { getResourceUser, getResource, getUserResourceProgress, loadResource } = useResourceContext();
   const { getCourseProgress, updateCourseProgress } = useCourseProgressContext();
   const {comments,fetchCommentsByResource,addComment,editComment,removeComment,} = useCommentContext();
   const {ratings,fetchRatingsByResource, addRating,  editRating,  removeRating,} = useRatingsContext();
@@ -96,10 +90,11 @@ export default function ResourceView() {
   const [userGeneralComment, setUserGeneralComment] = useState("");
   const [editingGeneralCommentId, setEditingGeneralCommentId] = useState(null);
   const [editedGeneralCommentContent, setEditedGeneralCommentContent] = useState("");
+  const [isLeftBarVisible, setIsLeftBarVisible] = useState(false);
   const { handleEditRating, handleSaveEditedRating, handleDeleteRating, handleRatingSubmit, } = RatingActions ({ updateRating, deleteRating, fetchRatingsByResource, id, setEditingRatingId, setEditedRatingScore, setEditedRatingComment, setUserExistingRating, setUserRating, setRatingComment, userRating, ratingComment, userExistingRating, user, addRating, courseId, currentScore, editedRatingComment, editedRatingScore });
   const { handleDeleteComment, handleEditComment, handleSaveEditedComment, handleCommentSubmit } = CommentActions ({editedCommentContent, setEditedCommentContent, setEditingCommentId, updateComment, fetchCommentsByResource, id, deleteComment, addComment, userComment, user, setUserComment, courseId });
   const { handleAddNote, handleAddResourceNote, handleEditNote, handleSaveEditedNote, handleDeleteNote, handleSaveEditedResourceNote, handleDeleteResourceNote, handleEditResourceNote} = CourseNotesHandler ({notes, editingNoteId, userNote, editedNoteContent, resourceNotes, userResourceNote, resources, resource, course, user, setEditingNoteId, setUserNote, setEditedNoteContent, editedResourceNoteContent, setEditedResourceNoteContent, setEditingResourceNoteId, editingResourceNoteId, setUserResourceNote, removeResourceNote, fetchResourceNotes, removeNote, fetchCourseNotes, addNote, courseId, addNoteToResource, editNote, editResourceNote});
-  const { handleGeneralCommentSubmit, handleEditGeneralComment, handleSaveEditedGeneralComment, handleDeleteGeneralComment} = GeneralCommentsActions ({generalComments, userGeneralComment, setUserGeneralComment, setEditingGeneralCommentId, editedGeneralCommentContent, setEditedGeneralCommentContent, user, courseId,addGeneralComment, editGeneralComment, fetchGeneralComments, removeGeneralComment, t });
+  const { handleGeneralCommentSubmit, handleEditGeneralComment, handleSaveEditedGeneralComment, handleDeleteGeneralComment} = GeneralCommentsActions ({generalComments, userGeneralComment, setUserGeneralComment, setEditingGeneralCommentId, editedGeneralCommentContent, setEditedGeneralCommentContent, user, courseId,addGeneralComment, editGeneralComment, fetchGeneralComments, removeGeneralComment, });
 
   const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(false);
 
@@ -701,8 +696,7 @@ export default function ResourceView() {
     if (currentResourceIndex < resources.length - 1) {
       const nextResource = resources[currentResourceIndex + 1];
       const percentagePerResource = 100 / resources.length;
-      const newProgress = Math.floor((currentResourceIndex + 1) * percentagePerResource);
-      
+      const newProgress = (currentResourceIndex + 1) * percentagePerResource;
       if (newProgress > currentProgress && currentProgress < 100) {
         await updateCourseProgress(user.data.id, courseId, newProgress);
         setCurrentProgress(newProgress);
@@ -714,10 +708,7 @@ export default function ResourceView() {
 
   // Funciones para la descarga de PDF
   const handleFinishCourse = async () => {
-    await updateCourseProgress(user.data.id, courseId, 100);
-    generatePremiumCertificatePDF(username, course.title, zorro, derechaabajo, izquierdaarriba, userInfo.documentNumber, estructura
-    );
-    navigate(`/course/${courseId}`);
+    navigate(`/Courses`);
   };
 
   const handleDownloadNotes = () => {
@@ -729,7 +720,7 @@ export default function ResourceView() {
     setIsOpen(!isOpen);
   };
 
-  const handleResourceClick = async (resourceId) => {
+  const handleResourceClick = async (resourceId, courseId) => {
     try {
       // Cargar el recurso sin cambiar de página
       const resourceData = await loadResource(resourceId);
@@ -740,7 +731,7 @@ export default function ResourceView() {
       setUserExistingRating(null);
       
       // Actualizar la URL sin recargar la página
-      navigate(`/course/${courseId}/resource/${resourceId}`, { replace: true });
+      navigate(`/course/${courseId}/resource/${resourceId}/A`, { replace: true });
       
       // Resetear estados necesarios para quizzes si es necesario
       if (resourceData?.quizzes && resourceData.quizzes.length > 0) {
@@ -763,9 +754,7 @@ export default function ResourceView() {
       const isUnlocked = currentProgress >= requiredProgress;
       const currentResource = resources[currentResourceIndex];
       const isCurrentResourceQuiz = currentResource?.quizzes && currentResource.quizzes.length > 0;
-      
-      // Lógica para permitir acceso a recursos anteriores
-      const canAdvance = index <= currentResourceIndex || (!isCurrentResourceQuiz || isQuizCompleted || attempts > 0);
+      const canAdvance = !isCurrentResourceQuiz || isQuizCompleted || attempts > 0;
 
       return (
         <div
@@ -773,7 +762,7 @@ export default function ResourceView() {
           className={`flex items-start mb-6 cursor-pointer ${
             isOpen ? "pr-4" : "justify-center"
           }`}
-          onClick={() => isUnlocked && canAdvance && handleResourceClick(res.id)}
+          onClick={() => isUnlocked && canAdvance && handleResourceClick(res.id, res.courseId)}
         >
           <div className="relative mr-2.5">
             <div
@@ -781,19 +770,19 @@ export default function ResourceView() {
                 flex items-center justify-center
                 w-10 h-10 rounded-full 
                 ${
-                  isUnlocked && (index <= currentResourceIndex || canAdvance)
+                  isUnlocked && canAdvance
                     ? "bg-white text-[#6D4F9E]"
                     : "bg-gray-500 text-gray-300 cursor-not-allowed"
                 }
                 text-sm font-bold
               `}
             >
-              {isUnlocked && (index <= currentResourceIndex || canAdvance) ? index + 1 : <FiLock />}
+              {isUnlocked && canAdvance ? index + 1 : <FiLock />}
             </div>
             {index < resources.length - 1 && (
               <div
                 className={`absolute left-[19px] top-8 w-0.5 h-10 ${
-                  isUnlocked && (index <= currentResourceIndex || canAdvance) ? "bg-white" : "bg-gray-500"
+                  isUnlocked && canAdvance ? "bg-white" : "bg-gray-500"
                 }`}
               />
             )}
@@ -801,7 +790,7 @@ export default function ResourceView() {
           {isOpen && (
             <span
               className={`mt-2 text-xs ${
-                isUnlocked && (index <= currentResourceIndex || canAdvance) ? "text-white font-bold" : "text-gray-500"
+                isUnlocked && canAdvance ? "text-white font-bold" : "text-gray-500"
               }`}
             >
               {res.title}
@@ -824,13 +813,6 @@ export default function ResourceView() {
   };
 
   const renderRightSideContent = () => {
-    const viewOrder = (resourceNotes, resources) => {
-      console.log("Recursos:", resources);
-      console.log("Notas:", resourceNotes);
-      
-    };
-    viewOrder(resourceNotes, resources);
-
     return (
       <div className="space-y-4">
         <div ref={scrollContainerRef} className="flex space-x-4 custom-scrollbar-x pb-2">
@@ -982,27 +964,28 @@ export default function ResourceView() {
 
   return (
     <div className="min-h-screen bg-[#200E3E]">
-      <NavigationBar />
+      <div className="flex h-full">
+        <LeftBar onVisibilityChange={setIsLeftBarVisible} />
+        <div className={`w-full transition-all duration-300 ${isLeftBarVisible ? "ml-56 max-w-full" : ""}`}>
+        <Navbar />
       <div className="flex flex-col sm:flex-row">
-        <div className="hidden sm:block">
-          <div
-            className={`${
-              isOpen ? "w-56" : "w-16"
-            } fixed left-0 top-16 h-full bg-[#200E3E] transition-all duration-300 ease-in-out overflow-hidden z-40`}
+        <div className="absolute right-10 top-20 z-40 hidden sm:block">
+          <button
+            onClick={toggleSidebar}
+            className="p-[10px] bg-[#5D4B8A] text-white rounded-full shadow-lg hover:bg-[#3D2A5F] transition-colors"
           >
-            <button
-              onClick={toggleSidebar}
-              className="absolute top-4 left-2 p-[10px] bg-[#5D4B8A] text-white rounded-full shadow-lg hover:bg-[#3D2A5F] transition-colors"
+            {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
+          </button>
+          {isOpen && (
+            <div
+              className="mt-2 bg-[#200E3E] text-white w-56 rounded-lg shadow-lg transition-all duration-300 ease-in-out overflow-hidden"
             >
-              {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
-            </button>
-            <div className="mt-16 p-4">{renderResourceList()}</div>
-          </div>
+              <div className="p-4">{renderResourceList()}</div>
+            </div>
+          )}
         </div>
         <div
-          className={`flex-1 transition-all duration-300 ease-in-out pt-20 px-4 sm:px-6 ${
-            isOpen ? "sm:ml-56" : "sm:ml-16"
-          }`}
+          className={`flex-1 transition-all duration-300 ease-in-out pt-20 px-4 sm:px-6`}
         >
           <div className="mb-4">
             <div className="flex items-center justify-between mb-1">
@@ -1102,6 +1085,9 @@ export default function ResourceView() {
           </div>
         </div>
       </div>
+          
+        </div>
+      </div>
     </div>
   );
-}
+};
