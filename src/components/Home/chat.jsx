@@ -846,7 +846,7 @@ export default function Chat() {
       {user?.data?.role === "usuario" && <NavigationBar />}
       {(user?.data?.role === "Admin" || user?.data?.role === "instructor") && <Navbar />}
       <motion.div
-        className={`h-[calc(100vh-4rem)] ${(user?.data?.role === "Admin" || user?.data?.role === "instructor") ? 'mt-0' : 'mt-16'} flex relative`}
+        className={`h-[calc(100vh-4rem)] ${(user?.data?.role === "Admin" || user?.data?.role === "instructor") ? '-mt-4' : 'mt-16'} flex relative`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -924,7 +924,7 @@ export default function Chat() {
                     {isMobileView && (
                       <button
                         onClick={() => setShowSidebar(true)}
-                        className="absolute left-4 text-gray-600 hover:text-gray-800"
+                        className="absolute left-10 text-gray-600 hover:text-gray-800"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

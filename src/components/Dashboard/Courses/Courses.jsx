@@ -619,7 +619,7 @@ const DataTablete = () => {
                                           icon={<FaRegEye />}
                                           onClick={() => handleResourceClick(course)}
                                         >
-                                          {/* Botón de Ver Detalles */}
+                                          {/* Botón de Ver Detalles de un recurso */}
                                         </Button>
                                       )}
                                       {canNotify && (

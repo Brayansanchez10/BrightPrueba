@@ -9,12 +9,13 @@ import CreateTopicForm from "./TopicComponents/createTopic.jsx";
 import UpdateForumTopicForm from "./TopicComponents/updateTopic.jsx";
 import { useForumFavorite } from "../../../context/forum/forumFavorite.context.jsx";
 import { useUserContext } from "../../../context/user/user.context.jsx";
-import { FaSearch, FaUser, FaStopwatch, FaHeart, FaEdit, FaTrash, FaRegUserCircle } from "react-icons/fa";
+import { FaSearch, FaUser, FaStopwatch, FaHeart, FaEdit, FaTrash, FaRegUserCircle, FaRegEye } from "react-icons/fa";
 import Swal from "sweetalert2";
 import Footer from "../../footer.jsx";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
 import { motion, AnimatePresence } from "framer-motion";
+import { incrementForumViews } from "../../../api/forum/topic.request.js";
 
 export default function TopicComponent() {
   const { t } = useTranslation("global");
@@ -153,9 +154,14 @@ export default function TopicComponent() {
     return filtered;
   };
 
-  const handleTopicClick = (topicId) => {
+  const handleTopicClick = async (topicId) => {
     console.log("Tema ID", topicId);
     navigate(`/topic/${topicId}`);
+    try {
+      await incrementForumViews(topicId);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSearchChange = (e) => {
@@ -333,11 +339,16 @@ export default function TopicComponent() {
                             <FaUser className="w-3 h-3 mr-1" />
                             <span className="font-sans text-xs">{topic.user.username}</span>
                           </div>
-                          <div className="flex items-center text-white">
-                            <FaStopwatch className="w-3 h-3 mr-1" />
-                            <span className="font-sans text-xs">
-                              {t('Mytopic.open')}
-                            </span>{" "}
+
+                          <div className="flex space-x-4 ml-auto">
+                            <div className="flex items-center text-white">
+                              <FaStopwatch className="w-3 h-3 mr-1" />
+                              <span className="font-sans text-xs">{t('Mytopic.open')}</span>
+                            </div>
+                            <div className="flex items-center text-white">
+                              <FaRegEye className="w-3 h-3 mr-1" />
+                              <span className="font-sans text-xs">{topic.views}</span>
+                            </div>
                           </div>
                         </div>
                         <div className="absolute top-2 right-2 flex flex-col items-end">
