@@ -13,8 +13,7 @@ import imagen from "../assets/img/torch.png";
 import LoginFond from "../assets/img/Login.png"
 import "../css/animations.css";
 
-import { gapi } from "gapi-script";
-import GoogleLogin from "react-google-login";
+import { GoogleLogin } from '@react-oauth/google';
 
 const LoginForm = () => {
   const [error, setError] = useState(null);
@@ -25,35 +24,30 @@ const LoginForm = () => {
   const { login, loginWithGoogle } = useAuth();
   const { t } = useTranslation("global");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const clientID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-  useEffect(() => {
-    const start = () => {
-      gapi.client.init({
-        clientId: clientID,
-        scope: "email profile"
-      });
-    };
-    gapi.load("client:auth2", start);
-  }, []);
-
-  const onSuccess = async (response) => {
-    console.log("Login exitoso de Google:", response.profileObj);
+  const onSuccess = async (credentialResponse) => {
     try {
-        const loginResponse = await loginWithGoogle(response);
-        
-    } catch (error) {
-        console.error("Error en proceso de login con Google:", error);
+      const loginResponse = await loginWithGoogle(credentialResponse);
+      if (loginResponse.success) {
+        // Manejar login exitoso
+      } else {
         Swal.fire({
-            icon: 'error',
-            title: t("login.titleE"),
-            text: t("login.messageE")
+          icon: 'error',
+          title: t("login.titleE"),
+          text: t("login.messageE")
         });
+      }
+    } catch (error) {
+      console.error("Error en proceso de login con Google:", error);
+      Swal.fire({
+        icon: 'error',
+        title: t("login.titleE"),
+        text: t("login.messageE")
+      });
     }
   };
 
-  const onFailure = (error) => {
-    console.log("Error en login de Google:", error);
+  const onFailure = () => {
     Swal.fire({
       icon: 'error',
       title: t("login.titleE"),
@@ -265,13 +259,14 @@ const LoginForm = () => {
               <div className="border-t border-gray-300 flex-grow"></div>
             </div>
             <div className="flex justify-center">
-              <GoogleLogin 
-                clientId={clientID}
-                buttonText="Iniciar sesión con Google"
-                onSuccess={onSuccess}
-                onFailure={onFailure}
-                cookiePolicy={'single_host_policy'}
-                className="google-login-button"
+              <GoogleLogin
+                onSuccess={(credentialResponse) => {
+                  onSuccess(credentialResponse);
+                }}
+                onError={() => {
+                  onFailure();
+                }}
+                useOneTap
               />
             </div>
             <div className="mb-5 mt-5 text-lg text-center font-semibold">

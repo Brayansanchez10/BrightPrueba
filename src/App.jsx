@@ -72,6 +72,7 @@ import Friends from './components/Home/Friends.jsx';
 import AllNotifications from './components/Notifications/AllNotifications.jsx';
 import ViewResource from './components/Dashboard/Courses/viewResource.jsx';
 import ForumViewAdmin from './components/Dashboard/forum/forumViewAdmin.jsx';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 function App() {
   const [forumActive, setForumActive] = useState(true); 
@@ -82,126 +83,128 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <UserProvider>
-          <NotificationsProvider>
-            <RoleProvider>
-              <PermissionProvider>
-                <CategoryProvider>
-                  <CoursesProvider>
-                    <ResourceProvider>
-                      <CourseProgressProvider>
-                        <SubCategoryProvider>
-                          <CommentProvider>
-                            <RatingsProvider>
-                              <FavoritesProvider>
-                                <NotesProvider>
-                                  <GeneralCommentProvider>
-                                    <ForumCategoriesProvider>
-                                      <TopicProvider>
-                                        <ForumFavoritesProvider>
-                                          <LikesProvider>
-                                            <BookmarkProvider>
-                                              <ForumCommentProvider>
-                                                <AnswersProvider>
-                                                  <EntityProvider> 
-                                                   <AnswersQuestionProvider>
-                                                    <ChatProvider>
-                                                      <FriendsProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <ThemeProvider>
+        <AuthProvider>
+          <UserProvider>
+            <NotificationsProvider>
+              <RoleProvider>
+                <PermissionProvider>
+                  <CategoryProvider>
+                    <CoursesProvider>
+                      <ResourceProvider>
+                        <CourseProgressProvider>
+                          <SubCategoryProvider>
+                            <CommentProvider>
+                              <RatingsProvider>
+                                <FavoritesProvider>
+                                  <NotesProvider>
+                                    <GeneralCommentProvider>
+                                      <ForumCategoriesProvider>
+                                        <TopicProvider>
+                                          <ForumFavoritesProvider>
+                                            <LikesProvider>
+                                              <BookmarkProvider>
+                                                <ForumCommentProvider>
+                                                  <AnswersProvider>
+                                                    <EntityProvider> 
+                                                    <AnswersQuestionProvider>
+                                                      <ChatProvider>
+                                                        <FriendsProvider>
 
-                                                    <Routes>
-                                                        <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
-                                                          <Route path="/" element={<LoginForm />} />
-                                                          <Route path="/register" element={<RegisterForm />} />
-                                                          <Route path="/reset" element={<ResetPasswordForm />} />
-                                                          <Route path="/code" element={<ResetPasswordVerifyForm />} />
-                                                          <Route path="/newPassword" element={<NewPassword />} />
-                                                        </Route>
-
-                                                        <Route element={<ProtectedRoute allowedRoles="usuario"/>}>
-                                                          <Route path="/Home" element={<HomePage />} />
-                                                          <Route path="/MyCourses" element={<MyCourses />} />
-                                                          <Route path="/CoursesHome" element={<CoursesHome />} />
-                                                          <Route path="/course/:courseId" element={<CourseView />} />
-                                                          <Route path="/course/:courseId/certificate-preview" element={<CertificatePreview />} />
-                                                          
-                                                          <Route path="/Account" element={<ProfileUser />} />
-                                                          <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />
-                                                          <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />
-                                                          <Route path="/AllCourses" element={<AllCourses />}/>
-                                                          <Route path="/notifications" element={<AllNotifications />}/>
-                                                          <Route path="/CourseCategory/:category" element={<CourseCategory />} />
-                                                              {forumActive && (
-                                                                  <>
-                                                                  <Route path="/Forum" element={<ForumCategoriesComponent />} />
-                                                                  <Route path="/categories/:forumCategoryId" element={<TopicComponent />} />
-                                                                  </>
-                                                              )}
-                                                      </Route>
-
-                                                        <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor']} />}>
-                                                          <Route path="/admin" element={<Dashboard />} />
-                                                          <Route path="/Usuarios" element={<Usuarios />} />
-                                                          <Route path="/Courses" element={<Courses />} />
-                                                          <Route path="/Categories" element={<Categories />} />
-                                                          <Route path="/ForumCategories" element={<ForumCategories />} />
-                                                          <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
-                                                          <Route path='/Entities' element={<Entities />} />
+                                                      <Routes>
+                                                          <Route element={<PublicRoute redirectToUser="/Home" redirectToAdmin="/admin" />}>
+                                                            <Route path="/" element={<LoginForm />} />
+                                                            <Route path="/register" element={<RegisterForm />} />
+                                                            <Route path="/reset" element={<ResetPasswordForm />} />
+                                                            <Route path="/code" element={<ResetPasswordVerifyForm />} />
+                                                            <Route path="/newPassword" element={<NewPassword />} />
                                                           </Route>
-                                                          <Route path="/roles" element={<Roles />} />
-                                                          <Route path="/ProfileEditor" element={<ProfileEditor />} />
-                                                          <Route path="/ChangePassword" element={<ChangePassword />} />
-                                                          <Route path="/eliminatedCode" element={<DeleteAccountConfirmation />} />
-                                                          <Route path="/adminNotifications" element={<AllNotifications />}/>
-                                                          <Route path="/StatisticsForum/:id" element={<ForumViewAdmin />}/>
+
+                                                          <Route element={<ProtectedRoute allowedRoles="usuario"/>}>
+                                                            <Route path="/Home" element={<HomePage />} />
+                                                            <Route path="/MyCourses" element={<MyCourses />} />
+                                                            <Route path="/CoursesHome" element={<CoursesHome />} />
+                                                            <Route path="/course/:courseId" element={<CourseView />} />
+                                                            <Route path="/course/:courseId/certificate-preview" element={<CertificatePreview />} />
+                                                            
+                                                            <Route path="/Account" element={<ProfileUser />} />
+                                                            <Route path="/ChangePasswordUser" element={<ChangePasswordUser />} />
+                                                            <Route path="/UserDeleteAccount" element={<UserDeleteAccount />} />
+                                                            <Route path="/AllCourses" element={<AllCourses />}/>
+                                                            <Route path="/notifications" element={<AllNotifications />}/>
+                                                            <Route path="/CourseCategory/:category" element={<CourseCategory />} />
+                                                                {forumActive && (
+                                                                    <>
+                                                                    <Route path="/Forum" element={<ForumCategoriesComponent />} />
+                                                                    <Route path="/categories/:forumCategoryId" element={<TopicComponent />} />
+                                                                    </>
+                                                                )}
                                                         </Route>
 
-                                                        <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor', 'usuario']} />}>
-                                                          <Route path="/course/:courseId/resource/:id" element={<ResourceView />} />
-                                                          <Route path="/course/:courseId/resource/:id/A" element={<ViewResource />} />
-                                                          
-                                                          <Route path="/profile/:id" element={<ViewProfile />} />
-                                                          <Route path="/prevUser/:id" element={<PrevUser />} />
-                                                          <Route path="/chat" element={<Chat />} /> 
-                                                          <Route path="/chat/:chatId" element={<Chat />} />
-                                                          <Route path="/friends" element={<Friends />} />
+                                                          <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor']} />}>
+                                                            <Route path="/admin" element={<Dashboard />} />
+                                                            <Route path="/Usuarios" element={<Usuarios />} />
+                                                            <Route path="/Courses" element={<Courses />} />
+                                                            <Route path="/Categories" element={<Categories />} />
+                                                            <Route path="/ForumCategories" element={<ForumCategories />} />
+                                                            <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+                                                            <Route path='/Entities' element={<Entities />} />
+                                                            </Route>
+                                                            <Route path="/roles" element={<Roles />} />
+                                                            <Route path="/ProfileEditor" element={<ProfileEditor />} />
+                                                            <Route path="/ChangePassword" element={<ChangePassword />} />
+                                                            <Route path="/eliminatedCode" element={<DeleteAccountConfirmation />} />
+                                                            <Route path="/adminNotifications" element={<AllNotifications />}/>
+                                                            <Route path="/StatisticsForum/:id" element={<ForumViewAdmin />}/>
+                                                          </Route>
 
-                                                          <Route path="/topic/:topicId" element={<TopicViewComponente />} />
-                                                        </Route>
+                                                          <Route element={<ProtectedRoute allowedRoles={["Admin", 'instructor', 'usuario']} />}>
+                                                            <Route path="/course/:courseId/resource/:id" element={<ResourceView />} />
+                                                            <Route path="/course/:courseId/resource/:id/A" element={<ViewResource />} />
+                                                            
+                                                            <Route path="/profile/:id" element={<ViewProfile />} />
+                                                            <Route path="/prevUser/:id" element={<PrevUser />} />
+                                                            <Route path="/chat" element={<Chat />} /> 
+                                                            <Route path="/chat/:chatId" element={<Chat />} />
+                                                            <Route path="/friends" element={<Friends />} />
 
-                                                        <Route path="/notFound" element={<NotFoundPage />} />
-                                                        <Route path="/activate/:id" element={<ActivationComponent />} />
-                                                        <Route path="*" element={<Navigate to="/notFound" />} />
-                                                      </Routes>
+                                                            <Route path="/topic/:topicId" element={<TopicViewComponente />} />
+                                                          </Route>
 
-                                                        </FriendsProvider>
-                                                      </ChatProvider>
-                                                    </AnswersQuestionProvider>
-                                                  </EntityProvider>
-                                                </AnswersProvider>
-                                              </ForumCommentProvider>
-                                            </BookmarkProvider>
-                                          </LikesProvider>
-                                        </ForumFavoritesProvider>
-                                      </TopicProvider>
-                                    </ForumCategoriesProvider>
-                                  </GeneralCommentProvider>
-                                </NotesProvider>
-                              </FavoritesProvider>
-                            </RatingsProvider>
-                          </CommentProvider>
-                        </SubCategoryProvider>
-                      </CourseProgressProvider>
-                    </ResourceProvider>
-                  </CoursesProvider>
-                </CategoryProvider>
-              </PermissionProvider>
-            </RoleProvider>
-          </NotificationsProvider>
-        </UserProvider>
-      </AuthProvider>
-    </ThemeProvider>
+                                                          <Route path="/notFound" element={<NotFoundPage />} />
+                                                          <Route path="/activate/:id" element={<ActivationComponent />} />
+                                                          <Route path="*" element={<Navigate to="/notFound" />} />
+                                                        </Routes>
+
+                                                          </FriendsProvider>
+                                                        </ChatProvider>
+                                                      </AnswersQuestionProvider>
+                                                    </EntityProvider>
+                                                  </AnswersProvider>
+                                                </ForumCommentProvider>
+                                              </BookmarkProvider>
+                                            </LikesProvider>
+                                          </ForumFavoritesProvider>
+                                        </TopicProvider>
+                                      </ForumCategoriesProvider>
+                                    </GeneralCommentProvider>
+                                  </NotesProvider>
+                                </FavoritesProvider>
+                              </RatingsProvider>
+                            </CommentProvider>
+                          </SubCategoryProvider>
+                        </CourseProgressProvider>
+                      </ResourceProvider>
+                    </CoursesProvider>
+                  </CategoryProvider>
+                </PermissionProvider>
+              </RoleProvider>
+            </NotificationsProvider>
+          </UserProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   );
 }
 

@@ -168,6 +168,8 @@ export default function Chat() {
       socket.on("stop typing", handleStopTyping);
       socket.on("message edited", handleMessageEdited);
       socket.on("message deleted", handleMessageDeleted);
+      socket.on("message received", handleMessageReceived);
+      socket.on("update unread count");
 
       return () => {
         socket.off("message received", handleMessageReceived);
@@ -175,6 +177,7 @@ export default function Chat() {
         socket.off("stop typing", handleStopTyping);
         socket.off("message edited", handleMessageEdited);
         socket.off("message deleted", handleMessageDeleted);
+        socket.off("update unread count");
       };
     }
   }, [selectedChat, user.data.id, updateLocalMessage]);
@@ -525,15 +528,18 @@ export default function Chat() {
       let messageContent = message.content;
       let replyContent = null;
       let replyUserName = "";
-
-      if (!message.isDeleted) {
+  
+      if (message.isDeleted) {
+        messageContent = "Este mensaje ha sido eliminado";
+      } else if (message.messageType === 'TEXT') {
         try {
-          const parsedContent = JSON.parse(message.content);
+          const parsedContent = JSON.parse(messageContent);
           if (parsedContent.replyTo) {
             const repliedMessage = localMessages.find(
               (msg) => msg.id === parsedContent.replyTo
             );
             let originalContent = repliedMessage?.content;
+            
             try {
               const parsedReplyContent = JSON.parse(originalContent);
               if (parsedReplyContent.content) {
@@ -550,14 +556,14 @@ export default function Chat() {
                   )?.user.username;
             messageContent = parsedContent.content;
           }
-        } catch (e) {}
+        } catch (e) {
+        }
       }
-
+  
       const isCurrentUser = message.senderId === user.data.id;
 
       return (
         <div
-          key={message.id}
           className={`mb-4 flex ${
             isCurrentUser ? "justify-end" : "justify-start"
           } sm:mx-8 mx-2`}
@@ -1062,16 +1068,18 @@ export default function Chat() {
                 </div>
                 <div className="flex-grow overflow-y-auto px-6 py-4 custom-scrollbar-y">
                   <div className="max-w-[98%] mx-auto">
-                    {Object.entries(groupedMessages).map(
-                      ([date, dateMessages]) => (
-                        <div key={date}>
-                          <div className="text-center text-sm text-gray-500 my-2">
-                            {date}
-                          </div>
-                          {dateMessages.map(renderMessage)}
+                    {Object.entries(groupedMessages).map(([date, dateMessages]) => (
+                      <div key={date}>
+                        <div className="text-center text-sm text-gray-500 my-2">
+                          {date}
                         </div>
-                      )
-                    )}
+                        {dateMessages.map((message) => (
+                          <div key={`${message.id}-${message.createdAt}`}>
+                            {renderMessage(message)}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
                   </div>
                   <div ref={messagesEndRef} />
                 </div>

@@ -2,6 +2,8 @@ import React, { useState, createContext, useContext } from 'react';
 import { loginRequest, verifyTokenRequest, googleLoginRequest } from '../api/auth.js';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
+import { jwtDecode } from "jwt-decode";
+
 export const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -102,16 +104,18 @@ export const AuthProvider = ({ children }) => {
         return !!user;
     };
 
-    const loginWithGoogle = async (googleData) => {
+    const loginWithGoogle = async (credentialResponse) => {
         setLoading(true);
         try {
+            const decoded = jwtDecode(credentialResponse.credential);
+            
             const response = await googleLoginRequest({
-                email: googleData.profileObj.email,
-                googleId: googleData.googleId,
-                name: googleData.profileObj.name,
-                givenName:googleData.profileObj.givenName,
-                familyName:googleData.profileObj.familyName,
-                image:googleData.profileObj.imageUrl,
+                email: decoded.email,
+                googleId: decoded.sub,
+                name: decoded.name,
+                givenName: decoded.given_name,
+                familyName: decoded.family_name,
+                image: decoded.picture,
             });
 
             const user = response.data;
